@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["pliantdb"] = [{"text":"impl PartialEq&lt;Revision&gt; for Revision","synthetic":false,"types":[]},{"text":"impl&lt;K:&nbsp;PartialEq + Serialize, V:&nbsp;PartialEq + Serialize&gt; PartialEq&lt;Map&lt;K, V&gt;&gt; for Map&lt;K, V&gt;","synthetic":false,"types":[]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
