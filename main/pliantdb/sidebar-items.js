@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Error","an enumeration of errors that this crate can produce"]],"mod":[["connection","types for interacting with a database"],["schema","types for defining database schema"],["storage","types for interacting with a local, file-based database"]]});

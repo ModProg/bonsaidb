@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["pliantdb"] = [{"text":"impl Debug for Error","synthetic":false,"types":[]},{"text":"impl Debug for Revision","synthetic":false,"types":[]},{"text":"impl Debug for Error","synthetic":false,"types":[]},{"text":"impl&lt;K:&nbsp;Debug + Serialize, V:&nbsp;Debug + Serialize&gt; Debug for Map&lt;K, V&gt;","synthetic":false,"types":[]},{"text":"impl Debug for Error","synthetic":false,"types":[]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

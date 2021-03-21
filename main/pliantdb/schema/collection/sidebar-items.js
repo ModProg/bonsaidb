@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Id","a unique collection id. Choose collection names that aren't likely to conflict with others, so that if someone mixes collections from multiple authors in a single database."]],"trait":[["Collection","a namespaced collection of `Document<Self>` items and views"]]});
