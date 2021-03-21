@@ -124,8 +124,6 @@
 <span id="121">121</span>
 <span id="122">122</span>
 <span id="123">123</span>
-<span id="124">124</span>
-<span id="125">125</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
@@ -156,18 +154,16 @@
 <span class="doccomment">/// inspired by [`CouchDB`&#39;s view system](https://docs.couchdb.org/en/stable/ddocs/views/index.html)</span>
 <span class="comment">// TODO write our own view docs</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">View</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">C</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// the key for this view</span>
+    <span class="doccomment">/// the key for this view. If you&#39;re using ranged queries, this type must be</span>
+    <span class="doccomment">/// meaningfully sortable when converted to bytes. Additionally, the</span>
+    <span class="doccomment">/// conversion process to bytes must be done using a consistent endianness.</span>
     <span class="kw">type</span> <span class="ident">MapKey</span>: <span class="ident">ToEndianBytes</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>;
 
     <span class="doccomment">/// an associated type that can be stored with each entry in the view</span>
     <span class="kw">type</span> <span class="ident">MapValue</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// when implementing reduce(), this is the returned type. If you&#39;re using</span>
-    <span class="doccomment">/// ranged queries, this type must be meaningfully sortable when converted</span>
-    <span class="doccomment">/// to bytes. Additionally, the conversion process to bytes must be done</span>
-    <span class="doccomment">/// using a consistent endianness.</span>
-    <span class="comment">// TODO: Don&#39;t use serialize here, use something that converts to bytes</span>
-    <span class="kw">type</span> <span class="ident">Reduce</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// when implementing reduce(), this is the returned type</span>
+    <span class="kw">type</span> <span class="ident">Reduce</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// the version of the view. Changing this value will cause indexes to be rebuilt.</span>
     <span class="kw">fn</span> <span class="ident">version</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span>;
