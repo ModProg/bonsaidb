@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Storage","a local, file-based database"]]});
+initSidebarItems({"enum":[["Error","errors that can occur from interacting with storage"]],"struct":[["Storage","a local, file-based database"]]});

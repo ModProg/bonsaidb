@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Error","an enumeration of errors that are `Connection`-related"]],"struct":[["Collection","a struct used to interact with a collection over a `Connection`"]],"trait":[["Connection","a trait that defines all interactions with a `Database`, regardless of whether it is local or remote"]]});
+initSidebarItems({"struct":[["Collection","a struct used to interact with a collection over a `Connection`"]],"trait":[["Connection","a trait that defines all interactions with a `Database`, regardless of whether it is local or remote"]]});

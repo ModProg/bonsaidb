@@ -51,6 +51,18 @@
 <span id="48">48</span>
 <span id="49">49</span>
 <span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! pliantdb (name not set in stone) is a programmable document database inspired by `CouchDB` written in Rust.</span>
 
@@ -85,18 +97,30 @@
 <span class="doccomment">/// an enumeration of errors that this crate can produce</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror</span>::<span class="ident">Error</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
-    <span class="doccomment">/// an error that occurred while interacting with a `Connection`</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error on connection: {0}&quot;</span>)]</span>
-    <span class="ident">Connection</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">connection</span>::<span class="ident">Error</span>),
-
     <span class="doccomment">/// an error from serializing or deserializing from a `Document`</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error serializing: {0}&quot;</span>)]</span>
-    <span class="ident">Serialization</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">serde_cbor</span>::<span class="ident">Error</span>),
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error working with storage: {0}&quot;</span>)]</span>
+    <span class="ident">Storage</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">storage</span>::<span class="ident">Error</span>),
+
+    <span class="doccomment">/// an attempt to use a `Collection` with a `Database` that it wasn&#39;t defined within</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;attempted to access a collection not registered with this schema&quot;</span>)]</span>
+    <span class="ident">CollectionNotFound</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">sled</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">sled</span>::<span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span>::<span class="ident">Connection</span>(<span class="ident">connection</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>))
+        <span class="self">Self</span>::<span class="ident">Storage</span>(<span class="ident">storage</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>))
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">serde_cbor</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">serde_cbor</span>::<span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">Self</span>::<span class="ident">Storage</span>(<span class="ident">storage</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>))
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">bincode</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">bincode</span>::<span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">Self</span>::<span class="ident">Storage</span>(<span class="ident">storage</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>))
     }
 }
 
