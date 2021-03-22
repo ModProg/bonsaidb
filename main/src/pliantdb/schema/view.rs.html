@@ -124,6 +124,7 @@
 <span id="121">121</span>
 <span id="122">122</span>
 <span id="123">123</span>
+<span id="124">124</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
@@ -131,8 +132,9 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">schema</span>::<span class="ident">Document</span>;
 
-<span class="kw">mod</span> <span class="ident">map</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">map</span>::{<span class="ident">Map</span>, <span class="ident">ToEndianBytes</span>};
+<span class="doccomment">/// types for defining a `Map` within a `View`</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">map</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">map</span>::{<span class="ident">Key</span>, <span class="ident">Map</span>};
 
 <span class="doccomment">/// errors that arise when interacting with views</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror</span>::<span class="ident">Error</span>, <span class="ident">Debug</span>)]</span>
@@ -157,7 +159,7 @@
     <span class="doccomment">/// the key for this view. If you&#39;re using ranged queries, this type must be</span>
     <span class="doccomment">/// meaningfully sortable when converted to bytes. Additionally, the</span>
     <span class="doccomment">/// conversion process to bytes must be done using a consistent endianness.</span>
-    <span class="kw">type</span> <span class="ident">MapKey</span>: <span class="ident">ToEndianBytes</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>;
+    <span class="kw">type</span> <span class="ident">MapKey</span>: <span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>;
 
     <span class="doccomment">/// an associated type that can be stored with each entry in the view</span>
     <span class="kw">type</span> <span class="ident">MapValue</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>;
