@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Document","a struct representing a document in the database"],["Header","the header of a `Document`"],["Revision","a struct containing information about a `Document`'s revision history"]]});
