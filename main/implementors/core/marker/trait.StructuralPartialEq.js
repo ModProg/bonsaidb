@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["pliantdb"] = [{"text":"impl StructuralPartialEq for Revision","synthetic":false,"types":[]},{"text":"impl&lt;'k, K:&nbsp;Key&lt;'k&gt;, V:&nbsp;Serialize&gt; StructuralPartialEq for Map&lt;'k, K, V&gt;","synthetic":false,"types":[]}];
+implementors["pliantdb"] = [{"text":"impl StructuralPartialEq for Revision","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Id","synthetic":false,"types":[]},{"text":"impl&lt;'k, K:&nbsp;Key&lt;'k&gt;, V:&nbsp;Serialize&gt; StructuralPartialEq for Map&lt;'k, K, V&gt;","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
