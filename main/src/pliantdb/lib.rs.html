@@ -63,6 +63,18 @@
 <span id="60">60</span>
 <span id="61">61</span>
 <span id="62">62</span>
+<span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
+<span id="66">66</span>
+<span id="67">67</span>
+<span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! pliantdb (name not set in stone) is a programmable document database inspired by `CouchDB` written in Rust.</span>
 
@@ -82,6 +94,9 @@
     <span class="comment">// clippy::missing_panics_doc, // not on stable yet</span>
     <span class="ident">clippy</span>::<span class="ident">option_if_let_else</span>,
 )]</span>
+
+<span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">collection</span>;
+<span class="kw">use</span> <span class="ident">uuid</span>::<span class="ident">Uuid</span>;
 
 <span class="doccomment">/// types for interacting with a database</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">connection</span>;
@@ -104,6 +119,15 @@
     <span class="doccomment">/// an attempt to use a `Collection` with a `Database` that it wasn&#39;t defined within</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;attempted to access a collection not registered with this schema&quot;</span>)]</span>
     <span class="ident">CollectionNotFound</span>,
+
+    <span class="comment">// TODO consider moving these to something like a document::Error</span>
+    <span class="doccomment">/// an attempt to update a document that doesn&#39;t exist</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;the requested document id {1} from collection {0} was not found&quot;</span>)]</span>
+    <span class="ident">DocumentNotFound</span>(<span class="ident">collection</span>::<span class="ident">Id</span>, <span class="ident">Uuid</span>),
+
+    <span class="doccomment">/// when updating a document, if a situation is detected where the contents have changed on the server since the `Revision` provided, a Conflict error will be returned.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;a conflict was detected while updating document id {1} from collection {0}&quot;</span>)]</span>
+    <span class="ident">DocumentConflict</span>(<span class="ident">collection</span>::<span class="ident">Id</span>, <span class="ident">Uuid</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">sled</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
