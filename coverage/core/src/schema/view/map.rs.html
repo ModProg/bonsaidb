@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<title>Grcov report &mdash;map.rs</title>
+<link rel="stylesheet" href="../../../../grcov.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<div class="header">
+<div class="view">
+<div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../../../index.html">top level</a> - <a href="index.html">core/src/schema/view</a> - map.rs</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-24 13:11:55</span></div>
+</div>
+<div class="stats">
+<div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
+<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">57</span><span class="linesTotal">66</span><span class="linesPercentage lineMed">86.4 %</span></div>
+<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">42</span><span class="funsTotal">43</span><span class="funsPercentage funHi">97.7 %</span></div>
+<div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
+</div>
+</div>
+<div class="sourceCode">
+<div class="line"><span id="1" class="lineNum"><a href="#1">1</a></span><span class="counterUnCov"></span><span class="lineUnCov">use std::{borrow::Cow, convert::TryInto, marker::PhantomData};</span></div>
+<div class="line"><span id="2" class="lineNum"><a href="#2">2</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="3" class="lineNum"><a href="#3">3</a></span><span class="counterUnCov"></span><span class="lineUnCov">use serde::{Deserialize, Serialize};</span></div>
+<div class="line"><span id="4" class="lineNum"><a href="#4">4</a></span><span class="counterUnCov"></span><span class="lineUnCov">use uuid::Uuid;</span></div>
+<div class="line"><span id="5" class="lineNum"><a href="#5">5</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="6" class="lineNum"><a href="#6">6</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// A document&#39;s entry in a View&#39;s mappings.</span></div>
+<div class="line"><span id="7" class="lineNum"><a href="#7">7</a></span><span class="counterCov">8</span><span class="lineCov">#[derive(PartialEq, Debug)]</span></div>
+<div class="line"><span id="8" class="lineNum"><a href="#8">8</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct Map&lt;&#39;k, K: Key&lt;&#39;k&gt; = (), V: Serialize = ()&gt; {</span></div>
+<div class="line"><span id="9" class="lineNum"><a href="#9">9</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The id of the document that emitted this entry.</span></div>
+<div class="line"><span id="10" class="lineNum"><a href="#10">10</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub source: Uuid,</span></div>
+<div class="line"><span id="11" class="lineNum"><a href="#11">11</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="12" class="lineNum"><a href="#12">12</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The key used to index the View.</span></div>
+<div class="line"><span id="13" class="lineNum"><a href="#13">13</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub key: K,</span></div>
+<div class="line"><span id="14" class="lineNum"><a href="#14">14</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="15" class="lineNum"><a href="#15">15</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// An associated value stored in the view.</span></div>
+<div class="line"><span id="16" class="lineNum"><a href="#16">16</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub value: V,</span></div>
+<div class="line"><span id="17" class="lineNum"><a href="#17">17</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="18" class="lineNum"><a href="#18">18</a></span><span class="counterUnCov"></span><span class="lineUnCov">    _phantom: PhantomData&lt;&amp;&#39;k K&gt;,</span></div>
+<div class="line"><span id="19" class="lineNum"><a href="#19">19</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="21" class="lineNum"><a href="#21">21</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;k, K: Key&lt;&#39;k&gt;, V: Serialize&gt; Map&lt;&#39;k, K, V&gt; {</span></div>
+<div class="line"><span id="22" class="lineNum"><a href="#22">22</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Creates a new Map entry for the document with id `source`.</span></div>
+<div class="line"><span id="23" class="lineNum"><a href="#23">23</a></span><span class="counterCov">16</span><span class="lineCov">    pub fn new(source: Uuid, key: K, value: V) -&gt; Self {</span></div>
+<div class="line"><span id="24" class="lineNum"><a href="#24">24</a></span><span class="counterCov">16</span><span class="lineCov">        Self {</span></div>
+<div class="line"><span id="25" class="lineNum"><a href="#25">25</a></span><span class="counterCov">16</span><span class="lineCov">            source,</span></div>
+<div class="line"><span id="26" class="lineNum"><a href="#26">26</a></span><span class="counterCov">16</span><span class="lineCov">            key,</span></div>
+<div class="line"><span id="27" class="lineNum"><a href="#27">27</a></span><span class="counterCov">16</span><span class="lineCov">            value,</span></div>
+<div class="line"><span id="28" class="lineNum"><a href="#28">28</a></span><span class="counterCov">16</span><span class="lineCov">            _phantom: PhantomData::default(),</span></div>
+<div class="line"><span id="29" class="lineNum"><a href="#29">29</a></span><span class="counterCov">16</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="30" class="lineNum"><a href="#30">30</a></span><span class="counterCov">16</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Represents a document&#39;s entry in a View&#39;s mappings, serialized and ready to store.</span></div>
+<div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterNoCov">0</span><span class="lineNoCov">#[derive(Serialize, Deserialize, Debug)]</span></div>
+<div class="line"><span id="35" class="lineNum"><a href="#35">35</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct Serialized&lt;&#39;k&gt; {</span></div>
+<div class="line"><span id="36" class="lineNum"><a href="#36">36</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The id of the document that emitted this entry.</span></div>
+<div class="line"><span id="37" class="lineNum"><a href="#37">37</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub source: Uuid,</span></div>
+<div class="line"><span id="38" class="lineNum"><a href="#38">38</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="39" class="lineNum"><a href="#39">39</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The key used to index the View.</span></div>
+<div class="line"><span id="40" class="lineNum"><a href="#40">40</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[serde(borrow)]</span></div>
+<div class="line"><span id="41" class="lineNum"><a href="#41">41</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub key: Cow&lt;&#39;k, [u8]&gt;,</span></div>
+<div class="line"><span id="42" class="lineNum"><a href="#42">42</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="43" class="lineNum"><a href="#43">43</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// An associated value stored in the view.</span></div>
+<div class="line"><span id="44" class="lineNum"><a href="#44">44</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub value: serde_cbor::Value,</span></div>
+<div class="line"><span id="45" class="lineNum"><a href="#45">45</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="46" class="lineNum"><a href="#46">46</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="47" class="lineNum"><a href="#47">47</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// A trait that enables a type to convert itself to a big-endian/network byte order.</span></div>
+<div class="line"><span id="48" class="lineNum"><a href="#48">48</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub trait Key&lt;&#39;k&gt; {</span></div>
+<div class="line"><span id="49" class="lineNum"><a href="#49">49</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Convert `self` into an `IVec` containing bytes ordered in big-endian/network byte order.</span></div>
+<div class="line"><span id="50" class="lineNum"><a href="#50">50</a></span><span class="counterUnCov"></span><span class="lineUnCov">    fn into_big_endian_bytes(self) -&gt; Cow&lt;&#39;k, [u8]&gt;;</span></div>
+<div class="line"><span id="51" class="lineNum"><a href="#51">51</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="52" class="lineNum"><a href="#52">52</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Convert a slice of bytes into `Self` by interpretting `bytes` in big-endian/network byte order.</span></div>
+<div class="line"><span id="53" class="lineNum"><a href="#53">53</a></span><span class="counterUnCov"></span><span class="lineUnCov">    fn from_big_endian_bytes(bytes: &amp;&#39;k [u8]) -&gt; Self;</span></div>
+<div class="line"><span id="54" class="lineNum"><a href="#54">54</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="55" class="lineNum"><a href="#55">55</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="56" class="lineNum"><a href="#56">56</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;k&gt; Key&lt;&#39;k&gt; for Cow&lt;&#39;k, [u8]&gt; {</span></div>
+<div class="line"><span id="57" class="lineNum"><a href="#57">57</a></span><span class="counterCov">2</span><span class="lineCov">    fn into_big_endian_bytes(self) -&gt; Cow&lt;&#39;k, [u8]&gt; {</span></div>
+<div class="line"><span id="58" class="lineNum"><a href="#58">58</a></span><span class="counterCov">2</span><span class="lineCov">        self</span></div>
+<div class="line"><span id="59" class="lineNum"><a href="#59">59</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="60" class="lineNum"><a href="#60">60</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="61" class="lineNum"><a href="#61">61</a></span><span class="counterCov">2</span><span class="lineCov">    fn from_big_endian_bytes(bytes: &amp;&#39;k [u8]) -&gt; Self {</span></div>
+<div class="line"><span id="62" class="lineNum"><a href="#62">62</a></span><span class="counterCov">2</span><span class="lineCov">        Cow::from(bytes)</span></div>
+<div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="66" class="lineNum"><a href="#66">66</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;k&gt; Key&lt;&#39;k&gt; for () {</span></div>
+<div class="line"><span id="67" class="lineNum"><a href="#67">67</a></span><span class="counterCov">2</span><span class="lineCov">    fn into_big_endian_bytes(self) -&gt; Cow&lt;&#39;k, [u8]&gt; {</span></div>
+<div class="line"><span id="68" class="lineNum"><a href="#68">68</a></span><span class="counterCov">2</span><span class="lineCov">        Cow::default()</span></div>
+<div class="line"><span id="69" class="lineNum"><a href="#69">69</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="70" class="lineNum"><a href="#70">70</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="71" class="lineNum"><a href="#71">71</a></span><span class="counterCov">2</span><span class="lineCov">    fn from_big_endian_bytes(_: &amp;&#39;k [u8]) -&gt; Self {}</span></div>
+<div class="line"><span id="72" class="lineNum"><a href="#72">72</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="73" class="lineNum"><a href="#73">73</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="74" class="lineNum"><a href="#74">74</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;k&gt; Key&lt;&#39;k&gt; for Uuid {</span></div>
+<div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    fn into_big_endian_bytes(self) -&gt; Cow&lt;&#39;k, [u8]&gt; {</span></div>
+<div class="line"><span id="76" class="lineNum"><a href="#76">76</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        Cow::from(self.as_u128().to_be_bytes().to_vec())</span></div>
+<div class="line"><span id="77" class="lineNum"><a href="#77">77</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    }</span></div>
+<div class="line"><span id="78" class="lineNum"><a href="#78">78</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="79" class="lineNum"><a href="#79">79</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    fn from_big_endian_bytes(bytes: &amp;&#39;k [u8]) -&gt; Self {</span></div>
+<div class="line"><span id="80" class="lineNum"><a href="#80">80</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        Self::from_u128(u128::from_be_bytes(bytes.try_into().unwrap()))</span></div>
+<div class="line"><span id="81" class="lineNum"><a href="#81">81</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    }</span></div>
+<div class="line"><span id="82" class="lineNum"><a href="#82">82</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="83" class="lineNum"><a href="#83">83</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="84" class="lineNum"><a href="#84">84</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;k, T&gt; Key&lt;&#39;k&gt; for Option&lt;T&gt;</span></div>
+<div class="line"><span id="85" class="lineNum"><a href="#85">85</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
+<div class="line"><span id="86" class="lineNum"><a href="#86">86</a></span><span class="counterUnCov"></span><span class="lineUnCov">    T: Key&lt;&#39;k&gt;,</span></div>
+<div class="line"><span id="87" class="lineNum"><a href="#87">87</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
+<div class="line"><span id="88" class="lineNum"><a href="#88">88</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// # Panics</span></div>
+<div class="line"><span id="89" class="lineNum"><a href="#89">89</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ///</span></div>
+<div class="line"><span id="90" class="lineNum"><a href="#90">90</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Panics if `T::into_big_endian_bytes` returns an empty `IVec`.</span></div>
+<div class="line"><span id="91" class="lineNum"><a href="#91">91</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // TODO consider removing this panic limitation by adding a single byte to</span></div>
+<div class="line"><span id="92" class="lineNum"><a href="#92">92</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // each key (at the end preferrably) so that we can distinguish between None</span></div>
+<div class="line"><span id="93" class="lineNum"><a href="#93">93</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // and a 0-byte type</span></div>
+<div class="line"><span id="94" class="lineNum"><a href="#94">94</a></span><span class="counterCov">4</span><span class="lineCov">    fn into_big_endian_bytes(self) -&gt; Cow&lt;&#39;k, [u8]&gt; {</span></div>
+<div class="line"><span id="95" class="lineNum"><a href="#95">95</a></span><span class="counterCov">4</span><span class="lineCov">        self.map(|contents| {</span></div>
+<div class="line"><span id="96" class="lineNum"><a href="#96">96</a></span><span class="counterCov">2</span><span class="lineCov">            let contents = contents.into_big_endian_bytes();</span></div>
+<div class="line"><span id="97" class="lineNum"><a href="#97">97</a></span><span class="counterCov">2</span><span class="lineCov">            assert!(!contents.is_empty());</span></div>
+<div class="line"><span id="98" class="lineNum"><a href="#98">98</a></span><span class="counterCov">2</span><span class="lineCov">            contents</span></div>
+<div class="line"><span id="99" class="lineNum"><a href="#99">99</a></span><span class="counterCov">4</span><span class="lineCov">        })</span></div>
+<div class="line"><span id="100" class="lineNum"><a href="#100">100</a></span><span class="counterCov">4</span><span class="lineCov">        .unwrap_or_default()</span></div>
+<div class="line"><span id="101" class="lineNum"><a href="#101">101</a></span><span class="counterCov">4</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="102" class="lineNum"><a href="#102">102</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="103" class="lineNum"><a href="#103">103</a></span><span class="counterCov">2</span><span class="lineCov">    fn from_big_endian_bytes(bytes: &amp;&#39;k [u8]) -&gt; Self {</span></div>
+<div class="line"><span id="104" class="lineNum"><a href="#104">104</a></span><span class="counterCov">2</span><span class="lineCov">        if bytes.is_empty() {</span></div>
+<div class="line"><span id="105" class="lineNum"><a href="#105">105</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            None</span></div>
+<div class="line"><span id="106" class="lineNum"><a href="#106">106</a></span><span class="counterUnCov"></span><span class="lineUnCov">        } else {</span></div>
+<div class="line"><span id="107" class="lineNum"><a href="#107">107</a></span><span class="counterCov">2</span><span class="lineCov">            Some(T::from_big_endian_bytes(bytes))</span></div>
+<div class="line"><span id="108" class="lineNum"><a href="#108">108</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
+<div class="line"><span id="109" class="lineNum"><a href="#109">109</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="110" class="lineNum"><a href="#110">110</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="111" class="lineNum"><a href="#111">111</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="112" class="lineNum"><a href="#112">112</a></span><span class="counterUnCov"></span><span class="lineUnCov">macro_rules! impl_key_for_primitive {</span></div>
+<div class="line"><span id="113" class="lineNum"><a href="#113">113</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ($type:ident) =&gt; {</span></div>
+<div class="line"><span id="114" class="lineNum"><a href="#114">114</a></span><span class="counterUnCov"></span><span class="lineUnCov">        impl&lt;&#39;k&gt; Key&lt;&#39;k&gt; for $type {</span></div>
+<div class="line"><span id="115" class="lineNum"><a href="#115">115</a></span><span class="counterCov">62</span><span class="lineCov">            fn into_big_endian_bytes(self) -&gt; Cow&lt;&#39;k, [u8]&gt; {</span></div>
+<div class="line"><span id="116" class="lineNum"><a href="#116">116</a></span><span class="counterUnCov"></span><span class="lineUnCov">                Cow::from(self.to_be_bytes().to_vec())</span></div>
+<div class="line"><span id="117" class="lineNum"><a href="#117">117</a></span><span class="counterUnCov"></span><span class="lineUnCov">            }</span></div>
+<div class="line"><span id="118" class="lineNum"><a href="#118">118</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="119" class="lineNum"><a href="#119">119</a></span><span class="counterCov">42</span><span class="lineCov">            fn from_big_endian_bytes(bytes: &amp;&#39;k [u8]) -&gt; Self {</span></div>
+<div class="line"><span id="120" class="lineNum"><a href="#120">120</a></span><span class="counterUnCov"></span><span class="lineUnCov">                $type::from_be_bytes(bytes.try_into().unwrap())</span></div>
+<div class="line"><span id="121" class="lineNum"><a href="#121">121</a></span><span class="counterUnCov"></span><span class="lineUnCov">            }</span></div>
+<div class="line"><span id="122" class="lineNum"><a href="#122">122</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
+<div class="line"><span id="123" class="lineNum"><a href="#123">123</a></span><span class="counterUnCov"></span><span class="lineUnCov">    };</span></div>
+<div class="line"><span id="124" class="lineNum"><a href="#124">124</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="125" class="lineNum"><a href="#125">125</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="126" class="lineNum"><a href="#126">126</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(i8);</span></div>
+<div class="line"><span id="127" class="lineNum"><a href="#127">127</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(u8);</span></div>
+<div class="line"><span id="128" class="lineNum"><a href="#128">128</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(i16);</span></div>
+<div class="line"><span id="129" class="lineNum"><a href="#129">129</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(u16);</span></div>
+<div class="line"><span id="130" class="lineNum"><a href="#130">130</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(i32);</span></div>
+<div class="line"><span id="131" class="lineNum"><a href="#131">131</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(u32);</span></div>
+<div class="line"><span id="132" class="lineNum"><a href="#132">132</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(i64);</span></div>
+<div class="line"><span id="133" class="lineNum"><a href="#133">133</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(u64);</span></div>
+<div class="line"><span id="134" class="lineNum"><a href="#134">134</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(i128);</span></div>
+<div class="line"><span id="135" class="lineNum"><a href="#135">135</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl_key_for_primitive!(u128);</span></div>
+<div class="line"><span id="136" class="lineNum"><a href="#136">136</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="137" class="lineNum"><a href="#137">137</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[test]</span></div>
+<div class="line"><span id="138" class="lineNum"><a href="#138">138</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[allow(clippy::cognitive_complexity)] // I disagree - @ecton</span></div>
+<div class="line"><span id="139" class="lineNum"><a href="#139">139</a></span><span class="counterCov">2</span><span class="lineCov">fn primitive_key_encoding_tests() {</span></div>
+<div class="line"><span id="140" class="lineNum"><a href="#140">140</a></span><span class="counterUnCov"></span><span class="lineUnCov">    macro_rules! test_primitive_extremes {</span></div>
+<div class="line"><span id="141" class="lineNum"><a href="#141">141</a></span><span class="counterUnCov"></span><span class="lineUnCov">        ($type:ident) =&gt; {</span></div>
+<div class="line"><span id="142" class="lineNum"><a href="#142">142</a></span><span class="counterUnCov"></span><span class="lineUnCov">            assert_eq!(</span></div>
+<div class="line"><span id="143" class="lineNum"><a href="#143">143</a></span><span class="counterUnCov"></span><span class="lineUnCov">                &amp;$type::MAX.to_be_bytes(),</span></div>
+<div class="line"><span id="144" class="lineNum"><a href="#144">144</a></span><span class="counterUnCov"></span><span class="lineUnCov">                $type::MAX.into_big_endian_bytes().as_ref()</span></div>
+<div class="line"><span id="145" class="lineNum"><a href="#145">145</a></span><span class="counterUnCov"></span><span class="lineUnCov">            );</span></div>
+<div class="line"><span id="146" class="lineNum"><a href="#146">146</a></span><span class="counterUnCov"></span><span class="lineUnCov">            assert_eq!(</span></div>
+<div class="line"><span id="147" class="lineNum"><a href="#147">147</a></span><span class="counterUnCov"></span><span class="lineUnCov">                $type::MAX,</span></div>
+<div class="line"><span id="148" class="lineNum"><a href="#148">148</a></span><span class="counterUnCov"></span><span class="lineUnCov">                $type::from_big_endian_bytes(&amp;$type::MAX.into_big_endian_bytes())</span></div>
+<div class="line"><span id="149" class="lineNum"><a href="#149">149</a></span><span class="counterUnCov"></span><span class="lineUnCov">            );</span></div>
+<div class="line"><span id="150" class="lineNum"><a href="#150">150</a></span><span class="counterUnCov"></span><span class="lineUnCov">            assert_eq!(</span></div>
+<div class="line"><span id="151" class="lineNum"><a href="#151">151</a></span><span class="counterUnCov"></span><span class="lineUnCov">                $type::MIN,</span></div>
+<div class="line"><span id="152" class="lineNum"><a href="#152">152</a></span><span class="counterUnCov"></span><span class="lineUnCov">                $type::from_big_endian_bytes(&amp;$type::MIN.into_big_endian_bytes())</span></div>
+<div class="line"><span id="153" class="lineNum"><a href="#153">153</a></span><span class="counterUnCov"></span><span class="lineUnCov">            );</span></div>
+<div class="line"><span id="154" class="lineNum"><a href="#154">154</a></span><span class="counterUnCov"></span><span class="lineUnCov">        };</span></div>
+<div class="line"><span id="155" class="lineNum"><a href="#155">155</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
+<div class="line"><span id="156" class="lineNum"><a href="#156">156</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="157" class="lineNum"><a href="#157">157</a></span><span class="counterCov">2</span><span class="lineCov">    test_primitive_extremes!(i8);</span></div>
+<div class="line"><span id="158" class="lineNum"><a href="#158">158</a></span><span class="counterCov">2</span><span class="lineCov">    test_primitive_extremes!(u8);</span></div>
+<div class="line"><span id="159" class="lineNum"><a href="#159">159</a></span><span class="counterCov">2</span><span class="lineCov">    test_primitive_extremes!(i16);</span></div>
+<div class="line"><span id="160" class="lineNum"><a href="#160">160</a></span><span class="counterCov">2</span><span class="lineCov">    test_primitive_extremes!(u16);</span></div>
+<div class="line"><span id="161" class="lineNum"><a href="#161">161</a></span><span class="counterCov">2</span><span class="lineCov">    test_primitive_extremes!(i32);</span></div>
+<div class="line"><span id="162" class="lineNum"><a href="#162">162</a></span><span class="counterCov">2</span><span class="lineCov">    test_primitive_extremes!(u32);</span></div>
+<div class="line"><span id="163" class="lineNum"><a href="#163">163</a></span><span class="counterCov">2</span><span class="lineCov">    test_primitive_extremes!(i64);</span></div>
+<div class="line"><span id="164" class="lineNum"><a href="#164">164</a></span><span class="counterCov">2</span><span class="lineCov">    test_primitive_extremes!(u64);</span></div>
+<div class="line"><span id="165" class="lineNum"><a href="#165">165</a></span><span class="counterCov">2</span><span class="lineCov">    test_primitive_extremes!(i128);</span></div>
+<div class="line"><span id="166" class="lineNum"><a href="#166">166</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    test_primitive_extremes!(u128);</span></div>
+<div class="line"><span id="167" class="lineNum"><a href="#167">167</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
+<div class="line"><span id="168" class="lineNum"><a href="#168">168</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="169" class="lineNum"><a href="#169">169</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[test]</span></div>
+<div class="line"><span id="170" class="lineNum"><a href="#170">170</a></span><span class="counterCov">2</span><span class="lineCov">fn optional_key_encoding_tests() {</span></div>
+<div class="line"><span id="171" class="lineNum"><a href="#171">171</a></span><span class="counterCov">2</span><span class="lineCov">    assert!(Option::&lt;i8&gt;::None.into_big_endian_bytes().is_empty());</span></div>
+<div class="line"><span id="172" class="lineNum"><a href="#172">172</a></span><span class="counterUnCov"></span><span class="lineUnCov">    assert_eq!(</span></div>
+<div class="line"><span id="173" class="lineNum"><a href="#173">173</a></span><span class="counterUnCov"></span><span class="lineUnCov">        Some(1_i8),</span></div>
+<div class="line"><span id="174" class="lineNum"><a href="#174">174</a></span><span class="counterCov">2</span><span class="lineCov">        Option::from_big_endian_bytes(&amp;Some(1_i8).into_big_endian_bytes())</span></div>
+<div class="line"><span id="175" class="lineNum"><a href="#175">175</a></span><span class="counterUnCov"></span><span class="lineUnCov">    );</span></div>
+<div class="line"><span id="176" class="lineNum"><a href="#176">176</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
+<div class="line"><span id="177" class="lineNum"><a href="#177">177</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="178" class="lineNum"><a href="#178">178</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[test]</span></div>
+<div class="line"><span id="179" class="lineNum"><a href="#179">179</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[allow(clippy::unit_cmp)] // this is more of a compilation test</span></div>
+<div class="line"><span id="180" class="lineNum"><a href="#180">180</a></span><span class="counterCov">2</span><span class="lineCov">fn unit_key_encoding_tests() {</span></div>
+<div class="line"><span id="181" class="lineNum"><a href="#181">181</a></span><span class="counterCov">2</span><span class="lineCov">    assert!(().into_big_endian_bytes().is_empty());</span></div>
+<div class="line"><span id="182" class="lineNum"><a href="#182">182</a></span><span class="counterCov">2</span><span class="lineCov">    assert_eq!((), &lt;() as Key&gt;::from_big_endian_bytes(&amp;[]));</span></div>
+<div class="line"><span id="183" class="lineNum"><a href="#183">183</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
+<div class="line"><span id="184" class="lineNum"><a href="#184">184</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="185" class="lineNum"><a href="#185">185</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[test]</span></div>
+<div class="line"><span id="186" class="lineNum"><a href="#186">186</a></span><span class="counterCov">2</span><span class="lineCov">fn vec_key_encoding_tests() {</span></div>
+<div class="line"><span id="187" class="lineNum"><a href="#187">187</a></span><span class="counterUnCov"></span><span class="lineUnCov">    const ORIGINAL_VALUE: &amp;[u8] = b&quot;pliantdb&quot;;</span></div>
+<div class="line"><span id="188" class="lineNum"><a href="#188">188</a></span><span class="counterCov">2</span><span class="lineCov">    let vec = Cow::&lt;&#39;_, [u8]&gt;::from(ORIGINAL_VALUE);</span></div>
+<div class="line"><span id="189" class="lineNum"><a href="#189">189</a></span><span class="counterUnCov"></span><span class="lineUnCov">    assert_eq!(</span></div>
+<div class="line"><span id="190" class="lineNum"><a href="#190">190</a></span><span class="counterCov">2</span><span class="lineCov">        vec.clone(),</span></div>
+<div class="line"><span id="191" class="lineNum"><a href="#191">191</a></span><span class="counterCov">2</span><span class="lineCov">        Cow::from_big_endian_bytes(&amp;vec.into_big_endian_bytes())</span></div>
+<div class="line"><span id="192" class="lineNum"><a href="#192">192</a></span><span class="counterUnCov"></span><span class="lineUnCov">    );</span></div>
+<div class="line"><span id="193" class="lineNum"><a href="#193">193</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
+</div>
+</body>
+</html>
