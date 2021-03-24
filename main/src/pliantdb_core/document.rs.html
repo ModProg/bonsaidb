@@ -154,6 +154,7 @@
 <span id="151">151</span>
 <span id="152">152</span>
 <span id="153">153</span>
+<span id="154">154</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
@@ -165,33 +166,33 @@
 <span class="kw">mod</span> <span class="ident">revision</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">revision</span>::<span class="ident">Revision</span>;
 
-<span class="doccomment">/// the header of a `Document`</span>
+<span class="doccomment">/// The header of a `Document`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Header</span> {
-    <span class="doccomment">/// the id of the Document. Unique across the collection `C`</span>
+    <span class="doccomment">/// The id of the Document. Unique across the collection `C`</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Uuid</span>,
 
-    <span class="doccomment">/// the revision of the stored document.</span>
+    <span class="doccomment">/// The revision of the stored document.</span>
     <span class="kw">pub</span> <span class="ident">revision</span>: <span class="ident">Revision</span>,
 }
 
-<span class="doccomment">/// a struct representing a document in the database</span>
+<span class="doccomment">/// Contains a serialized document in the database.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// the `Id` of the `Collection` this document belongs to</span>
+    <span class="doccomment">/// The `Id` of the `Collection` this document belongs to.</span>
     <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
 
-    <span class="doccomment">/// the header of the document, which contains the id and `Revision`</span>
+    <span class="doccomment">/// The header of the document, which contains the id and `Revision`.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
     <span class="kw">pub</span> <span class="ident">header</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Header</span><span class="op">&gt;</span>,
 
-    <span class="doccomment">/// the serialized bytes of the stored item</span>
+    <span class="doccomment">/// The serialized bytes of the stored item.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
     <span class="kw">pub</span> <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// create a new document with `contents`</span>
+    <span class="doccomment">/// Creates a new document with `contents`.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>, <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">revision</span> <span class="op">=</span> <span class="ident">Revision</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">contents</span>);
@@ -205,7 +206,7 @@
         }
     }
 
-    <span class="doccomment">/// create a new document with serialized bytes from `contents`</span>
+    <span class="doccomment">/// Creates a new document with serialized bytes from `contents`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_contents</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serialize</span><span class="op">&gt;</span>(
         <span class="ident">contents</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>,
         <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
@@ -214,21 +215,22 @@
         <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">new</span>(<span class="ident">contents</span>, <span class="ident">collection</span>))
     }
 
-    <span class="doccomment">/// retrieves `contents` through deserialization into the type `D`</span>
+    <span class="doccomment">/// Retrieves `contents` through deserialization into the type `D`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contents</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">D</span>, <span class="ident">serde_cbor</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">serde_cbor</span>::<span class="ident">from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">contents</span>)
     }
 
-    <span class="doccomment">/// serializes and stores `contents` into this document</span>
+    <span class="doccomment">/// Serializes and stores `contents` into this document.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">set_contents</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">contents</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">serde_cbor</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">contents</span> <span class="op">=</span> <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="ident">serde_cbor</span>::<span class="ident">to_vec</span>(<span class="ident">contents</span>)<span class="question-mark">?</span>);
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="doccomment">/// create a new revision. **WARNING:** This normally should not be used</span>
-    <span class="doccomment">/// outside of implementing a backend for `PliantDB`. To update a document,</span>
-    <span class="doccomment">/// use `set_contents()` and send the document with the existing `Revision`</span>
-    <span class="doccomment">/// information.</span>
+    <span class="doccomment">/// Creates a new revision.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// **WARNING: This normally should not be used** outside of implementing a</span>
+    <span class="doccomment">/// backend for `PliantDB`. To update a document, use `set_contents()` and</span>
+    <span class="doccomment">/// send the document with the existing `Revision` information.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_new_revision</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">header</span>
@@ -244,25 +246,25 @@
             })
     }
 
-    <span class="doccomment">/// create a `Map` result with an empty key and value</span>
+    <span class="doccomment">/// Creates a `Map` result with an empty key and value.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, (), ()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">emit_key_and_value</span>((), ())
     }
 
-    <span class="doccomment">/// create a `Map` result with a `key` and an empty value</span>
+    <span class="doccomment">/// Creates a `Map` result with a `key` and an empty value.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit_key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">Key</span>: <span class="ident">map</span>::<span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">key</span>: <span class="ident">Key</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">Key</span>, ()<span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">emit_key_and_value</span>(<span class="ident">key</span>, ())
     }
 
-    <span class="doccomment">/// create a `Map` result with `value` and an empty key</span>
+    <span class="doccomment">/// Creates a `Map` result with `value` and an empty key.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit_value</span><span class="op">&lt;</span><span class="ident">Value</span>: <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">value</span>: <span class="ident">Value</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, (), <span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">emit_key_and_value</span>((), <span class="ident">value</span>)
     }
 
-    <span class="doccomment">/// create a `Map` result with a `key` and `value`</span>
+    <span class="doccomment">/// Creates a `Map` result with a `key` and `value`.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">emit_key_and_value</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">Key</span>: <span class="ident">map</span>::<span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span>, <span class="ident">Value</span>: <span class="ident">Serialize</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -272,7 +274,7 @@
         <span class="ident">Map</span>::<span class="ident">new</span>(<span class="self">self</span>.<span class="ident">header</span>.<span class="ident">id</span>, <span class="ident">key</span>, <span class="ident">value</span>)
     }
 
-    <span class="doccomment">/// clone the document&#39;s data so that it&#39;s no longer borrowed in the original lifetime `&#39;a`</span>
+    <span class="doccomment">/// Clone the document&#39;s data so that it&#39;s no longer borrowed in the original lifetime `&#39;a`.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_owned</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
         <span class="ident">Document</span>::<span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {

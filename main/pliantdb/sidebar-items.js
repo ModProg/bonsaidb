@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["storage","types for interacting with a local, file-based database"]]});
+initSidebarItems({"mod":[["core","Core functionality and types for `PliantDB`."],["local","Local storage backend for `PliantDB`."]]});

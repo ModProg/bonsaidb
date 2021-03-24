@@ -193,29 +193,30 @@
 <span id="190">190</span>
 <span id="191">191</span>
 <span id="192">192</span>
+<span id="193">193</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">convert</span>::<span class="ident">TryInto</span>, <span class="ident">marker</span>::<span class="ident">PhantomData</span>};
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">uuid</span>::<span class="ident">Uuid</span>;
 
-<span class="doccomment">/// a structure representing a document&#39;s entry in a View&#39;s mappings</span>
+<span class="doccomment">/// A document&#39;s entry in a View&#39;s mappings.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">K</span>: <span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> <span class="op">=</span> (), <span class="ident">V</span>: <span class="ident">Serialize</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
-    <span class="doccomment">/// the id of the document that emitted this entry</span>
+    <span class="doccomment">/// The id of the document that emitted this entry.</span>
     <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Uuid</span>,
 
-    <span class="doccomment">/// the key used to index the View</span>
+    <span class="doccomment">/// The key used to index the View.</span>
     <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">K</span>,
 
-    <span class="doccomment">/// an associated value stored in the view</span>
+    <span class="doccomment">/// An associated value stored in the view.</span>
     <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">V</span>,
 
     <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;k</span> <span class="ident">K</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">K</span>: <span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span>, <span class="ident">V</span>: <span class="ident">Serialize</span><span class="op">&gt;</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// creates a new Map entry for the document with id `source`</span>
+    <span class="doccomment">/// Creates a new Map entry for the document with id `source`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source</span>: <span class="ident">Uuid</span>, <span class="ident">key</span>: <span class="ident">K</span>, <span class="ident">value</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">source</span>,
@@ -226,25 +227,26 @@
     }
 }
 
-<span class="doccomment">/// a structure representing a document&#39;s entry in a View&#39;s mappings, serialized and ready to store</span>
+<span class="doccomment">/// Represents a document&#39;s entry in a View&#39;s mappings, serialized and ready to store.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Serialized</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// the id of the document that emitted this entry</span>
+    <span class="doccomment">/// The id of the document that emitted this entry.</span>
     <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Uuid</span>,
 
-    <span class="doccomment">/// the key used to index the View</span>
+    <span class="doccomment">/// The key used to index the View.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
     <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
 
-    <span class="doccomment">/// an associated value stored in the view</span>
+    <span class="doccomment">/// An associated value stored in the view.</span>
     <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">serde_cbor</span>::<span class="ident">Value</span>,
 }
 
-<span class="doccomment">/// a trait that enables a type to convert itself to a big-endian/network byte order.</span>
+<span class="doccomment">/// A trait that enables a type to convert itself to a big-endian/network byte order.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// convert `self` into an `IVec` containing bytes ordered in big-endian/network byte order</span>
+    <span class="doccomment">/// Convert `self` into an `IVec` containing bytes ordered in big-endian/network byte order.</span>
     <span class="kw">fn</span> <span class="ident">into_big_endian_bytes</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>;
-    <span class="doccomment">/// convert a slice of bytes into `Self` by interpretting `bytes` in big-endian/network byte order</span>
+
+    <span class="doccomment">/// Convert a slice of bytes into `Self` by interpretting `bytes` in big-endian/network byte order.</span>
     <span class="kw">fn</span> <span class="ident">from_big_endian_bytes</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;k</span> [<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>;
 }
 
@@ -282,7 +284,7 @@
 {
     <span class="doccomment">/// # Panics</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// panics if `T::into_big_endian_bytes` returns an empty `IVec`</span>
+    <span class="doccomment">/// Panics if `T::into_big_endian_bytes` returns an empty `IVec`.</span>
     <span class="comment">// TODO consider removing this panic limitation by adding a single byte to</span>
     <span class="comment">// each key (at the end preferrably) so that we can distinguish between None</span>
     <span class="comment">// and a 0-byte type</span>

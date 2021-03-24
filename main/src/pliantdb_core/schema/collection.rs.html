@@ -46,7 +46,7 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">schema</span>::<span class="ident">Schema</span>;
 
-<span class="doccomment">/// a unique collection id. Choose collection names that aren&#39;t likely to</span>
+<span class="doccomment">/// A unique collection id. Choose collection names that aren&#39;t likely to</span>
 <span class="doccomment">/// conflict with others, so that if someone mixes collections from multiple</span>
 <span class="doccomment">/// authors in a single database.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
@@ -70,12 +70,12 @@
     }
 }
 
-<span class="doccomment">/// a namespaced collection of `Document&lt;Self&gt;` items and views</span>
+<span class="doccomment">/// A namespaced collection of `Document&lt;Self&gt;` items and views.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Collection</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {
-    <span class="doccomment">/// the `Id` of this collection</span>
+    <span class="doccomment">/// The `Id` of this collection.</span>
     <span class="kw">fn</span> <span class="ident">id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Id</span>;
 
-    <span class="doccomment">/// implementors define all of their `View`s in `schema`</span>
+    <span class="doccomment">/// Defines all `View`s in this collection in `schema`.</span>
     <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schema</span>);
 }
 </pre></div>
