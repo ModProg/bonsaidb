@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Error","an enumeration of errors that this crate can produce"]],"mod":[["connection","types for interacting with a database"],["document","types for interacting with `Document`s"],["schema","types for defining database schema"],["storage","types for interacting with a local, file-based database"],["transaction","types for executing transactions"]]});
+initSidebarItems({"mod":[["storage","types for interacting with a local, file-based database"]]});

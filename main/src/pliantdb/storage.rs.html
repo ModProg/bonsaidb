@@ -524,6 +524,57 @@
 <span id="521">521</span>
 <span id="522">522</span>
 <span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">collections</span>::<span class="ident">HashMap</span>, <span class="ident">marker</span>::<span class="ident">PhantomData</span>, <span class="ident">path</span>::<span class="ident">Path</span>, <span class="ident">sync</span>::<span class="ident">Arc</span>};
 
@@ -534,7 +585,7 @@
 };
 <span class="kw">use</span> <span class="ident">uuid</span>::<span class="ident">Uuid</span>;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
+<span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
     <span class="ident">connection</span>::{<span class="ident">Collection</span>, <span class="ident">Connection</span>},
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">Header</span>},
     <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">collection</span>, <span class="ident">Database</span>, <span class="ident">Schema</span>},
@@ -559,15 +610,17 @@
     <span class="ident">DB</span>: <span class="ident">Database</span>,
 {
     <span class="doccomment">/// opens a local file as a pliantdb</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_local</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">path</span>: <span class="ident">P</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">sled</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_local</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">path</span>: <span class="ident">P</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">collections</span> <span class="op">=</span> <span class="ident">Schema</span>::<span class="ident">default</span>();
         <span class="ident">DB</span>::<span class="ident">define_collections</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">collections</span>);
 
-        <span class="ident">sled</span>::<span class="ident">open</span>(<span class="ident">path</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">sled</span><span class="op">|</span> <span class="self">Self</span> {
-            <span class="ident">sled</span>,
-            <span class="ident">collections</span>: <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">collections</span>),
-            <span class="ident">_schema</span>: <span class="ident">PhantomData</span>::<span class="ident">default</span>(),
-        })
+        <span class="ident">sled</span>::<span class="ident">open</span>(<span class="ident">path</span>)
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">sled</span><span class="op">|</span> <span class="self">Self</span> {
+                <span class="ident">sled</span>,
+                <span class="ident">collections</span>: <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">collections</span>),
+                <span class="ident">_schema</span>: <span class="ident">PhantomData</span>::<span class="ident">default</span>(),
+            })
+            .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 }
 
@@ -578,21 +631,21 @@
 {
     <span class="kw">fn</span> <span class="ident">collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema</span>::<span class="ident">Collection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="self">Self</span>, <span class="ident">C</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Collection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="self">Self</span>, <span class="ident">C</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">collections</span>.<span class="ident">contains</span>::<span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>() {
             <span class="prelude-val">Ok</span>(<span class="ident">Collection</span>::<span class="ident">new</span>(<span class="self">self</span>))
         } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">CollectionNotFound</span>)
+            <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">CollectionNotFound</span>)
         }
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">insert</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema</span>::<span class="ident">Collection</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Header</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Header</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="comment">// We need these things to occur:</span>
         <span class="comment">// * [x] Create a &quot;transaction&quot; that contains the save statement.</span>
         <span class="comment">// * [ ] Execute the transaction</span>
@@ -624,7 +677,7 @@
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tx</span> <span class="op">=</span> <span class="ident">Transaction</span>::<span class="ident">default</span>();
         <span class="ident">tx</span>.<span class="ident">push</span>(<span class="ident">Operation</span> {
             <span class="ident">collection</span>: <span class="ident">doc</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(),
@@ -647,15 +700,19 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">apply_transaction</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">transaction</span>: <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">sled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sled</span>.<span class="ident">clone</span>();
         <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">open_trees</span> <span class="op">=</span> <span class="ident">OpenTrees</span>::<span class="ident">default</span>();
-            <span class="ident">open_trees</span>.<span class="ident">open_tree</span>(<span class="kw-2">&amp;</span><span class="ident">sled</span>, <span class="ident">TRANSACTION_TREE_NAME</span>)<span class="question-mark">?</span>;
+            <span class="ident">open_trees</span>
+                .<span class="ident">open_tree</span>(<span class="kw-2">&amp;</span><span class="ident">sled</span>, <span class="ident">TRANSACTION_TREE_NAME</span>)
+                .<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>;
             <span class="kw">for</span> <span class="ident">op</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">transaction</span>.<span class="ident">operations</span> {
                 <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">command</span> {
                     <span class="ident">Command</span>::<span class="ident">Update</span> { .. } <span class="op">|</span> <span class="ident">Command</span>::<span class="ident">Insert</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
-                        <span class="ident">open_trees</span>.<span class="ident">open_trees_for_document_change</span>(<span class="kw-2">&amp;</span><span class="ident">sled</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>)<span class="question-mark">?</span>;
+                        <span class="ident">open_trees</span>
+                            .<span class="ident">open_trees_for_document_change</span>(<span class="kw-2">&amp;</span><span class="ident">sled</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>)
+                            .<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>;
                     }
                 }
             }
@@ -683,7 +740,8 @@
                     <span class="ident">changed_documents</span>: <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="ident">changed_documents</span>),
                 };
                 <span class="kw">let</span> <span class="ident">serialized</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">bincode</span>::<span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="ident">executed</span>)
-                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>)))<span class="question-mark">?</span>;
+                    .<span class="ident">map_err_to_core</span>()
+                    .<span class="ident">map_err</span>(<span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>)<span class="question-mark">?</span>;
                 <span class="ident">tree</span>.<span class="ident">insert</span>(<span class="kw-2">&amp;</span><span class="ident">executed</span>.<span class="ident">id</span>.<span class="ident">to_be_bytes</span>(), <span class="ident">serialized</span>)<span class="question-mark">?</span>;
 
                 <span class="ident">trees</span>.<span class="ident">iter</span>().<span class="ident">for_each</span>(<span class="ident">TransactionalTree</span>::<span class="ident">flush</span>);
@@ -692,7 +750,9 @@
                 <span class="prelude-val">Ok</span>(<span class="ident">results</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">results</span>),
                 <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">err</span> {
                     <span class="ident">TransactionError</span>::<span class="ident">Abort</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
-                    <span class="ident">TransactionError</span>::<span class="ident">Storage</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>)),
+                    <span class="ident">TransactionError</span>::<span class="ident">Storage</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                        <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Storage</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()))
+                    }
                 },
             }
         })
@@ -703,10 +763,17 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema</span>::<span class="ident">Collection</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">id</span>: <span class="ident">Uuid</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sled</span>.<span class="ident">open_tree</span>(<span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="ident">C</span>::<span class="ident">id</span>()))<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">vec</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get</span>(<span class="ident">id</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span> {
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">vec</span>)<span class="question-mark">?</span>.<span class="ident">to_owned</span>()))
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>
+            .<span class="ident">sled</span>
+            .<span class="ident">open_tree</span>(<span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="ident">C</span>::<span class="ident">id</span>()))
+            .<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">vec</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get</span>(<span class="ident">id</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span> {
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(
+                <span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">vec</span>)
+                    .<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>
+                    .<span class="ident">to_owned</span>(),
+            ))
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
         }
@@ -716,12 +783,15 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">starting_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">result_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">transaction</span>::<span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">transaction</span>::<span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">result_limit</span> <span class="op">=</span> <span class="ident">result_limit</span>
             .<span class="ident">unwrap_or</span>(<span class="ident">LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT</span>)
             .<span class="ident">min</span>(<span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span>);
         <span class="kw">if</span> <span class="ident">result_limit</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">sled</span>.<span class="ident">open_tree</span>(<span class="ident">TRANSACTION_TREE_NAME</span>)<span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>
+                .<span class="ident">sled</span>
+                .<span class="ident">open_tree</span>(<span class="ident">TRANSACTION_TREE_NAME</span>)
+                .<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">iter</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">starting_id</span>) <span class="op">=</span> <span class="ident">starting_id</span> {
                 <span class="ident">tree</span>.<span class="ident">range</span>(<span class="ident">starting_id</span>.<span class="ident">to_be_bytes</span>()..<span class="op">=</span><span class="ident">u64</span>::<span class="ident">MAX</span>.<span class="ident">to_be_bytes</span>())
             } <span class="kw">else</span> {
@@ -731,8 +801,12 @@
             <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">cast_possible_truncation</span>)]</span> <span class="comment">// this value is limited above</span>
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">result_limit</span>);
             <span class="kw">for</span> <span class="ident">row</span> <span class="kw">in</span> <span class="ident">iter</span> {
-                <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">vec</span>) <span class="op">=</span> <span class="ident">row</span><span class="question-mark">?</span>;
-                <span class="ident">results</span>.<span class="ident">push</span>(<span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">transaction</span>::<span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">vec</span>)<span class="question-mark">?</span>.<span class="ident">to_owned</span>());
+                <span class="kw">let</span> (<span class="kw">_</span>, <span class="ident">vec</span>) <span class="op">=</span> <span class="ident">row</span>.<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>;
+                <span class="ident">results</span>.<span class="ident">push</span>(
+                    <span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">transaction</span>::<span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">vec</span>)
+                        .<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>
+                        .<span class="ident">to_owned</span>(),
+                );
 
                 <span class="kw">if</span> <span class="ident">results</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="ident">result_limit</span> {
                     <span class="kw">break</span>;
@@ -751,14 +825,15 @@
     <span class="ident">operation</span>: <span class="kw-2">&amp;</span><span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
     <span class="ident">trees</span>: <span class="kw-2">&amp;</span>[<span class="ident">TransactionalTree</span>],
     <span class="ident">tree_index_map</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">ConflictableTransactionError</span><span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">ConflictableTransactionError</span><span class="op">&lt;</span><span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">trees</span>[<span class="ident">tree_index_map</span>[<span class="kw-2">&amp;</span><span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="ident">operation</span>.<span class="ident">collection</span>)]];
     <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">operation</span>.<span class="ident">command</span> {
         <span class="ident">Command</span>::<span class="ident">Insert</span> { <span class="ident">contents</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">Document</span>::<span class="ident">new</span>(<span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="ident">contents</span>), <span class="ident">operation</span>.<span class="ident">collection</span>.<span class="ident">clone</span>());
             <span class="ident">save_doc</span>(<span class="ident">tree</span>, <span class="kw-2">&amp;</span><span class="ident">doc</span>)<span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">serialized</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">bincode</span>::<span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="ident">doc</span>)
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>)))<span class="question-mark">?</span>;
+                .<span class="ident">map_err_to_core</span>()
+                .<span class="ident">map_err</span>(<span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>)<span class="question-mark">?</span>;
             <span class="ident">tree</span>.<span class="ident">insert</span>(<span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span>.<span class="ident">as_bytes</span>(), <span class="ident">serialized</span>)<span class="question-mark">?</span>;
 
             <span class="prelude-val">Ok</span>(<span class="ident">OperationResult</span>::<span class="ident">DocumentUpdated</span> {
@@ -769,7 +844,8 @@
         <span class="ident">Command</span>::<span class="ident">Update</span> { <span class="ident">header</span>, <span class="ident">contents</span> } <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">vec</span>) <span class="op">=</span> <span class="ident">tree</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">header</span>.<span class="ident">id</span>.<span class="ident">as_bytes</span>())<span class="question-mark">?</span> {
                 <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">vec</span>)
-                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>)))<span class="question-mark">?</span>;
+                    .<span class="ident">map_err_to_core</span>()
+                    .<span class="ident">map_err</span>(<span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>)<span class="question-mark">?</span>;
                 <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="ident">doc</span>.<span class="ident">header</span> <span class="op">=</span><span class="op">=</span> <span class="ident">header</span> {
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">updated_doc</span>) <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">create_new_revision</span>(<span class="ident">contents</span>.<span class="ident">clone</span>()) {
                         <span class="ident">save_doc</span>(<span class="ident">tree</span>, <span class="kw-2">&amp;</span><span class="ident">updated_doc</span>)<span class="question-mark">?</span>;
@@ -789,12 +865,15 @@
                     }
                 } <span class="kw">else</span> {
                     <span class="prelude-val">Err</span>(<span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>(
-                        <span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">DocumentConflict</span>(<span class="ident">operation</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(), <span class="ident">header</span>.<span class="ident">id</span>),
+                        <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">DocumentConflict</span>(
+                            <span class="ident">operation</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(),
+                            <span class="ident">header</span>.<span class="ident">id</span>,
+                        ),
                     ))
                 }
             } <span class="kw">else</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>(
-                    <span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">DocumentNotFound</span>(<span class="ident">operation</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(), <span class="ident">header</span>.<span class="ident">id</span>),
+                    <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">DocumentNotFound</span>(<span class="ident">operation</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(), <span class="ident">header</span>.<span class="ident">id</span>),
                 ))
             }
         }
@@ -804,9 +883,10 @@
 <span class="kw">fn</span> <span class="ident">save_doc</span>(
     <span class="ident">tree</span>: <span class="kw-2">&amp;</span><span class="ident">TransactionalTree</span>,
     <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ConflictableTransactionError</span><span class="op">&lt;</span><span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ConflictableTransactionError</span><span class="op">&lt;</span><span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">serialized</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">bincode</span>::<span class="ident">serialize</span>(<span class="ident">doc</span>)
-        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>)))<span class="question-mark">?</span>;
+        .<span class="ident">map_err_to_core</span>()
+        .<span class="ident">map_err</span>(<span class="ident">ConflictableTransactionError</span>::<span class="ident">Abort</span>)<span class="question-mark">?</span>;
     <span class="ident">tree</span>.<span class="ident">insert</span>(<span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span>.<span class="ident">as_bytes</span>(), <span class="ident">serialized</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(())
 }
@@ -861,19 +941,25 @@
     <span class="ident">Serialization</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">serde_cbor</span>::<span class="ident">Error</span>),
 }
 
+<span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">into</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">Error</span> {
+        <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Storage</span>(<span class="self">self</span>.<span class="ident">to_string</span>())
+    }
+}
+
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">tests</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">storage</span>::<span class="ident">Storage</span>;
+    <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
         <span class="ident">connection</span>::<span class="ident">Connection</span>,
         <span class="ident">schema</span>::<span class="ident">Collection</span>,
-        <span class="ident">storage</span>::<span class="ident">Storage</span>,
         <span class="ident">test_util</span>::{<span class="ident">Basic</span>, <span class="ident">BasicCollection</span>, <span class="ident">TestDirectory</span>},
         <span class="ident">Error</span>,
     };
 
     <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">store_retrieve_update</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">store_retrieve_update</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">TestDirectory</span>::<span class="ident">new</span>(<span class="string">&quot;store-retrieve-update&quot;</span>);
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Storage</span>::<span class="op">&lt;</span><span class="ident">BasicCollection</span><span class="op">&gt;</span>::<span class="ident">open_local</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 
@@ -924,7 +1010,7 @@
     }
 
     <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">not_found</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">not_found</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">TestDirectory</span>::<span class="ident">new</span>(<span class="string">&quot;not-found&quot;</span>);
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Storage</span>::<span class="op">&lt;</span><span class="ident">BasicCollection</span><span class="op">&gt;</span>::<span class="ident">open_local</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 
@@ -938,7 +1024,7 @@
     }
 
     <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">conflict</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">conflict</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">TestDirectory</span>::<span class="ident">new</span>(<span class="string">&quot;conflict&quot;</span>);
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Storage</span>::<span class="op">&lt;</span><span class="ident">BasicCollection</span><span class="op">&gt;</span>::<span class="ident">open_local</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 
@@ -970,14 +1056,14 @@
                 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">collection</span>, <span class="ident">BasicCollection</span>::<span class="ident">id</span>());
                 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">id</span>, <span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span>);
             }
-            <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">other</span>),
+            <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">other</span>)),
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 
     <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">no_update</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">no_update</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">TestDirectory</span>::<span class="ident">new</span>(<span class="string">&quot;no-update&quot;</span>);
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Storage</span>::<span class="op">&lt;</span><span class="ident">BasicCollection</span><span class="op">&gt;</span>::<span class="ident">open_local</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
 
@@ -1000,7 +1086,7 @@
     }
 
     <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_transactions</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_transactions</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">TestDirectory</span>::<span class="ident">new</span>(<span class="string">&quot;list-transactions&quot;</span>);
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Storage</span>::<span class="op">&lt;</span><span class="ident">BasicCollection</span><span class="op">&gt;</span>::<span class="ident">open_local</span>(<span class="ident">path</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">BasicCollection</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
@@ -1046,6 +1132,22 @@
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">transactions</span>.<span class="ident">len</span>(), <span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span> <span class="op">+</span> <span class="number">1</span>);
 
         <span class="prelude-val">Ok</span>(())
+    }
+}
+
+<span class="kw">trait</span> <span class="ident">ResultExt</span> {
+    <span class="kw">type</span> <span class="ident">Output</span>;
+    <span class="kw">fn</span> <span class="ident">map_err_to_core</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Output</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span> <span class="ident">ResultExt</span> <span class="kw">for</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">E</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>,
+{
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">T</span>;
+
+    <span class="kw">fn</span> <span class="ident">map_err_to_core</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Output</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Storage</span>(<span class="ident">err</span>.<span class="ident">into</span>().<span class="ident">to_string</span>()))
     }
 }
 </pre></div>
