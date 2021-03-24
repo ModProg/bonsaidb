@@ -198,13 +198,12 @@
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">convert</span>::<span class="ident">TryInto</span>, <span class="ident">marker</span>::<span class="ident">PhantomData</span>};
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">uuid</span>::<span class="ident">Uuid</span>;
 
 <span class="doccomment">/// A document&#39;s entry in a View&#39;s mappings.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">K</span>: <span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> <span class="op">=</span> (), <span class="ident">V</span>: <span class="ident">Serialize</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
     <span class="doccomment">/// The id of the document that emitted this entry.</span>
-    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Uuid</span>,
+    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">u64</span>,
 
     <span class="doccomment">/// The key used to index the View.</span>
     <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">K</span>,
@@ -217,7 +216,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">K</span>: <span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span>, <span class="ident">V</span>: <span class="ident">Serialize</span><span class="op">&gt;</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Creates a new Map entry for the document with id `source`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source</span>: <span class="ident">Uuid</span>, <span class="ident">key</span>: <span class="ident">K</span>, <span class="ident">value</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source</span>: <span class="ident">u64</span>, <span class="ident">key</span>: <span class="ident">K</span>, <span class="ident">value</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">source</span>,
             <span class="ident">key</span>,
@@ -231,7 +230,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Serialized</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The id of the document that emitted this entry.</span>
-    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Uuid</span>,
+    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">u64</span>,
 
     <span class="doccomment">/// The key used to index the View.</span>
     <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
@@ -268,13 +267,14 @@
     <span class="kw">fn</span> <span class="ident">from_big_endian_bytes</span>(<span class="kw">_</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;k</span> [<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {}
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> <span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Uuid</span> {
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;uuid&quot;</span>)]</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> <span class="ident">Key</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">uuid</span>::<span class="ident">Uuid</span> {
     <span class="kw">fn</span> <span class="ident">into_big_endian_bytes</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span> {
-        <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="self">self</span>.<span class="ident">as_u128</span>().<span class="ident">to_be_bytes</span>().<span class="ident">to_vec</span>())
+        <span class="self">self</span>.<span class="ident">as_u128</span>().<span class="ident">into_big_endian_bytes</span>()
     }
 
     <span class="kw">fn</span> <span class="ident">from_big_endian_bytes</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;k</span> [<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span>::<span class="ident">from_u128</span>(<span class="ident">u128</span>::<span class="ident">from_be_bytes</span>(<span class="ident">bytes</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>()))
+        <span class="self">Self</span>::<span class="ident">from_bytes</span>(<span class="ident">bytes</span>.<span class="ident">try_into</span>().<span class="ident">unwrap</span>())
     }
 }
 
