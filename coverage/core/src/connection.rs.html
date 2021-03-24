@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">core/src</a> - connection.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-24 13:54:41</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-24 14:27:33</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -84,29 +84,24 @@
 <div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Cl: schema::Collection,</span></div>
 <div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
 <div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Creates a new instance using `connection`.</span></div>
-<div class="line"><span id="66" class="lineNum"><a href="#66">66</a></span><span class="counterCov">10</span><span class="lineCov">    pub fn new(connection: &amp;&#39;a Cn) -&gt; Self {</span></div>
-<div class="line"><span id="67" class="lineNum"><a href="#67">67</a></span><span class="counterCov">10</span><span class="lineCov">        Self {</span></div>
-<div class="line"><span id="68" class="lineNum"><a href="#68">68</a></span><span class="counterCov">10</span><span class="lineCov">            connection,</span></div>
-<div class="line"><span id="69" class="lineNum"><a href="#69">69</a></span><span class="counterCov">10</span><span class="lineCov">            _phantom: PhantomData::default(),</span></div>
-<div class="line"><span id="70" class="lineNum"><a href="#70">70</a></span><span class="counterCov">10</span><span class="lineCov">        }</span></div>
-<div class="line"><span id="71" class="lineNum"><a href="#71">71</a></span><span class="counterCov">10</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="66" class="lineNum"><a href="#66">66</a></span><span class="counterCov">8</span><span class="lineCov">    pub fn new(connection: &amp;&#39;a Cn) -&gt; Self {</span></div>
+<div class="line"><span id="67" class="lineNum"><a href="#67">67</a></span><span class="counterCov">8</span><span class="lineCov">        Self {</span></div>
+<div class="line"><span id="68" class="lineNum"><a href="#68">68</a></span><span class="counterCov">8</span><span class="lineCov">            connection,</span></div>
+<div class="line"><span id="69" class="lineNum"><a href="#69">69</a></span><span class="counterCov">8</span><span class="lineCov">            _phantom: PhantomData::default(),</span></div>
+<div class="line"><span id="70" class="lineNum"><a href="#70">70</a></span><span class="counterCov">8</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="71" class="lineNum"><a href="#71">71</a></span><span class="counterCov">8</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="72" class="lineNum"><a href="#72">72</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="73" class="lineNum"><a href="#73">73</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Adds a new `Document&lt;Cl&gt;` with the contents `item`.</span></div>
-<div class="line"><span id="74" class="lineNum"><a href="#74">74</a></span><span class="counterCov">2008</span><span class="lineCov">    pub async fn push&lt;S: Serialize + Sync&gt;(&amp;self, item: &amp;S) -&gt; Result&lt;Header, crate::Error&gt; {</span></div>
-<div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterCov">2008</span><span class="lineCov">        let contents = serde_cbor::to_vec(item)?;</span></div>
-<div class="line"><span id="76" class="lineNum"><a href="#76">76</a></span><span class="counterCov">2008</span><span class="lineCov">        Ok(self.connection.insert::&lt;Cl&gt;(contents).await?)</span></div>
-<div class="line"><span id="77" class="lineNum"><a href="#77">77</a></span><span class="counterCov">2008</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="74" class="lineNum"><a href="#74">74</a></span><span class="counterCov">2006</span><span class="lineCov">    pub async fn push&lt;S: Serialize + Sync&gt;(&amp;self, item: &amp;S) -&gt; Result&lt;Header, crate::Error&gt; {</span></div>
+<div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterCov">2006</span><span class="lineCov">        let contents = serde_cbor::to_vec(item)?;</span></div>
+<div class="line"><span id="76" class="lineNum"><a href="#76">76</a></span><span class="counterCov">2006</span><span class="lineCov">        Ok(self.connection.insert::&lt;Cl&gt;(contents).await?)</span></div>
+<div class="line"><span id="77" class="lineNum"><a href="#77">77</a></span><span class="counterCov">2006</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="78" class="lineNum"><a href="#78">78</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="79" class="lineNum"><a href="#79">79</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Adds a new `Document&lt;Cl&gt;` with the contents `item`.</span></div>
-<div class="line"><span id="80" class="lineNum"><a href="#80">80</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub async fn update(&amp;self, doc: &amp;mut Document&lt;&#39;_&gt;) -&gt; Result&lt;(), crate::Error&gt; {</span></div>
-<div class="line"><span id="81" class="lineNum"><a href="#81">81</a></span><span class="counterUnCov"></span><span class="lineUnCov">        Ok(self.connection.update(doc).await?)</span></div>
-<div class="line"><span id="82" class="lineNum"><a href="#82">82</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
-<div class="line"><span id="83" class="lineNum"><a href="#83">83</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="84" class="lineNum"><a href="#84">84</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Retrieves a `Document&lt;Cl&gt;` with `id` from the connection.</span></div>
-<div class="line"><span id="85" class="lineNum"><a href="#85">85</a></span><span class="counterCov">10</span><span class="lineCov">    pub async fn get(&amp;self, id: u64) -&gt; Result&lt;Option&lt;Document&lt;&#39;static&gt;&gt;, Error&gt; {</span></div>
-<div class="line"><span id="86" class="lineNum"><a href="#86">86</a></span><span class="counterCov">10</span><span class="lineCov">        self.connection.get::&lt;Cl&gt;(id).await</span></div>
-<div class="line"><span id="87" class="lineNum"><a href="#87">87</a></span><span class="counterCov">10</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="88" class="lineNum"><a href="#88">88</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="79" class="lineNum"><a href="#79">79</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Retrieves a `Document&lt;Cl&gt;` with `id` from the connection.</span></div>
+<div class="line"><span id="80" class="lineNum"><a href="#80">80</a></span><span class="counterCov">8</span><span class="lineCov">    pub async fn get(&amp;self, id: u64) -&gt; Result&lt;Option&lt;Document&lt;&#39;static&gt;&gt;, Error&gt; {</span></div>
+<div class="line"><span id="81" class="lineNum"><a href="#81">81</a></span><span class="counterCov">8</span><span class="lineCov">        self.connection.get::&lt;Cl&gt;(id).await</span></div>
+<div class="line"><span id="82" class="lineNum"><a href="#82">82</a></span><span class="counterCov">8</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="83" class="lineNum"><a href="#83">83</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 </div>
 </body>
 </html>
