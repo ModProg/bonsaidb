@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Collection","Interacts with a collection over a `Connection`."]],"trait":[["Connection","Defines all interactions with a `Database`, regardless of whether it is local or remote."]]});
+initSidebarItems({"enum":[["QueryKey","Filters a [`View`] by key."]],"struct":[["Collection","Interacts with a collection over a `Connection`."],["View","Parameters to query a `schema::View`."]],"trait":[["Connection","Defines all interactions with a [`schema::Database`], regardless of whether it is local or remote."]]});

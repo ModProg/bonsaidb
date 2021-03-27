@@ -1,3 +1,5 @@
 (function() {var implementors = {};
 implementors["pliantdb_core"] = [{"text":"impl Default for Schema","synthetic":false,"types":[]},{"text":"impl&lt;'a&gt; Default for Transaction&lt;'a&gt;","synthetic":false,"types":[]},{"text":"impl Default for Basic","synthetic":false,"types":[]}];
+implementors["pliantdb_jobs"] = [{"text":"impl&lt;Key&gt; Default for Manager&lt;Key&gt; <span class=\"where fmt-newline\">where<br>&nbsp;&nbsp;&nbsp;&nbsp;Key: Clone + Hash + Eq + Send + Sync + Debug + 'static,&nbsp;</span>","synthetic":false,"types":[]}];
+implementors["pliantdb_local"] = [{"text":"impl Default for Configuration","synthetic":false,"types":[]},{"text":"impl Default for Tasks","synthetic":false,"types":[]},{"text":"impl Default for Views","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

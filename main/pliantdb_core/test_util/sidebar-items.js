@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Basic",""],["BasicCollection",""],["BasicCount",""],["BasicDatabase",""],["TestDirectory",""]]});
+initSidebarItems({"struct":[["Basic",""],["BasicByCategory",""],["BasicByParentId",""],["BasicCollectionWithNoViews",""],["BasicCount",""],["BasicDatabase",""],["TestDirectory",""],["UnassociatedCollection",""]]});
