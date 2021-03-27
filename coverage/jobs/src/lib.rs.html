@@ -8,7 +8,7 @@
 <body>
 <div class="header">
 <div class="view">
-<div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">local/src</a> - lib.rs</span></div>
+<div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">jobs/src</a> - lib.rs</span></div>
 <div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-27 23:40:40</span></div>
 </div>
 <div class="stats">
@@ -19,7 +19,7 @@
 </div>
 </div>
 <div class="sourceCode">
-<div class="line"><span id="1" class="lineNum"><a href="#1">1</a></span><span class="counterCov">2</span><span class="lineCov">//! Local storage backend for `PliantDB`.</span></div>
+<div class="line"><span id="1" class="lineNum"><a href="#1">1</a></span><span class="counterCov">2</span><span class="lineCov">//! Aysnc jobs management for `PliantDB`.</span></div>
 <div class="line"><span id="2" class="lineNum"><a href="#2">2</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="3" class="lineNum"><a href="#3">3</a></span><span class="counterUnCov"></span><span class="lineUnCov">#![forbid(unsafe_code)]</span></div>
 <div class="line"><span id="4" class="lineNum"><a href="#4">4</a></span><span class="counterUnCov"></span><span class="lineUnCov">#![warn(</span></div>
@@ -38,25 +38,13 @@
 <div class="line"><span id="17" class="lineNum"><a href="#17">17</a></span><span class="counterUnCov"></span><span class="lineUnCov">    clippy::option_if_let_else,</span></div>
 <div class="line"><span id="18" class="lineNum"><a href="#18">18</a></span><span class="counterUnCov"></span><span class="lineUnCov">)]</span></div>
 <div class="line"><span id="19" class="lineNum"><a href="#19">19</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Configuration options.</span></div>
-<div class="line"><span id="21" class="lineNum"><a href="#21">21</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub mod config;</span></div>
-<div class="line"><span id="22" class="lineNum"><a href="#22">22</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod error;</span></div>
-<div class="line"><span id="23" class="lineNum"><a href="#23">23</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod open_trees;</span></div>
-<div class="line"><span id="24" class="lineNum"><a href="#24">24</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod storage;</span></div>
-<div class="line"><span id="25" class="lineNum"><a href="#25">25</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod tasks;</span></div>
-<div class="line"><span id="26" class="lineNum"><a href="#26">26</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod views;</span></div>
-<div class="line"><span id="27" class="lineNum"><a href="#27">27</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="28" class="lineNum"><a href="#28">28</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[doc(inline)]</span></div>
-<div class="line"><span id="29" class="lineNum"><a href="#29">29</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub use pliantdb_core as core;</span></div>
-<div class="line"><span id="30" class="lineNum"><a href="#30">30</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub use self::{</span></div>
-<div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterUnCov"></span><span class="lineUnCov">    config::Configuration,</span></div>
-<div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterUnCov"></span><span class="lineUnCov">    error::Error,</span></div>
-<div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterUnCov"></span><span class="lineUnCov">    storage::{Storage, LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT, LIST_TRANSACTIONS_MAX_RESULTS},</span></div>
-<div class="line"><span id="35" class="lineNum"><a href="#35">35</a></span><span class="counterUnCov"></span><span class="lineUnCov">};</span></div>
-<div class="line"><span id="36" class="lineNum"><a href="#36">36</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="37" class="lineNum"><a href="#37">37</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[cfg(test)]</span></div>
-<div class="line"><span id="38" class="lineNum"><a href="#38">38</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod tests;</span></div>
+<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Types related to the job [`Manager`].</span></div>
+<div class="line"><span id="21" class="lineNum"><a href="#21">21</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub mod manager;</span></div>
+<div class="line"><span id="22" class="lineNum"><a href="#22">22</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Types related to defining [`Job`]s.</span></div>
+<div class="line"><span id="23" class="lineNum"><a href="#23">23</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub mod task;</span></div>
+<div class="line"><span id="24" class="lineNum"><a href="#24">24</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod traits;</span></div>
+<div class="line"><span id="25" class="lineNum"><a href="#25">25</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="26" class="lineNum"><a href="#26">26</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub use self::traits::{Job, Keyed};</span></div>
 </div>
 </body>
 </html>
