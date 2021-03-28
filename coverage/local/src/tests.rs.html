@@ -9,12 +9,12 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">local/src</a> - tests.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-27 23:40:40</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-28 03:17:08</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
-<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">169</span><span class="linesTotal">186</span><span class="linesPercentage lineHi">90.9 %</span></div>
-<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">27</span><span class="funsTotal">27</span><span class="funsPercentage funHi">100.0 %</span></div>
+<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">203</span><span class="linesTotal">224</span><span class="linesPercentage lineHi">90.6 %</span></div>
+<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">30</span><span class="funsTotal">30</span><span class="funsPercentage funHi">100.0 %</span></div>
 <div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
 </div>
 </div>
@@ -281,6 +281,53 @@
 <div class="line"><span id="260" class="lineNum"><a href="#260">260</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="261" class="lineNum"><a href="#261">261</a></span><span class="counterCov">2</span><span class="lineCov">    Ok(())</span></div>
 <div class="line"><span id="262" class="lineNum"><a href="#262">262</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
+<div class="line"><span id="263" class="lineNum"><a href="#263">263</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="264" class="lineNum"><a href="#264">264</a></span><span class="counterCov">4</span><span class="lineCov">#[tokio::test(flavor = &quot;multi_thread&quot;)]</span></div>
+<div class="line"><span id="265" class="lineNum"><a href="#265">265</a></span><span class="counterCov">2</span><span class="lineCov">async fn view_update() -&gt; anyhow::Result&lt;()&gt; {</span></div>
+<div class="line"><span id="266" class="lineNum"><a href="#266">266</a></span><span class="counterCov">2</span><span class="lineCov">    let path = TestDirectory::new(&quot;view-update&quot;);</span></div>
+<div class="line"><span id="267" class="lineNum"><a href="#267">267</a></span><span class="counterCov">2</span><span class="lineCov">    let db = Storage::&lt;Basic&gt;::open_local(path, &amp;Configuration::default()).await?;</span></div>
+<div class="line"><span id="268" class="lineNum"><a href="#268">268</a></span><span class="counterCov">2</span><span class="lineCov">    let collection = db.collection::&lt;Basic&gt;()?;</span></div>
+<div class="line"><span id="269" class="lineNum"><a href="#269">269</a></span><span class="counterCov">2</span><span class="lineCov">    let a = collection.push(&amp;Basic::new(&quot;A&quot;)).await?;</span></div>
+<div class="line"><span id="270" class="lineNum"><a href="#270">270</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="271" class="lineNum"><a href="#271">271</a></span><span class="counterCov">2</span><span class="lineCov">    let a_children = db</span></div>
+<div class="line"><span id="272" class="lineNum"><a href="#272">272</a></span><span class="counterCov">2</span><span class="lineCov">        .view::&lt;BasicByParentId&gt;()</span></div>
+<div class="line"><span id="273" class="lineNum"><a href="#273">273</a></span><span class="counterCov">2</span><span class="lineCov">        .with_key(Some(a.id))</span></div>
+<div class="line"><span id="274" class="lineNum"><a href="#274">274</a></span><span class="counterCov">2</span><span class="lineCov">        .query()</span></div>
+<div class="line"><span id="275" class="lineNum"><a href="#275">275</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await?;</span></div>
+<div class="line"><span id="276" class="lineNum"><a href="#276">276</a></span><span class="counterCov">2</span><span class="lineCov">    assert_eq!(a_children.len(), 0);</span></div>
+<div class="line"><span id="277" class="lineNum"><a href="#277">277</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="278" class="lineNum"><a href="#278">278</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // Test inserting a new record and the view being made available</span></div>
+<div class="line"><span id="279" class="lineNum"><a href="#279">279</a></span><span class="counterCov">2</span><span class="lineCov">    let a_child = collection</span></div>
+<div class="line"><span id="280" class="lineNum"><a href="#280">280</a></span><span class="counterCov">2</span><span class="lineCov">        .push(</span></div>
+<div class="line"><span id="281" class="lineNum"><a href="#281">281</a></span><span class="counterCov">2</span><span class="lineCov">            &amp;Basic::new(&quot;A.1&quot;)</span></div>
+<div class="line"><span id="282" class="lineNum"><a href="#282">282</a></span><span class="counterCov">2</span><span class="lineCov">                .with_parent_id(a.id)</span></div>
+<div class="line"><span id="283" class="lineNum"><a href="#283">283</a></span><span class="counterCov">2</span><span class="lineCov">                .with_category(&quot;Alpha&quot;),</span></div>
+<div class="line"><span id="284" class="lineNum"><a href="#284">284</a></span><span class="counterCov">2</span><span class="lineCov">        )</span></div>
+<div class="line"><span id="285" class="lineNum"><a href="#285">285</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await?;</span></div>
+<div class="line"><span id="286" class="lineNum"><a href="#286">286</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="287" class="lineNum"><a href="#287">287</a></span><span class="counterCov">2</span><span class="lineCov">    let a_children = db</span></div>
+<div class="line"><span id="288" class="lineNum"><a href="#288">288</a></span><span class="counterCov">2</span><span class="lineCov">        .view::&lt;BasicByParentId&gt;()</span></div>
+<div class="line"><span id="289" class="lineNum"><a href="#289">289</a></span><span class="counterCov">2</span><span class="lineCov">        .with_key(Some(a.id))</span></div>
+<div class="line"><span id="290" class="lineNum"><a href="#290">290</a></span><span class="counterCov">2</span><span class="lineCov">        .query()</span></div>
+<div class="line"><span id="291" class="lineNum"><a href="#291">291</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await?;</span></div>
+<div class="line"><span id="292" class="lineNum"><a href="#292">292</a></span><span class="counterCov">2</span><span class="lineCov">    assert_eq!(a_children.len(), 1);</span></div>
+<div class="line"><span id="293" class="lineNum"><a href="#293">293</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="294" class="lineNum"><a href="#294">294</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // Test updating the record and the view being updated appropriately</span></div>
+<div class="line"><span id="295" class="lineNum"><a href="#295">295</a></span><span class="counterCov">2</span><span class="lineCov">    let mut doc = db.collection::&lt;Basic&gt;()?.get(a_child.id).await?.unwrap();</span></div>
+<div class="line"><span id="296" class="lineNum"><a href="#296">296</a></span><span class="counterCov">2</span><span class="lineCov">    let mut basic = doc.contents::&lt;Basic&gt;()?;</span></div>
+<div class="line"><span id="297" class="lineNum"><a href="#297">297</a></span><span class="counterCov">2</span><span class="lineCov">    basic.parent_id = None;</span></div>
+<div class="line"><span id="298" class="lineNum"><a href="#298">298</a></span><span class="counterCov">2</span><span class="lineCov">    doc.set_contents(&amp;basic)?;</span></div>
+<div class="line"><span id="299" class="lineNum"><a href="#299">299</a></span><span class="counterCov">2</span><span class="lineCov">    db.update(&amp;mut doc).await?;</span></div>
+<div class="line"><span id="300" class="lineNum"><a href="#300">300</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="301" class="lineNum"><a href="#301">301</a></span><span class="counterCov">2</span><span class="lineCov">    let a_children = db</span></div>
+<div class="line"><span id="302" class="lineNum"><a href="#302">302</a></span><span class="counterCov">2</span><span class="lineCov">        .view::&lt;BasicByParentId&gt;()</span></div>
+<div class="line"><span id="303" class="lineNum"><a href="#303">303</a></span><span class="counterCov">2</span><span class="lineCov">        .with_key(Some(a.id))</span></div>
+<div class="line"><span id="304" class="lineNum"><a href="#304">304</a></span><span class="counterCov">2</span><span class="lineCov">        .query()</span></div>
+<div class="line"><span id="305" class="lineNum"><a href="#305">305</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await?;</span></div>
+<div class="line"><span id="306" class="lineNum"><a href="#306">306</a></span><span class="counterCov">2</span><span class="lineCov">    assert_eq!(a_children.len(), 0);</span></div>
+<div class="line"><span id="307" class="lineNum"><a href="#307">307</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="308" class="lineNum"><a href="#308">308</a></span><span class="counterCov">2</span><span class="lineCov">    Ok(())</span></div>
+<div class="line"><span id="309" class="lineNum"><a href="#309">309</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
 </div>
 </body>
 </html>
