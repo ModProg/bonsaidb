@@ -103,6 +103,26 @@
 <span id="100">100</span>
 <span id="101">101</span>
 <span id="102">102</span>
+<span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
@@ -157,6 +177,14 @@
         <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
         <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
     },
+
+    <span class="doccomment">/// Delete an existing `Document` identified by `id`. `revision` must match</span>
+    <span class="doccomment">/// the currently stored revision on the `Document`. If it does not, the</span>
+    <span class="doccomment">/// command fill fail with a `DocumentConflict` error.</span>
+    <span class="ident">Delete</span> {
+        <span class="doccomment">/// The current header of the `Document`.</span>
+        <span class="ident">header</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Header</span><span class="op">&gt;</span>,
+    },
 }
 
 <span class="doccomment">/// Information about the result of each `Operation` in a transaction.</span>
@@ -172,6 +200,15 @@
 
         <span class="doccomment">/// The header of the updated `Document`.</span>
         <span class="ident">header</span>: <span class="ident">Header</span>,
+    },
+
+    <span class="doccomment">/// A `Document` was deleted.</span>
+    <span class="ident">DocumentDeleted</span> {
+        <span class="doccomment">/// The id of the `Collection` of the deleted `Document`.</span>
+        <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
+
+        <span class="doccomment">/// The id of the deleted `Document`.</span>
+        <span class="ident">id</span>: <span class="ident">u64</span>,
     },
 }
 
@@ -205,6 +242,9 @@
 
     <span class="doccomment">/// The id of the changed `Document`.</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">u64</span>,
+
+    <span class="doccomment">/// If the `Document` has been deleted, this will be `true`.</span>
+    <span class="kw">pub</span> <span class="ident">deleted</span>: <span class="ident">bool</span>,
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><script>window.rootPath = "../../";window.currentCrate = "pliantdb_core";</script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
