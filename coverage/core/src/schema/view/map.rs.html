@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../../../index.html">top level</a> - <a href="index.html">core/src/schema/view</a> - map.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-28 03:17:08</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-28 03:57:46</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -38,9 +38,9 @@
 <div class="line"><span id="17" class="lineNum"><a href="#17">17</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="18" class="lineNum"><a href="#18">18</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;K: Key, V: Serialize&gt; Map&lt;K, V&gt; {</span></div>
 <div class="line"><span id="19" class="lineNum"><a href="#19">19</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Creates a new Map entry for the document with id `source`.</span></div>
-<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterCov">82</span><span class="lineCov">    pub fn new(source: u64, key: K, value: V) -&gt; Self {</span></div>
-<div class="line"><span id="21" class="lineNum"><a href="#21">21</a></span><span class="counterCov">82</span><span class="lineCov">        Self { source, key, value }</span></div>
-<div class="line"><span id="22" class="lineNum"><a href="#22">22</a></span><span class="counterCov">82</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterCov">126</span><span class="lineCov">    pub fn new(source: u64, key: K, value: V) -&gt; Self {</span></div>
+<div class="line"><span id="21" class="lineNum"><a href="#21">21</a></span><span class="counterCov">126</span><span class="lineCov">        Self { source, key, value }</span></div>
+<div class="line"><span id="22" class="lineNum"><a href="#22">22</a></span><span class="counterCov">126</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="23" class="lineNum"><a href="#23">23</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 <div class="line"><span id="24" class="lineNum"><a href="#24">24</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="25" class="lineNum"><a href="#25">25</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Represents a document&#39;s entry in a View&#39;s mappings, serialized and ready to store.</span></div>
@@ -76,9 +76,9 @@
 <div class="line"><span id="55" class="lineNum"><a href="#55">55</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 <div class="line"><span id="56" class="lineNum"><a href="#56">56</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="57" class="lineNum"><a href="#57">57</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl Key for String {</span></div>
-<div class="line"><span id="58" class="lineNum"><a href="#58">58</a></span><span class="counterCov">18</span><span class="lineCov">    fn as_big_endian_bytes(&amp;self) -&gt; anyhow::Result&lt;Cow&lt;&#39;_, [u8]&gt;&gt; {</span></div>
-<div class="line"><span id="59" class="lineNum"><a href="#59">59</a></span><span class="counterCov">18</span><span class="lineCov">        Ok(Cow::Borrowed(self.as_bytes()))</span></div>
-<div class="line"><span id="60" class="lineNum"><a href="#60">60</a></span><span class="counterCov">18</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="58" class="lineNum"><a href="#58">58</a></span><span class="counterCov">30</span><span class="lineCov">    fn as_big_endian_bytes(&amp;self) -&gt; anyhow::Result&lt;Cow&lt;&#39;_, [u8]&gt;&gt; {</span></div>
+<div class="line"><span id="59" class="lineNum"><a href="#59">59</a></span><span class="counterCov">30</span><span class="lineCov">        Ok(Cow::Borrowed(self.as_bytes()))</span></div>
+<div class="line"><span id="60" class="lineNum"><a href="#60">60</a></span><span class="counterCov">30</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="61" class="lineNum"><a href="#61">61</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="62" class="lineNum"><a href="#62">62</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    fn from_big_endian_bytes(bytes: &amp;[u8]) -&gt; anyhow::Result&lt;Self&gt; {</span></div>
 <div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        Ok(Self::from_utf8(bytes.to_vec())?)</span></div>
@@ -116,15 +116,15 @@
 <div class="line"><span id="95" class="lineNum"><a href="#95">95</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // TODO consider removing this panic limitation by adding a single byte to</span></div>
 <div class="line"><span id="96" class="lineNum"><a href="#96">96</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // each key (at the end preferrably) so that we can distinguish between None</span></div>
 <div class="line"><span id="97" class="lineNum"><a href="#97">97</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // and a 0-byte type</span></div>
-<div class="line"><span id="98" class="lineNum"><a href="#98">98</a></span><span class="counterCov">106</span><span class="lineCov">    fn as_big_endian_bytes(&amp;self) -&gt; anyhow::Result&lt;Cow&lt;&#39;_, [u8]&gt;&gt; {</span></div>
-<div class="line"><span id="99" class="lineNum"><a href="#99">99</a></span><span class="counterCov">106</span><span class="lineCov">        if let Some(contents) = self {</span></div>
-<div class="line"><span id="100" class="lineNum"><a href="#100">100</a></span><span class="counterCov">80</span><span class="lineCov">            let contents = contents.as_big_endian_bytes()?;</span></div>
-<div class="line"><span id="101" class="lineNum"><a href="#101">101</a></span><span class="counterCov">80</span><span class="lineCov">            assert!(!contents.is_empty());</span></div>
-<div class="line"><span id="102" class="lineNum"><a href="#102">102</a></span><span class="counterCov">80</span><span class="lineCov">            Ok(contents)</span></div>
+<div class="line"><span id="98" class="lineNum"><a href="#98">98</a></span><span class="counterCov">174</span><span class="lineCov">    fn as_big_endian_bytes(&amp;self) -&gt; anyhow::Result&lt;Cow&lt;&#39;_, [u8]&gt;&gt; {</span></div>
+<div class="line"><span id="99" class="lineNum"><a href="#99">99</a></span><span class="counterCov">174</span><span class="lineCov">        if let Some(contents) = self {</span></div>
+<div class="line"><span id="100" class="lineNum"><a href="#100">100</a></span><span class="counterCov">132</span><span class="lineCov">            let contents = contents.as_big_endian_bytes()?;</span></div>
+<div class="line"><span id="101" class="lineNum"><a href="#101">101</a></span><span class="counterCov">132</span><span class="lineCov">            assert!(!contents.is_empty());</span></div>
+<div class="line"><span id="102" class="lineNum"><a href="#102">102</a></span><span class="counterCov">132</span><span class="lineCov">            Ok(contents)</span></div>
 <div class="line"><span id="103" class="lineNum"><a href="#103">103</a></span><span class="counterUnCov"></span><span class="lineUnCov">        } else {</span></div>
-<div class="line"><span id="104" class="lineNum"><a href="#104">104</a></span><span class="counterCov">26</span><span class="lineCov">            Ok(Cow::default())</span></div>
+<div class="line"><span id="104" class="lineNum"><a href="#104">104</a></span><span class="counterCov">42</span><span class="lineCov">            Ok(Cow::default())</span></div>
 <div class="line"><span id="105" class="lineNum"><a href="#105">105</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
-<div class="line"><span id="106" class="lineNum"><a href="#106">106</a></span><span class="counterCov">106</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="106" class="lineNum"><a href="#106">106</a></span><span class="counterCov">174</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="107" class="lineNum"><a href="#107">107</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="108" class="lineNum"><a href="#108">108</a></span><span class="counterCov">2</span><span class="lineCov">    fn from_big_endian_bytes(bytes: &amp;[u8]) -&gt; anyhow::Result&lt;Self&gt; {</span></div>
 <div class="line"><span id="109" class="lineNum"><a href="#109">109</a></span><span class="counterCov">2</span><span class="lineCov">        if bytes.is_empty() {</span></div>
@@ -138,13 +138,13 @@
 <div class="line"><span id="117" class="lineNum"><a href="#117">117</a></span><span class="counterUnCov"></span><span class="lineUnCov">macro_rules! impl_key_for_primitive {</span></div>
 <div class="line"><span id="118" class="lineNum"><a href="#118">118</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ($type:ident) =&gt; {</span></div>
 <div class="line"><span id="119" class="lineNum"><a href="#119">119</a></span><span class="counterUnCov"></span><span class="lineUnCov">        impl Key for $type {</span></div>
-<div class="line"><span id="120" class="lineNum"><a href="#120">120</a></span><span class="counterCov">30698</span><span class="lineCov">            fn as_big_endian_bytes(&amp;self) -&gt; anyhow::Result&lt;Cow&lt;&#39;_, [u8]&gt;&gt; {</span></div>
+<div class="line"><span id="120" class="lineNum"><a href="#120">120</a></span><span class="counterCov">51122</span><span class="lineCov">            fn as_big_endian_bytes(&amp;self) -&gt; anyhow::Result&lt;Cow&lt;&#39;_, [u8]&gt;&gt; {</span></div>
 <div class="line"><span id="121" class="lineNum"><a href="#121">121</a></span><span class="counterUnCov"></span><span class="lineUnCov">                Ok(Cow::from(self.to_be_bytes().to_vec()))</span></div>
 <div class="line"><span id="122" class="lineNum"><a href="#122">122</a></span><span class="counterUnCov"></span><span class="lineUnCov">            }</span></div>
 <div class="line"><span id="123" class="lineNum"><a href="#123">123</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="124" class="lineNum"><a href="#124">124</a></span><span class="counterCov">228</span><span class="lineCov">            fn from_big_endian_bytes(bytes: &amp;[u8]) -&gt; anyhow::Result&lt;Self&gt; {</span></div>
-<div class="line"><span id="125" class="lineNum"><a href="#125">125</a></span><span class="counterCov">228</span><span class="lineCov">                Ok($type::from_be_bytes(bytes.try_into()?))</span></div>
-<div class="line"><span id="126" class="lineNum"><a href="#126">126</a></span><span class="counterCov">228</span><span class="lineCov">            }</span></div>
+<div class="line"><span id="124" class="lineNum"><a href="#124">124</a></span><span class="counterCov">352</span><span class="lineCov">            fn from_big_endian_bytes(bytes: &amp;[u8]) -&gt; anyhow::Result&lt;Self&gt; {</span></div>
+<div class="line"><span id="125" class="lineNum"><a href="#125">125</a></span><span class="counterCov">352</span><span class="lineCov">                Ok($type::from_be_bytes(bytes.try_into()?))</span></div>
+<div class="line"><span id="126" class="lineNum"><a href="#126">126</a></span><span class="counterCov">352</span><span class="lineCov">            }</span></div>
 <div class="line"><span id="127" class="lineNum"><a href="#127">127</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
 <div class="line"><span id="128" class="lineNum"><a href="#128">128</a></span><span class="counterUnCov"></span><span class="lineUnCov">    };</span></div>
 <div class="line"><span id="129" class="lineNum"><a href="#129">129</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
