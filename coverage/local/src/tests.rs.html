@@ -9,20 +9,20 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">local/src</a> - tests.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-28 04:05:08</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-28 15:08:12</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
-<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">203</span><span class="linesTotal">224</span><span class="linesPercentage lineHi">90.6 %</span></div>
-<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">30</span><span class="funsTotal">30</span><span class="funsPercentage funHi">100.0 %</span></div>
+<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">239</span><span class="linesTotal">265</span><span class="linesPercentage lineHi">90.2 %</span></div>
+<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">33</span><span class="funsTotal">33</span><span class="funsPercentage funHi">100.0 %</span></div>
 <div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
 </div>
 </div>
 <div class="sourceCode">
-<div class="line"><span id="1" class="lineNum"><a href="#1">1</a></span><span class="counterUnCov"></span><span class="lineUnCov">use std::borrow::Cow;</span></div>
+<div class="line"><span id="1" class="lineNum"><a href="#1">1</a></span><span class="counterUnCov"></span><span class="lineUnCov">use std::{borrow::Cow, time::Duration};</span></div>
 <div class="line"><span id="2" class="lineNum"><a href="#2">2</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="3" class="lineNum"><a href="#3">3</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_core::{</span></div>
-<div class="line"><span id="4" class="lineNum"><a href="#4">4</a></span><span class="counterUnCov"></span><span class="lineUnCov">    connection::Connection,</span></div>
+<div class="line"><span id="4" class="lineNum"><a href="#4">4</a></span><span class="counterUnCov"></span><span class="lineUnCov">    connection::{AccessPolicy, Connection},</span></div>
 <div class="line"><span id="5" class="lineNum"><a href="#5">5</a></span><span class="counterUnCov"></span><span class="lineUnCov">    document::Document,</span></div>
 <div class="line"><span id="6" class="lineNum"><a href="#6">6</a></span><span class="counterUnCov"></span><span class="lineUnCov">    schema::Collection,</span></div>
 <div class="line"><span id="7" class="lineNum"><a href="#7">7</a></span><span class="counterUnCov"></span><span class="lineUnCov">    test_util::{Basic, BasicByCategory, BasicByParentId, TestDirectory, UnassociatedCollection},</span></div>
@@ -328,6 +328,61 @@
 <div class="line"><span id="307" class="lineNum"><a href="#307">307</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="308" class="lineNum"><a href="#308">308</a></span><span class="counterCov">2</span><span class="lineCov">    Ok(())</span></div>
 <div class="line"><span id="309" class="lineNum"><a href="#309">309</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
+<div class="line"><span id="310" class="lineNum"><a href="#310">310</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="311" class="lineNum"><a href="#311">311</a></span><span class="counterCov">4</span><span class="lineCov">#[tokio::test(flavor = &quot;multi_thread&quot;)]</span></div>
+<div class="line"><span id="312" class="lineNum"><a href="#312">312</a></span><span class="counterCov">2</span><span class="lineCov">async fn view_access_policies() -&gt; anyhow::Result&lt;()&gt; {</span></div>
+<div class="line"><span id="313" class="lineNum"><a href="#313">313</a></span><span class="counterCov">2</span><span class="lineCov">    let path = TestDirectory::new(&quot;view-access-policies&quot;);</span></div>
+<div class="line"><span id="314" class="lineNum"><a href="#314">314</a></span><span class="counterCov">2</span><span class="lineCov">    let db = Storage::&lt;Basic&gt;::open_local(path, &amp;Configuration::default()).await?;</span></div>
+<div class="line"><span id="315" class="lineNum"><a href="#315">315</a></span><span class="counterCov">2</span><span class="lineCov">    let collection = db.collection::&lt;Basic&gt;()?;</span></div>
+<div class="line"><span id="316" class="lineNum"><a href="#316">316</a></span><span class="counterCov">2</span><span class="lineCov">    let a = collection.push(&amp;Basic::new(&quot;A&quot;)).await?;</span></div>
+<div class="line"><span id="317" class="lineNum"><a href="#317">317</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="318" class="lineNum"><a href="#318">318</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // Test inserting a record that should match the view, but ask for it to be</span></div>
+<div class="line"><span id="319" class="lineNum"><a href="#319">319</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // NoUpdate. Verify we get no matches.</span></div>
+<div class="line"><span id="320" class="lineNum"><a href="#320">320</a></span><span class="counterCov">2</span><span class="lineCov">    collection</span></div>
+<div class="line"><span id="321" class="lineNum"><a href="#321">321</a></span><span class="counterCov">2</span><span class="lineCov">        .push(</span></div>
+<div class="line"><span id="322" class="lineNum"><a href="#322">322</a></span><span class="counterCov">2</span><span class="lineCov">            &amp;Basic::new(&quot;A.1&quot;)</span></div>
+<div class="line"><span id="323" class="lineNum"><a href="#323">323</a></span><span class="counterCov">2</span><span class="lineCov">                .with_parent_id(a.id)</span></div>
+<div class="line"><span id="324" class="lineNum"><a href="#324">324</a></span><span class="counterCov">2</span><span class="lineCov">                .with_category(&quot;Alpha&quot;),</span></div>
+<div class="line"><span id="325" class="lineNum"><a href="#325">325</a></span><span class="counterCov">2</span><span class="lineCov">        )</span></div>
+<div class="line"><span id="326" class="lineNum"><a href="#326">326</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await?;</span></div>
+<div class="line"><span id="327" class="lineNum"><a href="#327">327</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="328" class="lineNum"><a href="#328">328</a></span><span class="counterCov">2</span><span class="lineCov">    let a_children = db</span></div>
+<div class="line"><span id="329" class="lineNum"><a href="#329">329</a></span><span class="counterCov">2</span><span class="lineCov">        .view::&lt;BasicByParentId&gt;()</span></div>
+<div class="line"><span id="330" class="lineNum"><a href="#330">330</a></span><span class="counterCov">2</span><span class="lineCov">        .with_key(Some(a.id))</span></div>
+<div class="line"><span id="331" class="lineNum"><a href="#331">331</a></span><span class="counterCov">2</span><span class="lineCov">        .with_access_policy(AccessPolicy::NoUpdate)</span></div>
+<div class="line"><span id="332" class="lineNum"><a href="#332">332</a></span><span class="counterCov">2</span><span class="lineCov">        .query()</span></div>
+<div class="line"><span id="333" class="lineNum"><a href="#333">333</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await?;</span></div>
+<div class="line"><span id="334" class="lineNum"><a href="#334">334</a></span><span class="counterCov">2</span><span class="lineCov">    assert_eq!(a_children.len(), 0);</span></div>
+<div class="line"><span id="335" class="lineNum"><a href="#335">335</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="336" class="lineNum"><a href="#336">336</a></span><span class="counterCov">2</span><span class="lineCov">    tokio::time::sleep(Duration::from_millis(20)).await;</span></div>
+<div class="line"><span id="337" class="lineNum"><a href="#337">337</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="338" class="lineNum"><a href="#338">338</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // Verify the view still have no value, but this time ask for it to be</span></div>
+<div class="line"><span id="339" class="lineNum"><a href="#339">339</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // updated after returning</span></div>
+<div class="line"><span id="340" class="lineNum"><a href="#340">340</a></span><span class="counterCov">2</span><span class="lineCov">    let a_children = db</span></div>
+<div class="line"><span id="341" class="lineNum"><a href="#341">341</a></span><span class="counterCov">2</span><span class="lineCov">        .view::&lt;BasicByParentId&gt;()</span></div>
+<div class="line"><span id="342" class="lineNum"><a href="#342">342</a></span><span class="counterCov">2</span><span class="lineCov">        .with_key(Some(a.id))</span></div>
+<div class="line"><span id="343" class="lineNum"><a href="#343">343</a></span><span class="counterCov">2</span><span class="lineCov">        .with_access_policy(AccessPolicy::UpdateAfter)</span></div>
+<div class="line"><span id="344" class="lineNum"><a href="#344">344</a></span><span class="counterCov">2</span><span class="lineCov">        .query()</span></div>
+<div class="line"><span id="345" class="lineNum"><a href="#345">345</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await?;</span></div>
+<div class="line"><span id="346" class="lineNum"><a href="#346">346</a></span><span class="counterCov">2</span><span class="lineCov">    assert_eq!(a_children.len(), 0);</span></div>
+<div class="line"><span id="347" class="lineNum"><a href="#347">347</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="348" class="lineNum"><a href="#348">348</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // Waiting on background jobs can be unreliable in a CI environment</span></div>
+<div class="line"><span id="349" class="lineNum"><a href="#349">349</a></span><span class="counterCov">8</span><span class="lineCov">    for _ in 0..10 {</span></div>
+<div class="line"><span id="350" class="lineNum"><a href="#350">350</a></span><span class="counterCov">8</span><span class="lineCov">        tokio::time::sleep(Duration::from_millis(20)).await;</span></div>
+<div class="line"><span id="351" class="lineNum"><a href="#351">351</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="352" class="lineNum"><a href="#352">352</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // Now, the view should contain the entry.</span></div>
+<div class="line"><span id="353" class="lineNum"><a href="#353">353</a></span><span class="counterCov">8</span><span class="lineCov">        let a_children = db</span></div>
+<div class="line"><span id="354" class="lineNum"><a href="#354">354</a></span><span class="counterCov">8</span><span class="lineCov">            .view::&lt;BasicByParentId&gt;()</span></div>
+<div class="line"><span id="355" class="lineNum"><a href="#355">355</a></span><span class="counterCov">8</span><span class="lineCov">            .with_key(Some(a.id))</span></div>
+<div class="line"><span id="356" class="lineNum"><a href="#356">356</a></span><span class="counterCov">8</span><span class="lineCov">            .with_access_policy(AccessPolicy::NoUpdate)</span></div>
+<div class="line"><span id="357" class="lineNum"><a href="#357">357</a></span><span class="counterCov">8</span><span class="lineCov">            .query()</span></div>
+<div class="line"><span id="358" class="lineNum"><a href="#358">358</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            .await?;</span></div>
+<div class="line"><span id="359" class="lineNum"><a href="#359">359</a></span><span class="counterCov">8</span><span class="lineCov">        if a_children.len() == 1 {</span></div>
+<div class="line"><span id="360" class="lineNum"><a href="#360">360</a></span><span class="counterCov">2</span><span class="lineCov">            return Ok(());</span></div>
+<div class="line"><span id="361" class="lineNum"><a href="#361">361</a></span><span class="counterCov">6</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="362" class="lineNum"><a href="#362">362</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
+<div class="line"><span id="363" class="lineNum"><a href="#363">363</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    panic!(&quot;view never updated&quot;)</span></div>
+<div class="line"><span id="364" class="lineNum"><a href="#364">364</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
 </div>
 </body>
 </html>
