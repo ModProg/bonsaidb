@@ -277,6 +277,15 @@
 <span id="274">274</span>
 <span id="275">275</span>
 <span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
@@ -366,6 +375,15 @@
             )
         })
         .<span class="kw">await</span><span class="question-mark">?</span><span class="question-mark">?</span>;
+
+        <span class="self">self</span>.<span class="ident">storage</span>
+            .<span class="ident">tasks</span>
+            .<span class="ident">mark_view_updated</span>(
+                <span class="self">self</span>.<span class="ident">map</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(),
+                <span class="self">self</span>.<span class="ident">map</span>.<span class="ident">view_name</span>.<span class="ident">clone</span>(),
+                <span class="ident">transaction_id</span>,
+            )
+            .<span class="kw">await</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">transaction_id</span>)
     }
