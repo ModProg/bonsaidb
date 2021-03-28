@@ -9,12 +9,12 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">core/src</a> - transaction.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-28 16:31:07</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-28 21:05:14</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
 <div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">12</span><span class="linesTotal">14</span><span class="linesPercentage lineMed">85.7 %</span></div>
-<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">12</span><span class="funsTotal">67</span><span class="funsPercentage funLow">17.9 %</span></div>
+<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">12</span><span class="funsTotal">79</span><span class="funsPercentage funLow">15.2 %</span></div>
 <div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
 </div>
 </div>
@@ -28,7 +28,7 @@
 <div class="line"><span id="7" class="lineNum"><a href="#7">7</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// A list of operations to execute as a single unit. If any operation fails,</span></div>
 <div class="line"><span id="8" class="lineNum"><a href="#8">8</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// all changes are aborted. Reads that happen while the transaction is in</span></div>
 <div class="line"><span id="9" class="lineNum"><a href="#9">9</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// progress will return old data and not block.</span></div>
-<div class="line"><span id="10" class="lineNum"><a href="#10">10</a></span><span class="counterCov">2040</span><span class="lineCov">#[derive(Default, Debug)]</span></div>
+<div class="line"><span id="10" class="lineNum"><a href="#10">10</a></span><span class="counterCov">2044</span><span class="lineCov">#[derive(Default, Debug)]</span></div>
 <div class="line"><span id="11" class="lineNum"><a href="#11">11</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct Transaction&lt;&#39;a&gt; {</span></div>
 <div class="line"><span id="12" class="lineNum"><a href="#12">12</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The operations in this transaction.</span></div>
 <div class="line"><span id="13" class="lineNum"><a href="#13">13</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub operations: Vec&lt;Operation&lt;&#39;a&gt;&gt;,</span></div>
@@ -36,9 +36,9 @@
 <div class="line"><span id="15" class="lineNum"><a href="#15">15</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="16" class="lineNum"><a href="#16">16</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a&gt; Transaction&lt;&#39;a&gt; {</span></div>
 <div class="line"><span id="17" class="lineNum"><a href="#17">17</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Adds an operation to the transaction.</span></div>
-<div class="line"><span id="18" class="lineNum"><a href="#18">18</a></span><span class="counterCov">10200</span><span class="lineCov">    pub fn push(&amp;mut self, operation: Operation&lt;&#39;a&gt;) {</span></div>
-<div class="line"><span id="19" class="lineNum"><a href="#19">19</a></span><span class="counterCov">10200</span><span class="lineCov">        self.operations.push(operation);</span></div>
-<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterCov">10200</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="18" class="lineNum"><a href="#18">18</a></span><span class="counterCov">10220</span><span class="lineCov">    pub fn push(&amp;mut self, operation: Operation&lt;&#39;a&gt;) {</span></div>
+<div class="line"><span id="19" class="lineNum"><a href="#19">19</a></span><span class="counterCov">10220</span><span class="lineCov">        self.operations.push(operation);</span></div>
+<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterCov">10220</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="21" class="lineNum"><a href="#21">21</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 <div class="line"><span id="22" class="lineNum"><a href="#22">22</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="23" class="lineNum"><a href="#23">23</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// A single operation performed on a `Collection`.</span></div>
@@ -72,55 +72,75 @@
 <div class="line"><span id="51" class="lineNum"><a href="#51">51</a></span><span class="counterUnCov"></span><span class="lineUnCov">        #[serde(borrow)]</span></div>
 <div class="line"><span id="52" class="lineNum"><a href="#52">52</a></span><span class="counterUnCov"></span><span class="lineUnCov">        contents: Cow&lt;&#39;a, [u8]&gt;,</span></div>
 <div class="line"><span id="53" class="lineNum"><a href="#53">53</a></span><span class="counterUnCov"></span><span class="lineUnCov">    },</span></div>
-<div class="line"><span id="54" class="lineNum"><a href="#54">54</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="55" class="lineNum"><a href="#55">55</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="56" class="lineNum"><a href="#56">56</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Information about the result of each `Operation` in a transaction.</span></div>
-<div class="line"><span id="57" class="lineNum"><a href="#57">57</a></span><span class="counterNoCov">0</span><span class="lineNoCov">#[derive(Debug, Serialize, Deserialize)]</span></div>
-<div class="line"><span id="58" class="lineNum"><a href="#58">58</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub enum OperationResult {</span></div>
-<div class="line"><span id="59" class="lineNum"><a href="#59">59</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// An operation succeeded but had no information to output.</span></div>
-<div class="line"><span id="60" class="lineNum"><a href="#60">60</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Success,</span></div>
-<div class="line"><span id="61" class="lineNum"><a href="#61">61</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="62" class="lineNum"><a href="#62">62</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// A `Document` was updated.</span></div>
-<div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DocumentUpdated {</span></div>
-<div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterUnCov"></span><span class="lineUnCov">        /// The id of the `Collection` of the updated `Document`.</span></div>
-<div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterUnCov"></span><span class="lineUnCov">        collection: collection::Id,</span></div>
-<div class="line"><span id="66" class="lineNum"><a href="#66">66</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="67" class="lineNum"><a href="#67">67</a></span><span class="counterUnCov"></span><span class="lineUnCov">        /// The header of the updated `Document`.</span></div>
-<div class="line"><span id="68" class="lineNum"><a href="#68">68</a></span><span class="counterUnCov"></span><span class="lineUnCov">        header: Header,</span></div>
-<div class="line"><span id="69" class="lineNum"><a href="#69">69</a></span><span class="counterUnCov"></span><span class="lineUnCov">    },</span></div>
-<div class="line"><span id="70" class="lineNum"><a href="#70">70</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="71" class="lineNum"><a href="#71">71</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="72" class="lineNum"><a href="#72">72</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Details about an executed transaction.</span></div>
-<div class="line"><span id="73" class="lineNum"><a href="#73">73</a></span><span class="counterCov">8412</span><span class="lineCov">#[derive(Debug, Serialize, Deserialize)]</span></div>
-<div class="line"><span id="74" class="lineNum"><a href="#74">74</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct Executed&lt;&#39;a&gt; {</span></div>
-<div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The id of the transaction.</span></div>
-<div class="line"><span id="76" class="lineNum"><a href="#76">76</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub id: u64,</span></div>
-<div class="line"><span id="77" class="lineNum"><a href="#77">77</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="78" class="lineNum"><a href="#78">78</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// A list of containing ids of `Documents` changed.</span></div>
-<div class="line"><span id="79" class="lineNum"><a href="#79">79</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[serde(borrow)]</span></div>
-<div class="line"><span id="80" class="lineNum"><a href="#80">80</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub changed_documents: Cow&lt;&#39;a, [ChangedDocument]&gt;,</span></div>
-<div class="line"><span id="81" class="lineNum"><a href="#81">81</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="82" class="lineNum"><a href="#82">82</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="83" class="lineNum"><a href="#83">83</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a&gt; Executed&lt;&#39;a&gt; {</span></div>
-<div class="line"><span id="84" class="lineNum"><a href="#84">84</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Convert this structure to be free of borrows.</span></div>
-<div class="line"><span id="85" class="lineNum"><a href="#85">85</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
-<div class="line"><span id="86" class="lineNum"><a href="#86">86</a></span><span class="counterCov">21030</span><span class="lineCov">    pub fn to_owned(&amp;self) -&gt; Executed&lt;&#39;static&gt; {</span></div>
-<div class="line"><span id="87" class="lineNum"><a href="#87">87</a></span><span class="counterCov">21030</span><span class="lineCov">        Executed {</span></div>
-<div class="line"><span id="88" class="lineNum"><a href="#88">88</a></span><span class="counterCov">21030</span><span class="lineCov">            id: self.id,</span></div>
-<div class="line"><span id="89" class="lineNum"><a href="#89">89</a></span><span class="counterCov">21030</span><span class="lineCov">            changed_documents: self.changed_documents.iter().cloned().collect(),</span></div>
-<div class="line"><span id="90" class="lineNum"><a href="#90">90</a></span><span class="counterCov">21030</span><span class="lineCov">        }</span></div>
-<div class="line"><span id="91" class="lineNum"><a href="#91">91</a></span><span class="counterCov">21030</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="92" class="lineNum"><a href="#92">92</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="93" class="lineNum"><a href="#93">93</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="94" class="lineNum"><a href="#94">94</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// A record of a changed.</span></div>
-<div class="line"><span id="95" class="lineNum"><a href="#95">95</a></span><span class="counterCov">25236</span><span class="lineCov">#[derive(Debug, Clone, Serialize, Deserialize)]</span></div>
-<div class="line"><span id="96" class="lineNum"><a href="#96">96</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct ChangedDocument {</span></div>
-<div class="line"><span id="97" class="lineNum"><a href="#97">97</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The id of the `Collection` of the changed `Document`.</span></div>
-<div class="line"><span id="98" class="lineNum"><a href="#98">98</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub collection: collection::Id,</span></div>
+<div class="line"><span id="54" class="lineNum"><a href="#54">54</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="55" class="lineNum"><a href="#55">55</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Delete an existing `Document` identified by `id`. `revision` must match</span></div>
+<div class="line"><span id="56" class="lineNum"><a href="#56">56</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// the currently stored revision on the `Document`. If it does not, the</span></div>
+<div class="line"><span id="57" class="lineNum"><a href="#57">57</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// command fill fail with a `DocumentConflict` error.</span></div>
+<div class="line"><span id="58" class="lineNum"><a href="#58">58</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Delete {</span></div>
+<div class="line"><span id="59" class="lineNum"><a href="#59">59</a></span><span class="counterUnCov"></span><span class="lineUnCov">        /// The current header of the `Document`.</span></div>
+<div class="line"><span id="60" class="lineNum"><a href="#60">60</a></span><span class="counterUnCov"></span><span class="lineUnCov">        header: Cow&lt;&#39;a, Header&gt;,</span></div>
+<div class="line"><span id="61" class="lineNum"><a href="#61">61</a></span><span class="counterUnCov"></span><span class="lineUnCov">    },</span></div>
+<div class="line"><span id="62" class="lineNum"><a href="#62">62</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Information about the result of each `Operation` in a transaction.</span></div>
+<div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterNoCov">0</span><span class="lineNoCov">#[derive(Debug, Serialize, Deserialize)]</span></div>
+<div class="line"><span id="66" class="lineNum"><a href="#66">66</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub enum OperationResult {</span></div>
+<div class="line"><span id="67" class="lineNum"><a href="#67">67</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// An operation succeeded but had no information to output.</span></div>
+<div class="line"><span id="68" class="lineNum"><a href="#68">68</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Success,</span></div>
+<div class="line"><span id="69" class="lineNum"><a href="#69">69</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="70" class="lineNum"><a href="#70">70</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// A `Document` was updated.</span></div>
+<div class="line"><span id="71" class="lineNum"><a href="#71">71</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DocumentUpdated {</span></div>
+<div class="line"><span id="72" class="lineNum"><a href="#72">72</a></span><span class="counterUnCov"></span><span class="lineUnCov">        /// The id of the `Collection` of the updated `Document`.</span></div>
+<div class="line"><span id="73" class="lineNum"><a href="#73">73</a></span><span class="counterUnCov"></span><span class="lineUnCov">        collection: collection::Id,</span></div>
+<div class="line"><span id="74" class="lineNum"><a href="#74">74</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterUnCov"></span><span class="lineUnCov">        /// The header of the updated `Document`.</span></div>
+<div class="line"><span id="76" class="lineNum"><a href="#76">76</a></span><span class="counterUnCov"></span><span class="lineUnCov">        header: Header,</span></div>
+<div class="line"><span id="77" class="lineNum"><a href="#77">77</a></span><span class="counterUnCov"></span><span class="lineUnCov">    },</span></div>
+<div class="line"><span id="78" class="lineNum"><a href="#78">78</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="79" class="lineNum"><a href="#79">79</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// A `Document` was deleted.</span></div>
+<div class="line"><span id="80" class="lineNum"><a href="#80">80</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DocumentDeleted {</span></div>
+<div class="line"><span id="81" class="lineNum"><a href="#81">81</a></span><span class="counterUnCov"></span><span class="lineUnCov">        /// The id of the `Collection` of the deleted `Document`.</span></div>
+<div class="line"><span id="82" class="lineNum"><a href="#82">82</a></span><span class="counterUnCov"></span><span class="lineUnCov">        collection: collection::Id,</span></div>
+<div class="line"><span id="83" class="lineNum"><a href="#83">83</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="84" class="lineNum"><a href="#84">84</a></span><span class="counterUnCov"></span><span class="lineUnCov">        /// The id of the deleted `Document`.</span></div>
+<div class="line"><span id="85" class="lineNum"><a href="#85">85</a></span><span class="counterUnCov"></span><span class="lineUnCov">        id: u64,</span></div>
+<div class="line"><span id="86" class="lineNum"><a href="#86">86</a></span><span class="counterUnCov"></span><span class="lineUnCov">    },</span></div>
+<div class="line"><span id="87" class="lineNum"><a href="#87">87</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="88" class="lineNum"><a href="#88">88</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="89" class="lineNum"><a href="#89">89</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Details about an executed transaction.</span></div>
+<div class="line"><span id="90" class="lineNum"><a href="#90">90</a></span><span class="counterCov">8416</span><span class="lineCov">#[derive(Debug, Serialize, Deserialize)]</span></div>
+<div class="line"><span id="91" class="lineNum"><a href="#91">91</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct Executed&lt;&#39;a&gt; {</span></div>
+<div class="line"><span id="92" class="lineNum"><a href="#92">92</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The id of the transaction.</span></div>
+<div class="line"><span id="93" class="lineNum"><a href="#93">93</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub id: u64,</span></div>
+<div class="line"><span id="94" class="lineNum"><a href="#94">94</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="95" class="lineNum"><a href="#95">95</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// A list of containing ids of `Documents` changed.</span></div>
+<div class="line"><span id="96" class="lineNum"><a href="#96">96</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[serde(borrow)]</span></div>
+<div class="line"><span id="97" class="lineNum"><a href="#97">97</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub changed_documents: Cow&lt;&#39;a, [ChangedDocument]&gt;,</span></div>
+<div class="line"><span id="98" class="lineNum"><a href="#98">98</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 <div class="line"><span id="99" class="lineNum"><a href="#99">99</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="100" class="lineNum"><a href="#100">100</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The id of the changed `Document`.</span></div>
-<div class="line"><span id="101" class="lineNum"><a href="#101">101</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub id: u64,</span></div>
-<div class="line"><span id="102" class="lineNum"><a href="#102">102</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="100" class="lineNum"><a href="#100">100</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a&gt; Executed&lt;&#39;a&gt; {</span></div>
+<div class="line"><span id="101" class="lineNum"><a href="#101">101</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Convert this structure to be free of borrows.</span></div>
+<div class="line"><span id="102" class="lineNum"><a href="#102">102</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
+<div class="line"><span id="103" class="lineNum"><a href="#103">103</a></span><span class="counterCov">21040</span><span class="lineCov">    pub fn to_owned(&amp;self) -&gt; Executed&lt;&#39;static&gt; {</span></div>
+<div class="line"><span id="104" class="lineNum"><a href="#104">104</a></span><span class="counterCov">21040</span><span class="lineCov">        Executed {</span></div>
+<div class="line"><span id="105" class="lineNum"><a href="#105">105</a></span><span class="counterCov">21040</span><span class="lineCov">            id: self.id,</span></div>
+<div class="line"><span id="106" class="lineNum"><a href="#106">106</a></span><span class="counterCov">21040</span><span class="lineCov">            changed_documents: self.changed_documents.iter().cloned().collect(),</span></div>
+<div class="line"><span id="107" class="lineNum"><a href="#107">107</a></span><span class="counterCov">21040</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="108" class="lineNum"><a href="#108">108</a></span><span class="counterCov">21040</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="109" class="lineNum"><a href="#109">109</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="110" class="lineNum"><a href="#110">110</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="111" class="lineNum"><a href="#111">111</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// A record of a changed.</span></div>
+<div class="line"><span id="112" class="lineNum"><a href="#112">112</a></span><span class="counterCov">25248</span><span class="lineCov">#[derive(Debug, Clone, Serialize, Deserialize)]</span></div>
+<div class="line"><span id="113" class="lineNum"><a href="#113">113</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct ChangedDocument {</span></div>
+<div class="line"><span id="114" class="lineNum"><a href="#114">114</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The id of the `Collection` of the changed `Document`.</span></div>
+<div class="line"><span id="115" class="lineNum"><a href="#115">115</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub collection: collection::Id,</span></div>
+<div class="line"><span id="116" class="lineNum"><a href="#116">116</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="117" class="lineNum"><a href="#117">117</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The id of the changed `Document`.</span></div>
+<div class="line"><span id="118" class="lineNum"><a href="#118">118</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub id: u64,</span></div>
+<div class="line"><span id="119" class="lineNum"><a href="#119">119</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="120" class="lineNum"><a href="#120">120</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// If the `Document` has been deleted, this will be `true`.</span></div>
+<div class="line"><span id="121" class="lineNum"><a href="#121">121</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub deleted: bool,</span></div>
+<div class="line"><span id="122" class="lineNum"><a href="#122">122</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 </div>
 </body>
 </html>
