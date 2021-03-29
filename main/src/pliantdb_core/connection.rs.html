@@ -267,7 +267,7 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">Header</span>},
-    <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">map</span>},
+    <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">view</span>},
     <span class="ident">transaction</span>::{<span class="self">self</span>, <span class="ident">Command</span>, <span class="ident">Operation</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
     <span class="ident">Error</span>,
 };
@@ -361,7 +361,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span><span class="op">&lt;</span><span class="lifetime">&#39;k</span>, <span class="ident">V</span>: <span class="ident">schema</span>::<span class="ident">View</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">query</span>: <span class="ident">View</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="self">Self</span>, <span class="ident">V</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map</span>::<span class="ident">Serialized</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">view</span>::<span class="ident">Map</span><span class="op">&lt;</span><span class="ident">V</span>::<span class="ident">Key</span>, <span class="ident">V</span>::<span class="ident">Value</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>;
 
@@ -477,7 +477,7 @@
     }
 
     <span class="doccomment">/// Executes the query and retrieves the results.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map</span>::<span class="ident">Serialized</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">view</span>::<span class="ident">Map</span><span class="op">&lt;</span><span class="ident">V</span>::<span class="ident">Key</span>, <span class="ident">V</span>::<span class="ident">Value</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">query</span>(<span class="self">self</span>).<span class="kw">await</span>
     }
 
