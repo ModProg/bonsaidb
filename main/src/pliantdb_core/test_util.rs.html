@@ -242,10 +242,6 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow</span>::<span class="ident">Cow</span>,
@@ -254,7 +250,7 @@
 };
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">view</span>::<span class="ident">Map</span>;
+<span class="kw">use</span> <span class="ident">view</span>::<span class="ident">map</span>::<span class="ident">MappedValue</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">document</span>::<span class="ident">Document</span>,
@@ -306,9 +302,8 @@
 
 <span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">BasicCount</span> {
     <span class="kw">type</span> <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">Basic</span>;
-    <span class="kw">type</span> <span class="ident">MapKey</span> <span class="op">=</span> ();
-    <span class="kw">type</span> <span class="ident">MapValue</span> <span class="op">=</span> <span class="ident">usize</span>;
-    <span class="kw">type</span> <span class="ident">Reduce</span> <span class="op">=</span> <span class="ident">usize</span>;
+    <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> ();
+    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
     <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
         <span class="number">0</span>
@@ -318,15 +313,15 @@
         <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="string">&quot;count&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">MapKey</span>, <span class="self">Self</span>::<span class="ident">MapValue</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">document</span>.<span class="ident">emit_key_and_value</span>((), <span class="number">1</span>)))
     }
 
     <span class="kw">fn</span> <span class="ident">reduce</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">Map</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">MapKey</span>, <span class="self">Self</span>::<span class="ident">MapValue</span><span class="op">&gt;</span>],
+        <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Reduce</span>, <span class="ident">view</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Value</span>, <span class="ident">view</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -336,9 +331,8 @@
 
 <span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">BasicByParentId</span> {
     <span class="kw">type</span> <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">Basic</span>;
-    <span class="kw">type</span> <span class="ident">MapKey</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>;
-    <span class="kw">type</span> <span class="ident">MapValue</span> <span class="op">=</span> <span class="ident">usize</span>;
-    <span class="kw">type</span> <span class="ident">Reduce</span> <span class="op">=</span> <span class="ident">usize</span>;
+    <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
     <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
         <span class="number">1</span>
@@ -348,16 +342,16 @@
         <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="string">&quot;by-parent-id&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">MapKey</span>, <span class="self">Self</span>::<span class="ident">MapValue</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">document</span>.<span class="ident">emit_key_and_value</span>(<span class="ident">contents</span>.<span class="ident">parent_id</span>, <span class="number">1</span>)))
     }
 
     <span class="kw">fn</span> <span class="ident">reduce</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">Map</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">MapKey</span>, <span class="self">Self</span>::<span class="ident">MapValue</span><span class="op">&gt;</span>],
+        <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Reduce</span>, <span class="ident">view</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Value</span>, <span class="ident">view</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -367,9 +361,8 @@
 
 <span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">BasicByCategory</span> {
     <span class="kw">type</span> <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">Basic</span>;
-    <span class="kw">type</span> <span class="ident">MapKey</span> <span class="op">=</span> <span class="ident">String</span>;
-    <span class="kw">type</span> <span class="ident">MapValue</span> <span class="op">=</span> <span class="ident">usize</span>;
-    <span class="kw">type</span> <span class="ident">Reduce</span> <span class="op">=</span> <span class="ident">usize</span>;
+    <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="ident">String</span>;
+    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
     <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
         <span class="number">0</span>
@@ -379,7 +372,7 @@
         <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="string">&quot;by-category&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">MapKey</span>, <span class="self">Self</span>::<span class="ident">MapValue</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">category</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">contents</span>.<span class="ident">category</span> {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(
@@ -392,9 +385,9 @@
 
     <span class="kw">fn</span> <span class="ident">reduce</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">Map</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">MapKey</span>, <span class="self">Self</span>::<span class="ident">MapValue</span><span class="op">&gt;</span>],
+        <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Reduce</span>, <span class="ident">view</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Value</span>, <span class="ident">view</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -404,9 +397,8 @@
 
 <span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">BasicByBrokenParentId</span> {
     <span class="kw">type</span> <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">Basic</span>;
-    <span class="kw">type</span> <span class="ident">MapKey</span> <span class="op">=</span> ();
-    <span class="kw">type</span> <span class="ident">MapValue</span> <span class="op">=</span> ();
-    <span class="kw">type</span> <span class="ident">Reduce</span> <span class="op">=</span> ();
+    <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> ();
+    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> ();
 
     <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
         <span class="number">0</span>
@@ -416,7 +408,7 @@
         <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="string">&quot;by-parent-id&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">MapKey</span>, <span class="self">Self</span>::<span class="ident">MapValue</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">document</span>.<span class="ident">emit</span>()))
     }
 }

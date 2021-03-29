@@ -316,13 +316,44 @@
 <span id="313">313</span>
 <span id="314">314</span>
 <span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
     <span class="ident">document</span>::<span class="ident">Document</span>,
-    <span class="ident">schema</span>::{<span class="ident">collection</span>, <span class="ident">map</span>, <span class="ident">Database</span>, <span class="ident">Key</span>},
+    <span class="ident">schema</span>::{<span class="ident">collection</span>, <span class="ident">map</span>, <span class="ident">view</span>, <span class="ident">Database</span>, <span class="ident">Key</span>},
 };
 <span class="kw">use</span> <span class="ident">pliantdb_jobs</span>::{<span class="ident">Job</span>, <span class="ident">Keyed</span>};
 <span class="kw">use</span> <span class="ident">sled</span>::{
@@ -521,6 +552,7 @@
                     <span class="kw-2">&amp;</span><span class="ident">keys</span>,
                     <span class="kw-2">&amp;</span><span class="ident">existing_map</span>,
                     <span class="self">self</span>.<span class="ident">view_entries</span>,
+                    <span class="ident">view</span>,
                 )<span class="question-mark">?</span>;
             }
 
@@ -550,11 +582,33 @@
                     <span class="ident">entry</span>.<span class="ident">mappings</span>.<span class="ident">push</span>(<span class="ident">entry_mapping</span>);
                 }
 
+                <span class="comment">// There was a choice to be made here of whether to call</span>
+                <span class="comment">// reduce()  with all of the existing values, or call it with</span>
+                <span class="comment">// rereduce=true passing only the new value and the old stored</span>
+                <span class="comment">// value. In this implementation, it&#39;s technically less</span>
+                <span class="comment">// efficient, but we can guarantee that every value has only</span>
+                <span class="comment">// been reduced once, and potentially re-reduced a single-time.</span>
+                <span class="comment">// If we constantly try to update the value to optimize the size</span>
+                <span class="comment">// of `mappings`, the fear is that the value computed may lose</span>
+                <span class="comment">// precision in some contexts over time. Thus, the decision was</span>
+                <span class="comment">// made to always call reduce() with all the mappings within a</span>
+                <span class="comment">// single ViewEntry.</span>
+                <span class="kw">let</span> <span class="ident">mappings</span> <span class="op">=</span> <span class="ident">entry</span>
+                    .<span class="ident">mappings</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> (<span class="ident">key</span>.<span class="ident">as_slice</span>(), <span class="ident">m</span>.<span class="ident">value</span>.<span class="ident">as_slice</span>()))
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+                <span class="ident">entry</span>.<span class="ident">reduced_value</span> <span class="op">=</span> <span class="ident">view</span>.<span class="ident">reduce</span>(<span class="kw-2">&amp;</span><span class="ident">mappings</span>, <span class="bool-val">false</span>).<span class="ident">map_to_transaction_error</span>()<span class="question-mark">?</span>;
+
                 <span class="ident">entry</span>
             } <span class="kw">else</span> {
+                <span class="kw">let</span> <span class="ident">reduced_value</span> <span class="op">=</span> <span class="ident">view</span>
+                    .<span class="ident">reduce</span>(<span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span><span class="ident">key</span>, <span class="kw-2">&amp;</span><span class="ident">entry_mapping</span>.<span class="ident">value</span>)], <span class="bool-val">false</span>)
+                    .<span class="ident">map_to_transaction_error</span>()<span class="question-mark">?</span>;
                 <span class="ident">ViewEntry</span> {
                     <span class="ident">view_version</span>: <span class="ident">view</span>.<span class="ident">version</span>(),
                     <span class="ident">mappings</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">entry_mapping</span>],
+                    <span class="ident">reduced_value</span>,
                 }
             };
             <span class="self">self</span>.<span class="ident">view_entries</span>.<span class="ident">insert</span>(
@@ -569,6 +623,7 @@
                     <span class="kw-2">&amp;</span>[],
                     <span class="kw-2">&amp;</span><span class="ident">existing_map</span>,
                     <span class="self">self</span>.<span class="ident">view_entries</span>,
+                    <span class="ident">view</span>,
                 )<span class="question-mark">?</span>;
             }
 
@@ -606,6 +661,7 @@
     <span class="ident">keys</span>: <span class="kw-2">&amp;</span>[<span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>],
     <span class="ident">existing_map</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
     <span class="ident">view_entries</span>: <span class="kw-2">&amp;</span><span class="ident">TransactionalTree</span>,
+    <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">view</span>::<span class="ident">Serialized</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">ConflictableTransactionError</span><span class="op">&lt;</span><span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">existing_keys</span> <span class="op">=</span>
         <span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">existing_map</span>).<span class="ident">map_to_transaction_error</span>()<span class="question-mark">?</span>;
@@ -625,6 +681,12 @@
             <span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">ViewEntry</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">existing_entry</span>).<span class="ident">map_to_transaction_error</span>()<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">document_id</span> <span class="op">=</span> <span class="ident">u64</span>::<span class="ident">from_big_endian_bytes</span>(<span class="ident">document_id</span>).<span class="ident">unwrap</span>();
         <span class="ident">entry</span>.<span class="ident">mappings</span>.<span class="ident">retain</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">source</span> <span class="op">!</span><span class="op">=</span> <span class="ident">document_id</span>);
+        <span class="kw">let</span> <span class="ident">mappings</span> <span class="op">=</span> <span class="ident">entry</span>
+            .<span class="ident">mappings</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> (<span class="ident">existing_keys</span>[<span class="number">0</span>].<span class="ident">as_ref</span>(), <span class="ident">m</span>.<span class="ident">value</span>.<span class="ident">as_slice</span>()))
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
+        <span class="ident">entry</span>.<span class="ident">reduced_value</span> <span class="op">=</span> <span class="ident">view</span>.<span class="ident">reduce</span>(<span class="kw-2">&amp;</span><span class="ident">mappings</span>, <span class="bool-val">false</span>).<span class="ident">map_to_transaction_error</span>()<span class="question-mark">?</span>;
         <span class="ident">view_entries</span>.<span class="ident">insert</span>(
             <span class="ident">existing_keys</span>[<span class="number">0</span>].<span class="ident">as_ref</span>(),
             <span class="ident">bincode</span>::<span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="ident">entry</span>).<span class="ident">map_to_transaction_error</span>()<span class="question-mark">?</span>,

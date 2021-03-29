@@ -156,6 +156,30 @@
 <span id="153">153</span>
 <span id="154">154</span>
 <span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
+<span id="165">165</span>
+<span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">fmt</span>::<span class="ident">Debug</span>};
 
@@ -167,6 +191,7 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">map</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">map</span>::{<span class="ident">Key</span>, <span class="ident">Map</span>};
 
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">map</span>::<span class="ident">MappedValue</span>;
 <span class="kw">use</span> <span class="kw">super</span>::<span class="ident">collection</span>;
 
 <span class="doccomment">/// Errors that arise when interacting with views.</span>
@@ -201,13 +226,10 @@
     <span class="kw">type</span> <span class="ident">Collection</span>: <span class="ident">Collection</span>;
 
     <span class="doccomment">/// The key for this view.</span>
-    <span class="kw">type</span> <span class="ident">MapKey</span>: <span class="ident">Key</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>;
+    <span class="kw">type</span> <span class="ident">Key</span>: <span class="ident">Key</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>;
 
     <span class="doccomment">/// An associated type that can be stored with each entry in the view.</span>
-    <span class="kw">type</span> <span class="ident">MapValue</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// When implementing reduce(), this is the returned type.</span>
-    <span class="kw">type</span> <span class="ident">Reduce</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Value</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// The version of the view. Changing this value will cause indexes to be rebuilt.</span>
     <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span>;
@@ -218,7 +240,7 @@
     <span class="doccomment">/// The map function for this view. This function is responsible for</span>
     <span class="doccomment">/// emitting entries for any documents that should be contained in this</span>
     <span class="doccomment">/// View. If None is returned, the View will not include the document.</span>
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">MapKey</span>, <span class="self">Self</span>::<span class="ident">MapValue</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// The reduce function for this view. If `Err(Error::ReduceUnimplemented)`</span>
     <span class="doccomment">/// is returned, queries that ask for a reduce operation will return an</span>
@@ -228,9 +250,9 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
     <span class="kw">fn</span> <span class="ident">reduce</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">Map</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">MapKey</span>, <span class="self">Self</span>::<span class="ident">MapValue</span><span class="op">&gt;</span>],
+        <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span>],
         <span class="ident">rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Reduce</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Value</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">ReduceUnimplemented</span>)
     }
 }
@@ -276,12 +298,15 @@
     <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>;
     <span class="doccomment">/// Wraps [`View::map`]</span>
     <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">map</span>::<span class="ident">Serialized</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Wraps [`View::reduce`]</span>
+    <span class="kw">fn</span> <span class="ident">reduce</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>])], <span class="ident">rereduce</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">use_self</span>)]</span> <span class="comment">// Using Self here instead of T inside of reduce() breaks compilation. The alternative is much more verbose and harder to read.</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Serialized</span> <span class="kw">for</span> <span class="ident">T</span>
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">View</span>,
-    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span>::<span class="ident">MapKey</span>: <span class="lifetime">&#39;static</span>,
+    <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span>::<span class="ident">Key</span>: <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">fn</span> <span class="ident">collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">collection</span>::<span class="ident">Id</span> {
         <span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span>::<span class="ident">Collection</span> <span class="kw">as</span> <span class="ident">Collection</span><span class="op">&gt;</span>::<span class="ident">id</span>()
@@ -310,6 +335,29 @@
             })),
             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
         }
+    }
+
+    <span class="kw">fn</span> <span class="ident">reduce</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>])], <span class="ident">rereduce</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">mappings</span> <span class="op">=</span> <span class="ident">mappings</span>
+            .<span class="ident">iter</span>()
+            .<span class="ident">map</span>(
+                <span class="op">|</span>(<span class="ident">key</span>, <span class="ident">value</span>)<span class="op">|</span> <span class="kw">match</span> <span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Key</span> <span class="kw">as</span> <span class="ident">Key</span><span class="op">&gt;</span>::<span class="ident">from_big_endian_bytes</span>(<span class="ident">key</span>) {
+                    <span class="prelude-val">Ok</span>(<span class="ident">key</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">serde_cbor</span>::<span class="ident">from_slice</span>::<span class="op">&lt;</span><span class="ident">T</span>::<span class="ident">Value</span><span class="op">&gt;</span>(<span class="ident">value</span>) {
+                        <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">MappedValue</span> { <span class="ident">key</span>, <span class="ident">value</span> }),
+                        <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>)),
+                    },
+                    <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">KeySerialization</span>(<span class="ident">err</span>)),
+                },
+            )
+            .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">reduced_value</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">reduce</span>(<span class="kw-2">&amp;</span><span class="ident">mappings</span>, <span class="ident">rereduce</span>) {
+            <span class="prelude-val">Ok</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">value</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">ReduceUnimplemented</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Vec</span>::<span class="ident">new</span>()),
+            <span class="prelude-val">Err</span>(<span class="ident">other</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">other</span>),
+        };
+
+        <span class="ident">serde_cbor</span>::<span class="ident">to_vec</span>(<span class="kw-2">&amp;</span><span class="ident">reduced_value</span>).<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
     }
 }
 </pre></div>
