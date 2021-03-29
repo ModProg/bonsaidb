@@ -214,16 +214,46 @@
 <span id="211">211</span>
 <span id="212">212</span>
 <span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">convert</span>::<span class="ident">TryInto</span>};
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">document</span>::<span class="ident">Document</span>;
 
 <span class="doccomment">/// A document&#39;s entry in a View&#39;s mappings.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span> <span class="op">=</span> (), <span class="ident">V</span>: <span class="ident">Serialize</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
     <span class="doccomment">/// The id of the document that emitted this entry.</span>
     <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">u64</span>,
+
+    <span class="doccomment">/// The key used to index the View.</span>
+    <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">K</span>,
+
+    <span class="doccomment">/// An associated value stored in the view.</span>
+    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">V</span>,
+}
+
+<span class="doccomment">/// A document&#39;s entry in a View&#39;s mappings.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MappedDocument</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span> <span class="op">=</span> (), <span class="ident">V</span>: <span class="ident">Serialize</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
+    <span class="doccomment">/// The id of the document that emitted this entry.</span>
+    <span class="kw">pub</span> <span class="ident">document</span>: <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// The key used to index the View.</span>
     <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">K</span>,
