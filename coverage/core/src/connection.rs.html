@@ -9,12 +9,12 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">core/src</a> - connection.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-28 21:05:14</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-29 20:01:02</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
-<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">83</span><span class="linesTotal">92</span><span class="linesPercentage lineHi">90.2 %</span></div>
-<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">33</span><span class="funsTotal">37</span><span class="funsPercentage funMed">89.2 %</span></div>
+<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">86</span><span class="linesTotal">95</span><span class="linesPercentage lineHi">90.5 %</span></div>
+<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">35</span><span class="funsTotal">39</span><span class="funsPercentage funMed">89.7 %</span></div>
 <div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
 </div>
 </div>
@@ -108,14 +108,14 @@
 <div class="line"><span id="87" class="lineNum"><a href="#87">87</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="88" class="lineNum"><a href="#88">88</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Initializes [`ViewQuery`] for [`schema::View`] `V`.</span></div>
 <div class="line"><span id="89" class="lineNum"><a href="#89">89</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
-<div class="line"><span id="90" class="lineNum"><a href="#90">90</a></span><span class="counterCov">30</span><span class="lineCov">    fn view&lt;V: schema::View&gt;(&amp;&#39;a self) -&gt; View&lt;&#39;a, Self, V&gt;</span></div>
-<div class="line"><span id="91" class="lineNum"><a href="#91">91</a></span><span class="counterCov">30</span><span class="lineCov">    where</span></div>
-<div class="line"><span id="92" class="lineNum"><a href="#92">92</a></span><span class="counterCov">30</span><span class="lineCov">        Self: Sized,</span></div>
-<div class="line"><span id="93" class="lineNum"><a href="#93">93</a></span><span class="counterCov">30</span><span class="lineCov">    {</span></div>
-<div class="line"><span id="94" class="lineNum"><a href="#94">94</a></span><span class="counterCov">30</span><span class="lineCov">        View::new(self)</span></div>
-<div class="line"><span id="95" class="lineNum"><a href="#95">95</a></span><span class="counterCov">30</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="90" class="lineNum"><a href="#90">90</a></span><span class="counterCov">38</span><span class="lineCov">    fn view&lt;V: schema::View&gt;(&amp;&#39;a self) -&gt; View&lt;&#39;a, Self, V&gt;</span></div>
+<div class="line"><span id="91" class="lineNum"><a href="#91">91</a></span><span class="counterCov">38</span><span class="lineCov">    where</span></div>
+<div class="line"><span id="92" class="lineNum"><a href="#92">92</a></span><span class="counterCov">38</span><span class="lineCov">        Self: Sized,</span></div>
+<div class="line"><span id="93" class="lineNum"><a href="#93">93</a></span><span class="counterCov">38</span><span class="lineCov">    {</span></div>
+<div class="line"><span id="94" class="lineNum"><a href="#94">94</a></span><span class="counterCov">38</span><span class="lineCov">        View::new(self)</span></div>
+<div class="line"><span id="95" class="lineNum"><a href="#95">95</a></span><span class="counterCov">38</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="96" class="lineNum"><a href="#96">96</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="97" class="lineNum"><a href="#97">97</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Initializes [`ViewQuery`] for [`schema::View`] `V`.</span></div>
+<div class="line"><span id="97" class="lineNum"><a href="#97">97</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Queries for view entries matching [`ViewQuery`].</span></div>
 <div class="line"><span id="98" class="lineNum"><a href="#98">98</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
 <div class="line"><span id="99" class="lineNum"><a href="#99">99</a></span><span class="counterUnCov"></span><span class="lineUnCov">    async fn query&lt;&#39;k, V: schema::View&gt;(</span></div>
 <div class="line"><span id="100" class="lineNum"><a href="#100">100</a></span><span class="counterUnCov"></span><span class="lineUnCov">        &amp;self,</span></div>
@@ -124,145 +124,159 @@
 <div class="line"><span id="103" class="lineNum"><a href="#103">103</a></span><span class="counterUnCov"></span><span class="lineUnCov">    where</span></div>
 <div class="line"><span id="104" class="lineNum"><a href="#104">104</a></span><span class="counterUnCov"></span><span class="lineUnCov">        Self: Sized;</span></div>
 <div class="line"><span id="105" class="lineNum"><a href="#105">105</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="106" class="lineNum"><a href="#106">106</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Applies a [`Transaction`] to the [`schema::Database`]. If any operation in the</span></div>
-<div class="line"><span id="107" class="lineNum"><a href="#107">107</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// [`Transaction`] fails, none of the operations will be applied to the</span></div>
-<div class="line"><span id="108" class="lineNum"><a href="#108">108</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// [`schema::Database`].</span></div>
-<div class="line"><span id="109" class="lineNum"><a href="#109">109</a></span><span class="counterUnCov"></span><span class="lineUnCov">    async fn apply_transaction(</span></div>
-<div class="line"><span id="110" class="lineNum"><a href="#110">110</a></span><span class="counterUnCov"></span><span class="lineUnCov">        &amp;self,</span></div>
-<div class="line"><span id="111" class="lineNum"><a href="#111">111</a></span><span class="counterUnCov"></span><span class="lineUnCov">        transaction: Transaction&lt;&#39;static&gt;,</span></div>
-<div class="line"><span id="112" class="lineNum"><a href="#112">112</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ) -&gt; Result&lt;Vec&lt;OperationResult&gt;, Error&gt;;</span></div>
-<div class="line"><span id="113" class="lineNum"><a href="#113">113</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="114" class="lineNum"><a href="#114">114</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Lists executed [`Transaction`]s from this [`schema::Database`]. By default, a maximum of</span></div>
-<div class="line"><span id="115" class="lineNum"><a href="#115">115</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// 1000 entries will be returned, but that limit can be overridden by</span></div>
-<div class="line"><span id="116" class="lineNum"><a href="#116">116</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// setting `result_limit`. A hard limit of 100,000 results will be</span></div>
-<div class="line"><span id="117" class="lineNum"><a href="#117">117</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// returned. To begin listing after another known `transaction_id`, pass</span></div>
-<div class="line"><span id="118" class="lineNum"><a href="#118">118</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// `transaction_id + 1` into `starting_id`.</span></div>
-<div class="line"><span id="119" class="lineNum"><a href="#119">119</a></span><span class="counterUnCov"></span><span class="lineUnCov">    async fn list_executed_transactions(</span></div>
-<div class="line"><span id="120" class="lineNum"><a href="#120">120</a></span><span class="counterUnCov"></span><span class="lineUnCov">        &amp;self,</span></div>
-<div class="line"><span id="121" class="lineNum"><a href="#121">121</a></span><span class="counterUnCov"></span><span class="lineUnCov">        starting_id: Option&lt;u64&gt;,</span></div>
-<div class="line"><span id="122" class="lineNum"><a href="#122">122</a></span><span class="counterUnCov"></span><span class="lineUnCov">        result_limit: Option&lt;usize&gt;,</span></div>
-<div class="line"><span id="123" class="lineNum"><a href="#123">123</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ) -&gt; Result&lt;Vec&lt;transaction::Executed&lt;&#39;static&gt;&gt;, Error&gt;;</span></div>
-<div class="line"><span id="124" class="lineNum"><a href="#124">124</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="125" class="lineNum"><a href="#125">125</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="126" class="lineNum"><a href="#126">126</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Interacts with a collection over a `Connection`.</span></div>
-<div class="line"><span id="127" class="lineNum"><a href="#127">127</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct Collection&lt;&#39;a, Cn, Cl&gt; {</span></div>
-<div class="line"><span id="128" class="lineNum"><a href="#128">128</a></span><span class="counterUnCov"></span><span class="lineUnCov">    connection: &amp;&#39;a Cn,</span></div>
-<div class="line"><span id="129" class="lineNum"><a href="#129">129</a></span><span class="counterUnCov"></span><span class="lineUnCov">    _phantom: PhantomData&lt;Cl&gt;, // allows for extension traits to be written for collections of specific types</span></div>
-<div class="line"><span id="130" class="lineNum"><a href="#130">130</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="131" class="lineNum"><a href="#131">131</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="132" class="lineNum"><a href="#132">132</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a, Cn, Cl&gt; Collection&lt;&#39;a, Cn, Cl&gt;</span></div>
-<div class="line"><span id="133" class="lineNum"><a href="#133">133</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
-<div class="line"><span id="134" class="lineNum"><a href="#134">134</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Cn: Connection&lt;&#39;a&gt;,</span></div>
-<div class="line"><span id="135" class="lineNum"><a href="#135">135</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Cl: schema::Collection,</span></div>
-<div class="line"><span id="136" class="lineNum"><a href="#136">136</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
-<div class="line"><span id="137" class="lineNum"><a href="#137">137</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Creates a new instance using `connection`.</span></div>
-<div class="line"><span id="138" class="lineNum"><a href="#138">138</a></span><span class="counterCov">20</span><span class="lineCov">    pub fn new(connection: &amp;&#39;a Cn) -&gt; Self {</span></div>
-<div class="line"><span id="139" class="lineNum"><a href="#139">139</a></span><span class="counterCov">20</span><span class="lineCov">        Self {</span></div>
-<div class="line"><span id="140" class="lineNum"><a href="#140">140</a></span><span class="counterCov">20</span><span class="lineCov">            connection,</span></div>
-<div class="line"><span id="141" class="lineNum"><a href="#141">141</a></span><span class="counterCov">20</span><span class="lineCov">            _phantom: PhantomData::default(),</span></div>
-<div class="line"><span id="142" class="lineNum"><a href="#142">142</a></span><span class="counterCov">20</span><span class="lineCov">        }</span></div>
-<div class="line"><span id="143" class="lineNum"><a href="#143">143</a></span><span class="counterCov">20</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="144" class="lineNum"><a href="#144">144</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="145" class="lineNum"><a href="#145">145</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Adds a new `Document&lt;Cl&gt;` with the contents `item`.</span></div>
-<div class="line"><span id="146" class="lineNum"><a href="#146">146</a></span><span class="counterCov">2028</span><span class="lineCov">    pub async fn push&lt;S: Serialize + Sync&gt;(&amp;self, item: &amp;S) -&gt; Result&lt;Header, crate::Error&gt; {</span></div>
-<div class="line"><span id="147" class="lineNum"><a href="#147">147</a></span><span class="counterCov">2028</span><span class="lineCov">        let contents = serde_cbor::to_vec(item)?;</span></div>
-<div class="line"><span id="148" class="lineNum"><a href="#148">148</a></span><span class="counterCov">2028</span><span class="lineCov">        Ok(self.connection.insert::&lt;Cl&gt;(contents).await?)</span></div>
-<div class="line"><span id="149" class="lineNum"><a href="#149">149</a></span><span class="counterCov">2028</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="150" class="lineNum"><a href="#150">150</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="151" class="lineNum"><a href="#151">151</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Retrieves a `Document&lt;Cl&gt;` with `id` from the connection.</span></div>
-<div class="line"><span id="152" class="lineNum"><a href="#152">152</a></span><span class="counterCov">14</span><span class="lineCov">    pub async fn get(&amp;self, id: u64) -&gt; Result&lt;Option&lt;Document&lt;&#39;static&gt;&gt;, Error&gt; {</span></div>
-<div class="line"><span id="153" class="lineNum"><a href="#153">153</a></span><span class="counterCov">14</span><span class="lineCov">        self.connection.get::&lt;Cl&gt;(id).await</span></div>
-<div class="line"><span id="154" class="lineNum"><a href="#154">154</a></span><span class="counterCov">14</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="155" class="lineNum"><a href="#155">155</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="156" class="lineNum"><a href="#156">156</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="157" class="lineNum"><a href="#157">157</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Parameters to query a `schema::View`.</span></div>
-<div class="line"><span id="158" class="lineNum"><a href="#158">158</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct View&lt;&#39;a, Cn, V: schema::View&gt; {</span></div>
-<div class="line"><span id="159" class="lineNum"><a href="#159">159</a></span><span class="counterUnCov"></span><span class="lineUnCov">    connection: &amp;&#39;a Cn,</span></div>
-<div class="line"><span id="160" class="lineNum"><a href="#160">160</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="161" class="lineNum"><a href="#161">161</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Key filtering criteria.</span></div>
-<div class="line"><span id="162" class="lineNum"><a href="#162">162</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub key: Option&lt;QueryKey&lt;V::MapKey&gt;&gt;,</span></div>
-<div class="line"><span id="163" class="lineNum"><a href="#163">163</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="164" class="lineNum"><a href="#164">164</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The view&#39;s data access policy. The default value is [`AccessPolicy::UpdateBefore`].</span></div>
-<div class="line"><span id="165" class="lineNum"><a href="#165">165</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub access_policy: AccessPolicy,</span></div>
-<div class="line"><span id="166" class="lineNum"><a href="#166">166</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="167" class="lineNum"><a href="#167">167</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="168" class="lineNum"><a href="#168">168</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a, Cn, V&gt; View&lt;&#39;a, Cn, V&gt;</span></div>
-<div class="line"><span id="169" class="lineNum"><a href="#169">169</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
-<div class="line"><span id="170" class="lineNum"><a href="#170">170</a></span><span class="counterUnCov"></span><span class="lineUnCov">    V: schema::View,</span></div>
-<div class="line"><span id="171" class="lineNum"><a href="#171">171</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Cn: Connection&lt;&#39;a&gt;,</span></div>
-<div class="line"><span id="172" class="lineNum"><a href="#172">172</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
-<div class="line"><span id="173" class="lineNum"><a href="#173">173</a></span><span class="counterCov">30</span><span class="lineCov">    fn new(connection: &amp;&#39;a Cn) -&gt; Self {</span></div>
-<div class="line"><span id="174" class="lineNum"><a href="#174">174</a></span><span class="counterCov">30</span><span class="lineCov">        Self {</span></div>
-<div class="line"><span id="175" class="lineNum"><a href="#175">175</a></span><span class="counterCov">30</span><span class="lineCov">            connection,</span></div>
-<div class="line"><span id="176" class="lineNum"><a href="#176">176</a></span><span class="counterCov">30</span><span class="lineCov">            key: None,</span></div>
-<div class="line"><span id="177" class="lineNum"><a href="#177">177</a></span><span class="counterCov">30</span><span class="lineCov">            access_policy: AccessPolicy::UpdateBefore,</span></div>
-<div class="line"><span id="178" class="lineNum"><a href="#178">178</a></span><span class="counterCov">30</span><span class="lineCov">        }</span></div>
-<div class="line"><span id="179" class="lineNum"><a href="#179">179</a></span><span class="counterCov">30</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="180" class="lineNum"><a href="#180">180</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="181" class="lineNum"><a href="#181">181</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Filters for entries in the view with `key`.</span></div>
-<div class="line"><span id="182" class="lineNum"><a href="#182">182</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
-<div class="line"><span id="183" class="lineNum"><a href="#183">183</a></span><span class="counterCov">18</span><span class="lineCov">    pub fn with_key(mut self, key: V::MapKey) -&gt; Self {</span></div>
-<div class="line"><span id="184" class="lineNum"><a href="#184">184</a></span><span class="counterCov">18</span><span class="lineCov">        self.key = Some(QueryKey::Matches(key));</span></div>
-<div class="line"><span id="185" class="lineNum"><a href="#185">185</a></span><span class="counterCov">18</span><span class="lineCov">        self</span></div>
-<div class="line"><span id="186" class="lineNum"><a href="#186">186</a></span><span class="counterCov">18</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="187" class="lineNum"><a href="#187">187</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="188" class="lineNum"><a href="#188">188</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Filters for entries in the view with `keys`.</span></div>
-<div class="line"><span id="189" class="lineNum"><a href="#189">189</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
-<div class="line"><span id="190" class="lineNum"><a href="#190">190</a></span><span class="counterCov">2</span><span class="lineCov">    pub fn with_keys(mut self, keys: Vec&lt;V::MapKey&gt;) -&gt; Self {</span></div>
-<div class="line"><span id="191" class="lineNum"><a href="#191">191</a></span><span class="counterCov">2</span><span class="lineCov">        self.key = Some(QueryKey::Multiple(keys));</span></div>
-<div class="line"><span id="192" class="lineNum"><a href="#192">192</a></span><span class="counterCov">2</span><span class="lineCov">        self</span></div>
-<div class="line"><span id="193" class="lineNum"><a href="#193">193</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="194" class="lineNum"><a href="#194">194</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="195" class="lineNum"><a href="#195">195</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Filters for entries in the view with the range `keys`.</span></div>
-<div class="line"><span id="196" class="lineNum"><a href="#196">196</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
-<div class="line"><span id="197" class="lineNum"><a href="#197">197</a></span><span class="counterCov">2</span><span class="lineCov">    pub fn with_key_range(mut self, range: Range&lt;V::MapKey&gt;) -&gt; Self {</span></div>
-<div class="line"><span id="198" class="lineNum"><a href="#198">198</a></span><span class="counterCov">2</span><span class="lineCov">        self.key = Some(QueryKey::Range(range));</span></div>
-<div class="line"><span id="199" class="lineNum"><a href="#199">199</a></span><span class="counterCov">2</span><span class="lineCov">        self</span></div>
-<div class="line"><span id="200" class="lineNum"><a href="#200">200</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="201" class="lineNum"><a href="#201">201</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="202" class="lineNum"><a href="#202">202</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Sets the access policy for queries.</span></div>
-<div class="line"><span id="203" class="lineNum"><a href="#203">203</a></span><span class="counterCov">10</span><span class="lineCov">    pub fn with_access_policy(mut self, policy: AccessPolicy) -&gt; Self {</span></div>
-<div class="line"><span id="204" class="lineNum"><a href="#204">204</a></span><span class="counterCov">10</span><span class="lineCov">        self.access_policy = policy;</span></div>
-<div class="line"><span id="205" class="lineNum"><a href="#205">205</a></span><span class="counterCov">10</span><span class="lineCov">        self</span></div>
-<div class="line"><span id="206" class="lineNum"><a href="#206">206</a></span><span class="counterCov">10</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="207" class="lineNum"><a href="#207">207</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="208" class="lineNum"><a href="#208">208</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Executes the query and retrieves the results.</span></div>
-<div class="line"><span id="209" class="lineNum"><a href="#209">209</a></span><span class="counterCov">30</span><span class="lineCov">    pub async fn query(self) -&gt; Result&lt;Vec&lt;map::Serialized&gt;, Error&gt; {</span></div>
-<div class="line"><span id="210" class="lineNum"><a href="#210">210</a></span><span class="counterCov">30</span><span class="lineCov">        self.connection.query(self).await</span></div>
-<div class="line"><span id="211" class="lineNum"><a href="#211">211</a></span><span class="counterCov">30</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="212" class="lineNum"><a href="#212">212</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="213" class="lineNum"><a href="#213">213</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="214" class="lineNum"><a href="#214">214</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Filters a [`View`] by key.</span></div>
-<div class="line"><span id="215" class="lineNum"><a href="#215">215</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub enum QueryKey&lt;K&gt; {</span></div>
-<div class="line"><span id="216" class="lineNum"><a href="#216">216</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Matches all entries with the key provided.</span></div>
-<div class="line"><span id="217" class="lineNum"><a href="#217">217</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Matches(K),</span></div>
-<div class="line"><span id="218" class="lineNum"><a href="#218">218</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="219" class="lineNum"><a href="#219">219</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Matches all entires with keys in the range provided.</span></div>
-<div class="line"><span id="220" class="lineNum"><a href="#220">220</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Range(Range&lt;K&gt;),</span></div>
+<div class="line"><span id="106" class="lineNum"><a href="#106">106</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Reduces the view entries matching [`ViewQuery`].</span></div>
+<div class="line"><span id="107" class="lineNum"><a href="#107">107</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
+<div class="line"><span id="108" class="lineNum"><a href="#108">108</a></span><span class="counterUnCov"></span><span class="lineUnCov">    async fn reduce&lt;&#39;k, V: schema::View&gt;(</span></div>
+<div class="line"><span id="109" class="lineNum"><a href="#109">109</a></span><span class="counterUnCov"></span><span class="lineUnCov">        &amp;self,</span></div>
+<div class="line"><span id="110" class="lineNum"><a href="#110">110</a></span><span class="counterUnCov"></span><span class="lineUnCov">        query: View&lt;&#39;a, Self, V&gt;,</span></div>
+<div class="line"><span id="111" class="lineNum"><a href="#111">111</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ) -&gt; Result&lt;V::Value, Error&gt;</span></div>
+<div class="line"><span id="112" class="lineNum"><a href="#112">112</a></span><span class="counterUnCov"></span><span class="lineUnCov">    where</span></div>
+<div class="line"><span id="113" class="lineNum"><a href="#113">113</a></span><span class="counterUnCov"></span><span class="lineUnCov">        Self: Sized;</span></div>
+<div class="line"><span id="114" class="lineNum"><a href="#114">114</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="115" class="lineNum"><a href="#115">115</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Applies a [`Transaction`] to the [`schema::Database`]. If any operation in the</span></div>
+<div class="line"><span id="116" class="lineNum"><a href="#116">116</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// [`Transaction`] fails, none of the operations will be applied to the</span></div>
+<div class="line"><span id="117" class="lineNum"><a href="#117">117</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// [`schema::Database`].</span></div>
+<div class="line"><span id="118" class="lineNum"><a href="#118">118</a></span><span class="counterUnCov"></span><span class="lineUnCov">    async fn apply_transaction(</span></div>
+<div class="line"><span id="119" class="lineNum"><a href="#119">119</a></span><span class="counterUnCov"></span><span class="lineUnCov">        &amp;self,</span></div>
+<div class="line"><span id="120" class="lineNum"><a href="#120">120</a></span><span class="counterUnCov"></span><span class="lineUnCov">        transaction: Transaction&lt;&#39;static&gt;,</span></div>
+<div class="line"><span id="121" class="lineNum"><a href="#121">121</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ) -&gt; Result&lt;Vec&lt;OperationResult&gt;, Error&gt;;</span></div>
+<div class="line"><span id="122" class="lineNum"><a href="#122">122</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="123" class="lineNum"><a href="#123">123</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Lists executed [`Transaction`]s from this [`schema::Database`]. By default, a maximum of</span></div>
+<div class="line"><span id="124" class="lineNum"><a href="#124">124</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// 1000 entries will be returned, but that limit can be overridden by</span></div>
+<div class="line"><span id="125" class="lineNum"><a href="#125">125</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// setting `result_limit`. A hard limit of 100,000 results will be</span></div>
+<div class="line"><span id="126" class="lineNum"><a href="#126">126</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// returned. To begin listing after another known `transaction_id`, pass</span></div>
+<div class="line"><span id="127" class="lineNum"><a href="#127">127</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// `transaction_id + 1` into `starting_id`.</span></div>
+<div class="line"><span id="128" class="lineNum"><a href="#128">128</a></span><span class="counterUnCov"></span><span class="lineUnCov">    async fn list_executed_transactions(</span></div>
+<div class="line"><span id="129" class="lineNum"><a href="#129">129</a></span><span class="counterUnCov"></span><span class="lineUnCov">        &amp;self,</span></div>
+<div class="line"><span id="130" class="lineNum"><a href="#130">130</a></span><span class="counterUnCov"></span><span class="lineUnCov">        starting_id: Option&lt;u64&gt;,</span></div>
+<div class="line"><span id="131" class="lineNum"><a href="#131">131</a></span><span class="counterUnCov"></span><span class="lineUnCov">        result_limit: Option&lt;usize&gt;,</span></div>
+<div class="line"><span id="132" class="lineNum"><a href="#132">132</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ) -&gt; Result&lt;Vec&lt;transaction::Executed&lt;&#39;static&gt;&gt;, Error&gt;;</span></div>
+<div class="line"><span id="133" class="lineNum"><a href="#133">133</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="134" class="lineNum"><a href="#134">134</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="135" class="lineNum"><a href="#135">135</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Interacts with a collection over a `Connection`.</span></div>
+<div class="line"><span id="136" class="lineNum"><a href="#136">136</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct Collection&lt;&#39;a, Cn, Cl&gt; {</span></div>
+<div class="line"><span id="137" class="lineNum"><a href="#137">137</a></span><span class="counterUnCov"></span><span class="lineUnCov">    connection: &amp;&#39;a Cn,</span></div>
+<div class="line"><span id="138" class="lineNum"><a href="#138">138</a></span><span class="counterUnCov"></span><span class="lineUnCov">    _phantom: PhantomData&lt;Cl&gt;, // allows for extension traits to be written for collections of specific types</span></div>
+<div class="line"><span id="139" class="lineNum"><a href="#139">139</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="140" class="lineNum"><a href="#140">140</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="141" class="lineNum"><a href="#141">141</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a, Cn, Cl&gt; Collection&lt;&#39;a, Cn, Cl&gt;</span></div>
+<div class="line"><span id="142" class="lineNum"><a href="#142">142</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
+<div class="line"><span id="143" class="lineNum"><a href="#143">143</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Cn: Connection&lt;&#39;a&gt;,</span></div>
+<div class="line"><span id="144" class="lineNum"><a href="#144">144</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Cl: schema::Collection,</span></div>
+<div class="line"><span id="145" class="lineNum"><a href="#145">145</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
+<div class="line"><span id="146" class="lineNum"><a href="#146">146</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Creates a new instance using `connection`.</span></div>
+<div class="line"><span id="147" class="lineNum"><a href="#147">147</a></span><span class="counterCov">20</span><span class="lineCov">    pub fn new(connection: &amp;&#39;a Cn) -&gt; Self {</span></div>
+<div class="line"><span id="148" class="lineNum"><a href="#148">148</a></span><span class="counterCov">20</span><span class="lineCov">        Self {</span></div>
+<div class="line"><span id="149" class="lineNum"><a href="#149">149</a></span><span class="counterCov">20</span><span class="lineCov">            connection,</span></div>
+<div class="line"><span id="150" class="lineNum"><a href="#150">150</a></span><span class="counterCov">20</span><span class="lineCov">            _phantom: PhantomData::default(),</span></div>
+<div class="line"><span id="151" class="lineNum"><a href="#151">151</a></span><span class="counterCov">20</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="152" class="lineNum"><a href="#152">152</a></span><span class="counterCov">20</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="153" class="lineNum"><a href="#153">153</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="154" class="lineNum"><a href="#154">154</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Adds a new `Document&lt;Cl&gt;` with the contents `item`.</span></div>
+<div class="line"><span id="155" class="lineNum"><a href="#155">155</a></span><span class="counterCov">2028</span><span class="lineCov">    pub async fn push&lt;S: Serialize + Sync&gt;(&amp;self, item: &amp;S) -&gt; Result&lt;Header, crate::Error&gt; {</span></div>
+<div class="line"><span id="156" class="lineNum"><a href="#156">156</a></span><span class="counterCov">2028</span><span class="lineCov">        let contents = serde_cbor::to_vec(item)?;</span></div>
+<div class="line"><span id="157" class="lineNum"><a href="#157">157</a></span><span class="counterCov">2028</span><span class="lineCov">        Ok(self.connection.insert::&lt;Cl&gt;(contents).await?)</span></div>
+<div class="line"><span id="158" class="lineNum"><a href="#158">158</a></span><span class="counterCov">2028</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="159" class="lineNum"><a href="#159">159</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="160" class="lineNum"><a href="#160">160</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Retrieves a `Document&lt;Cl&gt;` with `id` from the connection.</span></div>
+<div class="line"><span id="161" class="lineNum"><a href="#161">161</a></span><span class="counterCov">14</span><span class="lineCov">    pub async fn get(&amp;self, id: u64) -&gt; Result&lt;Option&lt;Document&lt;&#39;static&gt;&gt;, Error&gt; {</span></div>
+<div class="line"><span id="162" class="lineNum"><a href="#162">162</a></span><span class="counterCov">14</span><span class="lineCov">        self.connection.get::&lt;Cl&gt;(id).await</span></div>
+<div class="line"><span id="163" class="lineNum"><a href="#163">163</a></span><span class="counterCov">14</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="164" class="lineNum"><a href="#164">164</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="165" class="lineNum"><a href="#165">165</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="166" class="lineNum"><a href="#166">166</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Parameters to query a `schema::View`.</span></div>
+<div class="line"><span id="167" class="lineNum"><a href="#167">167</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct View&lt;&#39;a, Cn, V: schema::View&gt; {</span></div>
+<div class="line"><span id="168" class="lineNum"><a href="#168">168</a></span><span class="counterUnCov"></span><span class="lineUnCov">    connection: &amp;&#39;a Cn,</span></div>
+<div class="line"><span id="169" class="lineNum"><a href="#169">169</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="170" class="lineNum"><a href="#170">170</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Key filtering criteria.</span></div>
+<div class="line"><span id="171" class="lineNum"><a href="#171">171</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub key: Option&lt;QueryKey&lt;V::Key&gt;&gt;,</span></div>
+<div class="line"><span id="172" class="lineNum"><a href="#172">172</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="173" class="lineNum"><a href="#173">173</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The view&#39;s data access policy. The default value is [`AccessPolicy::UpdateBefore`].</span></div>
+<div class="line"><span id="174" class="lineNum"><a href="#174">174</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub access_policy: AccessPolicy,</span></div>
+<div class="line"><span id="175" class="lineNum"><a href="#175">175</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="176" class="lineNum"><a href="#176">176</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="177" class="lineNum"><a href="#177">177</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a, Cn, V&gt; View&lt;&#39;a, Cn, V&gt;</span></div>
+<div class="line"><span id="178" class="lineNum"><a href="#178">178</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
+<div class="line"><span id="179" class="lineNum"><a href="#179">179</a></span><span class="counterUnCov"></span><span class="lineUnCov">    V: schema::View,</span></div>
+<div class="line"><span id="180" class="lineNum"><a href="#180">180</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Cn: Connection&lt;&#39;a&gt;,</span></div>
+<div class="line"><span id="181" class="lineNum"><a href="#181">181</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
+<div class="line"><span id="182" class="lineNum"><a href="#182">182</a></span><span class="counterCov">38</span><span class="lineCov">    fn new(connection: &amp;&#39;a Cn) -&gt; Self {</span></div>
+<div class="line"><span id="183" class="lineNum"><a href="#183">183</a></span><span class="counterCov">38</span><span class="lineCov">        Self {</span></div>
+<div class="line"><span id="184" class="lineNum"><a href="#184">184</a></span><span class="counterCov">38</span><span class="lineCov">            connection,</span></div>
+<div class="line"><span id="185" class="lineNum"><a href="#185">185</a></span><span class="counterCov">38</span><span class="lineCov">            key: None,</span></div>
+<div class="line"><span id="186" class="lineNum"><a href="#186">186</a></span><span class="counterCov">38</span><span class="lineCov">            access_policy: AccessPolicy::UpdateBefore,</span></div>
+<div class="line"><span id="187" class="lineNum"><a href="#187">187</a></span><span class="counterCov">38</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="188" class="lineNum"><a href="#188">188</a></span><span class="counterCov">38</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="189" class="lineNum"><a href="#189">189</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="190" class="lineNum"><a href="#190">190</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Filters for entries in the view with `key`.</span></div>
+<div class="line"><span id="191" class="lineNum"><a href="#191">191</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
+<div class="line"><span id="192" class="lineNum"><a href="#192">192</a></span><span class="counterCov">24</span><span class="lineCov">    pub fn with_key(mut self, key: V::Key) -&gt; Self {</span></div>
+<div class="line"><span id="193" class="lineNum"><a href="#193">193</a></span><span class="counterCov">24</span><span class="lineCov">        self.key = Some(QueryKey::Matches(key));</span></div>
+<div class="line"><span id="194" class="lineNum"><a href="#194">194</a></span><span class="counterCov">24</span><span class="lineCov">        self</span></div>
+<div class="line"><span id="195" class="lineNum"><a href="#195">195</a></span><span class="counterCov">24</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="196" class="lineNum"><a href="#196">196</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="197" class="lineNum"><a href="#197">197</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Filters for entries in the view with `keys`.</span></div>
+<div class="line"><span id="198" class="lineNum"><a href="#198">198</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
+<div class="line"><span id="199" class="lineNum"><a href="#199">199</a></span><span class="counterCov">2</span><span class="lineCov">    pub fn with_keys(mut self, keys: Vec&lt;V::Key&gt;) -&gt; Self {</span></div>
+<div class="line"><span id="200" class="lineNum"><a href="#200">200</a></span><span class="counterCov">2</span><span class="lineCov">        self.key = Some(QueryKey::Multiple(keys));</span></div>
+<div class="line"><span id="201" class="lineNum"><a href="#201">201</a></span><span class="counterCov">2</span><span class="lineCov">        self</span></div>
+<div class="line"><span id="202" class="lineNum"><a href="#202">202</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="203" class="lineNum"><a href="#203">203</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="204" class="lineNum"><a href="#204">204</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Filters for entries in the view with the range `keys`.</span></div>
+<div class="line"><span id="205" class="lineNum"><a href="#205">205</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
+<div class="line"><span id="206" class="lineNum"><a href="#206">206</a></span><span class="counterCov">2</span><span class="lineCov">    pub fn with_key_range(mut self, range: Range&lt;V::Key&gt;) -&gt; Self {</span></div>
+<div class="line"><span id="207" class="lineNum"><a href="#207">207</a></span><span class="counterCov">2</span><span class="lineCov">        self.key = Some(QueryKey::Range(range));</span></div>
+<div class="line"><span id="208" class="lineNum"><a href="#208">208</a></span><span class="counterCov">2</span><span class="lineCov">        self</span></div>
+<div class="line"><span id="209" class="lineNum"><a href="#209">209</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="210" class="lineNum"><a href="#210">210</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="211" class="lineNum"><a href="#211">211</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Sets the access policy for queries.</span></div>
+<div class="line"><span id="212" class="lineNum"><a href="#212">212</a></span><span class="counterCov">10</span><span class="lineCov">    pub fn with_access_policy(mut self, policy: AccessPolicy) -&gt; Self {</span></div>
+<div class="line"><span id="213" class="lineNum"><a href="#213">213</a></span><span class="counterCov">10</span><span class="lineCov">        self.access_policy = policy;</span></div>
+<div class="line"><span id="214" class="lineNum"><a href="#214">214</a></span><span class="counterCov">10</span><span class="lineCov">        self</span></div>
+<div class="line"><span id="215" class="lineNum"><a href="#215">215</a></span><span class="counterCov">10</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="216" class="lineNum"><a href="#216">216</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="217" class="lineNum"><a href="#217">217</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Executes the query and retrieves the results.</span></div>
+<div class="line"><span id="218" class="lineNum"><a href="#218">218</a></span><span class="counterCov">30</span><span class="lineCov">    pub async fn query(self) -&gt; Result&lt;Vec&lt;map::Serialized&gt;, Error&gt; {</span></div>
+<div class="line"><span id="219" class="lineNum"><a href="#219">219</a></span><span class="counterCov">30</span><span class="lineCov">        self.connection.query(self).await</span></div>
+<div class="line"><span id="220" class="lineNum"><a href="#220">220</a></span><span class="counterCov">30</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="221" class="lineNum"><a href="#221">221</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="222" class="lineNum"><a href="#222">222</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Matches all entries that have keys that are included in the set provided.</span></div>
-<div class="line"><span id="223" class="lineNum"><a href="#223">223</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Multiple(Vec&lt;K&gt;),</span></div>
-<div class="line"><span id="224" class="lineNum"><a href="#224">224</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="225" class="lineNum"><a href="#225">225</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="226" class="lineNum"><a href="#226">226</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Changes how the view&#39;s outdated data will be treated.</span></div>
-<div class="line"><span id="227" class="lineNum"><a href="#227">227</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub enum AccessPolicy {</span></div>
-<div class="line"><span id="228" class="lineNum"><a href="#228">228</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Update any changed documents before returning a response.</span></div>
-<div class="line"><span id="229" class="lineNum"><a href="#229">229</a></span><span class="counterUnCov"></span><span class="lineUnCov">    UpdateBefore,</span></div>
-<div class="line"><span id="230" class="lineNum"><a href="#230">230</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="231" class="lineNum"><a href="#231">231</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Return the results, which may be out-of-date, and start an update job in</span></div>
-<div class="line"><span id="232" class="lineNum"><a href="#232">232</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// the background. This pattern is useful when you want to ensure you</span></div>
-<div class="line"><span id="233" class="lineNum"><a href="#233">233</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// provide consistent response times while ensuring the database is</span></div>
-<div class="line"><span id="234" class="lineNum"><a href="#234">234</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// updating in the background.</span></div>
-<div class="line"><span id="235" class="lineNum"><a href="#235">235</a></span><span class="counterUnCov"></span><span class="lineUnCov">    UpdateAfter,</span></div>
-<div class="line"><span id="236" class="lineNum"><a href="#236">236</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="237" class="lineNum"><a href="#237">237</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Returns the restuls, which may be out-of-date, and do not start any</span></div>
-<div class="line"><span id="238" class="lineNum"><a href="#238">238</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// background jobs. This mode is useful if you&#39;re using a view as a cache</span></div>
-<div class="line"><span id="239" class="lineNum"><a href="#239">239</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// and have a background process that is responsible for controlling when</span></div>
-<div class="line"><span id="240" class="lineNum"><a href="#240">240</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// data is refreshed and updated. While the default `UpdateBefore`</span></div>
-<div class="line"><span id="241" class="lineNum"><a href="#241">241</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// shouldn&#39;t have much overhead, this option removes all overhead related</span></div>
-<div class="line"><span id="242" class="lineNum"><a href="#242">242</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// to view updating from the query.</span></div>
-<div class="line"><span id="243" class="lineNum"><a href="#243">243</a></span><span class="counterUnCov"></span><span class="lineUnCov">    NoUpdate,</span></div>
-<div class="line"><span id="244" class="lineNum"><a href="#244">244</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="222" class="lineNum"><a href="#222">222</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Executes a reduce over the results of the query</span></div>
+<div class="line"><span id="223" class="lineNum"><a href="#223">223</a></span><span class="counterCov">8</span><span class="lineCov">    pub async fn reduce(self) -&gt; Result&lt;V::Value, Error&gt; {</span></div>
+<div class="line"><span id="224" class="lineNum"><a href="#224">224</a></span><span class="counterCov">8</span><span class="lineCov">        self.connection.reduce(self).await</span></div>
+<div class="line"><span id="225" class="lineNum"><a href="#225">225</a></span><span class="counterCov">8</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="226" class="lineNum"><a href="#226">226</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="227" class="lineNum"><a href="#227">227</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="228" class="lineNum"><a href="#228">228</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Filters a [`View`] by key.</span></div>
+<div class="line"><span id="229" class="lineNum"><a href="#229">229</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub enum QueryKey&lt;K&gt; {</span></div>
+<div class="line"><span id="230" class="lineNum"><a href="#230">230</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Matches all entries with the key provided.</span></div>
+<div class="line"><span id="231" class="lineNum"><a href="#231">231</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Matches(K),</span></div>
+<div class="line"><span id="232" class="lineNum"><a href="#232">232</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="233" class="lineNum"><a href="#233">233</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Matches all entires with keys in the range provided.</span></div>
+<div class="line"><span id="234" class="lineNum"><a href="#234">234</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Range(Range&lt;K&gt;),</span></div>
+<div class="line"><span id="235" class="lineNum"><a href="#235">235</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="236" class="lineNum"><a href="#236">236</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Matches all entries that have keys that are included in the set provided.</span></div>
+<div class="line"><span id="237" class="lineNum"><a href="#237">237</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Multiple(Vec&lt;K&gt;),</span></div>
+<div class="line"><span id="238" class="lineNum"><a href="#238">238</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="239" class="lineNum"><a href="#239">239</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="240" class="lineNum"><a href="#240">240</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Changes how the view&#39;s outdated data will be treated.</span></div>
+<div class="line"><span id="241" class="lineNum"><a href="#241">241</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub enum AccessPolicy {</span></div>
+<div class="line"><span id="242" class="lineNum"><a href="#242">242</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Update any changed documents before returning a response.</span></div>
+<div class="line"><span id="243" class="lineNum"><a href="#243">243</a></span><span class="counterUnCov"></span><span class="lineUnCov">    UpdateBefore,</span></div>
+<div class="line"><span id="244" class="lineNum"><a href="#244">244</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="245" class="lineNum"><a href="#245">245</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Return the results, which may be out-of-date, and start an update job in</span></div>
+<div class="line"><span id="246" class="lineNum"><a href="#246">246</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// the background. This pattern is useful when you want to ensure you</span></div>
+<div class="line"><span id="247" class="lineNum"><a href="#247">247</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// provide consistent response times while ensuring the database is</span></div>
+<div class="line"><span id="248" class="lineNum"><a href="#248">248</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// updating in the background.</span></div>
+<div class="line"><span id="249" class="lineNum"><a href="#249">249</a></span><span class="counterUnCov"></span><span class="lineUnCov">    UpdateAfter,</span></div>
+<div class="line"><span id="250" class="lineNum"><a href="#250">250</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="251" class="lineNum"><a href="#251">251</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Returns the restuls, which may be out-of-date, and do not start any</span></div>
+<div class="line"><span id="252" class="lineNum"><a href="#252">252</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// background jobs. This mode is useful if you&#39;re using a view as a cache</span></div>
+<div class="line"><span id="253" class="lineNum"><a href="#253">253</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// and have a background process that is responsible for controlling when</span></div>
+<div class="line"><span id="254" class="lineNum"><a href="#254">254</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// data is refreshed and updated. While the default `UpdateBefore`</span></div>
+<div class="line"><span id="255" class="lineNum"><a href="#255">255</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// shouldn&#39;t have much overhead, this option removes all overhead related</span></div>
+<div class="line"><span id="256" class="lineNum"><a href="#256">256</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// to view updating from the query.</span></div>
+<div class="line"><span id="257" class="lineNum"><a href="#257">257</a></span><span class="counterUnCov"></span><span class="lineUnCov">    NoUpdate,</span></div>
+<div class="line"><span id="258" class="lineNum"><a href="#258">258</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 </div>
 </body>
 </html>

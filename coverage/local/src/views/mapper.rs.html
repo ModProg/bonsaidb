@@ -9,12 +9,12 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../../index.html">top level</a> - <a href="index.html">local/src/views</a> - mapper.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-28 21:05:14</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-29 20:01:02</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
-<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">179</span><span class="linesTotal">194</span><span class="linesPercentage lineHi">92.3 %</span></div>
-<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">26</span><span class="funsTotal">68</span><span class="funsPercentage funLow">38.2 %</span></div>
+<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">198</span><span class="linesTotal">213</span><span class="linesPercentage lineHi">93.0 %</span></div>
+<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">29</span><span class="funsTotal">73</span><span class="funsPercentage funLow">39.7 %</span></div>
 <div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
 </div>
 </div>
@@ -24,7 +24,7 @@
 <div class="line"><span id="3" class="lineNum"><a href="#3">3</a></span><span class="counterUnCov"></span><span class="lineUnCov">use async_trait::async_trait;</span></div>
 <div class="line"><span id="4" class="lineNum"><a href="#4">4</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_core::{</span></div>
 <div class="line"><span id="5" class="lineNum"><a href="#5">5</a></span><span class="counterUnCov"></span><span class="lineUnCov">    document::Document,</span></div>
-<div class="line"><span id="6" class="lineNum"><a href="#6">6</a></span><span class="counterUnCov"></span><span class="lineUnCov">    schema::{collection, map, Database, Key},</span></div>
+<div class="line"><span id="6" class="lineNum"><a href="#6">6</a></span><span class="counterUnCov"></span><span class="lineUnCov">    schema::{collection, map, view, Database, Key},</span></div>
 <div class="line"><span id="7" class="lineNum"><a href="#7">7</a></span><span class="counterUnCov"></span><span class="lineUnCov">};</span></div>
 <div class="line"><span id="8" class="lineNum"><a href="#8">8</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_jobs::{Job, Keyed};</span></div>
 <div class="line"><span id="9" class="lineNum"><a href="#9">9</a></span><span class="counterUnCov"></span><span class="lineUnCov">use sled::{</span></div>
@@ -223,117 +223,148 @@
 <div class="line"><span id="202" class="lineNum"><a href="#202">202</a></span><span class="counterCov">4</span><span class="lineCov">                    &amp;keys,</span></div>
 <div class="line"><span id="203" class="lineNum"><a href="#203">203</a></span><span class="counterCov">4</span><span class="lineCov">                    &amp;existing_map,</span></div>
 <div class="line"><span id="204" class="lineNum"><a href="#204">204</a></span><span class="counterCov">4</span><span class="lineCov">                    self.view_entries,</span></div>
-<div class="line"><span id="205" class="lineNum"><a href="#205">205</a></span><span class="counterCov">4</span><span class="lineCov">                )?;</span></div>
-<div class="line"><span id="206" class="lineNum"><a href="#206">206</a></span><span class="counterCov">28</span><span class="lineCov">            }</span></div>
-<div class="line"><span id="207" class="lineNum"><a href="#207">207</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="208" class="lineNum"><a href="#208">208</a></span><span class="counterCov">32</span><span class="lineCov">            let entry_mapping = EntryMapping { source, value };</span></div>
-<div class="line"><span id="209" class="lineNum"><a href="#209">209</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="210" class="lineNum"><a href="#210">210</a></span><span class="counterUnCov"></span><span class="lineUnCov">            // Add a new ViewEntry or update an existing</span></div>
-<div class="line"><span id="211" class="lineNum"><a href="#211">211</a></span><span class="counterUnCov"></span><span class="lineUnCov">            // ViewEntry for the key given</span></div>
-<div class="line"><span id="212" class="lineNum"><a href="#212">212</a></span><span class="counterCov">32</span><span class="lineCov">            let view_entry = if let Some(existing_entry) = self.view_entries.get(&amp;key)? {</span></div>
-<div class="line"><span id="213" class="lineNum"><a href="#213">213</a></span><span class="counterCov">8</span><span class="lineCov">                let mut entry = bincode::deserialize::&lt;ViewEntry&gt;(&amp;existing_entry)</span></div>
-<div class="line"><span id="214" class="lineNum"><a href="#214">214</a></span><span class="counterCov">8</span><span class="lineCov">                    .map_to_transaction_error()?;</span></div>
-<div class="line"><span id="215" class="lineNum"><a href="#215">215</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="216" class="lineNum"><a href="#216">216</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // attempt to update an existing</span></div>
-<div class="line"><span id="217" class="lineNum"><a href="#217">217</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // entry for this document, if</span></div>
-<div class="line"><span id="218" class="lineNum"><a href="#218">218</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // present</span></div>
-<div class="line"><span id="219" class="lineNum"><a href="#219">219</a></span><span class="counterCov">8</span><span class="lineCov">                let mut found = false;</span></div>
-<div class="line"><span id="220" class="lineNum"><a href="#220">220</a></span><span class="counterCov">8</span><span class="lineCov">                for mapping in &amp;mut entry.mappings {</span></div>
-<div class="line"><span id="221" class="lineNum"><a href="#221">221</a></span><span class="counterCov">8</span><span class="lineCov">                    if mapping.source == source {</span></div>
-<div class="line"><span id="222" class="lineNum"><a href="#222">222</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        found = true;</span></div>
-<div class="line"><span id="223" class="lineNum"><a href="#223">223</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        mapping.value = entry_mapping.value.clone();</span></div>
-<div class="line"><span id="224" class="lineNum"><a href="#224">224</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        break;</span></div>
-<div class="line"><span id="225" class="lineNum"><a href="#225">225</a></span><span class="counterCov">8</span><span class="lineCov">                    }</span></div>
-<div class="line"><span id="226" class="lineNum"><a href="#226">226</a></span><span class="counterUnCov"></span><span class="lineUnCov">                }</span></div>
-<div class="line"><span id="227" class="lineNum"><a href="#227">227</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="228" class="lineNum"><a href="#228">228</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // If an existing mapping wasn&#39;t</span></div>
-<div class="line"><span id="229" class="lineNum"><a href="#229">229</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // found, add it</span></div>
-<div class="line"><span id="230" class="lineNum"><a href="#230">230</a></span><span class="counterCov">8</span><span class="lineCov">                if !found {</span></div>
-<div class="line"><span id="231" class="lineNum"><a href="#231">231</a></span><span class="counterCov">8</span><span class="lineCov">                    entry.mappings.push(entry_mapping);</span></div>
-<div class="line"><span id="232" class="lineNum"><a href="#232">232</a></span><span class="counterCov">8</span><span class="lineCov">                }</span></div>
-<div class="line"><span id="233" class="lineNum"><a href="#233">233</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="234" class="lineNum"><a href="#234">234</a></span><span class="counterCov">8</span><span class="lineCov">                entry</span></div>
-<div class="line"><span id="235" class="lineNum"><a href="#235">235</a></span><span class="counterUnCov"></span><span class="lineUnCov">            } else {</span></div>
-<div class="line"><span id="236" class="lineNum"><a href="#236">236</a></span><span class="counterCov">24</span><span class="lineCov">                ViewEntry {</span></div>
-<div class="line"><span id="237" class="lineNum"><a href="#237">237</a></span><span class="counterCov">24</span><span class="lineCov">                    view_version: view.version(),</span></div>
-<div class="line"><span id="238" class="lineNum"><a href="#238">238</a></span><span class="counterCov">24</span><span class="lineCov">                    mappings: vec![entry_mapping],</span></div>
-<div class="line"><span id="239" class="lineNum"><a href="#239">239</a></span><span class="counterCov">24</span><span class="lineCov">                }</span></div>
-<div class="line"><span id="240" class="lineNum"><a href="#240">240</a></span><span class="counterUnCov"></span><span class="lineUnCov">            };</span></div>
-<div class="line"><span id="241" class="lineNum"><a href="#241">241</a></span><span class="counterCov">32</span><span class="lineCov">            self.view_entries.insert(</span></div>
-<div class="line"><span id="242" class="lineNum"><a href="#242">242</a></span><span class="counterCov">32</span><span class="lineCov">                key,</span></div>
-<div class="line"><span id="243" class="lineNum"><a href="#243">243</a></span><span class="counterCov">32</span><span class="lineCov">                bincode::serialize(&amp;view_entry).map_to_transaction_error()?,</span></div>
-<div class="line"><span id="244" class="lineNum"><a href="#244">244</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            )?;</span></div>
-<div class="line"><span id="245" class="lineNum"><a href="#245">245</a></span><span class="counterUnCov"></span><span class="lineUnCov">        } else {</span></div>
-<div class="line"><span id="246" class="lineNum"><a href="#246">246</a></span><span class="counterUnCov"></span><span class="lineUnCov">            // When no entry is emitted, the document map is emptied and a note is made in omitted_entries</span></div>
-<div class="line"><span id="247" class="lineNum"><a href="#247">247</a></span><span class="counterCov">8</span><span class="lineCov">            if let Some(existing_map) = self.document_map.remove(self.document_id)? {</span></div>
-<div class="line"><span id="248" class="lineNum"><a href="#248">248</a></span><span class="counterCov">2</span><span class="lineCov">                remove_existing_view_entries_for_keys(</span></div>
-<div class="line"><span id="249" class="lineNum"><a href="#249">249</a></span><span class="counterCov">2</span><span class="lineCov">                    self.document_id,</span></div>
-<div class="line"><span id="250" class="lineNum"><a href="#250">250</a></span><span class="counterCov">2</span><span class="lineCov">                    &amp;[],</span></div>
-<div class="line"><span id="251" class="lineNum"><a href="#251">251</a></span><span class="counterCov">2</span><span class="lineCov">                    &amp;existing_map,</span></div>
-<div class="line"><span id="252" class="lineNum"><a href="#252">252</a></span><span class="counterCov">2</span><span class="lineCov">                    self.view_entries,</span></div>
-<div class="line"><span id="253" class="lineNum"><a href="#253">253</a></span><span class="counterCov">2</span><span class="lineCov">                )?;</span></div>
-<div class="line"><span id="254" class="lineNum"><a href="#254">254</a></span><span class="counterCov">6</span><span class="lineCov">            }</span></div>
-<div class="line"><span id="255" class="lineNum"><a href="#255">255</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="256" class="lineNum"><a href="#256">256</a></span><span class="counterCov">8</span><span class="lineCov">            if doc_still_exists {</span></div>
-<div class="line"><span id="257" class="lineNum"><a href="#257">257</a></span><span class="counterCov">6</span><span class="lineCov">                self.omitted_entries</span></div>
-<div class="line"><span id="258" class="lineNum"><a href="#258">258</a></span><span class="counterCov">6</span><span class="lineCov">                    .insert(self.document_id, IVec::default())?;</span></div>
-<div class="line"><span id="259" class="lineNum"><a href="#259">259</a></span><span class="counterCov">2</span><span class="lineCov">            }</span></div>
-<div class="line"><span id="260" class="lineNum"><a href="#260">260</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
-<div class="line"><span id="261" class="lineNum"><a href="#261">261</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="262" class="lineNum"><a href="#262">262</a></span><span class="counterCov">40</span><span class="lineCov">        Ok(())</span></div>
-<div class="line"><span id="263" class="lineNum"><a href="#263">263</a></span><span class="counterCov">40</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="264" class="lineNum"><a href="#264">264</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="265" class="lineNum"><a href="#265">265</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="266" class="lineNum"><a href="#266">266</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;DB&gt; Keyed&lt;Task&gt; for Mapper&lt;DB&gt;</span></div>
-<div class="line"><span id="267" class="lineNum"><a href="#267">267</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
-<div class="line"><span id="268" class="lineNum"><a href="#268">268</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Database,</span></div>
-<div class="line"><span id="269" class="lineNum"><a href="#269">269</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
-<div class="line"><span id="270" class="lineNum"><a href="#270">270</a></span><span class="counterCov">22</span><span class="lineCov">    fn key(&amp;self) -&gt; Task {</span></div>
-<div class="line"><span id="271" class="lineNum"><a href="#271">271</a></span><span class="counterCov">22</span><span class="lineCov">        Task::ViewMap(self.map.clone())</span></div>
-<div class="line"><span id="272" class="lineNum"><a href="#272">272</a></span><span class="counterCov">22</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="273" class="lineNum"><a href="#273">273</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="274" class="lineNum"><a href="#274">274</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="275" class="lineNum"><a href="#275">275</a></span><span class="counterUnCov"></span><span class="lineUnCov">trait ToTransactionResult&lt;T, E&gt; {</span></div>
-<div class="line"><span id="276" class="lineNum"><a href="#276">276</a></span><span class="counterUnCov"></span><span class="lineUnCov">    fn map_to_transaction_error&lt;RE: From&lt;E&gt;&gt;(self) -&gt; Result&lt;T, ConflictableTransactionError&lt;RE&gt;&gt;;</span></div>
-<div class="line"><span id="277" class="lineNum"><a href="#277">277</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="278" class="lineNum"><a href="#278">278</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="279" class="lineNum"><a href="#279">279</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;T, E&gt; ToTransactionResult&lt;T, E&gt; for Result&lt;T, E&gt; {</span></div>
-<div class="line"><span id="280" class="lineNum"><a href="#280">280</a></span><span class="counterCov">166</span><span class="lineCov">    fn map_to_transaction_error&lt;RE: From&lt;E&gt;&gt;(self) -&gt; Result&lt;T, ConflictableTransactionError&lt;RE&gt;&gt; {</span></div>
-<div class="line"><span id="281" class="lineNum"><a href="#281">281</a></span><span class="counterCov">166</span><span class="lineCov">        self.map_err(|err| ConflictableTransactionError::Abort(RE::from(err)))</span></div>
-<div class="line"><span id="282" class="lineNum"><a href="#282">282</a></span><span class="counterCov">166</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="283" class="lineNum"><a href="#283">283</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
-<div class="line"><span id="284" class="lineNum"><a href="#284">284</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="285" class="lineNum"><a href="#285">285</a></span><span class="counterCov">6</span><span class="lineCov">fn remove_existing_view_entries_for_keys(</span></div>
-<div class="line"><span id="286" class="lineNum"><a href="#286">286</a></span><span class="counterCov">6</span><span class="lineCov">    document_id: &amp;[u8],</span></div>
-<div class="line"><span id="287" class="lineNum"><a href="#287">287</a></span><span class="counterCov">6</span><span class="lineCov">    keys: &amp;[Cow&lt;&#39;_, [u8]&gt;],</span></div>
-<div class="line"><span id="288" class="lineNum"><a href="#288">288</a></span><span class="counterCov">6</span><span class="lineCov">    existing_map: &amp;[u8],</span></div>
-<div class="line"><span id="289" class="lineNum"><a href="#289">289</a></span><span class="counterCov">6</span><span class="lineCov">    view_entries: &amp;TransactionalTree,</span></div>
-<div class="line"><span id="290" class="lineNum"><a href="#290">290</a></span><span class="counterCov">6</span><span class="lineCov">) -&gt; Result&lt;(), ConflictableTransactionError&lt;anyhow::Error&gt;&gt; {</span></div>
-<div class="line"><span id="291" class="lineNum"><a href="#291">291</a></span><span class="counterCov">6</span><span class="lineCov">    let existing_keys =</span></div>
-<div class="line"><span id="292" class="lineNum"><a href="#292">292</a></span><span class="counterCov">6</span><span class="lineCov">        bincode::deserialize::&lt;Vec&lt;Cow&lt;&#39;_, [u8]&gt;&gt;&gt;(existing_map).map_to_transaction_error()?;</span></div>
-<div class="line"><span id="293" class="lineNum"><a href="#293">293</a></span><span class="counterCov">6</span><span class="lineCov">    if existing_keys == keys {</span></div>
-<div class="line"><span id="294" class="lineNum"><a href="#294">294</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // No change</span></div>
-<div class="line"><span id="295" class="lineNum"><a href="#295">295</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        return Ok(());</span></div>
-<div class="line"><span id="296" class="lineNum"><a href="#296">296</a></span><span class="counterCov">6</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="297" class="lineNum"><a href="#297">297</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="298" class="lineNum"><a href="#298">298</a></span><span class="counterUnCov"></span><span class="lineUnCov">    assert_eq!(</span></div>
-<div class="line"><span id="299" class="lineNum"><a href="#299">299</a></span><span class="counterCov">6</span><span class="lineCov">        existing_keys.len(),</span></div>
-<div class="line"><span id="300" class="lineNum"><a href="#300">300</a></span><span class="counterUnCov"></span><span class="lineUnCov">        1,</span></div>
-<div class="line"><span id="301" class="lineNum"><a href="#301">301</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        &quot;need to add support for multi-emitted keys&quot;</span></div>
-<div class="line"><span id="302" class="lineNum"><a href="#302">302</a></span><span class="counterUnCov"></span><span class="lineUnCov">    );</span></div>
-<div class="line"><span id="303" class="lineNum"><a href="#303">303</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // Remove the old key</span></div>
-<div class="line"><span id="304" class="lineNum"><a href="#304">304</a></span><span class="counterCov">6</span><span class="lineCov">    if let Some(existing_entry) = view_entries.get(&amp;existing_keys[0])? {</span></div>
-<div class="line"><span id="305" class="lineNum"><a href="#305">305</a></span><span class="counterCov">6</span><span class="lineCov">        let mut entry =</span></div>
-<div class="line"><span id="306" class="lineNum"><a href="#306">306</a></span><span class="counterCov">6</span><span class="lineCov">            bincode::deserialize::&lt;ViewEntry&gt;(&amp;existing_entry).map_to_transaction_error()?;</span></div>
-<div class="line"><span id="307" class="lineNum"><a href="#307">307</a></span><span class="counterCov">6</span><span class="lineCov">        let document_id = u64::from_big_endian_bytes(document_id).unwrap();</span></div>
-<div class="line"><span id="308" class="lineNum"><a href="#308">308</a></span><span class="counterCov">8</span><span class="lineCov">        entry.mappings.retain(|m| m.source != document_id);</span></div>
-<div class="line"><span id="309" class="lineNum"><a href="#309">309</a></span><span class="counterCov">6</span><span class="lineCov">        view_entries.insert(</span></div>
-<div class="line"><span id="310" class="lineNum"><a href="#310">310</a></span><span class="counterCov">6</span><span class="lineCov">            existing_keys[0].as_ref(),</span></div>
-<div class="line"><span id="311" class="lineNum"><a href="#311">311</a></span><span class="counterCov">6</span><span class="lineCov">            bincode::serialize(&amp;entry).map_to_transaction_error()?,</span></div>
-<div class="line"><span id="312" class="lineNum"><a href="#312">312</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        )?;</span></div>
-<div class="line"><span id="313" class="lineNum"><a href="#313">313</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    }</span></div>
-<div class="line"><span id="314" class="lineNum"><a href="#314">314</a></span><span class="counterCov">6</span><span class="lineCov">    Ok(())</span></div>
-<div class="line"><span id="315" class="lineNum"><a href="#315">315</a></span><span class="counterCov">6</span><span class="lineCov">}</span></div>
+<div class="line"><span id="205" class="lineNum"><a href="#205">205</a></span><span class="counterCov">4</span><span class="lineCov">                    view,</span></div>
+<div class="line"><span id="206" class="lineNum"><a href="#206">206</a></span><span class="counterCov">4</span><span class="lineCov">                )?;</span></div>
+<div class="line"><span id="207" class="lineNum"><a href="#207">207</a></span><span class="counterCov">28</span><span class="lineCov">            }</span></div>
+<div class="line"><span id="208" class="lineNum"><a href="#208">208</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="209" class="lineNum"><a href="#209">209</a></span><span class="counterCov">32</span><span class="lineCov">            let entry_mapping = EntryMapping { source, value };</span></div>
+<div class="line"><span id="210" class="lineNum"><a href="#210">210</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="211" class="lineNum"><a href="#211">211</a></span><span class="counterUnCov"></span><span class="lineUnCov">            // Add a new ViewEntry or update an existing</span></div>
+<div class="line"><span id="212" class="lineNum"><a href="#212">212</a></span><span class="counterUnCov"></span><span class="lineUnCov">            // ViewEntry for the key given</span></div>
+<div class="line"><span id="213" class="lineNum"><a href="#213">213</a></span><span class="counterCov">32</span><span class="lineCov">            let view_entry = if let Some(existing_entry) = self.view_entries.get(&amp;key)? {</span></div>
+<div class="line"><span id="214" class="lineNum"><a href="#214">214</a></span><span class="counterCov">8</span><span class="lineCov">                let mut entry = bincode::deserialize::&lt;ViewEntry&gt;(&amp;existing_entry)</span></div>
+<div class="line"><span id="215" class="lineNum"><a href="#215">215</a></span><span class="counterCov">8</span><span class="lineCov">                    .map_to_transaction_error()?;</span></div>
+<div class="line"><span id="216" class="lineNum"><a href="#216">216</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="217" class="lineNum"><a href="#217">217</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // attempt to update an existing</span></div>
+<div class="line"><span id="218" class="lineNum"><a href="#218">218</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // entry for this document, if</span></div>
+<div class="line"><span id="219" class="lineNum"><a href="#219">219</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // present</span></div>
+<div class="line"><span id="220" class="lineNum"><a href="#220">220</a></span><span class="counterCov">8</span><span class="lineCov">                let mut found = false;</span></div>
+<div class="line"><span id="221" class="lineNum"><a href="#221">221</a></span><span class="counterCov">8</span><span class="lineCov">                for mapping in &amp;mut entry.mappings {</span></div>
+<div class="line"><span id="222" class="lineNum"><a href="#222">222</a></span><span class="counterCov">8</span><span class="lineCov">                    if mapping.source == source {</span></div>
+<div class="line"><span id="223" class="lineNum"><a href="#223">223</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        found = true;</span></div>
+<div class="line"><span id="224" class="lineNum"><a href="#224">224</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        mapping.value = entry_mapping.value.clone();</span></div>
+<div class="line"><span id="225" class="lineNum"><a href="#225">225</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        break;</span></div>
+<div class="line"><span id="226" class="lineNum"><a href="#226">226</a></span><span class="counterCov">8</span><span class="lineCov">                    }</span></div>
+<div class="line"><span id="227" class="lineNum"><a href="#227">227</a></span><span class="counterUnCov"></span><span class="lineUnCov">                }</span></div>
+<div class="line"><span id="228" class="lineNum"><a href="#228">228</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="229" class="lineNum"><a href="#229">229</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // If an existing mapping wasn&#39;t</span></div>
+<div class="line"><span id="230" class="lineNum"><a href="#230">230</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // found, add it</span></div>
+<div class="line"><span id="231" class="lineNum"><a href="#231">231</a></span><span class="counterCov">8</span><span class="lineCov">                if !found {</span></div>
+<div class="line"><span id="232" class="lineNum"><a href="#232">232</a></span><span class="counterCov">8</span><span class="lineCov">                    entry.mappings.push(entry_mapping);</span></div>
+<div class="line"><span id="233" class="lineNum"><a href="#233">233</a></span><span class="counterCov">8</span><span class="lineCov">                }</span></div>
+<div class="line"><span id="234" class="lineNum"><a href="#234">234</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="235" class="lineNum"><a href="#235">235</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // There was a choice to be made here of whether to call</span></div>
+<div class="line"><span id="236" class="lineNum"><a href="#236">236</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // reduce()  with all of the existing values, or call it with</span></div>
+<div class="line"><span id="237" class="lineNum"><a href="#237">237</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // rereduce=true passing only the new value and the old stored</span></div>
+<div class="line"><span id="238" class="lineNum"><a href="#238">238</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // value. In this implementation, it&#39;s technically less</span></div>
+<div class="line"><span id="239" class="lineNum"><a href="#239">239</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // efficient, but we can guarantee that every value has only</span></div>
+<div class="line"><span id="240" class="lineNum"><a href="#240">240</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // been reduced once, and potentially re-reduced a single-time.</span></div>
+<div class="line"><span id="241" class="lineNum"><a href="#241">241</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // If we constantly try to update the value to optimize the size</span></div>
+<div class="line"><span id="242" class="lineNum"><a href="#242">242</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // of `mappings`, the fear is that the value computed may lose</span></div>
+<div class="line"><span id="243" class="lineNum"><a href="#243">243</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // precision in some contexts over time. Thus, the decision was</span></div>
+<div class="line"><span id="244" class="lineNum"><a href="#244">244</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // made to always call reduce() with all the mappings within a</span></div>
+<div class="line"><span id="245" class="lineNum"><a href="#245">245</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // single ViewEntry.</span></div>
+<div class="line"><span id="246" class="lineNum"><a href="#246">246</a></span><span class="counterCov">8</span><span class="lineCov">                let mappings = entry</span></div>
+<div class="line"><span id="247" class="lineNum"><a href="#247">247</a></span><span class="counterCov">8</span><span class="lineCov">                    .mappings</span></div>
+<div class="line"><span id="248" class="lineNum"><a href="#248">248</a></span><span class="counterCov">8</span><span class="lineCov">                    .iter()</span></div>
+<div class="line"><span id="249" class="lineNum"><a href="#249">249</a></span><span class="counterCov">16</span><span class="lineCov">                    .map(|m| (key.as_slice(), m.value.as_slice()))</span></div>
+<div class="line"><span id="250" class="lineNum"><a href="#250">250</a></span><span class="counterCov">8</span><span class="lineCov">                    .collect::&lt;Vec&lt;_&gt;&gt;();</span></div>
+<div class="line"><span id="251" class="lineNum"><a href="#251">251</a></span><span class="counterCov">8</span><span class="lineCov">                entry.reduced_value = view.reduce(&amp;mappings, false).map_to_transaction_error()?;</span></div>
+<div class="line"><span id="252" class="lineNum"><a href="#252">252</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="253" class="lineNum"><a href="#253">253</a></span><span class="counterCov">8</span><span class="lineCov">                entry</span></div>
+<div class="line"><span id="254" class="lineNum"><a href="#254">254</a></span><span class="counterUnCov"></span><span class="lineUnCov">            } else {</span></div>
+<div class="line"><span id="255" class="lineNum"><a href="#255">255</a></span><span class="counterCov">24</span><span class="lineCov">                let reduced_value = view</span></div>
+<div class="line"><span id="256" class="lineNum"><a href="#256">256</a></span><span class="counterCov">24</span><span class="lineCov">                    .reduce(&amp;[(&amp;key, &amp;entry_mapping.value)], false)</span></div>
+<div class="line"><span id="257" class="lineNum"><a href="#257">257</a></span><span class="counterCov">24</span><span class="lineCov">                    .map_to_transaction_error()?;</span></div>
+<div class="line"><span id="258" class="lineNum"><a href="#258">258</a></span><span class="counterCov">24</span><span class="lineCov">                ViewEntry {</span></div>
+<div class="line"><span id="259" class="lineNum"><a href="#259">259</a></span><span class="counterCov">24</span><span class="lineCov">                    view_version: view.version(),</span></div>
+<div class="line"><span id="260" class="lineNum"><a href="#260">260</a></span><span class="counterCov">24</span><span class="lineCov">                    mappings: vec![entry_mapping],</span></div>
+<div class="line"><span id="261" class="lineNum"><a href="#261">261</a></span><span class="counterCov">24</span><span class="lineCov">                    reduced_value,</span></div>
+<div class="line"><span id="262" class="lineNum"><a href="#262">262</a></span><span class="counterCov">24</span><span class="lineCov">                }</span></div>
+<div class="line"><span id="263" class="lineNum"><a href="#263">263</a></span><span class="counterUnCov"></span><span class="lineUnCov">            };</span></div>
+<div class="line"><span id="264" class="lineNum"><a href="#264">264</a></span><span class="counterCov">32</span><span class="lineCov">            self.view_entries.insert(</span></div>
+<div class="line"><span id="265" class="lineNum"><a href="#265">265</a></span><span class="counterCov">32</span><span class="lineCov">                key,</span></div>
+<div class="line"><span id="266" class="lineNum"><a href="#266">266</a></span><span class="counterCov">32</span><span class="lineCov">                bincode::serialize(&amp;view_entry).map_to_transaction_error()?,</span></div>
+<div class="line"><span id="267" class="lineNum"><a href="#267">267</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            )?;</span></div>
+<div class="line"><span id="268" class="lineNum"><a href="#268">268</a></span><span class="counterUnCov"></span><span class="lineUnCov">        } else {</span></div>
+<div class="line"><span id="269" class="lineNum"><a href="#269">269</a></span><span class="counterUnCov"></span><span class="lineUnCov">            // When no entry is emitted, the document map is emptied and a note is made in omitted_entries</span></div>
+<div class="line"><span id="270" class="lineNum"><a href="#270">270</a></span><span class="counterCov">8</span><span class="lineCov">            if let Some(existing_map) = self.document_map.remove(self.document_id)? {</span></div>
+<div class="line"><span id="271" class="lineNum"><a href="#271">271</a></span><span class="counterCov">2</span><span class="lineCov">                remove_existing_view_entries_for_keys(</span></div>
+<div class="line"><span id="272" class="lineNum"><a href="#272">272</a></span><span class="counterCov">2</span><span class="lineCov">                    self.document_id,</span></div>
+<div class="line"><span id="273" class="lineNum"><a href="#273">273</a></span><span class="counterCov">2</span><span class="lineCov">                    &amp;[],</span></div>
+<div class="line"><span id="274" class="lineNum"><a href="#274">274</a></span><span class="counterCov">2</span><span class="lineCov">                    &amp;existing_map,</span></div>
+<div class="line"><span id="275" class="lineNum"><a href="#275">275</a></span><span class="counterCov">2</span><span class="lineCov">                    self.view_entries,</span></div>
+<div class="line"><span id="276" class="lineNum"><a href="#276">276</a></span><span class="counterCov">2</span><span class="lineCov">                    view,</span></div>
+<div class="line"><span id="277" class="lineNum"><a href="#277">277</a></span><span class="counterCov">2</span><span class="lineCov">                )?;</span></div>
+<div class="line"><span id="278" class="lineNum"><a href="#278">278</a></span><span class="counterCov">6</span><span class="lineCov">            }</span></div>
+<div class="line"><span id="279" class="lineNum"><a href="#279">279</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="280" class="lineNum"><a href="#280">280</a></span><span class="counterCov">8</span><span class="lineCov">            if doc_still_exists {</span></div>
+<div class="line"><span id="281" class="lineNum"><a href="#281">281</a></span><span class="counterCov">6</span><span class="lineCov">                self.omitted_entries</span></div>
+<div class="line"><span id="282" class="lineNum"><a href="#282">282</a></span><span class="counterCov">6</span><span class="lineCov">                    .insert(self.document_id, IVec::default())?;</span></div>
+<div class="line"><span id="283" class="lineNum"><a href="#283">283</a></span><span class="counterCov">2</span><span class="lineCov">            }</span></div>
+<div class="line"><span id="284" class="lineNum"><a href="#284">284</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
+<div class="line"><span id="285" class="lineNum"><a href="#285">285</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="286" class="lineNum"><a href="#286">286</a></span><span class="counterCov">40</span><span class="lineCov">        Ok(())</span></div>
+<div class="line"><span id="287" class="lineNum"><a href="#287">287</a></span><span class="counterCov">40</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="288" class="lineNum"><a href="#288">288</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="289" class="lineNum"><a href="#289">289</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="290" class="lineNum"><a href="#290">290</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;DB&gt; Keyed&lt;Task&gt; for Mapper&lt;DB&gt;</span></div>
+<div class="line"><span id="291" class="lineNum"><a href="#291">291</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
+<div class="line"><span id="292" class="lineNum"><a href="#292">292</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Database,</span></div>
+<div class="line"><span id="293" class="lineNum"><a href="#293">293</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
+<div class="line"><span id="294" class="lineNum"><a href="#294">294</a></span><span class="counterCov">22</span><span class="lineCov">    fn key(&amp;self) -&gt; Task {</span></div>
+<div class="line"><span id="295" class="lineNum"><a href="#295">295</a></span><span class="counterCov">22</span><span class="lineCov">        Task::ViewMap(self.map.clone())</span></div>
+<div class="line"><span id="296" class="lineNum"><a href="#296">296</a></span><span class="counterCov">22</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="297" class="lineNum"><a href="#297">297</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="298" class="lineNum"><a href="#298">298</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="299" class="lineNum"><a href="#299">299</a></span><span class="counterUnCov"></span><span class="lineUnCov">trait ToTransactionResult&lt;T, E&gt; {</span></div>
+<div class="line"><span id="300" class="lineNum"><a href="#300">300</a></span><span class="counterUnCov"></span><span class="lineUnCov">    fn map_to_transaction_error&lt;RE: From&lt;E&gt;&gt;(self) -&gt; Result&lt;T, ConflictableTransactionError&lt;RE&gt;&gt;;</span></div>
+<div class="line"><span id="301" class="lineNum"><a href="#301">301</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="302" class="lineNum"><a href="#302">302</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="303" class="lineNum"><a href="#303">303</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;T, E&gt; ToTransactionResult&lt;T, E&gt; for Result&lt;T, E&gt; {</span></div>
+<div class="line"><span id="304" class="lineNum"><a href="#304">304</a></span><span class="counterCov">204</span><span class="lineCov">    fn map_to_transaction_error&lt;RE: From&lt;E&gt;&gt;(self) -&gt; Result&lt;T, ConflictableTransactionError&lt;RE&gt;&gt; {</span></div>
+<div class="line"><span id="305" class="lineNum"><a href="#305">305</a></span><span class="counterCov">204</span><span class="lineCov">        self.map_err(|err| ConflictableTransactionError::Abort(RE::from(err)))</span></div>
+<div class="line"><span id="306" class="lineNum"><a href="#306">306</a></span><span class="counterCov">204</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="307" class="lineNum"><a href="#307">307</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="308" class="lineNum"><a href="#308">308</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="309" class="lineNum"><a href="#309">309</a></span><span class="counterCov">6</span><span class="lineCov">fn remove_existing_view_entries_for_keys(</span></div>
+<div class="line"><span id="310" class="lineNum"><a href="#310">310</a></span><span class="counterCov">6</span><span class="lineCov">    document_id: &amp;[u8],</span></div>
+<div class="line"><span id="311" class="lineNum"><a href="#311">311</a></span><span class="counterCov">6</span><span class="lineCov">    keys: &amp;[Cow&lt;&#39;_, [u8]&gt;],</span></div>
+<div class="line"><span id="312" class="lineNum"><a href="#312">312</a></span><span class="counterCov">6</span><span class="lineCov">    existing_map: &amp;[u8],</span></div>
+<div class="line"><span id="313" class="lineNum"><a href="#313">313</a></span><span class="counterCov">6</span><span class="lineCov">    view_entries: &amp;TransactionalTree,</span></div>
+<div class="line"><span id="314" class="lineNum"><a href="#314">314</a></span><span class="counterCov">6</span><span class="lineCov">    view: &amp;dyn view::Serialized,</span></div>
+<div class="line"><span id="315" class="lineNum"><a href="#315">315</a></span><span class="counterCov">6</span><span class="lineCov">) -&gt; Result&lt;(), ConflictableTransactionError&lt;anyhow::Error&gt;&gt; {</span></div>
+<div class="line"><span id="316" class="lineNum"><a href="#316">316</a></span><span class="counterCov">6</span><span class="lineCov">    let existing_keys =</span></div>
+<div class="line"><span id="317" class="lineNum"><a href="#317">317</a></span><span class="counterCov">6</span><span class="lineCov">        bincode::deserialize::&lt;Vec&lt;Cow&lt;&#39;_, [u8]&gt;&gt;&gt;(existing_map).map_to_transaction_error()?;</span></div>
+<div class="line"><span id="318" class="lineNum"><a href="#318">318</a></span><span class="counterCov">6</span><span class="lineCov">    if existing_keys == keys {</span></div>
+<div class="line"><span id="319" class="lineNum"><a href="#319">319</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // No change</span></div>
+<div class="line"><span id="320" class="lineNum"><a href="#320">320</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        return Ok(());</span></div>
+<div class="line"><span id="321" class="lineNum"><a href="#321">321</a></span><span class="counterCov">6</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="322" class="lineNum"><a href="#322">322</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="323" class="lineNum"><a href="#323">323</a></span><span class="counterUnCov"></span><span class="lineUnCov">    assert_eq!(</span></div>
+<div class="line"><span id="324" class="lineNum"><a href="#324">324</a></span><span class="counterCov">6</span><span class="lineCov">        existing_keys.len(),</span></div>
+<div class="line"><span id="325" class="lineNum"><a href="#325">325</a></span><span class="counterUnCov"></span><span class="lineUnCov">        1,</span></div>
+<div class="line"><span id="326" class="lineNum"><a href="#326">326</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        &quot;need to add support for multi-emitted keys&quot;</span></div>
+<div class="line"><span id="327" class="lineNum"><a href="#327">327</a></span><span class="counterUnCov"></span><span class="lineUnCov">    );</span></div>
+<div class="line"><span id="328" class="lineNum"><a href="#328">328</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // Remove the old key</span></div>
+<div class="line"><span id="329" class="lineNum"><a href="#329">329</a></span><span class="counterCov">6</span><span class="lineCov">    if let Some(existing_entry) = view_entries.get(&amp;existing_keys[0])? {</span></div>
+<div class="line"><span id="330" class="lineNum"><a href="#330">330</a></span><span class="counterCov">6</span><span class="lineCov">        let mut entry =</span></div>
+<div class="line"><span id="331" class="lineNum"><a href="#331">331</a></span><span class="counterCov">6</span><span class="lineCov">            bincode::deserialize::&lt;ViewEntry&gt;(&amp;existing_entry).map_to_transaction_error()?;</span></div>
+<div class="line"><span id="332" class="lineNum"><a href="#332">332</a></span><span class="counterCov">6</span><span class="lineCov">        let document_id = u64::from_big_endian_bytes(document_id).unwrap();</span></div>
+<div class="line"><span id="333" class="lineNum"><a href="#333">333</a></span><span class="counterCov">8</span><span class="lineCov">        entry.mappings.retain(|m| m.source != document_id);</span></div>
+<div class="line"><span id="334" class="lineNum"><a href="#334">334</a></span><span class="counterCov">6</span><span class="lineCov">        let mappings = entry</span></div>
+<div class="line"><span id="335" class="lineNum"><a href="#335">335</a></span><span class="counterCov">6</span><span class="lineCov">            .mappings</span></div>
+<div class="line"><span id="336" class="lineNum"><a href="#336">336</a></span><span class="counterCov">6</span><span class="lineCov">            .iter()</span></div>
+<div class="line"><span id="337" class="lineNum"><a href="#337">337</a></span><span class="counterCov">6</span><span class="lineCov">            .map(|m| (existing_keys[0].as_ref(), m.value.as_slice()))</span></div>
+<div class="line"><span id="338" class="lineNum"><a href="#338">338</a></span><span class="counterCov">6</span><span class="lineCov">            .collect::&lt;Vec&lt;_&gt;&gt;();</span></div>
+<div class="line"><span id="339" class="lineNum"><a href="#339">339</a></span><span class="counterCov">6</span><span class="lineCov">        entry.reduced_value = view.reduce(&amp;mappings, false).map_to_transaction_error()?;</span></div>
+<div class="line"><span id="340" class="lineNum"><a href="#340">340</a></span><span class="counterCov">6</span><span class="lineCov">        view_entries.insert(</span></div>
+<div class="line"><span id="341" class="lineNum"><a href="#341">341</a></span><span class="counterCov">6</span><span class="lineCov">            existing_keys[0].as_ref(),</span></div>
+<div class="line"><span id="342" class="lineNum"><a href="#342">342</a></span><span class="counterCov">6</span><span class="lineCov">            bincode::serialize(&amp;entry).map_to_transaction_error()?,</span></div>
+<div class="line"><span id="343" class="lineNum"><a href="#343">343</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        )?;</span></div>
+<div class="line"><span id="344" class="lineNum"><a href="#344">344</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    }</span></div>
+<div class="line"><span id="345" class="lineNum"><a href="#345">345</a></span><span class="counterCov">6</span><span class="lineCov">    Ok(())</span></div>
+<div class="line"><span id="346" class="lineNum"><a href="#346">346</a></span><span class="counterCov">6</span><span class="lineCov">}</span></div>
 </div>
 </body>
 </html>
