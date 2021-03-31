@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">local/src</a> - storage.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 19:49:16</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 20:03:16</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -81,9 +81,9 @@
 <div class="line"><span id="60" class="lineNum"><a href="#60">60</a></span><span class="counterCov">36</span><span class="lineCov">        path: P,</span></div>
 <div class="line"><span id="61" class="lineNum"><a href="#61">61</a></span><span class="counterCov">36</span><span class="lineCov">        configuration: &amp;Configuration,</span></div>
 <div class="line"><span id="62" class="lineNum"><a href="#62">62</a></span><span class="counterCov">36</span><span class="lineCov">    ) -&gt; Result&lt;Self, Error&gt; {</span></div>
-<div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterCov">34</span><span class="lineCov">        let owned_path = path.as_ref().to_owned();</span></div>
-<div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterCov">34</span><span class="lineCov"></span></div>
-<div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterCov">34</span><span class="lineCov">        let manager = Manager::default();</span></div>
+<div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterCov">36</span><span class="lineCov">        let owned_path = path.as_ref().to_owned();</span></div>
+<div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterCov">36</span><span class="lineCov"></span></div>
+<div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterCov">36</span><span class="lineCov">        let manager = Manager::default();</span></div>
 <div class="line"><span id="66" class="lineNum"><a href="#66">66</a></span><span class="counterCov">576</span><span class="lineCov">        for _ in 0..configuration.workers.worker_count {</span></div>
 <div class="line"><span id="67" class="lineNum"><a href="#67">67</a></span><span class="counterCov">576</span><span class="lineCov">            manager.spawn_worker();</span></div>
 <div class="line"><span id="68" class="lineNum"><a href="#68">68</a></span><span class="counterCov">576</span><span class="lineCov">        }</span></div>
@@ -216,10 +216,10 @@
 <div class="line"><span id="195" class="lineNum"><a href="#195">195</a></span><span class="counterCov">2050</span><span class="lineCov">        let sled = self.sled.clone();</span></div>
 <div class="line"><span id="196" class="lineNum"><a href="#196">196</a></span><span class="counterCov">2050</span><span class="lineCov">        let schema = self.schema.clone();</span></div>
 <div class="line"><span id="197" class="lineNum"><a href="#197">197</a></span><span class="counterCov">2050</span><span class="lineCov">        tokio::task::spawn_blocking(move || {</span></div>
-<div class="line"><span id="198" class="lineNum"><a href="#198">198</a></span><span class="counterCov">2048</span><span class="lineCov">            let mut open_trees = OpenTrees::default();</span></div>
-<div class="line"><span id="199" class="lineNum"><a href="#199">199</a></span><span class="counterCov">2048</span><span class="lineCov">            open_trees</span></div>
-<div class="line"><span id="200" class="lineNum"><a href="#200">200</a></span><span class="counterCov">2048</span><span class="lineCov">                .open_tree(&amp;sled, TRANSACTION_TREE_NAME)</span></div>
-<div class="line"><span id="201" class="lineNum"><a href="#201">201</a></span><span class="counterCov">2048</span><span class="lineCov">                .map_err_to_core()?;</span></div>
+<div class="line"><span id="198" class="lineNum"><a href="#198">198</a></span><span class="counterCov">2050</span><span class="lineCov">            let mut open_trees = OpenTrees::default();</span></div>
+<div class="line"><span id="199" class="lineNum"><a href="#199">199</a></span><span class="counterCov">2050</span><span class="lineCov">            open_trees</span></div>
+<div class="line"><span id="200" class="lineNum"><a href="#200">200</a></span><span class="counterCov">2050</span><span class="lineCov">                .open_tree(&amp;sled, TRANSACTION_TREE_NAME)</span></div>
+<div class="line"><span id="201" class="lineNum"><a href="#201">201</a></span><span class="counterCov">2050</span><span class="lineCov">                .map_err_to_core()?;</span></div>
 <div class="line"><span id="202" class="lineNum"><a href="#202">202</a></span><span class="counterCov">2050</span><span class="lineCov">            for op in &amp;transaction.operations {</span></div>
 <div class="line"><span id="203" class="lineNum"><a href="#203">203</a></span><span class="counterCov">2050</span><span class="lineCov">                match &amp;op.command {</span></div>
 <div class="line"><span id="204" class="lineNum"><a href="#204">204</a></span><span class="counterCov">2050</span><span class="lineCov">                    Command::Update { .. } | Command::Insert { .. } | Command::Delete { .. } =&gt; {</span></div>
@@ -294,7 +294,7 @@
 <div class="line"><span id="273" class="lineNum"><a href="#273">273</a></span><span class="counterCov">2046</span><span class="lineCov">                Ok(results)</span></div>
 <div class="line"><span id="274" class="lineNum"><a href="#274">274</a></span><span class="counterCov">2050</span><span class="lineCov">            }) {</span></div>
 <div class="line"><span id="275" class="lineNum"><a href="#275">275</a></span><span class="counterCov">2046</span><span class="lineCov">                Ok(results) =&gt; Ok(results),</span></div>
-<div class="line"><span id="276" class="lineNum"><a href="#276">276</a></span><span class="counterCov">2</span><span class="lineCov">                Err(err) =&gt; match err {</span></div>
+<div class="line"><span id="276" class="lineNum"><a href="#276">276</a></span><span class="counterCov">4</span><span class="lineCov">                Err(err) =&gt; match err {</span></div>
 <div class="line"><span id="277" class="lineNum"><a href="#277">277</a></span><span class="counterCov">4</span><span class="lineCov">                    TransactionError::Abort(err) =&gt; Err(err),</span></div>
 <div class="line"><span id="278" class="lineNum"><a href="#278">278</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                    TransactionError::Storage(err) =&gt; {</span></div>
 <div class="line"><span id="279" class="lineNum"><a href="#279">279</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        Err(pliantdb_core::Error::Storage(err.to_string()))</span></div>
