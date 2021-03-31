@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<title>Grcov report &mdash;mod.rs</title>
+<link rel="stylesheet" href="../../../grcov.css">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<div class="header">
+<div class="view">
+<div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../../index.html">top level</a> - <a href="index.html">core/src/schema</a> - mod.rs</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 19:28:59</span></div>
+</div>
+<div class="stats">
+<div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
+<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">1</span><span class="linesTotal">1</span><span class="linesPercentage lineHi">100.0 %</span></div>
+<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">1</span><span class="funsTotal">1</span><span class="funsPercentage funHi">100.0 %</span></div>
+<div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
+</div>
+</div>
+<div class="sourceCode">
+<div class="line"><span id="1" class="lineNum"><a href="#1">1</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Types for defining a `Collection`.</span></div>
+<div class="line"><span id="2" class="lineNum"><a href="#2">2</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub mod collection;</span></div>
+<div class="line"><span id="3" class="lineNum"><a href="#3">3</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod schematic;</span></div>
+<div class="line"><span id="4" class="lineNum"><a href="#4">4</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Types for defining map/reduce-powered `View`s.</span></div>
+<div class="line"><span id="5" class="lineNum"><a href="#5">5</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub mod view;</span></div>
+<div class="line"><span id="6" class="lineNum"><a href="#6">6</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="7" class="lineNum"><a href="#7">7</a></span><span class="counterUnCov"></span><span class="lineUnCov">use std::fmt::Debug;</span></div>
+<div class="line"><span id="8" class="lineNum"><a href="#8">8</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="9" class="lineNum"><a href="#9">9</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub use self::{collection::*, schematic::*, view::*};</span></div>
+<div class="line"><span id="10" class="lineNum"><a href="#10">10</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="11" class="lineNum"><a href="#11">11</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// Defines a group of collections that are stored into a single database.</span></div>
+<div class="line"><span id="12" class="lineNum"><a href="#12">12</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub trait Schema: Send + Sync + Debug + &#39;static {</span></div>
+<div class="line"><span id="13" class="lineNum"><a href="#13">13</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Defines the `Collection`s into `schema`</span></div>
+<div class="line"><span id="14" class="lineNum"><a href="#14">14</a></span><span class="counterUnCov"></span><span class="lineUnCov">    fn define_collections(schema: &amp;mut Schematic);</span></div>
+<div class="line"><span id="15" class="lineNum"><a href="#15">15</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="16" class="lineNum"><a href="#16">16</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="17" class="lineNum"><a href="#17">17</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// This trait is only useful for tools like `pliantdb-dump`. There is no</span></div>
+<div class="line"><span id="18" class="lineNum"><a href="#18">18</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// real-world use case of connecting to a Database with no schema.</span></div>
+<div class="line"><span id="19" class="lineNum"><a href="#19">19</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl Schema for () {</span></div>
+<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterCov">48</span><span class="lineCov">    fn define_collections(_schema: &amp;mut Schematic) {}</span></div>
+<div class="line"><span id="21" class="lineNum"><a href="#21">21</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+</div>
+</body>
+</html>

@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../../index.html">top level</a> - <a href="index.html">local/src/views</a> - mapper.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 17:15:50</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 19:28:59</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -24,7 +24,7 @@
 <div class="line"><span id="3" class="lineNum"><a href="#3">3</a></span><span class="counterUnCov"></span><span class="lineUnCov">use async_trait::async_trait;</span></div>
 <div class="line"><span id="4" class="lineNum"><a href="#4">4</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_core::{</span></div>
 <div class="line"><span id="5" class="lineNum"><a href="#5">5</a></span><span class="counterUnCov"></span><span class="lineUnCov">    document::Document,</span></div>
-<div class="line"><span id="6" class="lineNum"><a href="#6">6</a></span><span class="counterUnCov"></span><span class="lineUnCov">    schema::{collection, map, view, Database, Key},</span></div>
+<div class="line"><span id="6" class="lineNum"><a href="#6">6</a></span><span class="counterUnCov"></span><span class="lineUnCov">    schema::{collection, map, view, Key, Schema},</span></div>
 <div class="line"><span id="7" class="lineNum"><a href="#7">7</a></span><span class="counterUnCov"></span><span class="lineUnCov">};</span></div>
 <div class="line"><span id="8" class="lineNum"><a href="#8">8</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_jobs::{Job, Keyed};</span></div>
 <div class="line"><span id="9" class="lineNum"><a href="#9">9</a></span><span class="counterUnCov"></span><span class="lineUnCov">use sled::{</span></div>
@@ -53,7 +53,7 @@
 <div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[async_trait]</span></div>
 <div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;DB&gt; Job for Mapper&lt;DB&gt;</span></div>
 <div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
-<div class="line"><span id="35" class="lineNum"><a href="#35">35</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Database,</span></div>
+<div class="line"><span id="35" class="lineNum"><a href="#35">35</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Schema,</span></div>
 <div class="line"><span id="36" class="lineNum"><a href="#36">36</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
 <div class="line"><span id="37" class="lineNum"><a href="#37">37</a></span><span class="counterUnCov"></span><span class="lineUnCov">    type Output = u64;</span></div>
 <div class="line"><span id="38" class="lineNum"><a href="#38">38</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
@@ -121,7 +121,7 @@
 <div class="line"><span id="100" class="lineNum"><a href="#100">100</a></span><span class="counterCov">44</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="101" class="lineNum"><a href="#101">101</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 <div class="line"><span id="102" class="lineNum"><a href="#102">102</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="103" class="lineNum"><a href="#103">103</a></span><span class="counterCov">22</span><span class="lineCov">fn map_view&lt;DB: Database&gt;(</span></div>
+<div class="line"><span id="103" class="lineNum"><a href="#103">103</a></span><span class="counterCov">22</span><span class="lineCov">fn map_view&lt;DB: Schema&gt;(</span></div>
 <div class="line"><span id="104" class="lineNum"><a href="#104">104</a></span><span class="counterCov">22</span><span class="lineCov">    invalidated_entries: &amp;Tree,</span></div>
 <div class="line"><span id="105" class="lineNum"><a href="#105">105</a></span><span class="counterCov">22</span><span class="lineCov">    document_map: &amp;Tree,</span></div>
 <div class="line"><span id="106" class="lineNum"><a href="#106">106</a></span><span class="counterCov">22</span><span class="lineCov">    documents: &amp;Tree,</span></div>
@@ -184,7 +184,7 @@
 <div class="line"><span id="163" class="lineNum"><a href="#163">163</a></span><span class="counterUnCov"></span><span class="lineUnCov">    storage: &amp;&#39;a Storage&lt;DB&gt;,</span></div>
 <div class="line"><span id="164" class="lineNum"><a href="#164">164</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 <div class="line"><span id="165" class="lineNum"><a href="#165">165</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="166" class="lineNum"><a href="#166">166</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a, DB: Database&gt; DocumentRequest&lt;&#39;a, DB&gt; {</span></div>
+<div class="line"><span id="166" class="lineNum"><a href="#166">166</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a, DB: Schema&gt; DocumentRequest&lt;&#39;a, DB&gt; {</span></div>
 <div class="line"><span id="167" class="lineNum"><a href="#167">167</a></span><span class="counterUnCov"></span><span class="lineUnCov">    fn map(&amp;self) -&gt; Result&lt;(), ConflictableTransactionError&lt;anyhow::Error&gt;&gt; {</span></div>
 <div class="line"><span id="168" class="lineNum"><a href="#168">168</a></span><span class="counterCov">40</span><span class="lineCov">        self.invalidated_entries.remove(self.document_id)?;</span></div>
 <div class="line"><span id="169" class="lineNum"><a href="#169">169</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
@@ -310,7 +310,7 @@
 <div class="line"><span id="289" class="lineNum"><a href="#289">289</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="290" class="lineNum"><a href="#290">290</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;DB&gt; Keyed&lt;Task&gt; for Mapper&lt;DB&gt;</span></div>
 <div class="line"><span id="291" class="lineNum"><a href="#291">291</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
-<div class="line"><span id="292" class="lineNum"><a href="#292">292</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Database,</span></div>
+<div class="line"><span id="292" class="lineNum"><a href="#292">292</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Schema,</span></div>
 <div class="line"><span id="293" class="lineNum"><a href="#293">293</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
 <div class="line"><span id="294" class="lineNum"><a href="#294">294</a></span><span class="counterCov">22</span><span class="lineCov">    fn key(&amp;self) -&gt; Task {</span></div>
 <div class="line"><span id="295" class="lineNum"><a href="#295">295</a></span><span class="counterCov">22</span><span class="lineCov">        Task::ViewMap(self.map.clone())</span></div>

@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">local/src</a> - storage.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 17:15:50</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 19:28:59</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -26,7 +26,7 @@
 <div class="line"><span id="5" class="lineNum"><a href="#5">5</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_core::{</span></div>
 <div class="line"><span id="6" class="lineNum"><a href="#6">6</a></span><span class="counterUnCov"></span><span class="lineUnCov">    connection::{AccessPolicy, Collection, Connection, QueryKey, View},</span></div>
 <div class="line"><span id="7" class="lineNum"><a href="#7">7</a></span><span class="counterUnCov"></span><span class="lineUnCov">    document::Document,</span></div>
-<div class="line"><span id="8" class="lineNum"><a href="#8">8</a></span><span class="counterUnCov"></span><span class="lineUnCov">    schema::{self, collection, map::MappedDocument, view, Database, Key, Map, Schema},</span></div>
+<div class="line"><span id="8" class="lineNum"><a href="#8">8</a></span><span class="counterUnCov"></span><span class="lineUnCov">    schema::{self, collection, map::MappedDocument, view, Key, Map, Schema, Schematic},</span></div>
 <div class="line"><span id="9" class="lineNum"><a href="#9">9</a></span><span class="counterUnCov"></span><span class="lineUnCov">    transaction::{self, ChangedDocument, Command, Operation, OperationResult, Transaction},</span></div>
 <div class="line"><span id="10" class="lineNum"><a href="#10">10</a></span><span class="counterUnCov"></span><span class="lineUnCov">};</span></div>
 <div class="line"><span id="11" class="lineNum"><a href="#11">11</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_jobs::manager::Manager;</span></div>
@@ -52,7 +52,7 @@
 <div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterNoCov">0</span><span class="lineNoCov">#[derive(Debug)]</span></div>
 <div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct Storage&lt;DB&gt; {</span></div>
 <div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub(crate) sled: sled::Db,</span></div>
-<div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub(crate) schema: Arc&lt;Schema&gt;,</span></div>
+<div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub(crate) schema: Arc&lt;Schematic&gt;,</span></div>
 <div class="line"><span id="35" class="lineNum"><a href="#35">35</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub(crate) tasks: TaskManager,</span></div>
 <div class="line"><span id="36" class="lineNum"><a href="#36">36</a></span><span class="counterUnCov"></span><span class="lineUnCov">    _schema: PhantomData&lt;DB&gt;,</span></div>
 <div class="line"><span id="37" class="lineNum"><a href="#37">37</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
@@ -70,7 +70,7 @@
 <div class="line"><span id="49" class="lineNum"><a href="#49">49</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="50" class="lineNum"><a href="#50">50</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;DB&gt; Storage&lt;DB&gt;</span></div>
 <div class="line"><span id="51" class="lineNum"><a href="#51">51</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
-<div class="line"><span id="52" class="lineNum"><a href="#52">52</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Database,</span></div>
+<div class="line"><span id="52" class="lineNum"><a href="#52">52</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Schema,</span></div>
 <div class="line"><span id="53" class="lineNum"><a href="#53">53</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
 <div class="line"><span id="54" class="lineNum"><a href="#54">54</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Opens a local file as a pliantdb.</span></div>
 <div class="line"><span id="55" class="lineNum"><a href="#55">55</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ///</span></div>
@@ -81,16 +81,16 @@
 <div class="line"><span id="60" class="lineNum"><a href="#60">60</a></span><span class="counterCov">44</span><span class="lineCov">        path: P,</span></div>
 <div class="line"><span id="61" class="lineNum"><a href="#61">61</a></span><span class="counterCov">44</span><span class="lineCov">        configuration: &amp;Configuration,</span></div>
 <div class="line"><span id="62" class="lineNum"><a href="#62">62</a></span><span class="counterCov">44</span><span class="lineCov">    ) -&gt; Result&lt;Self, Error&gt; {</span></div>
-<div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterCov">42</span><span class="lineCov">        let owned_path = path.as_ref().to_owned();</span></div>
-<div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterCov">42</span><span class="lineCov"></span></div>
-<div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterCov">42</span><span class="lineCov">        let manager = Manager::default();</span></div>
+<div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterCov">44</span><span class="lineCov">        let owned_path = path.as_ref().to_owned();</span></div>
+<div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterCov">44</span><span class="lineCov"></span></div>
+<div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterCov">44</span><span class="lineCov">        let manager = Manager::default();</span></div>
 <div class="line"><span id="66" class="lineNum"><a href="#66">66</a></span><span class="counterCov">704</span><span class="lineCov">        for _ in 0..configuration.workers.worker_count {</span></div>
 <div class="line"><span id="67" class="lineNum"><a href="#67">67</a></span><span class="counterCov">704</span><span class="lineCov">            manager.spawn_worker();</span></div>
 <div class="line"><span id="68" class="lineNum"><a href="#68">68</a></span><span class="counterCov">704</span><span class="lineCov">        }</span></div>
 <div class="line"><span id="69" class="lineNum"><a href="#69">69</a></span><span class="counterCov">44</span><span class="lineCov">        let tasks = TaskManager::new(manager);</span></div>
 <div class="line"><span id="70" class="lineNum"><a href="#70">70</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="71" class="lineNum"><a href="#71">71</a></span><span class="counterCov">44</span><span class="lineCov">        let storage = tokio::task::spawn_blocking(move || {</span></div>
-<div class="line"><span id="72" class="lineNum"><a href="#72">72</a></span><span class="counterCov">44</span><span class="lineCov">            let mut collections = Schema::default();</span></div>
+<div class="line"><span id="72" class="lineNum"><a href="#72">72</a></span><span class="counterCov">44</span><span class="lineCov">            let mut collections = Schematic::default();</span></div>
 <div class="line"><span id="73" class="lineNum"><a href="#73">73</a></span><span class="counterCov">44</span><span class="lineCov">            DB::define_collections(&amp;mut collections);</span></div>
 <div class="line"><span id="74" class="lineNum"><a href="#74">74</a></span><span class="counterCov">44</span><span class="lineCov"></span></div>
 <div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterCov">44</span><span class="lineCov">            sled::open(owned_path)</span></div>
@@ -194,7 +194,7 @@
 <div class="line"><span id="173" class="lineNum"><a href="#173">173</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[async_trait]</span></div>
 <div class="line"><span id="174" class="lineNum"><a href="#174">174</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;&#39;a, DB&gt; Connection&lt;&#39;a&gt; for Storage&lt;DB&gt;</span></div>
 <div class="line"><span id="175" class="lineNum"><a href="#175">175</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
-<div class="line"><span id="176" class="lineNum"><a href="#176">176</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Database,</span></div>
+<div class="line"><span id="176" class="lineNum"><a href="#176">176</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Schema,</span></div>
 <div class="line"><span id="177" class="lineNum"><a href="#177">177</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
 <div class="line"><span id="178" class="lineNum"><a href="#178">178</a></span><span class="counterCov">28</span><span class="lineCov">    fn collection&lt;C: schema::Collection + &#39;static&gt;(</span></div>
 <div class="line"><span id="179" class="lineNum"><a href="#179">179</a></span><span class="counterCov">28</span><span class="lineCov">        &amp;&#39;a self,</span></div>

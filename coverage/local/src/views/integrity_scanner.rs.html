@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../../index.html">top level</a> - <a href="index.html">local/src/views</a> - integrity_scanner.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 17:15:50</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 19:28:59</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -22,7 +22,7 @@
 <div class="line"><span id="1" class="lineNum"><a href="#1">1</a></span><span class="counterUnCov"></span><span class="lineUnCov">use std::{borrow::Cow, collections::HashSet, hash::Hash};</span></div>
 <div class="line"><span id="2" class="lineNum"><a href="#2">2</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="3" class="lineNum"><a href="#3">3</a></span><span class="counterUnCov"></span><span class="lineUnCov">use async_trait::async_trait;</span></div>
-<div class="line"><span id="4" class="lineNum"><a href="#4">4</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_core::schema::{collection, view, Database, Key};</span></div>
+<div class="line"><span id="4" class="lineNum"><a href="#4">4</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_core::schema::{collection, view, Key, Schema};</span></div>
 <div class="line"><span id="5" class="lineNum"><a href="#5">5</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_jobs::{Job, Keyed};</span></div>
 <div class="line"><span id="6" class="lineNum"><a href="#6">6</a></span><span class="counterUnCov"></span><span class="lineUnCov">use sled::{IVec, Transactional, Tree};</span></div>
 <div class="line"><span id="7" class="lineNum"><a href="#7">7</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
@@ -48,7 +48,7 @@
 <div class="line"><span id="27" class="lineNum"><a href="#27">27</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[async_trait]</span></div>
 <div class="line"><span id="28" class="lineNum"><a href="#28">28</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;DB&gt; Job for IntegrityScanner&lt;DB&gt;</span></div>
 <div class="line"><span id="29" class="lineNum"><a href="#29">29</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
-<div class="line"><span id="30" class="lineNum"><a href="#30">30</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Database,</span></div>
+<div class="line"><span id="30" class="lineNum"><a href="#30">30</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Schema,</span></div>
 <div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
 <div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterUnCov"></span><span class="lineUnCov">    type Output = ();</span></div>
 <div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
@@ -176,7 +176,7 @@
 <div class="line"><span id="155" class="lineNum"><a href="#155">155</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="156" class="lineNum"><a href="#156">156</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;DB&gt; Keyed&lt;Task&gt; for IntegrityScanner&lt;DB&gt;</span></div>
 <div class="line"><span id="157" class="lineNum"><a href="#157">157</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
-<div class="line"><span id="158" class="lineNum"><a href="#158">158</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Database,</span></div>
+<div class="line"><span id="158" class="lineNum"><a href="#158">158</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Schema,</span></div>
 <div class="line"><span id="159" class="lineNum"><a href="#159">159</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
 <div class="line"><span id="160" class="lineNum"><a href="#160">160</a></span><span class="counterCov">16</span><span class="lineCov">    fn key(&amp;self) -&gt; Task {</span></div>
 <div class="line"><span id="161" class="lineNum"><a href="#161">161</a></span><span class="counterCov">16</span><span class="lineCov">        Task::IntegrityScan(self.scan.clone())</span></div>

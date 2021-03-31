@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../../index.html">top level</a> - <a href="index.html">jobs/src/manager</a> - jobs.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 17:15:50</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 19:28:59</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -44,17 +44,17 @@
 <div class="line"><span id="23" class="lineNum"><a href="#23">23</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
 <div class="line"><span id="24" class="lineNum"><a href="#24">24</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Key: Clone + std::hash::Hash + Eq + Send + Sync + Debug + &#39;static,</span></div>
 <div class="line"><span id="25" class="lineNum"><a href="#25">25</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
-<div class="line"><span id="26" class="lineNum"><a href="#26">26</a></span><span class="counterCov">46</span><span class="lineCov">    pub fn new() -&gt; Self {</span></div>
-<div class="line"><span id="27" class="lineNum"><a href="#27">27</a></span><span class="counterCov">46</span><span class="lineCov">        let (queuer, queue) = flume::unbounded();</span></div>
-<div class="line"><span id="28" class="lineNum"><a href="#28">28</a></span><span class="counterCov">46</span><span class="lineCov"></span></div>
-<div class="line"><span id="29" class="lineNum"><a href="#29">29</a></span><span class="counterCov">46</span><span class="lineCov">        Self {</span></div>
-<div class="line"><span id="30" class="lineNum"><a href="#30">30</a></span><span class="counterCov">46</span><span class="lineCov">            last_task_id: 0,</span></div>
-<div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterCov">46</span><span class="lineCov">            result_senders: HashMap::new(),</span></div>
-<div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterCov">46</span><span class="lineCov">            keyed_jobs: HashMap::new(),</span></div>
-<div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterCov">46</span><span class="lineCov">            queuer,</span></div>
-<div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterCov">46</span><span class="lineCov">            queue,</span></div>
-<div class="line"><span id="35" class="lineNum"><a href="#35">35</a></span><span class="counterCov">46</span><span class="lineCov">        }</span></div>
-<div class="line"><span id="36" class="lineNum"><a href="#36">36</a></span><span class="counterCov">46</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="26" class="lineNum"><a href="#26">26</a></span><span class="counterCov">48</span><span class="lineCov">    pub fn new() -&gt; Self {</span></div>
+<div class="line"><span id="27" class="lineNum"><a href="#27">27</a></span><span class="counterCov">48</span><span class="lineCov">        let (queuer, queue) = flume::unbounded();</span></div>
+<div class="line"><span id="28" class="lineNum"><a href="#28">28</a></span><span class="counterCov">48</span><span class="lineCov"></span></div>
+<div class="line"><span id="29" class="lineNum"><a href="#29">29</a></span><span class="counterCov">48</span><span class="lineCov">        Self {</span></div>
+<div class="line"><span id="30" class="lineNum"><a href="#30">30</a></span><span class="counterCov">48</span><span class="lineCov">            last_task_id: 0,</span></div>
+<div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterCov">48</span><span class="lineCov">            result_senders: HashMap::new(),</span></div>
+<div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterCov">48</span><span class="lineCov">            keyed_jobs: HashMap::new(),</span></div>
+<div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterCov">48</span><span class="lineCov">            queuer,</span></div>
+<div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterCov">48</span><span class="lineCov">            queue,</span></div>
+<div class="line"><span id="35" class="lineNum"><a href="#35">35</a></span><span class="counterCov">48</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="36" class="lineNum"><a href="#36">36</a></span><span class="counterCov">48</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="37" class="lineNum"><a href="#37">37</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="38" class="lineNum"><a href="#38">38</a></span><span class="counterCov">708</span><span class="lineCov">    pub fn queue(&amp;self) -&gt; Receiver&lt;Box&lt;dyn Executable&gt;&gt; {</span></div>
 <div class="line"><span id="39" class="lineNum"><a href="#39">39</a></span><span class="counterCov">708</span><span class="lineCov">        self.queue.clone()</span></div>
