@@ -1,1 +1,0 @@
-initSidebarItems({"fn":[["map_view",""],["remove_existing_view_entries_for_keys",""]],"struct":[["DocumentRequest",""],["Map",""],["Mapper",""]],"trait":[["ToTransactionResult",""]]});

@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["Command","The command to execute."]],"fn":[["restore_documents",""],["write_documents",""]],"struct":[["Cli","The command line interface for `pliantdb-dump`."]]});

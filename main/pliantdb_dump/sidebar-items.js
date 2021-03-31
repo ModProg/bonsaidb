@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["Error","Errors that can occur from interacting with storage."]],"fn":[["main",""]],"mod":[["config",""],["dump","Local database tool to dump and load databases into plain an easy-to-consume filesystem structure."],["error",""],["open_trees",""],["storage",""],["tasks",""],["views",""]]});
