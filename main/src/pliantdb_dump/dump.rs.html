@@ -313,36 +313,6 @@
 <span id="310">310</span>
 <span id="311">311</span>
 <span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
-<span id="340">340</span>
-<span id="341">341</span>
-<span id="342">342</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Local database tool to dump and load databases into plain an easy-to-consume</span>
 <span class="doccomment">//! filesystem structure.</span>
@@ -364,23 +334,6 @@
 <span class="doccomment">//! pliantdb-dump &lt;database_path&gt; load &lt;backup_location&gt;</span>
 <span class="doccomment">//! ```</span>
 
-<span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
-<span class="attribute">#![<span class="ident">warn</span>(
-    <span class="ident">clippy</span>::<span class="ident">cargo</span>,
-    <span class="ident">missing_docs</span>,
-    <span class="comment">// clippy::missing_docs_in_private_items,</span>
-    <span class="ident">clippy</span>::<span class="ident">nursery</span>,
-    <span class="ident">clippy</span>::<span class="ident">pedantic</span>,
-    <span class="ident">future_incompatible</span>,
-    <span class="ident">rust_2018_idioms</span>,
-)]</span>
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">doc</span>, <span class="ident">warn</span>(<span class="ident">rustdoc</span>))]</span>
-<span class="attribute">#![<span class="ident">allow</span>(
-    <span class="ident">clippy</span>::<span class="ident">missing_errors_doc</span>, <span class="comment">// TODO</span>
-    <span class="comment">// clippy::missing_panics_doc, // not on stable yet</span>
-    <span class="ident">clippy</span>::<span class="ident">option_if_let_else</span>,
-)]</span>
-
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow</span>::<span class="ident">Cow</span>,
     <span class="ident">ffi</span>::<span class="ident">OsString</span>,
@@ -388,28 +341,20 @@
     <span class="ident">str</span>::<span class="ident">FromStr</span>,
 };
 
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">config</span>::<span class="ident">Configuration</span>,
+    <span class="ident">storage</span>::{<span class="ident">document_tree_name</span>, <span class="ident">Storage</span>},
+};
 <span class="kw">use</span> <span class="ident">flume</span>::<span class="ident">Receiver</span>;
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">Header</span>, <span class="ident">Revision</span>},
     <span class="ident">schema</span>::{<span class="ident">collection</span>, <span class="ident">Key</span>},
 };
-<span class="kw">use</span> <span class="ident">storage</span>::<span class="ident">document_tree_name</span>;
 <span class="kw">use</span> <span class="ident">structopt</span>::<span class="ident">StructOpt</span>;
 <span class="kw">use</span> <span class="ident">tokio</span>::{
     <span class="ident">fs</span>::<span class="ident">File</span>,
     <span class="ident">io</span>::{<span class="ident">AsyncReadExt</span>, <span class="ident">AsyncWriteExt</span>},
 };
-
-<span class="kw">mod</span> <span class="ident">config</span>;
-<span class="kw">mod</span> <span class="ident">error</span>;
-<span class="kw">mod</span> <span class="ident">open_trees</span>;
-<span class="kw">mod</span> <span class="ident">storage</span>;
-<span class="kw">mod</span> <span class="ident">tasks</span>;
-<span class="kw">mod</span> <span class="ident">views</span>;
-
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">Error</span>;
-
-<span class="kw">use</span> <span class="self">self</span>::{<span class="ident">config</span>::<span class="ident">Configuration</span>, <span class="ident">storage</span>::<span class="ident">Storage</span>};
 
 <span class="doccomment">/// The command line interface for `pliantdb-dump`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">StructOpt</span>, <span class="ident">Debug</span>)]</span>
@@ -458,14 +403,9 @@
     },
 }
 
-<span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">main</span>]</span>
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">main</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">args</span> <span class="op">=</span> <span class="ident">Cli</span>::<span class="ident">from_args</span>();
-    <span class="ident">args</span>.<span class="ident">command</span>.<span class="ident">execute</span>(<span class="ident">args</span>.<span class="ident">database_path</span>).<span class="kw">await</span>
-}
-
 <span class="kw">impl</span> <span class="ident">Command</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database_path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="doccomment">/// Executes the command.</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database_path</span>: <span class="ident">PathBuf</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="self">Self</span>::<span class="ident">Dump</span> {
                 <span class="ident">output_directory</span>,

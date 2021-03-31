@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Command","The command to execute."]],"struct":[["Cli","The command line interface for `pliantdb-dump`."]]});
