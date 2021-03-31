@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Basic",""],["BasicByBrokenParentId",""],["BasicByCategory",""],["BasicByParentId",""],["BasicCollectionWithNoViews",""],["BasicCollectionWithOnlyBrokenParentId",""],["BasicCount",""],["BasicDatabase",""],["TestDirectory",""],["UnassociatedCollection",""]]});
+initSidebarItems({"struct":[["Basic",""],["BasicByBrokenParentId",""],["BasicByCategory",""],["BasicByParentId",""],["BasicCollectionWithNoViews",""],["BasicCollectionWithOnlyBrokenParentId",""],["BasicCount",""],["BasicSchema",""],["TestDirectory",""],["UnassociatedCollection",""]]});

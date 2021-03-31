@@ -666,7 +666,7 @@
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Collection</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">View</span>},
     <span class="ident">document</span>::<span class="ident">Document</span>,
-    <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">collection</span>, <span class="ident">map</span>::<span class="ident">MappedDocument</span>, <span class="ident">view</span>, <span class="ident">Database</span>, <span class="ident">Key</span>, <span class="ident">Map</span>, <span class="ident">Schema</span>},
+    <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">collection</span>, <span class="ident">map</span>::<span class="ident">MappedDocument</span>, <span class="ident">view</span>, <span class="ident">Key</span>, <span class="ident">Map</span>, <span class="ident">Schema</span>, <span class="ident">Schematic</span>},
     <span class="ident">transaction</span>::{<span class="self">self</span>, <span class="ident">ChangedDocument</span>, <span class="ident">Command</span>, <span class="ident">Operation</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
 };
 <span class="kw">use</span> <span class="ident">pliantdb_jobs</span>::<span class="ident">manager</span>::<span class="ident">Manager</span>;
@@ -692,7 +692,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">sled</span>: <span class="ident">sled</span>::<span class="ident">Db</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">schema</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Schema</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">schema</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Schematic</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tasks</span>: <span class="ident">TaskManager</span>,
     <span class="ident">_schema</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
 }
@@ -710,7 +710,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">DB</span>: <span class="ident">Database</span>,
+    <span class="ident">DB</span>: <span class="ident">Schema</span>,
 {
     <span class="doccomment">/// Opens a local file as a pliantdb.</span>
     <span class="doccomment">///</span>
@@ -730,7 +730,7 @@
         <span class="kw">let</span> <span class="ident">tasks</span> <span class="op">=</span> <span class="ident">TaskManager</span>::<span class="ident">new</span>(<span class="ident">manager</span>);
 
         <span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">collections</span> <span class="op">=</span> <span class="ident">Schema</span>::<span class="ident">default</span>();
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">collections</span> <span class="op">=</span> <span class="ident">Schematic</span>::<span class="ident">default</span>();
             <span class="ident">DB</span>::<span class="ident">define_collections</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">collections</span>);
 
             <span class="ident">sled</span>::<span class="ident">open</span>(<span class="ident">owned_path</span>)
@@ -834,7 +834,7 @@
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">DB</span><span class="op">&gt;</span> <span class="ident">Connection</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">DB</span>: <span class="ident">Database</span>,
+    <span class="ident">DB</span>: <span class="ident">Schema</span>,
 {
     <span class="kw">fn</span> <span class="ident">collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema</span>::<span class="ident">Collection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,

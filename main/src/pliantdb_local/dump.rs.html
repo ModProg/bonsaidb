@@ -313,6 +313,7 @@
 <span id="310">310</span>
 <span id="311">311</span>
 <span id="312">312</span>
+<span id="313">313</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Local database tool to dump and load databases into plain an easy-to-consume</span>
 <span class="doccomment">//! filesystem structure.</span>
@@ -341,10 +342,6 @@
     <span class="ident">str</span>::<span class="ident">FromStr</span>,
 };
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">config</span>::<span class="ident">Configuration</span>,
-    <span class="ident">storage</span>::{<span class="ident">document_tree_name</span>, <span class="ident">Storage</span>},
-};
 <span class="kw">use</span> <span class="ident">flume</span>::<span class="ident">Receiver</span>;
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">Header</span>, <span class="ident">Revision</span>},
@@ -354,6 +351,11 @@
 <span class="kw">use</span> <span class="ident">tokio</span>::{
     <span class="ident">fs</span>::<span class="ident">File</span>,
     <span class="ident">io</span>::{<span class="ident">AsyncReadExt</span>, <span class="ident">AsyncWriteExt</span>},
+};
+
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">config</span>::<span class="ident">Configuration</span>,
+    <span class="ident">storage</span>::{<span class="ident">document_tree_name</span>, <span class="ident">Storage</span>},
 };
 
 <span class="doccomment">/// The command line interface for `pliantdb-dump`.</span>
