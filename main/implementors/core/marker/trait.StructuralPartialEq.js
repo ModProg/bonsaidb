@@ -1,4 +1,5 @@
 (function() {var implementors = {};
 implementors["pliantdb_core"] = [{"text":"impl StructuralPartialEq for Revision","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Header","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Id","synthetic":false,"types":[]},{"text":"impl&lt;K:&nbsp;Key, V:&nbsp;Serialize&gt; StructuralPartialEq for Map&lt;K, V&gt;","synthetic":false,"types":[]},{"text":"impl&lt;K:&nbsp;Key, V:&nbsp;Serialize&gt; StructuralPartialEq for MappedValue&lt;K, V&gt;","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Basic","synthetic":false,"types":[]}];
+implementors["pliantdb_dump"] = [{"text":"impl StructuralPartialEq for IntegrityScan","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Map","synthetic":false,"types":[]},{"text":"impl StructuralPartialEq for Task","synthetic":false,"types":[]}];
 implementors["pliantdb_jobs"] = [{"text":"impl StructuralPartialEq for Id","synthetic":false,"types":[]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

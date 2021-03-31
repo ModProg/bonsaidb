@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Command","The command to execute."],["Error","Errors that can occur from interacting with storage."]],"fn":[["main",""],["restore_documents",""],["write_documents",""]],"mod":[["config",""],["error",""],["open_trees",""],["storage",""],["tasks",""],["views",""]],"struct":[["Cli","The command line interface for `pliantdb-dump`."]]});
