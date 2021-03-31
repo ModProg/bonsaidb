@@ -9,11 +9,11 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">local/src</a> - tests.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-29 21:16:18</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 15:27:30</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
-<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">326</span><span class="linesTotal">367</span><span class="linesPercentage lineMed">88.8 %</span></div>
+<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">327</span><span class="linesTotal">367</span><span class="linesPercentage lineMed">89.1 %</span></div>
 <div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">41</span><span class="funsTotal">41</span><span class="funsPercentage funHi">100.0 %</span></div>
 <div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
 </div>
@@ -453,19 +453,19 @@
 <div class="line"><span id="432" class="lineNum"><a href="#432">432</a></span><span class="counterCov">2</span><span class="lineCov">    assert_eq!(a_children.len(), 0);</span></div>
 <div class="line"><span id="433" class="lineNum"><a href="#433">433</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="434" class="lineNum"><a href="#434">434</a></span><span class="counterUnCov"></span><span class="lineUnCov">    // Waiting on background jobs can be unreliable in a CI environment</span></div>
-<div class="line"><span id="435" class="lineNum"><a href="#435">435</a></span><span class="counterCov">2</span><span class="lineCov">    for _ in 0..10 {</span></div>
-<div class="line"><span id="436" class="lineNum"><a href="#436">436</a></span><span class="counterCov">2</span><span class="lineCov">        tokio::time::sleep(Duration::from_millis(20)).await;</span></div>
+<div class="line"><span id="435" class="lineNum"><a href="#435">435</a></span><span class="counterCov">4</span><span class="lineCov">    for _ in 0..10 {</span></div>
+<div class="line"><span id="436" class="lineNum"><a href="#436">436</a></span><span class="counterCov">4</span><span class="lineCov">        tokio::time::sleep(Duration::from_millis(20)).await;</span></div>
 <div class="line"><span id="437" class="lineNum"><a href="#437">437</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="438" class="lineNum"><a href="#438">438</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // Now, the view should contain the entry.</span></div>
-<div class="line"><span id="439" class="lineNum"><a href="#439">439</a></span><span class="counterCov">2</span><span class="lineCov">        let a_children = db</span></div>
-<div class="line"><span id="440" class="lineNum"><a href="#440">440</a></span><span class="counterCov">2</span><span class="lineCov">            .view::&lt;BasicByParentId&gt;()</span></div>
-<div class="line"><span id="441" class="lineNum"><a href="#441">441</a></span><span class="counterCov">2</span><span class="lineCov">            .with_key(Some(a.id))</span></div>
-<div class="line"><span id="442" class="lineNum"><a href="#442">442</a></span><span class="counterCov">2</span><span class="lineCov">            .with_access_policy(AccessPolicy::NoUpdate)</span></div>
-<div class="line"><span id="443" class="lineNum"><a href="#443">443</a></span><span class="counterCov">2</span><span class="lineCov">            .query()</span></div>
+<div class="line"><span id="439" class="lineNum"><a href="#439">439</a></span><span class="counterCov">4</span><span class="lineCov">        let a_children = db</span></div>
+<div class="line"><span id="440" class="lineNum"><a href="#440">440</a></span><span class="counterCov">4</span><span class="lineCov">            .view::&lt;BasicByParentId&gt;()</span></div>
+<div class="line"><span id="441" class="lineNum"><a href="#441">441</a></span><span class="counterCov">4</span><span class="lineCov">            .with_key(Some(a.id))</span></div>
+<div class="line"><span id="442" class="lineNum"><a href="#442">442</a></span><span class="counterCov">4</span><span class="lineCov">            .with_access_policy(AccessPolicy::NoUpdate)</span></div>
+<div class="line"><span id="443" class="lineNum"><a href="#443">443</a></span><span class="counterCov">4</span><span class="lineCov">            .query()</span></div>
 <div class="line"><span id="444" class="lineNum"><a href="#444">444</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            .await?;</span></div>
-<div class="line"><span id="445" class="lineNum"><a href="#445">445</a></span><span class="counterCov">2</span><span class="lineCov">        if a_children.len() == 1 {</span></div>
+<div class="line"><span id="445" class="lineNum"><a href="#445">445</a></span><span class="counterCov">4</span><span class="lineCov">        if a_children.len() == 1 {</span></div>
 <div class="line"><span id="446" class="lineNum"><a href="#446">446</a></span><span class="counterCov">2</span><span class="lineCov">            return Ok(());</span></div>
-<div class="line"><span id="447" class="lineNum"><a href="#447">447</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        }</span></div>
+<div class="line"><span id="447" class="lineNum"><a href="#447">447</a></span><span class="counterCov">2</span><span class="lineCov">        }</span></div>
 <div class="line"><span id="448" class="lineNum"><a href="#448">448</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
 <div class="line"><span id="449" class="lineNum"><a href="#449">449</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    panic!(&quot;view never updated&quot;)</span></div>
 <div class="line"><span id="450" class="lineNum"><a href="#450">450</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
