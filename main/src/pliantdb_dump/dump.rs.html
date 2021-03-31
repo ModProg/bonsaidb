@@ -326,9 +326,43 @@
 <span id="323">323</span>
 <span id="324">324</span>
 <span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Local database tool to dump and load databases into plain an easy-to-consume</span>
 <span class="doccomment">//! filesystem structure.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This tool is provided to ensure you always have a way to get your data</span>
+<span class="doccomment">//! backed up in a format that&#39;s easily consumable. This tool also provides a</span>
+<span class="doccomment">//! safety mechanism allowing a path of migrating across underlying storage</span>
+<span class="doccomment">//! layer changes that might have no other migration path.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! To back up an existing local database:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```sh</span>
+<span class="doccomment">//! pliantdb-dump &lt;database_path&gt; dump</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! To restore a backup:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```sh</span>
+<span class="doccomment">//! pliantdb-dump &lt;database_path&gt; load &lt;backup_location&gt;</span>
+<span class="doccomment">//! ```</span>
 
 <span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
 <span class="attribute">#![<span class="ident">warn</span>(
