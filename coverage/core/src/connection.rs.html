@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">core/src</a> - connection.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 15:50:31</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 17:15:50</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -42,23 +42,23 @@
 <div class="line"><span id="21" class="lineNum"><a href="#21">21</a></span><span class="counterUnCov"></span><span class="lineUnCov">        Self: Sized;</span></div>
 <div class="line"><span id="22" class="lineNum"><a href="#22">22</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="23" class="lineNum"><a href="#23">23</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Inserts a newly created document into the connected [`schema::Database`] for the [`Collection`] `C`.</span></div>
-<div class="line"><span id="24" class="lineNum"><a href="#24">24</a></span><span class="counterCov">2034</span><span class="lineCov">    async fn insert&lt;C: schema::Collection&gt;(&amp;self, contents: Vec&lt;u8&gt;) -&gt; Result&lt;Header, Error&gt; {</span></div>
-<div class="line"><span id="25" class="lineNum"><a href="#25">25</a></span><span class="counterCov">2034</span><span class="lineCov">        let mut tx = Transaction::default();</span></div>
-<div class="line"><span id="26" class="lineNum"><a href="#26">26</a></span><span class="counterCov">2034</span><span class="lineCov">        tx.push(Operation {</span></div>
-<div class="line"><span id="27" class="lineNum"><a href="#27">27</a></span><span class="counterCov">2034</span><span class="lineCov">            collection: C::id(),</span></div>
-<div class="line"><span id="28" class="lineNum"><a href="#28">28</a></span><span class="counterCov">2034</span><span class="lineCov">            command: Command::Insert {</span></div>
-<div class="line"><span id="29" class="lineNum"><a href="#29">29</a></span><span class="counterCov">2034</span><span class="lineCov">                contents: Cow::from(contents),</span></div>
-<div class="line"><span id="30" class="lineNum"><a href="#30">30</a></span><span class="counterCov">2034</span><span class="lineCov">            },</span></div>
-<div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterCov">2034</span><span class="lineCov">        });</span></div>
-<div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterCov">2034</span><span class="lineCov">        let results = self.apply_transaction(tx).await?;</span></div>
-<div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterCov">2034</span><span class="lineCov">        if let OperationResult::DocumentUpdated { header, .. } = &amp;results[0] {</span></div>
-<div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterCov">2034</span><span class="lineCov">            Ok(header.clone())</span></div>
+<div class="line"><span id="24" class="lineNum"><a href="#24">24</a></span><span class="counterCov">2036</span><span class="lineCov">    async fn insert&lt;C: schema::Collection&gt;(&amp;self, contents: Vec&lt;u8&gt;) -&gt; Result&lt;Header, Error&gt; {</span></div>
+<div class="line"><span id="25" class="lineNum"><a href="#25">25</a></span><span class="counterCov">2036</span><span class="lineCov">        let mut tx = Transaction::default();</span></div>
+<div class="line"><span id="26" class="lineNum"><a href="#26">26</a></span><span class="counterCov">2036</span><span class="lineCov">        tx.push(Operation {</span></div>
+<div class="line"><span id="27" class="lineNum"><a href="#27">27</a></span><span class="counterCov">2036</span><span class="lineCov">            collection: C::id(),</span></div>
+<div class="line"><span id="28" class="lineNum"><a href="#28">28</a></span><span class="counterCov">2036</span><span class="lineCov">            command: Command::Insert {</span></div>
+<div class="line"><span id="29" class="lineNum"><a href="#29">29</a></span><span class="counterCov">2036</span><span class="lineCov">                contents: Cow::from(contents),</span></div>
+<div class="line"><span id="30" class="lineNum"><a href="#30">30</a></span><span class="counterCov">2036</span><span class="lineCov">            },</span></div>
+<div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterCov">2036</span><span class="lineCov">        });</span></div>
+<div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterCov">2036</span><span class="lineCov">        let results = self.apply_transaction(tx).await?;</span></div>
+<div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterCov">2036</span><span class="lineCov">        if let OperationResult::DocumentUpdated { header, .. } = &amp;results[0] {</span></div>
+<div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterCov">2036</span><span class="lineCov">            Ok(header.clone())</span></div>
 <div class="line"><span id="35" class="lineNum"><a href="#35">35</a></span><span class="counterUnCov"></span><span class="lineUnCov">        } else {</span></div>
 <div class="line"><span id="36" class="lineNum"><a href="#36">36</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            unreachable!(</span></div>
 <div class="line"><span id="37" class="lineNum"><a href="#37">37</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                &quot;apply_transaction on a single insert should yield a single DocumentUpdated entry&quot;</span></div>
 <div class="line"><span id="38" class="lineNum"><a href="#38">38</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            )</span></div>
 <div class="line"><span id="39" class="lineNum"><a href="#39">39</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
-<div class="line"><span id="40" class="lineNum"><a href="#40">40</a></span><span class="counterCov">4068</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="40" class="lineNum"><a href="#40">40</a></span><span class="counterCov">4072</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="41" class="lineNum"><a href="#41">41</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="42" class="lineNum"><a href="#42">42</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Updates an existing document in the connected [`schema::Database`] for the</span></div>
 <div class="line"><span id="43" class="lineNum"><a href="#43">43</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// [`Collection`] `C`. Upon success, `doc.revision` will be updated with</span></div>
@@ -181,18 +181,18 @@
 <div class="line"><span id="160" class="lineNum"><a href="#160">160</a></span><span class="counterUnCov"></span><span class="lineUnCov">    Cl: schema::Collection,</span></div>
 <div class="line"><span id="161" class="lineNum"><a href="#161">161</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
 <div class="line"><span id="162" class="lineNum"><a href="#162">162</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Creates a new instance using `connection`.</span></div>
-<div class="line"><span id="163" class="lineNum"><a href="#163">163</a></span><span class="counterCov">24</span><span class="lineCov">    pub fn new(connection: &amp;&#39;a Cn) -&gt; Self {</span></div>
-<div class="line"><span id="164" class="lineNum"><a href="#164">164</a></span><span class="counterCov">24</span><span class="lineCov">        Self {</span></div>
-<div class="line"><span id="165" class="lineNum"><a href="#165">165</a></span><span class="counterCov">24</span><span class="lineCov">            connection,</span></div>
-<div class="line"><span id="166" class="lineNum"><a href="#166">166</a></span><span class="counterCov">24</span><span class="lineCov">            _phantom: PhantomData::default(),</span></div>
-<div class="line"><span id="167" class="lineNum"><a href="#167">167</a></span><span class="counterCov">24</span><span class="lineCov">        }</span></div>
-<div class="line"><span id="168" class="lineNum"><a href="#168">168</a></span><span class="counterCov">24</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="163" class="lineNum"><a href="#163">163</a></span><span class="counterCov">26</span><span class="lineCov">    pub fn new(connection: &amp;&#39;a Cn) -&gt; Self {</span></div>
+<div class="line"><span id="164" class="lineNum"><a href="#164">164</a></span><span class="counterCov">26</span><span class="lineCov">        Self {</span></div>
+<div class="line"><span id="165" class="lineNum"><a href="#165">165</a></span><span class="counterCov">26</span><span class="lineCov">            connection,</span></div>
+<div class="line"><span id="166" class="lineNum"><a href="#166">166</a></span><span class="counterCov">26</span><span class="lineCov">            _phantom: PhantomData::default(),</span></div>
+<div class="line"><span id="167" class="lineNum"><a href="#167">167</a></span><span class="counterCov">26</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="168" class="lineNum"><a href="#168">168</a></span><span class="counterCov">26</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="169" class="lineNum"><a href="#169">169</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="170" class="lineNum"><a href="#170">170</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Adds a new `Document&lt;Cl&gt;` with the contents `item`.</span></div>
-<div class="line"><span id="171" class="lineNum"><a href="#171">171</a></span><span class="counterCov">2034</span><span class="lineCov">    pub async fn push&lt;S: Serialize + Sync&gt;(&amp;self, item: &amp;S) -&gt; Result&lt;Header, crate::Error&gt; {</span></div>
-<div class="line"><span id="172" class="lineNum"><a href="#172">172</a></span><span class="counterCov">2034</span><span class="lineCov">        let contents = serde_cbor::to_vec(item)?;</span></div>
-<div class="line"><span id="173" class="lineNum"><a href="#173">173</a></span><span class="counterCov">2034</span><span class="lineCov">        Ok(self.connection.insert::&lt;Cl&gt;(contents).await?)</span></div>
-<div class="line"><span id="174" class="lineNum"><a href="#174">174</a></span><span class="counterCov">2034</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="171" class="lineNum"><a href="#171">171</a></span><span class="counterCov">2036</span><span class="lineCov">    pub async fn push&lt;S: Serialize + Sync&gt;(&amp;self, item: &amp;S) -&gt; Result&lt;Header, crate::Error&gt; {</span></div>
+<div class="line"><span id="172" class="lineNum"><a href="#172">172</a></span><span class="counterCov">2036</span><span class="lineCov">        let contents = serde_cbor::to_vec(item)?;</span></div>
+<div class="line"><span id="173" class="lineNum"><a href="#173">173</a></span><span class="counterCov">2036</span><span class="lineCov">        Ok(self.connection.insert::&lt;Cl&gt;(contents).await?)</span></div>
+<div class="line"><span id="174" class="lineNum"><a href="#174">174</a></span><span class="counterCov">2036</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="175" class="lineNum"><a href="#175">175</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="176" class="lineNum"><a href="#176">176</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Retrieves a `Document&lt;Cl&gt;` with `id` from the connection.</span></div>
 <div class="line"><span id="177" class="lineNum"><a href="#177">177</a></span><span class="counterCov">14</span><span class="lineCov">    pub async fn get(&amp;self, id: u64) -&gt; Result&lt;Option&lt;Document&lt;&#39;static&gt;&gt;, Error&gt; {</span></div>

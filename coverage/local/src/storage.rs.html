@@ -9,12 +9,12 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">local/src</a> - storage.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 15:50:31</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 17:15:50</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
 <div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">442</span><span class="linesTotal">464</span><span class="linesPercentage lineHi">95.3 %</span></div>
-<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">100</span><span class="funsTotal">214</span><span class="funsPercentage funLow">46.7 %</span></div>
+<div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">108</span><span class="funsTotal">224</span><span class="funsPercentage funLow">48.2 %</span></div>
 <div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
 </div>
 </div>
@@ -77,42 +77,42 @@
 <div class="line"><span id="56" class="lineNum"><a href="#56">56</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// # Panics</span></div>
 <div class="line"><span id="57" class="lineNum"><a href="#57">57</a></span><span class="counterUnCov"></span><span class="lineUnCov">    ///</span></div>
 <div class="line"><span id="58" class="lineNum"><a href="#58">58</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Panics if `tokio::task::spawn_blocking` fails</span></div>
-<div class="line"><span id="59" class="lineNum"><a href="#59">59</a></span><span class="counterCov">36</span><span class="lineCov">    pub async fn open_local&lt;P: AsRef&lt;Path&gt; + Send&gt;(</span></div>
-<div class="line"><span id="60" class="lineNum"><a href="#60">60</a></span><span class="counterCov">36</span><span class="lineCov">        path: P,</span></div>
-<div class="line"><span id="61" class="lineNum"><a href="#61">61</a></span><span class="counterCov">36</span><span class="lineCov">        configuration: &amp;Configuration,</span></div>
-<div class="line"><span id="62" class="lineNum"><a href="#62">62</a></span><span class="counterCov">36</span><span class="lineCov">    ) -&gt; Result&lt;Self, Error&gt; {</span></div>
-<div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterCov">36</span><span class="lineCov">        let owned_path = path.as_ref().to_owned();</span></div>
-<div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterCov">36</span><span class="lineCov"></span></div>
-<div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterCov">36</span><span class="lineCov">        let manager = Manager::default();</span></div>
-<div class="line"><span id="66" class="lineNum"><a href="#66">66</a></span><span class="counterCov">576</span><span class="lineCov">        for _ in 0..configuration.workers.worker_count {</span></div>
-<div class="line"><span id="67" class="lineNum"><a href="#67">67</a></span><span class="counterCov">576</span><span class="lineCov">            manager.spawn_worker();</span></div>
-<div class="line"><span id="68" class="lineNum"><a href="#68">68</a></span><span class="counterCov">576</span><span class="lineCov">        }</span></div>
-<div class="line"><span id="69" class="lineNum"><a href="#69">69</a></span><span class="counterCov">36</span><span class="lineCov">        let tasks = TaskManager::new(manager);</span></div>
+<div class="line"><span id="59" class="lineNum"><a href="#59">59</a></span><span class="counterCov">44</span><span class="lineCov">    pub async fn open_local&lt;P: AsRef&lt;Path&gt; + Send&gt;(</span></div>
+<div class="line"><span id="60" class="lineNum"><a href="#60">60</a></span><span class="counterCov">44</span><span class="lineCov">        path: P,</span></div>
+<div class="line"><span id="61" class="lineNum"><a href="#61">61</a></span><span class="counterCov">44</span><span class="lineCov">        configuration: &amp;Configuration,</span></div>
+<div class="line"><span id="62" class="lineNum"><a href="#62">62</a></span><span class="counterCov">44</span><span class="lineCov">    ) -&gt; Result&lt;Self, Error&gt; {</span></div>
+<div class="line"><span id="63" class="lineNum"><a href="#63">63</a></span><span class="counterCov">42</span><span class="lineCov">        let owned_path = path.as_ref().to_owned();</span></div>
+<div class="line"><span id="64" class="lineNum"><a href="#64">64</a></span><span class="counterCov">42</span><span class="lineCov"></span></div>
+<div class="line"><span id="65" class="lineNum"><a href="#65">65</a></span><span class="counterCov">42</span><span class="lineCov">        let manager = Manager::default();</span></div>
+<div class="line"><span id="66" class="lineNum"><a href="#66">66</a></span><span class="counterCov">704</span><span class="lineCov">        for _ in 0..configuration.workers.worker_count {</span></div>
+<div class="line"><span id="67" class="lineNum"><a href="#67">67</a></span><span class="counterCov">704</span><span class="lineCov">            manager.spawn_worker();</span></div>
+<div class="line"><span id="68" class="lineNum"><a href="#68">68</a></span><span class="counterCov">704</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="69" class="lineNum"><a href="#69">69</a></span><span class="counterCov">44</span><span class="lineCov">        let tasks = TaskManager::new(manager);</span></div>
 <div class="line"><span id="70" class="lineNum"><a href="#70">70</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="71" class="lineNum"><a href="#71">71</a></span><span class="counterCov">36</span><span class="lineCov">        let storage = tokio::task::spawn_blocking(move || {</span></div>
-<div class="line"><span id="72" class="lineNum"><a href="#72">72</a></span><span class="counterCov">36</span><span class="lineCov">            let mut collections = Schema::default();</span></div>
-<div class="line"><span id="73" class="lineNum"><a href="#73">73</a></span><span class="counterCov">36</span><span class="lineCov">            DB::define_collections(&amp;mut collections);</span></div>
-<div class="line"><span id="74" class="lineNum"><a href="#74">74</a></span><span class="counterCov">36</span><span class="lineCov"></span></div>
-<div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterCov">36</span><span class="lineCov">            sled::open(owned_path)</span></div>
-<div class="line"><span id="76" class="lineNum"><a href="#76">76</a></span><span class="counterCov">36</span><span class="lineCov">                .map(|sled| Self {</span></div>
-<div class="line"><span id="77" class="lineNum"><a href="#77">77</a></span><span class="counterCov">36</span><span class="lineCov">                    sled,</span></div>
-<div class="line"><span id="78" class="lineNum"><a href="#78">78</a></span><span class="counterCov">36</span><span class="lineCov">                    schema: Arc::new(collections),</span></div>
-<div class="line"><span id="79" class="lineNum"><a href="#79">79</a></span><span class="counterCov">36</span><span class="lineCov">                    tasks,</span></div>
-<div class="line"><span id="80" class="lineNum"><a href="#80">80</a></span><span class="counterCov">36</span><span class="lineCov">                    _schema: PhantomData::default(),</span></div>
-<div class="line"><span id="81" class="lineNum"><a href="#81">81</a></span><span class="counterCov">36</span><span class="lineCov">                })</span></div>
-<div class="line"><span id="82" class="lineNum"><a href="#82">82</a></span><span class="counterCov">36</span><span class="lineCov">                .map_err(Error::from)</span></div>
-<div class="line"><span id="83" class="lineNum"><a href="#83">83</a></span><span class="counterCov">36</span><span class="lineCov">        })</span></div>
+<div class="line"><span id="71" class="lineNum"><a href="#71">71</a></span><span class="counterCov">44</span><span class="lineCov">        let storage = tokio::task::spawn_blocking(move || {</span></div>
+<div class="line"><span id="72" class="lineNum"><a href="#72">72</a></span><span class="counterCov">44</span><span class="lineCov">            let mut collections = Schema::default();</span></div>
+<div class="line"><span id="73" class="lineNum"><a href="#73">73</a></span><span class="counterCov">44</span><span class="lineCov">            DB::define_collections(&amp;mut collections);</span></div>
+<div class="line"><span id="74" class="lineNum"><a href="#74">74</a></span><span class="counterCov">44</span><span class="lineCov"></span></div>
+<div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterCov">44</span><span class="lineCov">            sled::open(owned_path)</span></div>
+<div class="line"><span id="76" class="lineNum"><a href="#76">76</a></span><span class="counterCov">44</span><span class="lineCov">                .map(|sled| Self {</span></div>
+<div class="line"><span id="77" class="lineNum"><a href="#77">77</a></span><span class="counterCov">44</span><span class="lineCov">                    sled,</span></div>
+<div class="line"><span id="78" class="lineNum"><a href="#78">78</a></span><span class="counterCov">44</span><span class="lineCov">                    schema: Arc::new(collections),</span></div>
+<div class="line"><span id="79" class="lineNum"><a href="#79">79</a></span><span class="counterCov">44</span><span class="lineCov">                    tasks,</span></div>
+<div class="line"><span id="80" class="lineNum"><a href="#80">80</a></span><span class="counterCov">44</span><span class="lineCov">                    _schema: PhantomData::default(),</span></div>
+<div class="line"><span id="81" class="lineNum"><a href="#81">81</a></span><span class="counterCov">44</span><span class="lineCov">                })</span></div>
+<div class="line"><span id="82" class="lineNum"><a href="#82">82</a></span><span class="counterCov">44</span><span class="lineCov">                .map_err(Error::from)</span></div>
+<div class="line"><span id="83" class="lineNum"><a href="#83">83</a></span><span class="counterCov">44</span><span class="lineCov">        })</span></div>
 <div class="line"><span id="84" class="lineNum"><a href="#84">84</a></span><span class="counterUnCov"></span><span class="lineUnCov">        .await</span></div>
 <div class="line"><span id="85" class="lineNum"><a href="#85">85</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .unwrap()?;</span></div>
 <div class="line"><span id="86" class="lineNum"><a href="#86">86</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="87" class="lineNum"><a href="#87">87</a></span><span class="counterCov">36</span><span class="lineCov">        if configuration.views.check_integrity_on_open {</span></div>
+<div class="line"><span id="87" class="lineNum"><a href="#87">87</a></span><span class="counterCov">44</span><span class="lineCov">        if configuration.views.check_integrity_on_open {</span></div>
 <div class="line"><span id="88" class="lineNum"><a href="#88">88</a></span><span class="counterCov">6</span><span class="lineCov">            for view in storage.schema.views() {</span></div>
 <div class="line"><span id="89" class="lineNum"><a href="#89">89</a></span><span class="counterCov">6</span><span class="lineCov">                storage.tasks.spawn_integrity_check(view, &amp;storage).await?;</span></div>
 <div class="line"><span id="90" class="lineNum"><a href="#90">90</a></span><span class="counterUnCov"></span><span class="lineUnCov">            }</span></div>
-<div class="line"><span id="91" class="lineNum"><a href="#91">91</a></span><span class="counterCov">34</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="91" class="lineNum"><a href="#91">91</a></span><span class="counterCov">42</span><span class="lineCov">        }</span></div>
 <div class="line"><span id="92" class="lineNum"><a href="#92">92</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="93" class="lineNum"><a href="#93">93</a></span><span class="counterCov">36</span><span class="lineCov">        Ok(storage)</span></div>
-<div class="line"><span id="94" class="lineNum"><a href="#94">94</a></span><span class="counterCov">36</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="93" class="lineNum"><a href="#93">93</a></span><span class="counterCov">44</span><span class="lineCov">        Ok(storage)</span></div>
+<div class="line"><span id="94" class="lineNum"><a href="#94">94</a></span><span class="counterCov">44</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="95" class="lineNum"><a href="#95">95</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="96" class="lineNum"><a href="#96">96</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Fetches the last transaction id that has been committed, if any.</span></div>
 <div class="line"><span id="97" class="lineNum"><a href="#97">97</a></span><span class="counterCov">56</span><span class="lineCov">    pub async fn last_transaction_id(&amp;self) -&gt; Result&lt;Option&lt;u64&gt;, Error&gt; {</span></div>
@@ -196,54 +196,54 @@
 <div class="line"><span id="175" class="lineNum"><a href="#175">175</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
 <div class="line"><span id="176" class="lineNum"><a href="#176">176</a></span><span class="counterUnCov"></span><span class="lineUnCov">    DB: Database,</span></div>
 <div class="line"><span id="177" class="lineNum"><a href="#177">177</a></span><span class="counterUnCov"></span><span class="lineUnCov">{</span></div>
-<div class="line"><span id="178" class="lineNum"><a href="#178">178</a></span><span class="counterCov">26</span><span class="lineCov">    fn collection&lt;C: schema::Collection + &#39;static&gt;(</span></div>
-<div class="line"><span id="179" class="lineNum"><a href="#179">179</a></span><span class="counterCov">26</span><span class="lineCov">        &amp;&#39;a self,</span></div>
-<div class="line"><span id="180" class="lineNum"><a href="#180">180</a></span><span class="counterCov">26</span><span class="lineCov">    ) -&gt; Result&lt;Collection&lt;&#39;a, Self, C&gt;, pliantdb_core::Error&gt;</span></div>
-<div class="line"><span id="181" class="lineNum"><a href="#181">181</a></span><span class="counterCov">26</span><span class="lineCov">    where</span></div>
-<div class="line"><span id="182" class="lineNum"><a href="#182">182</a></span><span class="counterCov">26</span><span class="lineCov">        Self: Sized,</span></div>
-<div class="line"><span id="183" class="lineNum"><a href="#183">183</a></span><span class="counterCov">26</span><span class="lineCov">    {</span></div>
-<div class="line"><span id="184" class="lineNum"><a href="#184">184</a></span><span class="counterCov">26</span><span class="lineCov">        if self.schema.contains::&lt;C&gt;() {</span></div>
-<div class="line"><span id="185" class="lineNum"><a href="#185">185</a></span><span class="counterCov">24</span><span class="lineCov">            Ok(Collection::new(self))</span></div>
+<div class="line"><span id="178" class="lineNum"><a href="#178">178</a></span><span class="counterCov">28</span><span class="lineCov">    fn collection&lt;C: schema::Collection + &#39;static&gt;(</span></div>
+<div class="line"><span id="179" class="lineNum"><a href="#179">179</a></span><span class="counterCov">28</span><span class="lineCov">        &amp;&#39;a self,</span></div>
+<div class="line"><span id="180" class="lineNum"><a href="#180">180</a></span><span class="counterCov">28</span><span class="lineCov">    ) -&gt; Result&lt;Collection&lt;&#39;a, Self, C&gt;, pliantdb_core::Error&gt;</span></div>
+<div class="line"><span id="181" class="lineNum"><a href="#181">181</a></span><span class="counterCov">28</span><span class="lineCov">    where</span></div>
+<div class="line"><span id="182" class="lineNum"><a href="#182">182</a></span><span class="counterCov">28</span><span class="lineCov">        Self: Sized,</span></div>
+<div class="line"><span id="183" class="lineNum"><a href="#183">183</a></span><span class="counterCov">28</span><span class="lineCov">    {</span></div>
+<div class="line"><span id="184" class="lineNum"><a href="#184">184</a></span><span class="counterCov">28</span><span class="lineCov">        if self.schema.contains::&lt;C&gt;() {</span></div>
+<div class="line"><span id="185" class="lineNum"><a href="#185">185</a></span><span class="counterCov">26</span><span class="lineCov">            Ok(Collection::new(self))</span></div>
 <div class="line"><span id="186" class="lineNum"><a href="#186">186</a></span><span class="counterUnCov"></span><span class="lineUnCov">        } else {</span></div>
 <div class="line"><span id="187" class="lineNum"><a href="#187">187</a></span><span class="counterCov">2</span><span class="lineCov">            Err(pliantdb_core::Error::CollectionNotFound)</span></div>
 <div class="line"><span id="188" class="lineNum"><a href="#188">188</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
-<div class="line"><span id="189" class="lineNum"><a href="#189">189</a></span><span class="counterCov">26</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="189" class="lineNum"><a href="#189">189</a></span><span class="counterCov">28</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="190" class="lineNum"><a href="#190">190</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="191" class="lineNum"><a href="#191">191</a></span><span class="counterCov">2050</span><span class="lineCov">    async fn apply_transaction(</span></div>
-<div class="line"><span id="192" class="lineNum"><a href="#192">192</a></span><span class="counterCov">2050</span><span class="lineCov">        &amp;self,</span></div>
-<div class="line"><span id="193" class="lineNum"><a href="#193">193</a></span><span class="counterCov">2050</span><span class="lineCov">        transaction: Transaction&lt;&#39;static&gt;,</span></div>
-<div class="line"><span id="194" class="lineNum"><a href="#194">194</a></span><span class="counterCov">2050</span><span class="lineCov">    ) -&gt; Result&lt;Vec&lt;OperationResult&gt;, pliantdb_core::Error&gt; {</span></div>
-<div class="line"><span id="195" class="lineNum"><a href="#195">195</a></span><span class="counterCov">2050</span><span class="lineCov">        let sled = self.sled.clone();</span></div>
-<div class="line"><span id="196" class="lineNum"><a href="#196">196</a></span><span class="counterCov">2050</span><span class="lineCov">        let schema = self.schema.clone();</span></div>
-<div class="line"><span id="197" class="lineNum"><a href="#197">197</a></span><span class="counterCov">2050</span><span class="lineCov">        tokio::task::spawn_blocking(move || {</span></div>
-<div class="line"><span id="198" class="lineNum"><a href="#198">198</a></span><span class="counterCov">2050</span><span class="lineCov">            let mut open_trees = OpenTrees::default();</span></div>
-<div class="line"><span id="199" class="lineNum"><a href="#199">199</a></span><span class="counterCov">2050</span><span class="lineCov">            open_trees</span></div>
-<div class="line"><span id="200" class="lineNum"><a href="#200">200</a></span><span class="counterCov">2050</span><span class="lineCov">                .open_tree(&amp;sled, TRANSACTION_TREE_NAME)</span></div>
-<div class="line"><span id="201" class="lineNum"><a href="#201">201</a></span><span class="counterCov">2050</span><span class="lineCov">                .map_err_to_core()?;</span></div>
-<div class="line"><span id="202" class="lineNum"><a href="#202">202</a></span><span class="counterCov">2050</span><span class="lineCov">            for op in &amp;transaction.operations {</span></div>
-<div class="line"><span id="203" class="lineNum"><a href="#203">203</a></span><span class="counterCov">2050</span><span class="lineCov">                match &amp;op.command {</span></div>
-<div class="line"><span id="204" class="lineNum"><a href="#204">204</a></span><span class="counterCov">2050</span><span class="lineCov">                    Command::Update { .. } | Command::Insert { .. } | Command::Delete { .. } =&gt; {</span></div>
-<div class="line"><span id="205" class="lineNum"><a href="#205">205</a></span><span class="counterCov">2050</span><span class="lineCov">                        open_trees</span></div>
-<div class="line"><span id="206" class="lineNum"><a href="#206">206</a></span><span class="counterCov">2050</span><span class="lineCov">                            .open_trees_for_document_change(&amp;sled, &amp;op.collection, &amp;schema)</span></div>
-<div class="line"><span id="207" class="lineNum"><a href="#207">207</a></span><span class="counterCov">2050</span><span class="lineCov">                            .map_err_to_core()?;</span></div>
+<div class="line"><span id="191" class="lineNum"><a href="#191">191</a></span><span class="counterCov">2052</span><span class="lineCov">    async fn apply_transaction(</span></div>
+<div class="line"><span id="192" class="lineNum"><a href="#192">192</a></span><span class="counterCov">2052</span><span class="lineCov">        &amp;self,</span></div>
+<div class="line"><span id="193" class="lineNum"><a href="#193">193</a></span><span class="counterCov">2052</span><span class="lineCov">        transaction: Transaction&lt;&#39;static&gt;,</span></div>
+<div class="line"><span id="194" class="lineNum"><a href="#194">194</a></span><span class="counterCov">2052</span><span class="lineCov">    ) -&gt; Result&lt;Vec&lt;OperationResult&gt;, pliantdb_core::Error&gt; {</span></div>
+<div class="line"><span id="195" class="lineNum"><a href="#195">195</a></span><span class="counterCov">2052</span><span class="lineCov">        let sled = self.sled.clone();</span></div>
+<div class="line"><span id="196" class="lineNum"><a href="#196">196</a></span><span class="counterCov">2052</span><span class="lineCov">        let schema = self.schema.clone();</span></div>
+<div class="line"><span id="197" class="lineNum"><a href="#197">197</a></span><span class="counterCov">2052</span><span class="lineCov">        tokio::task::spawn_blocking(move || {</span></div>
+<div class="line"><span id="198" class="lineNum"><a href="#198">198</a></span><span class="counterCov">2052</span><span class="lineCov">            let mut open_trees = OpenTrees::default();</span></div>
+<div class="line"><span id="199" class="lineNum"><a href="#199">199</a></span><span class="counterCov">2052</span><span class="lineCov">            open_trees</span></div>
+<div class="line"><span id="200" class="lineNum"><a href="#200">200</a></span><span class="counterCov">2052</span><span class="lineCov">                .open_tree(&amp;sled, TRANSACTION_TREE_NAME)</span></div>
+<div class="line"><span id="201" class="lineNum"><a href="#201">201</a></span><span class="counterCov">2052</span><span class="lineCov">                .map_err_to_core()?;</span></div>
+<div class="line"><span id="202" class="lineNum"><a href="#202">202</a></span><span class="counterCov">2052</span><span class="lineCov">            for op in &amp;transaction.operations {</span></div>
+<div class="line"><span id="203" class="lineNum"><a href="#203">203</a></span><span class="counterCov">2052</span><span class="lineCov">                match &amp;op.command {</span></div>
+<div class="line"><span id="204" class="lineNum"><a href="#204">204</a></span><span class="counterCov">2052</span><span class="lineCov">                    Command::Update { .. } | Command::Insert { .. } | Command::Delete { .. } =&gt; {</span></div>
+<div class="line"><span id="205" class="lineNum"><a href="#205">205</a></span><span class="counterCov">2052</span><span class="lineCov">                        open_trees</span></div>
+<div class="line"><span id="206" class="lineNum"><a href="#206">206</a></span><span class="counterCov">2052</span><span class="lineCov">                            .open_trees_for_document_change(&amp;sled, &amp;op.collection, &amp;schema)</span></div>
+<div class="line"><span id="207" class="lineNum"><a href="#207">207</a></span><span class="counterCov">2052</span><span class="lineCov">                            .map_err_to_core()?;</span></div>
 <div class="line"><span id="208" class="lineNum"><a href="#208">208</a></span><span class="counterUnCov"></span><span class="lineUnCov">                    }</span></div>
 <div class="line"><span id="209" class="lineNum"><a href="#209">209</a></span><span class="counterUnCov"></span><span class="lineUnCov">                }</span></div>
 <div class="line"><span id="210" class="lineNum"><a href="#210">210</a></span><span class="counterUnCov"></span><span class="lineUnCov">            }</span></div>
 <div class="line"><span id="211" class="lineNum"><a href="#211">211</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="212" class="lineNum"><a href="#212">212</a></span><span class="counterCov">2050</span><span class="lineCov">            match open_trees.trees.transaction(|trees| {</span></div>
-<div class="line"><span id="213" class="lineNum"><a href="#213">213</a></span><span class="counterCov">2050</span><span class="lineCov">                let mut results = Vec::new();</span></div>
-<div class="line"><span id="214" class="lineNum"><a href="#214">214</a></span><span class="counterCov">2050</span><span class="lineCov">                let mut changed_documents = Vec::new();</span></div>
-<div class="line"><span id="215" class="lineNum"><a href="#215">215</a></span><span class="counterCov">2050</span><span class="lineCov">                for op in &amp;transaction.operations {</span></div>
-<div class="line"><span id="216" class="lineNum"><a href="#216">216</a></span><span class="counterCov">2050</span><span class="lineCov">                    let result = execute_operation(op, trees, &amp;open_trees.trees_index_by_name)?;</span></div>
+<div class="line"><span id="212" class="lineNum"><a href="#212">212</a></span><span class="counterCov">2052</span><span class="lineCov">            match open_trees.trees.transaction(|trees| {</span></div>
+<div class="line"><span id="213" class="lineNum"><a href="#213">213</a></span><span class="counterCov">2052</span><span class="lineCov">                let mut results = Vec::new();</span></div>
+<div class="line"><span id="214" class="lineNum"><a href="#214">214</a></span><span class="counterCov">2052</span><span class="lineCov">                let mut changed_documents = Vec::new();</span></div>
+<div class="line"><span id="215" class="lineNum"><a href="#215">215</a></span><span class="counterCov">2052</span><span class="lineCov">                for op in &amp;transaction.operations {</span></div>
+<div class="line"><span id="216" class="lineNum"><a href="#216">216</a></span><span class="counterCov">2052</span><span class="lineCov">                    let result = execute_operation(op, trees, &amp;open_trees.trees_index_by_name)?;</span></div>
 <div class="line"><span id="217" class="lineNum"><a href="#217">217</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="218" class="lineNum"><a href="#218">218</a></span><span class="counterCov">2046</span><span class="lineCov">                    match &amp;result {</span></div>
-<div class="line"><span id="219" class="lineNum"><a href="#219">219</a></span><span class="counterCov">2042</span><span class="lineCov">                        OperationResult::DocumentUpdated { header, collection } =&gt; {</span></div>
-<div class="line"><span id="220" class="lineNum"><a href="#220">220</a></span><span class="counterCov">2042</span><span class="lineCov">                            changed_documents.push(ChangedDocument {</span></div>
-<div class="line"><span id="221" class="lineNum"><a href="#221">221</a></span><span class="counterCov">2042</span><span class="lineCov">                                collection: collection.clone(),</span></div>
-<div class="line"><span id="222" class="lineNum"><a href="#222">222</a></span><span class="counterCov">2042</span><span class="lineCov">                                id: header.id,</span></div>
-<div class="line"><span id="223" class="lineNum"><a href="#223">223</a></span><span class="counterCov">2042</span><span class="lineCov">                                deleted: false,</span></div>
-<div class="line"><span id="224" class="lineNum"><a href="#224">224</a></span><span class="counterCov">2042</span><span class="lineCov">                            });</span></div>
-<div class="line"><span id="225" class="lineNum"><a href="#225">225</a></span><span class="counterCov">2042</span><span class="lineCov">                        }</span></div>
+<div class="line"><span id="218" class="lineNum"><a href="#218">218</a></span><span class="counterCov">2048</span><span class="lineCov">                    match &amp;result {</span></div>
+<div class="line"><span id="219" class="lineNum"><a href="#219">219</a></span><span class="counterCov">2044</span><span class="lineCov">                        OperationResult::DocumentUpdated { header, collection } =&gt; {</span></div>
+<div class="line"><span id="220" class="lineNum"><a href="#220">220</a></span><span class="counterCov">2044</span><span class="lineCov">                            changed_documents.push(ChangedDocument {</span></div>
+<div class="line"><span id="221" class="lineNum"><a href="#221">221</a></span><span class="counterCov">2044</span><span class="lineCov">                                collection: collection.clone(),</span></div>
+<div class="line"><span id="222" class="lineNum"><a href="#222">222</a></span><span class="counterCov">2044</span><span class="lineCov">                                id: header.id,</span></div>
+<div class="line"><span id="223" class="lineNum"><a href="#223">223</a></span><span class="counterCov">2044</span><span class="lineCov">                                deleted: false,</span></div>
+<div class="line"><span id="224" class="lineNum"><a href="#224">224</a></span><span class="counterCov">2044</span><span class="lineCov">                            });</span></div>
+<div class="line"><span id="225" class="lineNum"><a href="#225">225</a></span><span class="counterCov">2044</span><span class="lineCov">                        }</span></div>
 <div class="line"><span id="226" class="lineNum"><a href="#226">226</a></span><span class="counterCov">4</span><span class="lineCov">                        OperationResult::DocumentDeleted { id, collection } =&gt; changed_documents</span></div>
 <div class="line"><span id="227" class="lineNum"><a href="#227">227</a></span><span class="counterCov">4</span><span class="lineCov">                            .push(ChangedDocument {</span></div>
 <div class="line"><span id="228" class="lineNum"><a href="#228">228</a></span><span class="counterCov">4</span><span class="lineCov">                                collection: collection.clone(),</span></div>
@@ -252,48 +252,48 @@
 <div class="line"><span id="231" class="lineNum"><a href="#231">231</a></span><span class="counterCov">4</span><span class="lineCov">                            }),</span></div>
 <div class="line"><span id="232" class="lineNum"><a href="#232">232</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        OperationResult::Success =&gt; {}</span></div>
 <div class="line"><span id="233" class="lineNum"><a href="#233">233</a></span><span class="counterUnCov"></span><span class="lineUnCov">                    }</span></div>
-<div class="line"><span id="234" class="lineNum"><a href="#234">234</a></span><span class="counterCov">2046</span><span class="lineCov">                    results.push(result);</span></div>
+<div class="line"><span id="234" class="lineNum"><a href="#234">234</a></span><span class="counterCov">2048</span><span class="lineCov">                    results.push(result);</span></div>
 <div class="line"><span id="235" class="lineNum"><a href="#235">235</a></span><span class="counterUnCov"></span><span class="lineUnCov">                }</span></div>
 <div class="line"><span id="236" class="lineNum"><a href="#236">236</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="237" class="lineNum"><a href="#237">237</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // Insert invalidations for each record changed</span></div>
-<div class="line"><span id="238" class="lineNum"><a href="#238">238</a></span><span class="counterCov">2046</span><span class="lineCov">                for (collection, changed_documents) in &amp;changed_documents</span></div>
-<div class="line"><span id="239" class="lineNum"><a href="#239">239</a></span><span class="counterCov">2046</span><span class="lineCov">                    .iter()</span></div>
-<div class="line"><span id="240" class="lineNum"><a href="#240">240</a></span><span class="counterCov">2046</span><span class="lineCov">                    .group_by(|doc| doc.collection.clone())</span></div>
+<div class="line"><span id="238" class="lineNum"><a href="#238">238</a></span><span class="counterCov">2048</span><span class="lineCov">                for (collection, changed_documents) in &amp;changed_documents</span></div>
+<div class="line"><span id="239" class="lineNum"><a href="#239">239</a></span><span class="counterCov">2048</span><span class="lineCov">                    .iter()</span></div>
+<div class="line"><span id="240" class="lineNum"><a href="#240">240</a></span><span class="counterCov">2048</span><span class="lineCov">                    .group_by(|doc| doc.collection.clone())</span></div>
 <div class="line"><span id="241" class="lineNum"><a href="#241">241</a></span><span class="counterUnCov"></span><span class="lineUnCov">                {</span></div>
-<div class="line"><span id="242" class="lineNum"><a href="#242">242</a></span><span class="counterCov">2046</span><span class="lineCov">                    if let Some(views) = schema.views_in_collection(&amp;collection) {</span></div>
-<div class="line"><span id="243" class="lineNum"><a href="#243">243</a></span><span class="counterCov">2044</span><span class="lineCov">                        let changed_documents = changed_documents.collect::&lt;Vec&lt;_&gt;&gt;();</span></div>
-<div class="line"><span id="244" class="lineNum"><a href="#244">244</a></span><span class="counterCov">6132</span><span class="lineCov">                        for view in views {</span></div>
-<div class="line"><span id="245" class="lineNum"><a href="#245">245</a></span><span class="counterCov">6132</span><span class="lineCov">                            let view_name = view.name();</span></div>
-<div class="line"><span id="246" class="lineNum"><a href="#246">246</a></span><span class="counterCov">6132</span><span class="lineCov">                            for changed_document in &amp;changed_documents {</span></div>
-<div class="line"><span id="247" class="lineNum"><a href="#247">247</a></span><span class="counterCov">6132</span><span class="lineCov">                                let invalidated_docs = &amp;trees[open_trees.trees_index_by_name</span></div>
-<div class="line"><span id="248" class="lineNum"><a href="#248">248</a></span><span class="counterCov">6132</span><span class="lineCov">                                    [&amp;view_invalidated_docs_tree_name(</span></div>
-<div class="line"><span id="249" class="lineNum"><a href="#249">249</a></span><span class="counterCov">6132</span><span class="lineCov">                                        &amp;collection,</span></div>
-<div class="line"><span id="250" class="lineNum"><a href="#250">250</a></span><span class="counterCov">6132</span><span class="lineCov">                                        view_name.as_ref(),</span></div>
-<div class="line"><span id="251" class="lineNum"><a href="#251">251</a></span><span class="counterCov">6132</span><span class="lineCov">                                    )]];</span></div>
-<div class="line"><span id="252" class="lineNum"><a href="#252">252</a></span><span class="counterCov">6132</span><span class="lineCov">                                invalidated_docs.insert(</span></div>
-<div class="line"><span id="253" class="lineNum"><a href="#253">253</a></span><span class="counterCov">6132</span><span class="lineCov">                                    changed_document.id.as_big_endian_bytes().unwrap().as_ref(),</span></div>
-<div class="line"><span id="254" class="lineNum"><a href="#254">254</a></span><span class="counterCov">6132</span><span class="lineCov">                                    IVec::default(),</span></div>
-<div class="line"><span id="255" class="lineNum"><a href="#255">255</a></span><span class="counterCov">6132</span><span class="lineCov">                                )?;</span></div>
+<div class="line"><span id="242" class="lineNum"><a href="#242">242</a></span><span class="counterCov">2048</span><span class="lineCov">                    if let Some(views) = schema.views_in_collection(&amp;collection) {</span></div>
+<div class="line"><span id="243" class="lineNum"><a href="#243">243</a></span><span class="counterCov">2046</span><span class="lineCov">                        let changed_documents = changed_documents.collect::&lt;Vec&lt;_&gt;&gt;();</span></div>
+<div class="line"><span id="244" class="lineNum"><a href="#244">244</a></span><span class="counterCov">6138</span><span class="lineCov">                        for view in views {</span></div>
+<div class="line"><span id="245" class="lineNum"><a href="#245">245</a></span><span class="counterCov">6138</span><span class="lineCov">                            let view_name = view.name();</span></div>
+<div class="line"><span id="246" class="lineNum"><a href="#246">246</a></span><span class="counterCov">6138</span><span class="lineCov">                            for changed_document in &amp;changed_documents {</span></div>
+<div class="line"><span id="247" class="lineNum"><a href="#247">247</a></span><span class="counterCov">6138</span><span class="lineCov">                                let invalidated_docs = &amp;trees[open_trees.trees_index_by_name</span></div>
+<div class="line"><span id="248" class="lineNum"><a href="#248">248</a></span><span class="counterCov">6138</span><span class="lineCov">                                    [&amp;view_invalidated_docs_tree_name(</span></div>
+<div class="line"><span id="249" class="lineNum"><a href="#249">249</a></span><span class="counterCov">6138</span><span class="lineCov">                                        &amp;collection,</span></div>
+<div class="line"><span id="250" class="lineNum"><a href="#250">250</a></span><span class="counterCov">6138</span><span class="lineCov">                                        view_name.as_ref(),</span></div>
+<div class="line"><span id="251" class="lineNum"><a href="#251">251</a></span><span class="counterCov">6138</span><span class="lineCov">                                    )]];</span></div>
+<div class="line"><span id="252" class="lineNum"><a href="#252">252</a></span><span class="counterCov">6138</span><span class="lineCov">                                invalidated_docs.insert(</span></div>
+<div class="line"><span id="253" class="lineNum"><a href="#253">253</a></span><span class="counterCov">6138</span><span class="lineCov">                                    changed_document.id.as_big_endian_bytes().unwrap().as_ref(),</span></div>
+<div class="line"><span id="254" class="lineNum"><a href="#254">254</a></span><span class="counterCov">6138</span><span class="lineCov">                                    IVec::default(),</span></div>
+<div class="line"><span id="255" class="lineNum"><a href="#255">255</a></span><span class="counterCov">6138</span><span class="lineCov">                                )?;</span></div>
 <div class="line"><span id="256" class="lineNum"><a href="#256">256</a></span><span class="counterUnCov"></span><span class="lineUnCov">                            }</span></div>
 <div class="line"><span id="257" class="lineNum"><a href="#257">257</a></span><span class="counterUnCov"></span><span class="lineUnCov">                        }</span></div>
 <div class="line"><span id="258" class="lineNum"><a href="#258">258</a></span><span class="counterCov">2</span><span class="lineCov">                    }</span></div>
 <div class="line"><span id="259" class="lineNum"><a href="#259">259</a></span><span class="counterUnCov"></span><span class="lineUnCov">                }</span></div>
 <div class="line"><span id="260" class="lineNum"><a href="#260">260</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="261" class="lineNum"><a href="#261">261</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // Save a record of the transaction we just completed.</span></div>
-<div class="line"><span id="262" class="lineNum"><a href="#262">262</a></span><span class="counterCov">2046</span><span class="lineCov">                let tree = &amp;trees[open_trees.trees_index_by_name[TRANSACTION_TREE_NAME]];</span></div>
-<div class="line"><span id="263" class="lineNum"><a href="#263">263</a></span><span class="counterCov">2046</span><span class="lineCov">                let executed = transaction::Executed {</span></div>
-<div class="line"><span id="264" class="lineNum"><a href="#264">264</a></span><span class="counterCov">2046</span><span class="lineCov">                    id: tree.generate_id()?,</span></div>
-<div class="line"><span id="265" class="lineNum"><a href="#265">265</a></span><span class="counterCov">2046</span><span class="lineCov">                    changed_documents: Cow::from(changed_documents),</span></div>
+<div class="line"><span id="262" class="lineNum"><a href="#262">262</a></span><span class="counterCov">2048</span><span class="lineCov">                let tree = &amp;trees[open_trees.trees_index_by_name[TRANSACTION_TREE_NAME]];</span></div>
+<div class="line"><span id="263" class="lineNum"><a href="#263">263</a></span><span class="counterCov">2048</span><span class="lineCov">                let executed = transaction::Executed {</span></div>
+<div class="line"><span id="264" class="lineNum"><a href="#264">264</a></span><span class="counterCov">2048</span><span class="lineCov">                    id: tree.generate_id()?,</span></div>
+<div class="line"><span id="265" class="lineNum"><a href="#265">265</a></span><span class="counterCov">2048</span><span class="lineCov">                    changed_documents: Cow::from(changed_documents),</span></div>
 <div class="line"><span id="266" class="lineNum"><a href="#266">266</a></span><span class="counterUnCov"></span><span class="lineUnCov">                };</span></div>
-<div class="line"><span id="267" class="lineNum"><a href="#267">267</a></span><span class="counterCov">2046</span><span class="lineCov">                let serialized: Vec&lt;u8&gt; = bincode::serialize(&amp;executed)</span></div>
-<div class="line"><span id="268" class="lineNum"><a href="#268">268</a></span><span class="counterCov">2046</span><span class="lineCov">                    .map_err_to_core()</span></div>
-<div class="line"><span id="269" class="lineNum"><a href="#269">269</a></span><span class="counterCov">2046</span><span class="lineCov">                    .map_err(ConflictableTransactionError::Abort)?;</span></div>
-<div class="line"><span id="270" class="lineNum"><a href="#270">270</a></span><span class="counterCov">2046</span><span class="lineCov">                tree.insert(&amp;executed.id.to_be_bytes(), serialized)?;</span></div>
+<div class="line"><span id="267" class="lineNum"><a href="#267">267</a></span><span class="counterCov">2048</span><span class="lineCov">                let serialized: Vec&lt;u8&gt; = bincode::serialize(&amp;executed)</span></div>
+<div class="line"><span id="268" class="lineNum"><a href="#268">268</a></span><span class="counterCov">2048</span><span class="lineCov">                    .map_err_to_core()</span></div>
+<div class="line"><span id="269" class="lineNum"><a href="#269">269</a></span><span class="counterCov">2048</span><span class="lineCov">                    .map_err(ConflictableTransactionError::Abort)?;</span></div>
+<div class="line"><span id="270" class="lineNum"><a href="#270">270</a></span><span class="counterCov">2048</span><span class="lineCov">                tree.insert(&amp;executed.id.to_be_bytes(), serialized)?;</span></div>
 <div class="line"><span id="271" class="lineNum"><a href="#271">271</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="272" class="lineNum"><a href="#272">272</a></span><span class="counterCov">2046</span><span class="lineCov">                trees.iter().for_each(TransactionalTree::flush);</span></div>
-<div class="line"><span id="273" class="lineNum"><a href="#273">273</a></span><span class="counterCov">2046</span><span class="lineCov">                Ok(results)</span></div>
-<div class="line"><span id="274" class="lineNum"><a href="#274">274</a></span><span class="counterCov">2050</span><span class="lineCov">            }) {</span></div>
-<div class="line"><span id="275" class="lineNum"><a href="#275">275</a></span><span class="counterCov">2046</span><span class="lineCov">                Ok(results) =&gt; Ok(results),</span></div>
+<div class="line"><span id="272" class="lineNum"><a href="#272">272</a></span><span class="counterCov">2048</span><span class="lineCov">                trees.iter().for_each(TransactionalTree::flush);</span></div>
+<div class="line"><span id="273" class="lineNum"><a href="#273">273</a></span><span class="counterCov">2048</span><span class="lineCov">                Ok(results)</span></div>
+<div class="line"><span id="274" class="lineNum"><a href="#274">274</a></span><span class="counterCov">2052</span><span class="lineCov">            }) {</span></div>
+<div class="line"><span id="275" class="lineNum"><a href="#275">275</a></span><span class="counterCov">2048</span><span class="lineCov">                Ok(results) =&gt; Ok(results),</span></div>
 <div class="line"><span id="276" class="lineNum"><a href="#276">276</a></span><span class="counterCov">4</span><span class="lineCov">                Err(err) =&gt; match err {</span></div>
 <div class="line"><span id="277" class="lineNum"><a href="#277">277</a></span><span class="counterCov">4</span><span class="lineCov">                    TransactionError::Abort(err) =&gt; Err(err),</span></div>
 <div class="line"><span id="278" class="lineNum"><a href="#278">278</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                    TransactionError::Storage(err) =&gt; {</span></div>
@@ -301,38 +301,38 @@
 <div class="line"><span id="280" class="lineNum"><a href="#280">280</a></span><span class="counterUnCov"></span><span class="lineUnCov">                    }</span></div>
 <div class="line"><span id="281" class="lineNum"><a href="#281">281</a></span><span class="counterUnCov"></span><span class="lineUnCov">                },</span></div>
 <div class="line"><span id="282" class="lineNum"><a href="#282">282</a></span><span class="counterUnCov"></span><span class="lineUnCov">            }</span></div>
-<div class="line"><span id="283" class="lineNum"><a href="#283">283</a></span><span class="counterCov">2050</span><span class="lineCov">        })</span></div>
-<div class="line"><span id="284" class="lineNum"><a href="#284">284</a></span><span class="counterCov">2050</span><span class="lineCov">        .await</span></div>
-<div class="line"><span id="285" class="lineNum"><a href="#285">285</a></span><span class="counterCov">2050</span><span class="lineCov">        .unwrap()</span></div>
-<div class="line"><span id="286" class="lineNum"><a href="#286">286</a></span><span class="counterCov">2050</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="283" class="lineNum"><a href="#283">283</a></span><span class="counterCov">2052</span><span class="lineCov">        })</span></div>
+<div class="line"><span id="284" class="lineNum"><a href="#284">284</a></span><span class="counterCov">2052</span><span class="lineCov">        .await</span></div>
+<div class="line"><span id="285" class="lineNum"><a href="#285">285</a></span><span class="counterCov">2052</span><span class="lineCov">        .unwrap()</span></div>
+<div class="line"><span id="286" class="lineNum"><a href="#286">286</a></span><span class="counterCov">2052</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="287" class="lineNum"><a href="#287">287</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="288" class="lineNum"><a href="#288">288</a></span><span class="counterCov">16</span><span class="lineCov">    async fn get&lt;C: schema::Collection&gt;(</span></div>
-<div class="line"><span id="289" class="lineNum"><a href="#289">289</a></span><span class="counterCov">16</span><span class="lineCov">        &amp;self,</span></div>
-<div class="line"><span id="290" class="lineNum"><a href="#290">290</a></span><span class="counterCov">16</span><span class="lineCov">        id: u64,</span></div>
-<div class="line"><span id="291" class="lineNum"><a href="#291">291</a></span><span class="counterCov">16</span><span class="lineCov">    ) -&gt; Result&lt;Option&lt;Document&lt;&#39;static&gt;&gt;, pliantdb_core::Error&gt; {</span></div>
-<div class="line"><span id="292" class="lineNum"><a href="#292">292</a></span><span class="counterCov">16</span><span class="lineCov">        tokio::task::block_in_place(|| {</span></div>
-<div class="line"><span id="293" class="lineNum"><a href="#293">293</a></span><span class="counterCov">16</span><span class="lineCov">            let tree = self</span></div>
-<div class="line"><span id="294" class="lineNum"><a href="#294">294</a></span><span class="counterCov">16</span><span class="lineCov">                .sled</span></div>
-<div class="line"><span id="295" class="lineNum"><a href="#295">295</a></span><span class="counterCov">16</span><span class="lineCov">                .open_tree(document_tree_name(&amp;C::id()))</span></div>
-<div class="line"><span id="296" class="lineNum"><a href="#296">296</a></span><span class="counterCov">16</span><span class="lineCov">                .map_err_to_core()?;</span></div>
-<div class="line"><span id="297" class="lineNum"><a href="#297">297</a></span><span class="counterCov">16</span><span class="lineCov">            if let Some(vec) = tree</span></div>
+<div class="line"><span id="288" class="lineNum"><a href="#288">288</a></span><span class="counterCov">18</span><span class="lineCov">    async fn get&lt;C: schema::Collection&gt;(</span></div>
+<div class="line"><span id="289" class="lineNum"><a href="#289">289</a></span><span class="counterCov">18</span><span class="lineCov">        &amp;self,</span></div>
+<div class="line"><span id="290" class="lineNum"><a href="#290">290</a></span><span class="counterCov">18</span><span class="lineCov">        id: u64,</span></div>
+<div class="line"><span id="291" class="lineNum"><a href="#291">291</a></span><span class="counterCov">18</span><span class="lineCov">    ) -&gt; Result&lt;Option&lt;Document&lt;&#39;static&gt;&gt;, pliantdb_core::Error&gt; {</span></div>
+<div class="line"><span id="292" class="lineNum"><a href="#292">292</a></span><span class="counterCov">18</span><span class="lineCov">        tokio::task::block_in_place(|| {</span></div>
+<div class="line"><span id="293" class="lineNum"><a href="#293">293</a></span><span class="counterCov">18</span><span class="lineCov">            let tree = self</span></div>
+<div class="line"><span id="294" class="lineNum"><a href="#294">294</a></span><span class="counterCov">18</span><span class="lineCov">                .sled</span></div>
+<div class="line"><span id="295" class="lineNum"><a href="#295">295</a></span><span class="counterCov">18</span><span class="lineCov">                .open_tree(document_tree_name(&amp;C::id()))</span></div>
+<div class="line"><span id="296" class="lineNum"><a href="#296">296</a></span><span class="counterCov">18</span><span class="lineCov">                .map_err_to_core()?;</span></div>
+<div class="line"><span id="297" class="lineNum"><a href="#297">297</a></span><span class="counterCov">18</span><span class="lineCov">            if let Some(vec) = tree</span></div>
 <div class="line"><span id="298" class="lineNum"><a href="#298">298</a></span><span class="counterUnCov"></span><span class="lineUnCov">                .get(</span></div>
-<div class="line"><span id="299" class="lineNum"><a href="#299">299</a></span><span class="counterCov">16</span><span class="lineCov">                    id.as_big_endian_bytes()</span></div>
-<div class="line"><span id="300" class="lineNum"><a href="#300">300</a></span><span class="counterCov">16</span><span class="lineCov">                        .map_err(view::Error::KeySerialization)</span></div>
-<div class="line"><span id="301" class="lineNum"><a href="#301">301</a></span><span class="counterCov">16</span><span class="lineCov">                        .map_err_to_core()?,</span></div>
+<div class="line"><span id="299" class="lineNum"><a href="#299">299</a></span><span class="counterCov">18</span><span class="lineCov">                    id.as_big_endian_bytes()</span></div>
+<div class="line"><span id="300" class="lineNum"><a href="#300">300</a></span><span class="counterCov">18</span><span class="lineCov">                        .map_err(view::Error::KeySerialization)</span></div>
+<div class="line"><span id="301" class="lineNum"><a href="#301">301</a></span><span class="counterCov">18</span><span class="lineCov">                        .map_err_to_core()?,</span></div>
 <div class="line"><span id="302" class="lineNum"><a href="#302">302</a></span><span class="counterUnCov"></span><span class="lineUnCov">                )</span></div>
 <div class="line"><span id="303" class="lineNum"><a href="#303">303</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                .map_err_to_core()?</span></div>
 <div class="line"><span id="304" class="lineNum"><a href="#304">304</a></span><span class="counterUnCov"></span><span class="lineUnCov">            {</span></div>
 <div class="line"><span id="305" class="lineNum"><a href="#305">305</a></span><span class="counterUnCov"></span><span class="lineUnCov">                Ok(Some(</span></div>
-<div class="line"><span id="306" class="lineNum"><a href="#306">306</a></span><span class="counterCov">12</span><span class="lineCov">                    bincode::deserialize::&lt;Document&lt;&#39;_&gt;&gt;(&amp;vec)</span></div>
-<div class="line"><span id="307" class="lineNum"><a href="#307">307</a></span><span class="counterCov">12</span><span class="lineCov">                        .map_err_to_core()?</span></div>
+<div class="line"><span id="306" class="lineNum"><a href="#306">306</a></span><span class="counterCov">14</span><span class="lineCov">                    bincode::deserialize::&lt;Document&lt;&#39;_&gt;&gt;(&amp;vec)</span></div>
+<div class="line"><span id="307" class="lineNum"><a href="#307">307</a></span><span class="counterCov">14</span><span class="lineCov">                        .map_err_to_core()?</span></div>
 <div class="line"><span id="308" class="lineNum"><a href="#308">308</a></span><span class="counterUnCov"></span><span class="lineUnCov">                        .to_owned(),</span></div>
 <div class="line"><span id="309" class="lineNum"><a href="#309">309</a></span><span class="counterUnCov"></span><span class="lineUnCov">                ))</span></div>
 <div class="line"><span id="310" class="lineNum"><a href="#310">310</a></span><span class="counterUnCov"></span><span class="lineUnCov">            } else {</span></div>
 <div class="line"><span id="311" class="lineNum"><a href="#311">311</a></span><span class="counterCov">4</span><span class="lineCov">                Ok(None)</span></div>
 <div class="line"><span id="312" class="lineNum"><a href="#312">312</a></span><span class="counterUnCov"></span><span class="lineUnCov">            }</span></div>
-<div class="line"><span id="313" class="lineNum"><a href="#313">313</a></span><span class="counterCov">16</span><span class="lineCov">        })</span></div>
-<div class="line"><span id="314" class="lineNum"><a href="#314">314</a></span><span class="counterCov">16</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="313" class="lineNum"><a href="#313">313</a></span><span class="counterCov">18</span><span class="lineCov">        })</span></div>
+<div class="line"><span id="314" class="lineNum"><a href="#314">314</a></span><span class="counterCov">18</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="315" class="lineNum"><a href="#315">315</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="316" class="lineNum"><a href="#316">316</a></span><span class="counterCov">4</span><span class="lineCov">    async fn get_multiple&lt;C: schema::Collection&gt;(</span></div>
 <div class="line"><span id="317" class="lineNum"><a href="#317">317</a></span><span class="counterCov">4</span><span class="lineCov">        &amp;self,</span></div>
@@ -565,32 +565,32 @@
 <div class="line"><span id="544" class="lineNum"><a href="#544">544</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
 <div class="line"><span id="545" class="lineNum"><a href="#545">545</a></span><span class="counterCov">40</span><span class="lineCov">}</span></div>
 <div class="line"><span id="546" class="lineNum"><a href="#546">546</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="547" class="lineNum"><a href="#547">547</a></span><span class="counterCov">2050</span><span class="lineCov">fn execute_operation(</span></div>
-<div class="line"><span id="548" class="lineNum"><a href="#548">548</a></span><span class="counterCov">2050</span><span class="lineCov">    operation: &amp;Operation&lt;&#39;_&gt;,</span></div>
-<div class="line"><span id="549" class="lineNum"><a href="#549">549</a></span><span class="counterCov">2050</span><span class="lineCov">    trees: &amp;[TransactionalTree],</span></div>
-<div class="line"><span id="550" class="lineNum"><a href="#550">550</a></span><span class="counterCov">2050</span><span class="lineCov">    tree_index_map: &amp;HashMap&lt;String, usize&gt;,</span></div>
-<div class="line"><span id="551" class="lineNum"><a href="#551">551</a></span><span class="counterCov">2050</span><span class="lineCov">) -&gt; Result&lt;OperationResult, ConflictableTransactionError&lt;pliantdb_core::Error&gt;&gt; {</span></div>
-<div class="line"><span id="552" class="lineNum"><a href="#552">552</a></span><span class="counterCov">2050</span><span class="lineCov">    let tree = &amp;trees[tree_index_map[&amp;document_tree_name(&amp;operation.collection)]];</span></div>
-<div class="line"><span id="553" class="lineNum"><a href="#553">553</a></span><span class="counterCov">2050</span><span class="lineCov">    match &amp;operation.command {</span></div>
-<div class="line"><span id="554" class="lineNum"><a href="#554">554</a></span><span class="counterCov">2034</span><span class="lineCov">        Command::Insert { contents } =&gt; {</span></div>
-<div class="line"><span id="555" class="lineNum"><a href="#555">555</a></span><span class="counterCov">2034</span><span class="lineCov">            let doc = Document::new(</span></div>
-<div class="line"><span id="556" class="lineNum"><a href="#556">556</a></span><span class="counterCov">2034</span><span class="lineCov">                tree.generate_id()?,</span></div>
-<div class="line"><span id="557" class="lineNum"><a href="#557">557</a></span><span class="counterCov">2034</span><span class="lineCov">                Cow::Borrowed(contents),</span></div>
-<div class="line"><span id="558" class="lineNum"><a href="#558">558</a></span><span class="counterCov">2034</span><span class="lineCov">                operation.collection.clone(),</span></div>
+<div class="line"><span id="547" class="lineNum"><a href="#547">547</a></span><span class="counterCov">2052</span><span class="lineCov">fn execute_operation(</span></div>
+<div class="line"><span id="548" class="lineNum"><a href="#548">548</a></span><span class="counterCov">2052</span><span class="lineCov">    operation: &amp;Operation&lt;&#39;_&gt;,</span></div>
+<div class="line"><span id="549" class="lineNum"><a href="#549">549</a></span><span class="counterCov">2052</span><span class="lineCov">    trees: &amp;[TransactionalTree],</span></div>
+<div class="line"><span id="550" class="lineNum"><a href="#550">550</a></span><span class="counterCov">2052</span><span class="lineCov">    tree_index_map: &amp;HashMap&lt;String, usize&gt;,</span></div>
+<div class="line"><span id="551" class="lineNum"><a href="#551">551</a></span><span class="counterCov">2052</span><span class="lineCov">) -&gt; Result&lt;OperationResult, ConflictableTransactionError&lt;pliantdb_core::Error&gt;&gt; {</span></div>
+<div class="line"><span id="552" class="lineNum"><a href="#552">552</a></span><span class="counterCov">2052</span><span class="lineCov">    let tree = &amp;trees[tree_index_map[&amp;document_tree_name(&amp;operation.collection)]];</span></div>
+<div class="line"><span id="553" class="lineNum"><a href="#553">553</a></span><span class="counterCov">2052</span><span class="lineCov">    match &amp;operation.command {</span></div>
+<div class="line"><span id="554" class="lineNum"><a href="#554">554</a></span><span class="counterCov">2036</span><span class="lineCov">        Command::Insert { contents } =&gt; {</span></div>
+<div class="line"><span id="555" class="lineNum"><a href="#555">555</a></span><span class="counterCov">2036</span><span class="lineCov">            let doc = Document::new(</span></div>
+<div class="line"><span id="556" class="lineNum"><a href="#556">556</a></span><span class="counterCov">2036</span><span class="lineCov">                tree.generate_id()?,</span></div>
+<div class="line"><span id="557" class="lineNum"><a href="#557">557</a></span><span class="counterCov">2036</span><span class="lineCov">                Cow::Borrowed(contents),</span></div>
+<div class="line"><span id="558" class="lineNum"><a href="#558">558</a></span><span class="counterCov">2036</span><span class="lineCov">                operation.collection.clone(),</span></div>
 <div class="line"><span id="559" class="lineNum"><a href="#559">559</a></span><span class="counterUnCov"></span><span class="lineUnCov">            );</span></div>
-<div class="line"><span id="560" class="lineNum"><a href="#560">560</a></span><span class="counterCov">2034</span><span class="lineCov">            save_doc(tree, &amp;doc)?;</span></div>
-<div class="line"><span id="561" class="lineNum"><a href="#561">561</a></span><span class="counterCov">2034</span><span class="lineCov">            let serialized: Vec&lt;u8&gt; = bincode::serialize(&amp;doc)</span></div>
-<div class="line"><span id="562" class="lineNum"><a href="#562">562</a></span><span class="counterCov">2034</span><span class="lineCov">                .map_err_to_core()</span></div>
-<div class="line"><span id="563" class="lineNum"><a href="#563">563</a></span><span class="counterCov">2034</span><span class="lineCov">                .map_err(ConflictableTransactionError::Abort)?;</span></div>
-<div class="line"><span id="564" class="lineNum"><a href="#564">564</a></span><span class="counterCov">2034</span><span class="lineCov">            tree.insert(</span></div>
-<div class="line"><span id="565" class="lineNum"><a href="#565">565</a></span><span class="counterCov">2034</span><span class="lineCov">                doc.header.id.as_big_endian_bytes().unwrap().as_ref(),</span></div>
-<div class="line"><span id="566" class="lineNum"><a href="#566">566</a></span><span class="counterCov">2034</span><span class="lineCov">                serialized,</span></div>
-<div class="line"><span id="567" class="lineNum"><a href="#567">567</a></span><span class="counterCov">2034</span><span class="lineCov">            )?;</span></div>
+<div class="line"><span id="560" class="lineNum"><a href="#560">560</a></span><span class="counterCov">2036</span><span class="lineCov">            save_doc(tree, &amp;doc)?;</span></div>
+<div class="line"><span id="561" class="lineNum"><a href="#561">561</a></span><span class="counterCov">2036</span><span class="lineCov">            let serialized: Vec&lt;u8&gt; = bincode::serialize(&amp;doc)</span></div>
+<div class="line"><span id="562" class="lineNum"><a href="#562">562</a></span><span class="counterCov">2036</span><span class="lineCov">                .map_err_to_core()</span></div>
+<div class="line"><span id="563" class="lineNum"><a href="#563">563</a></span><span class="counterCov">2036</span><span class="lineCov">                .map_err(ConflictableTransactionError::Abort)?;</span></div>
+<div class="line"><span id="564" class="lineNum"><a href="#564">564</a></span><span class="counterCov">2036</span><span class="lineCov">            tree.insert(</span></div>
+<div class="line"><span id="565" class="lineNum"><a href="#565">565</a></span><span class="counterCov">2036</span><span class="lineCov">                doc.header.id.as_big_endian_bytes().unwrap().as_ref(),</span></div>
+<div class="line"><span id="566" class="lineNum"><a href="#566">566</a></span><span class="counterCov">2036</span><span class="lineCov">                serialized,</span></div>
+<div class="line"><span id="567" class="lineNum"><a href="#567">567</a></span><span class="counterCov">2036</span><span class="lineCov">            )?;</span></div>
 <div class="line"><span id="568" class="lineNum"><a href="#568">568</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="569" class="lineNum"><a href="#569">569</a></span><span class="counterCov">2034</span><span class="lineCov">            Ok(OperationResult::DocumentUpdated {</span></div>
-<div class="line"><span id="570" class="lineNum"><a href="#570">570</a></span><span class="counterCov">2034</span><span class="lineCov">                collection: operation.collection.clone(),</span></div>
-<div class="line"><span id="571" class="lineNum"><a href="#571">571</a></span><span class="counterCov">2034</span><span class="lineCov">                header: doc.header.as_ref().clone(),</span></div>
-<div class="line"><span id="572" class="lineNum"><a href="#572">572</a></span><span class="counterCov">2034</span><span class="lineCov">            })</span></div>
+<div class="line"><span id="569" class="lineNum"><a href="#569">569</a></span><span class="counterCov">2036</span><span class="lineCov">            Ok(OperationResult::DocumentUpdated {</span></div>
+<div class="line"><span id="570" class="lineNum"><a href="#570">570</a></span><span class="counterCov">2036</span><span class="lineCov">                collection: operation.collection.clone(),</span></div>
+<div class="line"><span id="571" class="lineNum"><a href="#571">571</a></span><span class="counterCov">2036</span><span class="lineCov">                header: doc.header.as_ref().clone(),</span></div>
+<div class="line"><span id="572" class="lineNum"><a href="#572">572</a></span><span class="counterCov">2036</span><span class="lineCov">            })</span></div>
 <div class="line"><span id="573" class="lineNum"><a href="#573">573</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
 <div class="line"><span id="574" class="lineNum"><a href="#574">574</a></span><span class="counterCov">12</span><span class="lineCov">        Command::Update { header, contents } =&gt; {</span></div>
 <div class="line"><span id="575" class="lineNum"><a href="#575">575</a></span><span class="counterCov">12</span><span class="lineCov">            if let Some(vec) = tree.get(&amp;header.id.as_big_endian_bytes().unwrap())? {</span></div>
@@ -655,27 +655,27 @@
 <div class="line"><span id="634" class="lineNum"><a href="#634">634</a></span><span class="counterUnCov"></span><span class="lineUnCov">            }</span></div>
 <div class="line"><span id="635" class="lineNum"><a href="#635">635</a></span><span class="counterUnCov"></span><span class="lineUnCov">        }</span></div>
 <div class="line"><span id="636" class="lineNum"><a href="#636">636</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
-<div class="line"><span id="637" class="lineNum"><a href="#637">637</a></span><span class="counterCov">2050</span><span class="lineCov">}</span></div>
+<div class="line"><span id="637" class="lineNum"><a href="#637">637</a></span><span class="counterCov">2052</span><span class="lineCov">}</span></div>
 <div class="line"><span id="638" class="lineNum"><a href="#638">638</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="639" class="lineNum"><a href="#639">639</a></span><span class="counterCov">2040</span><span class="lineCov">fn save_doc(</span></div>
-<div class="line"><span id="640" class="lineNum"><a href="#640">640</a></span><span class="counterCov">2040</span><span class="lineCov">    tree: &amp;TransactionalTree,</span></div>
-<div class="line"><span id="641" class="lineNum"><a href="#641">641</a></span><span class="counterCov">2040</span><span class="lineCov">    doc: &amp;Document&lt;&#39;_&gt;,</span></div>
-<div class="line"><span id="642" class="lineNum"><a href="#642">642</a></span><span class="counterCov">2040</span><span class="lineCov">) -&gt; Result&lt;(), ConflictableTransactionError&lt;pliantdb_core::Error&gt;&gt; {</span></div>
-<div class="line"><span id="643" class="lineNum"><a href="#643">643</a></span><span class="counterCov">2040</span><span class="lineCov">    let serialized: Vec&lt;u8&gt; = bincode::serialize(doc)</span></div>
-<div class="line"><span id="644" class="lineNum"><a href="#644">644</a></span><span class="counterCov">2040</span><span class="lineCov">        .map_err_to_core()</span></div>
-<div class="line"><span id="645" class="lineNum"><a href="#645">645</a></span><span class="counterCov">2040</span><span class="lineCov">        .map_err(ConflictableTransactionError::Abort)?;</span></div>
-<div class="line"><span id="646" class="lineNum"><a href="#646">646</a></span><span class="counterCov">2040</span><span class="lineCov">    tree.insert(</span></div>
-<div class="line"><span id="647" class="lineNum"><a href="#647">647</a></span><span class="counterCov">2040</span><span class="lineCov">        doc.header.id.as_big_endian_bytes().unwrap().as_ref(),</span></div>
-<div class="line"><span id="648" class="lineNum"><a href="#648">648</a></span><span class="counterCov">2040</span><span class="lineCov">        serialized,</span></div>
-<div class="line"><span id="649" class="lineNum"><a href="#649">649</a></span><span class="counterCov">2040</span><span class="lineCov">    )?;</span></div>
-<div class="line"><span id="650" class="lineNum"><a href="#650">650</a></span><span class="counterCov">2040</span><span class="lineCov">    Ok(())</span></div>
-<div class="line"><span id="651" class="lineNum"><a href="#651">651</a></span><span class="counterCov">2040</span><span class="lineCov">}</span></div>
+<div class="line"><span id="639" class="lineNum"><a href="#639">639</a></span><span class="counterCov">2042</span><span class="lineCov">fn save_doc(</span></div>
+<div class="line"><span id="640" class="lineNum"><a href="#640">640</a></span><span class="counterCov">2042</span><span class="lineCov">    tree: &amp;TransactionalTree,</span></div>
+<div class="line"><span id="641" class="lineNum"><a href="#641">641</a></span><span class="counterCov">2042</span><span class="lineCov">    doc: &amp;Document&lt;&#39;_&gt;,</span></div>
+<div class="line"><span id="642" class="lineNum"><a href="#642">642</a></span><span class="counterCov">2042</span><span class="lineCov">) -&gt; Result&lt;(), ConflictableTransactionError&lt;pliantdb_core::Error&gt;&gt; {</span></div>
+<div class="line"><span id="643" class="lineNum"><a href="#643">643</a></span><span class="counterCov">2042</span><span class="lineCov">    let serialized: Vec&lt;u8&gt; = bincode::serialize(doc)</span></div>
+<div class="line"><span id="644" class="lineNum"><a href="#644">644</a></span><span class="counterCov">2042</span><span class="lineCov">        .map_err_to_core()</span></div>
+<div class="line"><span id="645" class="lineNum"><a href="#645">645</a></span><span class="counterCov">2042</span><span class="lineCov">        .map_err(ConflictableTransactionError::Abort)?;</span></div>
+<div class="line"><span id="646" class="lineNum"><a href="#646">646</a></span><span class="counterCov">2042</span><span class="lineCov">    tree.insert(</span></div>
+<div class="line"><span id="647" class="lineNum"><a href="#647">647</a></span><span class="counterCov">2042</span><span class="lineCov">        doc.header.id.as_big_endian_bytes().unwrap().as_ref(),</span></div>
+<div class="line"><span id="648" class="lineNum"><a href="#648">648</a></span><span class="counterCov">2042</span><span class="lineCov">        serialized,</span></div>
+<div class="line"><span id="649" class="lineNum"><a href="#649">649</a></span><span class="counterCov">2042</span><span class="lineCov">    )?;</span></div>
+<div class="line"><span id="650" class="lineNum"><a href="#650">650</a></span><span class="counterCov">2042</span><span class="lineCov">    Ok(())</span></div>
+<div class="line"><span id="651" class="lineNum"><a href="#651">651</a></span><span class="counterCov">2042</span><span class="lineCov">}</span></div>
 <div class="line"><span id="652" class="lineNum"><a href="#652">652</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="653" class="lineNum"><a href="#653">653</a></span><span class="counterUnCov"></span><span class="lineUnCov">const TRANSACTION_TREE_NAME: &amp;str = &quot;transactions&quot;;</span></div>
 <div class="line"><span id="654" class="lineNum"><a href="#654">654</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="655" class="lineNum"><a href="#655">655</a></span><span class="counterCov">4160</span><span class="lineCov">pub fn document_tree_name(collection: &amp;collection::Id) -&gt; String {</span></div>
-<div class="line"><span id="656" class="lineNum"><a href="#656">656</a></span><span class="counterCov">4160</span><span class="lineCov">    format!(&quot;collection::{}&quot;, collection.0)</span></div>
-<div class="line"><span id="657" class="lineNum"><a href="#657">657</a></span><span class="counterCov">4160</span><span class="lineCov">}</span></div>
+<div class="line"><span id="655" class="lineNum"><a href="#655">655</a></span><span class="counterCov">4168</span><span class="lineCov">pub fn document_tree_name(collection: &amp;collection::Id) -&gt; String {</span></div>
+<div class="line"><span id="656" class="lineNum"><a href="#656">656</a></span><span class="counterCov">4168</span><span class="lineCov">    format!(&quot;collection::{}&quot;, collection.0)</span></div>
+<div class="line"><span id="657" class="lineNum"><a href="#657">657</a></span><span class="counterCov">4168</span><span class="lineCov">}</span></div>
 </div>
 </body>
 </html>
