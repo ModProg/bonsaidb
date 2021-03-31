@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../../index.html">top level</a> - <a href="index.html">core/src/schema</a> - database.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 15:27:30</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-03-31 15:50:31</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -63,18 +63,18 @@
 <div class="line"><span id="42" class="lineNum"><a href="#42">42</a></span><span class="counterCov">174</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="43" class="lineNum"><a href="#43">43</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="44" class="lineNum"><a href="#44">44</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Adds the view `V`.</span></div>
-<div class="line"><span id="45" class="lineNum"><a href="#45">45</a></span><span class="counterCov">522</span><span class="lineCov">    pub fn define_view&lt;V: View + &#39;static&gt;(&amp;mut self, view: V) {</span></div>
-<div class="line"><span id="46" class="lineNum"><a href="#46">46</a></span><span class="counterCov">522</span><span class="lineCov">        let name = view.name();</span></div>
-<div class="line"><span id="47" class="lineNum"><a href="#47">47</a></span><span class="counterCov">522</span><span class="lineCov">        let collection = view.collection();</span></div>
-<div class="line"><span id="48" class="lineNum"><a href="#48">48</a></span><span class="counterCov">522</span><span class="lineCov">        self.views.insert(TypeId::of::&lt;V&gt;(), Box::new(view));</span></div>
-<div class="line"><span id="49" class="lineNum"><a href="#49">49</a></span><span class="counterCov">522</span><span class="lineCov">        self.views_by_name</span></div>
-<div class="line"><span id="50" class="lineNum"><a href="#50">50</a></span><span class="counterCov">522</span><span class="lineCov">            .insert(name.to_string(), TypeId::of::&lt;V&gt;());</span></div>
-<div class="line"><span id="51" class="lineNum"><a href="#51">51</a></span><span class="counterCov">522</span><span class="lineCov">        let views = self</span></div>
-<div class="line"><span id="52" class="lineNum"><a href="#52">52</a></span><span class="counterCov">522</span><span class="lineCov">            .views_by_collection</span></div>
-<div class="line"><span id="53" class="lineNum"><a href="#53">53</a></span><span class="counterCov">522</span><span class="lineCov">            .entry(collection)</span></div>
-<div class="line"><span id="54" class="lineNum"><a href="#54">54</a></span><span class="counterCov">522</span><span class="lineCov">            .or_insert_with(Vec::new);</span></div>
-<div class="line"><span id="55" class="lineNum"><a href="#55">55</a></span><span class="counterCov">522</span><span class="lineCov">        views.push(TypeId::of::&lt;V&gt;());</span></div>
-<div class="line"><span id="56" class="lineNum"><a href="#56">56</a></span><span class="counterCov">522</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="45" class="lineNum"><a href="#45">45</a></span><span class="counterCov">510</span><span class="lineCov">    pub fn define_view&lt;V: View + &#39;static&gt;(&amp;mut self, view: V) {</span></div>
+<div class="line"><span id="46" class="lineNum"><a href="#46">46</a></span><span class="counterCov">510</span><span class="lineCov">        let name = view.name();</span></div>
+<div class="line"><span id="47" class="lineNum"><a href="#47">47</a></span><span class="counterCov">510</span><span class="lineCov">        let collection = view.collection();</span></div>
+<div class="line"><span id="48" class="lineNum"><a href="#48">48</a></span><span class="counterCov">510</span><span class="lineCov">        self.views.insert(TypeId::of::&lt;V&gt;(), Box::new(view));</span></div>
+<div class="line"><span id="49" class="lineNum"><a href="#49">49</a></span><span class="counterCov">510</span><span class="lineCov">        self.views_by_name</span></div>
+<div class="line"><span id="50" class="lineNum"><a href="#50">50</a></span><span class="counterCov">510</span><span class="lineCov">            .insert(name.to_string(), TypeId::of::&lt;V&gt;());</span></div>
+<div class="line"><span id="51" class="lineNum"><a href="#51">51</a></span><span class="counterCov">510</span><span class="lineCov">        let views = self</span></div>
+<div class="line"><span id="52" class="lineNum"><a href="#52">52</a></span><span class="counterCov">510</span><span class="lineCov">            .views_by_collection</span></div>
+<div class="line"><span id="53" class="lineNum"><a href="#53">53</a></span><span class="counterCov">510</span><span class="lineCov">            .entry(collection)</span></div>
+<div class="line"><span id="54" class="lineNum"><a href="#54">54</a></span><span class="counterCov">510</span><span class="lineCov">            .or_insert_with(Vec::new);</span></div>
+<div class="line"><span id="55" class="lineNum"><a href="#55">55</a></span><span class="counterCov">510</span><span class="lineCov">        views.push(TypeId::of::&lt;V&gt;());</span></div>
+<div class="line"><span id="56" class="lineNum"><a href="#56">56</a></span><span class="counterCov">510</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="57" class="lineNum"><a href="#57">57</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="58" class="lineNum"><a href="#58">58</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Returns `true` if this schema contains the collection `C`.</span></div>
 <div class="line"><span id="59" class="lineNum"><a href="#59">59</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
@@ -93,9 +93,9 @@
 <div class="line"><span id="72" class="lineNum"><a href="#72">72</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="73" class="lineNum"><a href="#73">73</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Looks up a [`view::Serialized`] through the the type `V`.</span></div>
 <div class="line"><span id="74" class="lineNum"><a href="#74">74</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[must_use]</span></div>
-<div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterCov">52</span><span class="lineCov">    pub fn view&lt;V: View + &#39;static&gt;(&amp;self) -&gt; Option&lt;&amp;&#39;_ dyn view::Serialized&gt; {</span></div>
-<div class="line"><span id="76" class="lineNum"><a href="#76">76</a></span><span class="counterCov">52</span><span class="lineCov">        self.views.get(&amp;TypeId::of::&lt;V&gt;()).map(AsRef::as_ref)</span></div>
-<div class="line"><span id="77" class="lineNum"><a href="#77">77</a></span><span class="counterCov">52</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="75" class="lineNum"><a href="#75">75</a></span><span class="counterCov">50</span><span class="lineCov">    pub fn view&lt;V: View + &#39;static&gt;(&amp;self) -&gt; Option&lt;&amp;&#39;_ dyn view::Serialized&gt; {</span></div>
+<div class="line"><span id="76" class="lineNum"><a href="#76">76</a></span><span class="counterCov">50</span><span class="lineCov">        self.views.get(&amp;TypeId::of::&lt;V&gt;()).map(AsRef::as_ref)</span></div>
+<div class="line"><span id="77" class="lineNum"><a href="#77">77</a></span><span class="counterCov">50</span><span class="lineCov">    }</span></div>
 <div class="line"><span id="78" class="lineNum"><a href="#78">78</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="79" class="lineNum"><a href="#79">79</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// Iterates over all registered views.</span></div>
 <div class="line"><span id="80" class="lineNum"><a href="#80">80</a></span><span class="counterCov">12</span><span class="lineCov">    pub fn views(&amp;self) -&gt; impl Iterator&lt;Item = &amp;&#39;_ dyn view::Serialized&gt; {</span></div>
