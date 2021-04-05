@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["pliantdb_jobs"] = [{"text":"impl Copy for Id","synthetic":false,"types":[]}];
+implementors["pliantdb_jobs"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html\" title=\"trait core::marker::Copy\">Copy</a> for <a class=\"struct\" href=\"pliantdb_jobs/task/struct.Id.html\" title=\"struct pliantdb_jobs::task::Id\">Id</a>","synthetic":false,"types":["pliantdb_jobs::task::Id"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

@@ -1,3 +1,3 @@
 (function() {var implementors = {};
-implementors["pliantdb_core"] = [{"text":"impl Drop for TestDirectory","synthetic":false,"types":[]}];
+implementors["pliantdb_core"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/ops/drop/trait.Drop.html\" title=\"trait core::ops::drop::Drop\">Drop</a> for <a class=\"struct\" href=\"pliantdb_core/test_util/struct.TestDirectory.html\" title=\"struct pliantdb_core::test_util::TestDirectory\">TestDirectory</a>","synthetic":false,"types":["pliantdb_core::test_util::TestDirectory"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
