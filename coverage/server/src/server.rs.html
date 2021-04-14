@@ -528,7 +528,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">use pliantdb_local::Storage;</pre>
+                <pre class="has-background-white py-0 px-2">use pliantdb_local::{Internal, Storage};</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1006,7 +1006,7 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success">
-                36
+                37
             </div>
             <div class="column has-background-success-light p-0">
                 <pre class="has-background-success-light py-0 px-2">            Storage::open_local(directory.join(&quot;admin.pliantdb&quot;), &amp;configuration.storage).await?;</pre>
@@ -10109,7 +10109,7 @@
                 1514
             </div>
             <div class="column has-background-success-light p-0">
-                <pre class="has-background-success-light py-0 px-2">        self.get_from_collection_id(id, collection).await</pre>
+                <pre class="has-background-success-light py-0 px-2">        Internal::get_from_collection_id(self, id, collection).await</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10213,7 +10213,7 @@
                 2
             </div>
             <div class="column has-background-success-light p-0">
-                <pre class="has-background-success-light py-0 px-2">        self.get_multiple_from_collection_id(ids, collection).await</pre>
+                <pre class="has-background-success-light py-0 px-2">        Internal::get_multiple_from_collection_id(self, ids, collection).await</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10301,7 +10301,7 @@
             </div>
             <div
                 class="column is-1 is-narrow p-0 has-text-centered has-text-success-light has-background-success">
-                3547
+                3548
             </div>
             <div class="column has-background-success-light p-0">
                 <pre class="has-background-success-light py-0 px-2">        &lt;Self as Connection&gt;::apply_transaction(self, transaction).await</pre>
@@ -10798,7 +10798,7 @@
                 2
             </div>
             <div class="column has-background-success-light p-0">
-                <pre class="has-background-success-light py-0 px-2">        let mut documents = self</pre>
+                <pre class="has-background-success-light py-0 px-2">        let mut documents = Internal::get_multiple_from_collection_id(</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10811,7 +10811,7 @@
                 2
             </div>
             <div class="column has-background-success-light p-0">
-                <pre class="has-background-success-light py-0 px-2">            .get_multiple_from_collection_id(</pre>
+                <pre class="has-background-success-light py-0 px-2">            self,</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10824,7 +10824,7 @@
                 2
             </div>
             <div class="column has-background-success-light p-0">
-                <pre class="has-background-success-light py-0 px-2">                &amp;results.iter().map(|m| m.source).collect::&lt;Vec&lt;_&gt;&gt;(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            &amp;results.iter().map(|m| m.source).collect::&lt;Vec&lt;_&gt;&gt;(),</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10837,7 +10837,7 @@
                 2
             </div>
             <div class="column has-background-success-light p-0">
-                <pre class="has-background-success-light py-0 px-2">                &amp;view.collection(),</pre>
+                <pre class="has-background-success-light py-0 px-2">            &amp;view.collection(),</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10850,7 +10850,7 @@
                 2
             </div>
             <div class="column has-background-success-light p-0">
-                <pre class="has-background-success-light py-0 px-2">            )</pre>
+                <pre class="has-background-success-light py-0 px-2">        )</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10863,7 +10863,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">            .await?</pre>
+                <pre class="has-background-danger-light py-0 px-2">        .await?</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10876,7 +10876,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">            .into_iter()</pre>
+                <pre class="has-background-white py-0 px-2">        .into_iter()</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10889,7 +10889,7 @@
                 2
             </div>
             <div class="column has-background-success-light p-0">
-                <pre class="has-background-success-light py-0 px-2">            .map(|doc| (doc.header.id, doc))</pre>
+                <pre class="has-background-success-light py-0 px-2">        .map(|doc| (doc.header.id, doc))</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -10902,7 +10902,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">            .collect::&lt;HashMap&lt;_, _&gt;&gt;();</pre>
+                <pre class="has-background-white py-0 px-2">        .collect::&lt;HashMap&lt;_, _&gt;&gt;();</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -12766,7 +12766,7 @@
         </div></div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2021-04-14 17:03</p>
+                <p class="heading">Date: 2021-04-14 18:35</p>
             </div>
         </footer>
     </body>
