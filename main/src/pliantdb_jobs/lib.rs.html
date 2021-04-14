@@ -27,6 +27,7 @@
 <span id="24">24</span>
 <span id="25">25</span>
 <span id="26">26</span>
+<span id="27">27</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Aysnc jobs management for `PliantDB`.</span>
 
@@ -40,10 +41,9 @@
     <span class="ident">future_incompatible</span>,
     <span class="ident">rust_2018_idioms</span>,
 )]</span>
-<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">doc</span>, <span class="ident">warn</span>(<span class="ident">rustdoc</span>))]</span>
+<span class="attribute">#![<span class="ident">cfg_attr</span>(<span class="ident">doc</span>, <span class="ident">deny</span>(<span class="ident">rustdoc</span>))]</span>
 <span class="attribute">#![<span class="ident">allow</span>(
     <span class="ident">clippy</span>::<span class="ident">missing_errors_doc</span>, <span class="comment">// TODO</span>
-    <span class="comment">// clippy::missing_panics_doc, // not on stable yet</span>
     <span class="ident">clippy</span>::<span class="ident">option_if_let_else</span>,
 )]</span>
 
@@ -52,6 +52,8 @@
 <span class="doccomment">/// Types related to defining [`Job`]s.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">task</span>;
 <span class="kw">mod</span> <span class="ident">traits</span>;
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">flume</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">traits</span>::{<span class="ident">Job</span>, <span class="ident">Keyed</span>};
 </pre></div>

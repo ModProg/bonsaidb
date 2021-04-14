@@ -144,8 +144,6 @@
 <span id="141">141</span>
 <span id="142">142</span>
 <span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
@@ -167,17 +165,15 @@
 }
 
 <span class="doccomment">/// Contains a serialized document in the database.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The `Id` of the `Collection` this document belongs to.</span>
     <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
 
     <span class="doccomment">/// The header of the document, which contains the id and `Revision`.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
     <span class="kw">pub</span> <span class="ident">header</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Header</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// The serialized bytes of the stored item.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
     <span class="kw">pub</span> <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
 }
 
@@ -280,7 +276,7 @@
         <span class="ident">test_util</span>::<span class="ident">Basic</span>,
     };
 
-    <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">Document</span>::<span class="ident">with_contents</span>(<span class="number">1</span>, <span class="kw-2">&amp;</span><span class="ident">Basic</span>::<span class="ident">default</span>(), <span class="ident">Basic</span>::<span class="ident">id</span>())<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">Document</span>::<span class="ident">with_contents</span>(<span class="number">1</span>, <span class="kw-2">&amp;</span><span class="ident">Basic</span>::<span class="ident">default</span>(), <span class="ident">Basic</span>::<span class="ident">collection_id</span>())<span class="question-mark">?</span>;
 
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">doc</span>.<span class="ident">emit</span>(), <span class="ident">Map</span>::<span class="ident">new</span>(<span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span>, (), ()));
 

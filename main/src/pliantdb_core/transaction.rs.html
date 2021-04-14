@@ -120,9 +120,6 @@
 <span id="117">117</span>
 <span id="118">118</span>
 <span id="119">119</span>
-<span id="120">120</span>
-<span id="121">121</span>
-<span id="122">122</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
@@ -133,7 +130,7 @@
 <span class="doccomment">/// A list of operations to execute as a single unit. If any operation fails,</span>
 <span class="doccomment">/// all changes are aborted. Reads that happen while the transaction is in</span>
 <span class="doccomment">/// progress will return old data and not block.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The operations in this transaction.</span>
     <span class="kw">pub</span> <span class="ident">operations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -147,7 +144,7 @@
 }
 
 <span class="doccomment">/// A single operation performed on a `Collection`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The id of the `Collection`.</span>
     <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
@@ -157,12 +154,11 @@
 }
 
 <span class="doccomment">/// A command to execute within a `Collection`.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Inserts a new document containing `contents`.</span>
     <span class="ident">Insert</span> {
         <span class="doccomment">/// The initial contents of the document.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
         <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
     },
 
@@ -174,7 +170,6 @@
         <span class="ident">header</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Header</span><span class="op">&gt;</span>,
 
         <span class="doccomment">/// The new contents to store within the `Document`.</span>
-        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
         <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
     },
 
@@ -188,7 +183,7 @@
 }
 
 <span class="doccomment">/// Information about the result of each `Operation` in a transaction.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">OperationResult</span> {
     <span class="doccomment">/// An operation succeeded but had no information to output.</span>
     <span class="ident">Success</span>,
@@ -213,13 +208,12 @@
 }
 
 <span class="doccomment">/// Details about an executed transaction.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The id of the transaction.</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">u64</span>,
 
     <span class="doccomment">/// A list of containing ids of `Documents` changed.</span>
-    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">borrow</span>)]</span>
     <span class="kw">pub</span> <span class="ident">changed_documents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">ChangedDocument</span>]<span class="op">&gt;</span>,
 }
 

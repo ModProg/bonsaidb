@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Error","Errors related to working with `Client`"]],"struct":[["Client","Client for connecting to a `PliantDB` server."]]});

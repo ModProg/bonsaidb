@@ -192,7 +192,7 @@
 
 <span class="kw">use</span> <span class="kw">super</span>::{
     <span class="ident">mapper</span>::{<span class="ident">Map</span>, <span class="ident">Mapper</span>},
-    <span class="ident">view_document_map_tree_name</span>, <span class="ident">view_invalidated_docs_tree_name</span>, <span class="ident">view_versions</span>, <span class="ident">Task</span>,
+    <span class="ident">view_document_map_tree_name</span>, <span class="ident">view_invalidated_docs_tree_name</span>, <span class="ident">view_versions_tree_name</span>, <span class="ident">Task</span>,
 };
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">storage</span>::{<span class="ident">document_tree_name</span>, <span class="ident">Storage</span>};
 
@@ -225,7 +225,7 @@
         <span class="kw">let</span> <span class="ident">view_versions</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">storage</span>
             .<span class="ident">sled</span>
-            .<span class="ident">open_tree</span>(<span class="ident">view_versions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>))<span class="question-mark">?</span>;
+            .<span class="ident">open_tree</span>(<span class="ident">view_versions_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>))<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">document_map</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">storage</span>.<span class="ident">sled</span>.<span class="ident">open_tree</span>(<span class="ident">view_document_map_tree_name</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
@@ -312,7 +312,7 @@
                     },
                 })
                 .<span class="kw">await</span>;
-            <span class="ident">job</span>.<span class="ident">receive</span>().<span class="kw">await</span>.<span class="ident">unwrap</span>();
+            <span class="ident">job</span>.<span class="ident">receive</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">map_err</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">Other</span>)<span class="question-mark">?</span>;
         }
 
         <span class="self">self</span>.<span class="ident">storage</span>

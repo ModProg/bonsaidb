@@ -64,7 +64,7 @@
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">Id</span>,
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">manager</span>: <span class="ident">Manager</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">receiver</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">receiver</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Key</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Key</span><span class="op">&gt;</span>
@@ -80,13 +80,13 @@
     }
 
     <span class="doccomment">/// Waits for the job to complete and returns the result.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">flume</span>::<span class="ident">RecvError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">flume</span>::<span class="ident">RecvError</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span>
     }
 
     <span class="doccomment">/// Tries to receive the status of the job. If available, it is returned.</span>
     <span class="doccomment">/// This function will not block.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">flume</span>::<span class="ident">TryRecvError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">flume</span>::<span class="ident">TryRecvError</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">try_recv</span>()
     }
 }

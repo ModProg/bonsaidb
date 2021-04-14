@@ -71,24 +71,24 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">mapper</span>;
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view_entries_tree_name</span>(<span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>, <span class="ident">view_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::{}&quot;</span>, <span class="ident">collection</span>.<span class="number">0</span>, <span class="ident">view_name</span>)
+    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::{}&quot;</span>, <span class="ident">collection</span>, <span class="ident">view_name</span>)
 }
 
 <span class="doccomment">/// Used to store Document ID -&gt; Key mappings, so that when a document is updated, we can remove the old entry.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view_document_map_tree_name</span>(<span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>, <span class="ident">view_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::{}::document-map&quot;</span>, <span class="ident">collection</span>.<span class="number">0</span>, <span class="ident">view_name</span>)
+    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::{}::document-map&quot;</span>, <span class="ident">collection</span>, <span class="ident">view_name</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view_invalidated_docs_tree_name</span>(<span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>, <span class="ident">view_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::{}::invalidated&quot;</span>, <span class="ident">collection</span>.<span class="number">0</span>, <span class="ident">view_name</span>)
+    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::{}::invalidated&quot;</span>, <span class="ident">collection</span>, <span class="ident">view_name</span>)
 }
 
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view_omitted_docs_tree_name</span>(<span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>, <span class="ident">view_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::{}::omitted&quot;</span>, <span class="ident">collection</span>.<span class="number">0</span>, <span class="ident">view_name</span>)
+    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::{}::omitted&quot;</span>, <span class="ident">collection</span>, <span class="ident">view_name</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view_versions</span>(<span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
-    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::view-versions&quot;</span>, <span class="ident">collection</span>.<span class="number">0</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view_versions_tree_name</span>(<span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+    <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::view-versions&quot;</span>, <span class="ident">collection</span>)
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>

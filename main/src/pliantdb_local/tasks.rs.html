@@ -158,6 +158,11 @@
 <span id="155">155</span>
 <span id="156">156</span>
 <span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow</span>::<span class="ident">Cow</span>,
@@ -165,7 +170,10 @@
     <span class="ident">sync</span>::<span class="ident">Arc</span>,
 };
 
-<span class="kw">use</span> <span class="ident">pliantdb_core</span>::<span class="ident">schema</span>::{<span class="ident">collection</span>, <span class="ident">view</span>, <span class="ident">Schema</span>};
+<span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
+    <span class="ident">connection</span>::<span class="ident">Connection</span>,
+    <span class="ident">schema</span>::{<span class="ident">collection</span>, <span class="ident">view</span>, <span class="ident">Schema</span>},
+};
 <span class="kw">use</span> <span class="ident">pliantdb_jobs</span>::{<span class="ident">manager</span>::<span class="ident">Manager</span>, <span class="ident">task</span>::<span class="ident">Handle</span>};
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">RwLock</span>;
 
@@ -205,7 +213,7 @@
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">view_name</span> <span class="op">=</span> <span class="ident">view</span>.<span class="ident">name</span>();
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">job</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">spawn_integrity_check</span>(<span class="ident">view</span>, <span class="ident">storage</span>).<span class="kw">await</span><span class="question-mark">?</span> {
-            <span class="ident">job</span>.<span class="ident">receive</span>().<span class="kw">await</span>.<span class="ident">unwrap</span>();
+            <span class="ident">job</span>.<span class="ident">receive</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">map_err</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">Other</span>)<span class="question-mark">?</span>;
         }
 
         <span class="comment">// If there is no transaction id, there is no data, so the view is &quot;up-to-date&quot;</span>
@@ -245,7 +253,9 @@
                             }
                         }
                         <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">Other</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">msg</span>(<span class="ident">err</span>.<span class="ident">to_string</span>())))
+                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">Other</span>(<span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">msg</span>(
+                                <span class="ident">err</span>.<span class="ident">to_string</span>(),
+                            ))))
                         }
                     }
                 }

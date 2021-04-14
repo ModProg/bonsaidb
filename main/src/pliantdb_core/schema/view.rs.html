@@ -170,16 +170,6 @@
 <span id="167">167</span>
 <span id="168">168</span>
 <span id="169">169</span>
-<span id="170">170</span>
-<span id="171">171</span>
-<span id="172">172</span>
-<span id="173">173</span>
-<span id="174">174</span>
-<span id="175">175</span>
-<span id="176">176</span>
-<span id="177">177</span>
-<span id="178">178</span>
-<span id="179">179</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">fmt</span>::<span class="ident">Debug</span>};
 
@@ -196,6 +186,7 @@
 
 <span class="doccomment">/// Errors that arise when interacting with views.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror</span>::<span class="ident">Error</span>, <span class="ident">Debug</span>)]</span>
+<span class="comment">// TODO add which view name and collection</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
     <span class="doccomment">/// An error occurred while serializing or deserializing.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error deserializing document {0}&quot;</span>)]</span>
@@ -290,7 +281,7 @@
 
 <span class="doccomment">/// Wraps a [`View`] with serialization to erase the associated types</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Serialized</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> {
-    <span class="doccomment">/// Wraps returing [`&lt;View::Collection as Collection&gt;::id()`](crate::schema::Collection::id)</span>
+    <span class="doccomment">/// Wraps returing [`&lt;View::Collection as Collection&gt;::collection_id()`](crate::schema::Collection::collection_id)</span>
     <span class="kw">fn</span> <span class="ident">collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">collection</span>::<span class="ident">Id</span>;
     <span class="doccomment">/// Wraps [`View::version`]</span>
     <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span>;
@@ -309,7 +300,7 @@
     <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span>::<span class="ident">Key</span>: <span class="lifetime">&#39;static</span>,
 {
     <span class="kw">fn</span> <span class="ident">collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">collection</span>::<span class="ident">Id</span> {
-        <span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span>::<span class="ident">Collection</span> <span class="kw">as</span> <span class="ident">Collection</span><span class="op">&gt;</span>::<span class="ident">id</span>()
+        <span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span>::<span class="ident">Collection</span> <span class="kw">as</span> <span class="ident">Collection</span><span class="op">&gt;</span>::<span class="ident">collection_id</span>()
     }
 
     <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
@@ -323,18 +314,7 @@
     <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">map</span>::<span class="ident">Serialized</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">map</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">map</span>(<span class="ident">document</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">match</span> <span class="ident">map</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">map</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">map</span>::<span class="ident">Serialized</span> {
-                <span class="ident">source</span>: <span class="ident">map</span>.<span class="ident">source</span>,
-                <span class="ident">key</span>: <span class="ident">map</span>
-                    .<span class="ident">key</span>
-                    .<span class="ident">as_big_endian_bytes</span>()
-                    .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">KeySerialization</span>)<span class="question-mark">?</span>
-                    .<span class="ident">to_vec</span>(),
-                <span class="ident">value</span>: <span class="ident">serde_cbor</span>::<span class="ident">to_vec</span>(<span class="kw-2">&amp;</span><span class="ident">map</span>.<span class="ident">value</span>)<span class="question-mark">?</span>,
-            })),
-            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
-        }
+        <span class="ident">map</span>.<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">serialized</span>()).<span class="ident">transpose</span>()
     }
 
     <span class="kw">fn</span> <span class="ident">reduce</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">&amp;</span>[<span class="ident">u8</span>])], <span class="ident">rereduce</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {

@@ -1,3 +1,4 @@
 (function() {var implementors = {};
+implementors["pliantdb_core"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html\" title=\"trait core::marker::Copy\">Copy</a> for <a class=\"enum\" href=\"pliantdb_core/test_util/enum.ConnectionTest.html\" title=\"enum pliantdb_core::test_util::ConnectionTest\">ConnectionTest</a>","synthetic":false,"types":["pliantdb_core::test_util::ConnectionTest"]}];
 implementors["pliantdb_jobs"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html\" title=\"trait core::marker::Copy\">Copy</a> for <a class=\"struct\" href=\"pliantdb_jobs/task/struct.Id.html\" title=\"struct pliantdb_jobs::task::Id\">Id</a>","synthetic":false,"types":["pliantdb_jobs::task::Id"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

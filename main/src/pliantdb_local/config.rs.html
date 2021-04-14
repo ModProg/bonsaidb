@@ -49,7 +49,7 @@
 <span id="46">46</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/// Configuration options for [`Storage`](crate::storage::Storage).</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Configuration</span> {
     <span class="doccomment">/// Configuration options related to background tasks.</span>
     <span class="kw">pub</span> <span class="ident">workers</span>: <span class="ident">Tasks</span>,
@@ -59,7 +59,7 @@
 }
 
 <span class="doccomment">/// Configujration options for background tasks.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Tasks</span> {
     <span class="doccomment">/// Defines how many workers should be spawned to process tasks. Default</span>
     <span class="doccomment">/// value is `16`.</span>
@@ -77,7 +77,7 @@
 }
 
 <span class="doccomment">/// Configuration options for views.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Views</span> {
     <span class="doccomment">/// If true, the database will scan all views during the call to</span>
     <span class="doccomment">/// `open_local`. This will cause database opening to take longer, but once</span>
