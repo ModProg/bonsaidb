@@ -9,11 +9,11 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../index.html">top level</a> - <a href="index.html">local/src</a> - backup.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-04-05 14:28:28</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-04-14 00:27:50</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
-<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">153</span><span class="linesTotal">181</span><span class="linesPercentage lineMed">84.5 %</span></div>
+<div class="statsRow"><span class="statsLine">Lines</span><span class="linesHit">157</span><span class="linesTotal">185</span><span class="linesPercentage lineMed">84.9 %</span></div>
 <div class="statsRow"><span class="statsFun">Functions</span><span class="funsHit">15</span><span class="funsTotal">81</span><span class="funsPercentage funLow">18.5 %</span></div>
 <div class="statsRow"><span class="statsBranches">Branches</span><span class="branchesHit">0</span><span class="branchesTotal">0</span><span class="branchesPercentage branchLow">0.0 %</span></div>
 </div>
@@ -49,7 +49,7 @@
 <div class="line"><span id="28" class="lineNum"><a href="#28">28</a></span><span class="counterUnCov"></span><span class="lineUnCov">use flume::Receiver;</span></div>
 <div class="line"><span id="29" class="lineNum"><a href="#29">29</a></span><span class="counterUnCov"></span><span class="lineUnCov">use pliantdb_core::{</span></div>
 <div class="line"><span id="30" class="lineNum"><a href="#30">30</a></span><span class="counterUnCov"></span><span class="lineUnCov">    document::{Document, Header, Revision},</span></div>
-<div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterUnCov"></span><span class="lineUnCov">    schema::{collection, Key},</span></div>
+<div class="line"><span id="31" class="lineNum"><a href="#31">31</a></span><span class="counterUnCov"></span><span class="lineUnCov">    schema::{collection, Key, Schema},</span></div>
 <div class="line"><span id="32" class="lineNum"><a href="#32">32</a></span><span class="counterUnCov"></span><span class="lineUnCov">};</span></div>
 <div class="line"><span id="33" class="lineNum"><a href="#33">33</a></span><span class="counterUnCov"></span><span class="lineUnCov">use structopt::StructOpt;</span></div>
 <div class="line"><span id="34" class="lineNum"><a href="#34">34</a></span><span class="counterUnCov"></span><span class="lineUnCov">use tokio::{</span></div>
@@ -70,7 +70,7 @@
 <div class="line"><span id="49" class="lineNum"><a href="#49">49</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="50" class="lineNum"><a href="#50">50</a></span><span class="counterUnCov"></span><span class="lineUnCov">    /// The command to execute on the database.</span></div>
 <div class="line"><span id="51" class="lineNum"><a href="#51">51</a></span><span class="counterUnCov"></span><span class="lineUnCov">    #[structopt(subcommand)]</span></div>
-<div class="line"><span id="52" class="lineNum"><a href="#52">52</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub command: Command,</span></div>
+<div class="line"><span id="52" class="lineNum"><a href="#52">52</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub subcommand: Command,</span></div>
 <div class="line"><span id="53" class="lineNum"><a href="#53">53</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 <div class="line"><span id="54" class="lineNum"><a href="#54">54</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="55" class="lineNum"><a href="#55">55</a></span><span class="counterUnCov"></span><span class="lineUnCov">/// The command to execute.</span></div>
@@ -239,7 +239,7 @@
 <div class="line"><span id="218" class="lineNum"><a href="#218">218</a></span><span class="counterNoCov">0</span><span class="lineNoCov">    }</span></div>
 <div class="line"><span id="219" class="lineNum"><a href="#219">219</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="220" class="lineNum"><a href="#220">220</a></span><span class="counterCov">4</span><span class="lineCov">    while let Ok(document) = receiver.recv_async().await {</span></div>
-<div class="line"><span id="221" class="lineNum"><a href="#221">221</a></span><span class="counterCov">2</span><span class="lineCov">        let collection_directory = backup.join(document.collection.0.as_ref());</span></div>
+<div class="line"><span id="221" class="lineNum"><a href="#221">221</a></span><span class="counterCov">2</span><span class="lineCov">        let collection_directory = backup.join(document.collection.as_ref());</span></div>
 <div class="line"><span id="222" class="lineNum"><a href="#222">222</a></span><span class="counterCov">2</span><span class="lineCov">        if !collection_directory.exists() {</span></div>
 <div class="line"><span id="223" class="lineNum"><a href="#223">223</a></span><span class="counterCov">2</span><span class="lineCov">            tokio::fs::create_dir(&amp;collection_directory).await?;</span></div>
 <div class="line"><span id="224" class="lineNum"><a href="#224">224</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        }</span></div>
@@ -249,89 +249,93 @@
 <div class="line"><span id="228" class="lineNum"><a href="#228">228</a></span><span class="counterCov">2</span><span class="lineCov">        ));</span></div>
 <div class="line"><span id="229" class="lineNum"><a href="#229">229</a></span><span class="counterCov">2</span><span class="lineCov">        let mut file = File::create(&amp;document_path).await?;</span></div>
 <div class="line"><span id="230" class="lineNum"><a href="#230">230</a></span><span class="counterCov">2</span><span class="lineCov">        file.write_all(&amp;document.contents).await?;</span></div>
-<div class="line"><span id="231" class="lineNum"><a href="#231">231</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
-<div class="line"><span id="232" class="lineNum"><a href="#232">232</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="233" class="lineNum"><a href="#233">233</a></span><span class="counterCov">2</span><span class="lineCov">    Ok(())</span></div>
-<div class="line"><span id="234" class="lineNum"><a href="#234">234</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
-<div class="line"><span id="235" class="lineNum"><a href="#235">235</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="236" class="lineNum"><a href="#236">236</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[allow(clippy::clippy::needless_pass_by_value)] // it&#39;s not needless, it&#39;s to avoid a borrow that would need to span a &#39;static lifetime</span></div>
-<div class="line"><span id="237" class="lineNum"><a href="#237">237</a></span><span class="counterCov">2</span><span class="lineCov">fn restore_documents(receiver: Receiver&lt;Document&lt;&#39;static&gt;&gt;, db: Storage&lt;()&gt;) -&gt; anyhow::Result&lt;()&gt; {</span></div>
-<div class="line"><span id="238" class="lineNum"><a href="#238">238</a></span><span class="counterCov">4</span><span class="lineCov">    while let Ok(doc) = receiver.recv() {</span></div>
-<div class="line"><span id="239" class="lineNum"><a href="#239">239</a></span><span class="counterCov">2</span><span class="lineCov">        let tree = db.sled.open_tree(document_tree_name(&amp;doc.collection))?;</span></div>
-<div class="line"><span id="240" class="lineNum"><a href="#240">240</a></span><span class="counterCov">2</span><span class="lineCov">        tree.insert(</span></div>
-<div class="line"><span id="241" class="lineNum"><a href="#241">241</a></span><span class="counterCov">2</span><span class="lineCov">            doc.header.id.as_big_endian_bytes()?,</span></div>
-<div class="line"><span id="242" class="lineNum"><a href="#242">242</a></span><span class="counterCov">2</span><span class="lineCov">            bincode::serialize(&amp;doc)?,</span></div>
-<div class="line"><span id="243" class="lineNum"><a href="#243">243</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        )?;</span></div>
-<div class="line"><span id="244" class="lineNum"><a href="#244">244</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
-<div class="line"><span id="245" class="lineNum"><a href="#245">245</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="246" class="lineNum"><a href="#246">246</a></span><span class="counterCov">2</span><span class="lineCov">    db.sled.flush()?;</span></div>
-<div class="line"><span id="247" class="lineNum"><a href="#247">247</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="248" class="lineNum"><a href="#248">248</a></span><span class="counterCov">2</span><span class="lineCov">    Ok(())</span></div>
-<div class="line"><span id="249" class="lineNum"><a href="#249">249</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
-<div class="line"><span id="250" class="lineNum"><a href="#250">250</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="251" class="lineNum"><a href="#251">251</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[cfg(test)]</span></div>
-<div class="line"><span id="252" class="lineNum"><a href="#252">252</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod tests {</span></div>
-<div class="line"><span id="253" class="lineNum"><a href="#253">253</a></span><span class="counterUnCov"></span><span class="lineUnCov">    use pliantdb_core::{</span></div>
-<div class="line"><span id="254" class="lineNum"><a href="#254">254</a></span><span class="counterUnCov"></span><span class="lineUnCov">        connection::Connection,</span></div>
-<div class="line"><span id="255" class="lineNum"><a href="#255">255</a></span><span class="counterUnCov"></span><span class="lineUnCov">        test_util::{Basic, TestDirectory},</span></div>
-<div class="line"><span id="256" class="lineNum"><a href="#256">256</a></span><span class="counterUnCov"></span><span class="lineUnCov">    };</span></div>
-<div class="line"><span id="257" class="lineNum"><a href="#257">257</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="258" class="lineNum"><a href="#258">258</a></span><span class="counterUnCov"></span><span class="lineUnCov">    use super::*;</span></div>
-<div class="line"><span id="259" class="lineNum"><a href="#259">259</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="260" class="lineNum"><a href="#260">260</a></span><span class="counterCov">4</span><span class="lineCov">    #[tokio::test(flavor = &quot;multi_thread&quot;)]</span></div>
-<div class="line"><span id="261" class="lineNum"><a href="#261">261</a></span><span class="counterCov">2</span><span class="lineCov">    async fn backup_restore() -&gt; anyhow::Result&lt;()&gt; {</span></div>
-<div class="line"><span id="262" class="lineNum"><a href="#262">262</a></span><span class="counterCov">2</span><span class="lineCov">        let backup_destination = TestDirectory::new(&quot;backup-restore.pliantdb.backup&quot;);</span></div>
+<div class="line"><span id="231" class="lineNum"><a href="#231">231</a></span><span class="counterCov">2</span><span class="lineCov">        file.shutdown().await?;</span></div>
+<div class="line"><span id="232" class="lineNum"><a href="#232">232</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
+<div class="line"><span id="233" class="lineNum"><a href="#233">233</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="234" class="lineNum"><a href="#234">234</a></span><span class="counterCov">2</span><span class="lineCov">    Ok(())</span></div>
+<div class="line"><span id="235" class="lineNum"><a href="#235">235</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
+<div class="line"><span id="236" class="lineNum"><a href="#236">236</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="237" class="lineNum"><a href="#237">237</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[allow(clippy::clippy::needless_pass_by_value)] // it&#39;s not needless, it&#39;s to avoid a borrow that would need to span a &#39;static lifetime</span></div>
+<div class="line"><span id="238" class="lineNum"><a href="#238">238</a></span><span class="counterCov">2</span><span class="lineCov">fn restore_documents&lt;DB: Schema&gt;(</span></div>
+<div class="line"><span id="239" class="lineNum"><a href="#239">239</a></span><span class="counterCov">2</span><span class="lineCov">    receiver: Receiver&lt;Document&lt;&#39;static&gt;&gt;,</span></div>
+<div class="line"><span id="240" class="lineNum"><a href="#240">240</a></span><span class="counterCov">2</span><span class="lineCov">    db: Storage&lt;DB&gt;,</span></div>
+<div class="line"><span id="241" class="lineNum"><a href="#241">241</a></span><span class="counterCov">2</span><span class="lineCov">) -&gt; anyhow::Result&lt;()&gt; {</span></div>
+<div class="line"><span id="242" class="lineNum"><a href="#242">242</a></span><span class="counterCov">4</span><span class="lineCov">    while let Ok(doc) = receiver.recv() {</span></div>
+<div class="line"><span id="243" class="lineNum"><a href="#243">243</a></span><span class="counterCov">2</span><span class="lineCov">        let tree = db.sled.open_tree(document_tree_name(&amp;doc.collection))?;</span></div>
+<div class="line"><span id="244" class="lineNum"><a href="#244">244</a></span><span class="counterCov">2</span><span class="lineCov">        tree.insert(</span></div>
+<div class="line"><span id="245" class="lineNum"><a href="#245">245</a></span><span class="counterCov">2</span><span class="lineCov">            doc.header.id.as_big_endian_bytes()?,</span></div>
+<div class="line"><span id="246" class="lineNum"><a href="#246">246</a></span><span class="counterCov">2</span><span class="lineCov">            bincode::serialize(&amp;doc)?,</span></div>
+<div class="line"><span id="247" class="lineNum"><a href="#247">247</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        )?;</span></div>
+<div class="line"><span id="248" class="lineNum"><a href="#248">248</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
+<div class="line"><span id="249" class="lineNum"><a href="#249">249</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="250" class="lineNum"><a href="#250">250</a></span><span class="counterCov">2</span><span class="lineCov">    db.sled.flush()?;</span></div>
+<div class="line"><span id="251" class="lineNum"><a href="#251">251</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="252" class="lineNum"><a href="#252">252</a></span><span class="counterCov">2</span><span class="lineCov">    Ok(())</span></div>
+<div class="line"><span id="253" class="lineNum"><a href="#253">253</a></span><span class="counterCov">2</span><span class="lineCov">}</span></div>
+<div class="line"><span id="254" class="lineNum"><a href="#254">254</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="255" class="lineNum"><a href="#255">255</a></span><span class="counterUnCov"></span><span class="lineUnCov">#[cfg(test)]</span></div>
+<div class="line"><span id="256" class="lineNum"><a href="#256">256</a></span><span class="counterUnCov"></span><span class="lineUnCov">mod tests {</span></div>
+<div class="line"><span id="257" class="lineNum"><a href="#257">257</a></span><span class="counterUnCov"></span><span class="lineUnCov">    use pliantdb_core::{</span></div>
+<div class="line"><span id="258" class="lineNum"><a href="#258">258</a></span><span class="counterUnCov"></span><span class="lineUnCov">        connection::Connection,</span></div>
+<div class="line"><span id="259" class="lineNum"><a href="#259">259</a></span><span class="counterUnCov"></span><span class="lineUnCov">        test_util::{Basic, TestDirectory},</span></div>
+<div class="line"><span id="260" class="lineNum"><a href="#260">260</a></span><span class="counterUnCov"></span><span class="lineUnCov">    };</span></div>
+<div class="line"><span id="261" class="lineNum"><a href="#261">261</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="262" class="lineNum"><a href="#262">262</a></span><span class="counterUnCov"></span><span class="lineUnCov">    use super::*;</span></div>
 <div class="line"><span id="263" class="lineNum"><a href="#263">263</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="264" class="lineNum"><a href="#264">264</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // First, create a database that we&#39;ll be restoring. `TestDirectory`</span></div>
-<div class="line"><span id="265" class="lineNum"><a href="#265">265</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // will automatically erase the database when it drops out of scope,</span></div>
-<div class="line"><span id="266" class="lineNum"><a href="#266">266</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // which is why we&#39;re creating a nested scope here.</span></div>
-<div class="line"><span id="267" class="lineNum"><a href="#267">267</a></span><span class="counterCov">2</span><span class="lineCov">        let test_doc = {</span></div>
-<div class="line"><span id="268" class="lineNum"><a href="#268">268</a></span><span class="counterCov">2</span><span class="lineCov">            let database_directory = TestDirectory::new(&quot;backup-restore.pliantdb&quot;);</span></div>
-<div class="line"><span id="269" class="lineNum"><a href="#269">269</a></span><span class="counterCov">2</span><span class="lineCov">            let db = Storage::&lt;Basic&gt;::open_local(&amp;database_directory, &amp;Configuration::default())</span></div>
-<div class="line"><span id="270" class="lineNum"><a href="#270">270</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                .await?;</span></div>
-<div class="line"><span id="271" class="lineNum"><a href="#271">271</a></span><span class="counterCov">2</span><span class="lineCov">            let test_doc = db</span></div>
-<div class="line"><span id="272" class="lineNum"><a href="#272">272</a></span><span class="counterCov">2</span><span class="lineCov">                .collection::&lt;Basic&gt;()?</span></div>
-<div class="line"><span id="273" class="lineNum"><a href="#273">273</a></span><span class="counterCov">2</span><span class="lineCov">                .push(&amp;Basic::new(&quot;somevalue&quot;))</span></div>
+<div class="line"><span id="264" class="lineNum"><a href="#264">264</a></span><span class="counterCov">4</span><span class="lineCov">    #[tokio::test(flavor = &quot;multi_thread&quot;)]</span></div>
+<div class="line"><span id="265" class="lineNum"><a href="#265">265</a></span><span class="counterCov">2</span><span class="lineCov">    async fn backup_restore() -&gt; anyhow::Result&lt;()&gt; {</span></div>
+<div class="line"><span id="266" class="lineNum"><a href="#266">266</a></span><span class="counterCov">2</span><span class="lineCov">        let backup_destination = TestDirectory::new(&quot;backup-restore.pliantdb.backup&quot;);</span></div>
+<div class="line"><span id="267" class="lineNum"><a href="#267">267</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="268" class="lineNum"><a href="#268">268</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // First, create a database that we&#39;ll be restoring. `TestDirectory`</span></div>
+<div class="line"><span id="269" class="lineNum"><a href="#269">269</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // will automatically erase the database when it drops out of scope,</span></div>
+<div class="line"><span id="270" class="lineNum"><a href="#270">270</a></span><span class="counterUnCov"></span><span class="lineUnCov">        // which is why we&#39;re creating a nested scope here.</span></div>
+<div class="line"><span id="271" class="lineNum"><a href="#271">271</a></span><span class="counterCov">2</span><span class="lineCov">        let test_doc = {</span></div>
+<div class="line"><span id="272" class="lineNum"><a href="#272">272</a></span><span class="counterCov">2</span><span class="lineCov">            let database_directory = TestDirectory::new(&quot;backup-restore.pliantdb&quot;);</span></div>
+<div class="line"><span id="273" class="lineNum"><a href="#273">273</a></span><span class="counterCov">2</span><span class="lineCov">            let db = Storage::&lt;Basic&gt;::open_local(&amp;database_directory, &amp;Configuration::default())</span></div>
 <div class="line"><span id="274" class="lineNum"><a href="#274">274</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                .await?;</span></div>
-<div class="line"><span id="275" class="lineNum"><a href="#275">275</a></span><span class="counterCov">2</span><span class="lineCov">            drop(db);</span></div>
-<div class="line"><span id="276" class="lineNum"><a href="#276">276</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="277" class="lineNum"><a href="#277">277</a></span><span class="counterCov">2</span><span class="lineCov">            Command::Save {</span></div>
-<div class="line"><span id="278" class="lineNum"><a href="#278">278</a></span><span class="counterCov">2</span><span class="lineCov">                output_directory: None,</span></div>
-<div class="line"><span id="279" class="lineNum"><a href="#279">279</a></span><span class="counterCov">2</span><span class="lineCov">                output_name: Some(</span></div>
-<div class="line"><span id="280" class="lineNum"><a href="#280">280</a></span><span class="counterCov">2</span><span class="lineCov">                    backup_destination</span></div>
-<div class="line"><span id="281" class="lineNum"><a href="#281">281</a></span><span class="counterCov">2</span><span class="lineCov">                        .0</span></div>
-<div class="line"><span id="282" class="lineNum"><a href="#282">282</a></span><span class="counterCov">2</span><span class="lineCov">                        .file_name()</span></div>
-<div class="line"><span id="283" class="lineNum"><a href="#283">283</a></span><span class="counterCov">2</span><span class="lineCov">                        .unwrap()</span></div>
-<div class="line"><span id="284" class="lineNum"><a href="#284">284</a></span><span class="counterCov">2</span><span class="lineCov">                        .to_str()</span></div>
-<div class="line"><span id="285" class="lineNum"><a href="#285">285</a></span><span class="counterCov">2</span><span class="lineCov">                        .unwrap()</span></div>
-<div class="line"><span id="286" class="lineNum"><a href="#286">286</a></span><span class="counterCov">2</span><span class="lineCov">                        .to_owned(),</span></div>
-<div class="line"><span id="287" class="lineNum"><a href="#287">287</a></span><span class="counterCov">2</span><span class="lineCov">                ),</span></div>
-<div class="line"><span id="288" class="lineNum"><a href="#288">288</a></span><span class="counterCov">2</span><span class="lineCov">            }</span></div>
-<div class="line"><span id="289" class="lineNum"><a href="#289">289</a></span><span class="counterCov">2</span><span class="lineCov">            .execute(database_directory.0.clone())</span></div>
-<div class="line"><span id="290" class="lineNum"><a href="#290">290</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            .await?;</span></div>
-<div class="line"><span id="291" class="lineNum"><a href="#291">291</a></span><span class="counterCov">2</span><span class="lineCov">            test_doc</span></div>
-<div class="line"><span id="292" class="lineNum"><a href="#292">292</a></span><span class="counterCov">2</span><span class="lineCov">        };</span></div>
-<div class="line"><span id="293" class="lineNum"><a href="#293">293</a></span><span class="counterCov">2</span><span class="lineCov"></span></div>
-<div class="line"><span id="294" class="lineNum"><a href="#294">294</a></span><span class="counterCov">2</span><span class="lineCov">        // `backup_destination` now contains an export of the database, time to try loading it:</span></div>
-<div class="line"><span id="295" class="lineNum"><a href="#295">295</a></span><span class="counterCov">2</span><span class="lineCov">        let database_directory = TestDirectory::new(&quot;backup-restore.pliantdb&quot;);</span></div>
-<div class="line"><span id="296" class="lineNum"><a href="#296">296</a></span><span class="counterCov">2</span><span class="lineCov">        Command::Load {</span></div>
-<div class="line"><span id="297" class="lineNum"><a href="#297">297</a></span><span class="counterCov">2</span><span class="lineCov">            backup: backup_destination.0.clone(),</span></div>
-<div class="line"><span id="298" class="lineNum"><a href="#298">298</a></span><span class="counterCov">2</span><span class="lineCov">        }</span></div>
-<div class="line"><span id="299" class="lineNum"><a href="#299">299</a></span><span class="counterCov">2</span><span class="lineCov">        .execute(database_directory.0.clone())</span></div>
-<div class="line"><span id="300" class="lineNum"><a href="#300">300</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await?;</span></div>
-<div class="line"><span id="301" class="lineNum"><a href="#301">301</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="302" class="lineNum"><a href="#302">302</a></span><span class="counterCov">2</span><span class="lineCov">        let db =</span></div>
-<div class="line"><span id="303" class="lineNum"><a href="#303">303</a></span><span class="counterCov">2</span><span class="lineCov">            Storage::&lt;Basic&gt;::open_local(&amp;database_directory, &amp;Configuration::default()).await?;</span></div>
-<div class="line"><span id="304" class="lineNum"><a href="#304">304</a></span><span class="counterCov">2</span><span class="lineCov">        let doc = db</span></div>
-<div class="line"><span id="305" class="lineNum"><a href="#305">305</a></span><span class="counterCov">2</span><span class="lineCov">            .get::&lt;Basic&gt;(test_doc.id)</span></div>
-<div class="line"><span id="306" class="lineNum"><a href="#306">306</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            .await?</span></div>
-<div class="line"><span id="307" class="lineNum"><a href="#307">307</a></span><span class="counterCov">2</span><span class="lineCov">            .expect(&quot;Backed up document.not found&quot;);</span></div>
-<div class="line"><span id="308" class="lineNum"><a href="#308">308</a></span><span class="counterCov">2</span><span class="lineCov">        let contents = doc.contents::&lt;Basic&gt;()?;</span></div>
-<div class="line"><span id="309" class="lineNum"><a href="#309">309</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        assert_eq!(contents.value, &quot;somevalue&quot;);</span></div>
-<div class="line"><span id="310" class="lineNum"><a href="#310">310</a></span><span class="counterCov">2</span><span class="lineCov"></span></div>
-<div class="line"><span id="311" class="lineNum"><a href="#311">311</a></span><span class="counterCov">2</span><span class="lineCov">        Ok(())</span></div>
-<div class="line"><span id="312" class="lineNum"><a href="#312">312</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
-<div class="line"><span id="313" class="lineNum"><a href="#313">313</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
+<div class="line"><span id="275" class="lineNum"><a href="#275">275</a></span><span class="counterCov">2</span><span class="lineCov">            let test_doc = db</span></div>
+<div class="line"><span id="276" class="lineNum"><a href="#276">276</a></span><span class="counterCov">2</span><span class="lineCov">                .collection::&lt;Basic&gt;()</span></div>
+<div class="line"><span id="277" class="lineNum"><a href="#277">277</a></span><span class="counterCov">2</span><span class="lineCov">                .push(&amp;Basic::new(&quot;somevalue&quot;))</span></div>
+<div class="line"><span id="278" class="lineNum"><a href="#278">278</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                .await?;</span></div>
+<div class="line"><span id="279" class="lineNum"><a href="#279">279</a></span><span class="counterCov">2</span><span class="lineCov">            drop(db);</span></div>
+<div class="line"><span id="280" class="lineNum"><a href="#280">280</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="281" class="lineNum"><a href="#281">281</a></span><span class="counterCov">2</span><span class="lineCov">            Command::Save {</span></div>
+<div class="line"><span id="282" class="lineNum"><a href="#282">282</a></span><span class="counterCov">2</span><span class="lineCov">                output_directory: None,</span></div>
+<div class="line"><span id="283" class="lineNum"><a href="#283">283</a></span><span class="counterCov">2</span><span class="lineCov">                output_name: Some(</span></div>
+<div class="line"><span id="284" class="lineNum"><a href="#284">284</a></span><span class="counterCov">2</span><span class="lineCov">                    backup_destination</span></div>
+<div class="line"><span id="285" class="lineNum"><a href="#285">285</a></span><span class="counterCov">2</span><span class="lineCov">                        .0</span></div>
+<div class="line"><span id="286" class="lineNum"><a href="#286">286</a></span><span class="counterCov">2</span><span class="lineCov">                        .file_name()</span></div>
+<div class="line"><span id="287" class="lineNum"><a href="#287">287</a></span><span class="counterCov">2</span><span class="lineCov">                        .unwrap()</span></div>
+<div class="line"><span id="288" class="lineNum"><a href="#288">288</a></span><span class="counterCov">2</span><span class="lineCov">                        .to_str()</span></div>
+<div class="line"><span id="289" class="lineNum"><a href="#289">289</a></span><span class="counterCov">2</span><span class="lineCov">                        .unwrap()</span></div>
+<div class="line"><span id="290" class="lineNum"><a href="#290">290</a></span><span class="counterCov">2</span><span class="lineCov">                        .to_owned(),</span></div>
+<div class="line"><span id="291" class="lineNum"><a href="#291">291</a></span><span class="counterCov">2</span><span class="lineCov">                ),</span></div>
+<div class="line"><span id="292" class="lineNum"><a href="#292">292</a></span><span class="counterCov">2</span><span class="lineCov">            }</span></div>
+<div class="line"><span id="293" class="lineNum"><a href="#293">293</a></span><span class="counterCov">2</span><span class="lineCov">            .execute(database_directory.0.clone())</span></div>
+<div class="line"><span id="294" class="lineNum"><a href="#294">294</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            .await?;</span></div>
+<div class="line"><span id="295" class="lineNum"><a href="#295">295</a></span><span class="counterCov">2</span><span class="lineCov">            test_doc</span></div>
+<div class="line"><span id="296" class="lineNum"><a href="#296">296</a></span><span class="counterCov">2</span><span class="lineCov">        };</span></div>
+<div class="line"><span id="297" class="lineNum"><a href="#297">297</a></span><span class="counterCov">2</span><span class="lineCov"></span></div>
+<div class="line"><span id="298" class="lineNum"><a href="#298">298</a></span><span class="counterCov">2</span><span class="lineCov">        // `backup_destination` now contains an export of the database, time to try loading it:</span></div>
+<div class="line"><span id="299" class="lineNum"><a href="#299">299</a></span><span class="counterCov">2</span><span class="lineCov">        let database_directory = TestDirectory::new(&quot;backup-restore.pliantdb&quot;);</span></div>
+<div class="line"><span id="300" class="lineNum"><a href="#300">300</a></span><span class="counterCov">2</span><span class="lineCov">        Command::Load {</span></div>
+<div class="line"><span id="301" class="lineNum"><a href="#301">301</a></span><span class="counterCov">2</span><span class="lineCov">            backup: backup_destination.0.clone(),</span></div>
+<div class="line"><span id="302" class="lineNum"><a href="#302">302</a></span><span class="counterCov">2</span><span class="lineCov">        }</span></div>
+<div class="line"><span id="303" class="lineNum"><a href="#303">303</a></span><span class="counterCov">2</span><span class="lineCov">        .execute(database_directory.0.clone())</span></div>
+<div class="line"><span id="304" class="lineNum"><a href="#304">304</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await?;</span></div>
+<div class="line"><span id="305" class="lineNum"><a href="#305">305</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
+<div class="line"><span id="306" class="lineNum"><a href="#306">306</a></span><span class="counterCov">2</span><span class="lineCov">        let db =</span></div>
+<div class="line"><span id="307" class="lineNum"><a href="#307">307</a></span><span class="counterCov">2</span><span class="lineCov">            Storage::&lt;Basic&gt;::open_local(&amp;database_directory, &amp;Configuration::default()).await?;</span></div>
+<div class="line"><span id="308" class="lineNum"><a href="#308">308</a></span><span class="counterCov">2</span><span class="lineCov">        let doc = db</span></div>
+<div class="line"><span id="309" class="lineNum"><a href="#309">309</a></span><span class="counterCov">2</span><span class="lineCov">            .get::&lt;Basic&gt;(test_doc.id)</span></div>
+<div class="line"><span id="310" class="lineNum"><a href="#310">310</a></span><span class="counterNoCov">0</span><span class="lineNoCov">            .await?</span></div>
+<div class="line"><span id="311" class="lineNum"><a href="#311">311</a></span><span class="counterCov">2</span><span class="lineCov">            .expect(&quot;Backed up document.not found&quot;);</span></div>
+<div class="line"><span id="312" class="lineNum"><a href="#312">312</a></span><span class="counterCov">2</span><span class="lineCov">        let contents = doc.contents::&lt;Basic&gt;()?;</span></div>
+<div class="line"><span id="313" class="lineNum"><a href="#313">313</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        assert_eq!(contents.value, &quot;somevalue&quot;);</span></div>
+<div class="line"><span id="314" class="lineNum"><a href="#314">314</a></span><span class="counterCov">2</span><span class="lineCov"></span></div>
+<div class="line"><span id="315" class="lineNum"><a href="#315">315</a></span><span class="counterCov">2</span><span class="lineCov">        Ok(())</span></div>
+<div class="line"><span id="316" class="lineNum"><a href="#316">316</a></span><span class="counterCov">2</span><span class="lineCov">    }</span></div>
+<div class="line"><span id="317" class="lineNum"><a href="#317">317</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 </div>
 </body>
 </html>
