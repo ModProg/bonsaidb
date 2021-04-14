@@ -9,7 +9,7 @@
 <div class="header">
 <div class="view">
 <div class="viewRow"><span class="viewItem">Current view:</span><span class="viewValue"><a href="../../../index.html">top level</a> - <a href="index.html">local/src/views</a> - integrity_scanner.rs</span></div>
-<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-04-14 00:27:50</span></div>
+<div class="viewRow"><span class="viewItem">Date:</span><span class="viewValue">2021-04-14 01:59:12</span></div>
 </div>
 <div class="stats">
 <div class="statsRow"><span></span><span class="statsHit">Hit</span><span class="statsTotal">Total</span><span class="statsCoverage">Coverage</span></div>
@@ -38,7 +38,7 @@
 <div class="line"><span id="17" class="lineNum"><a href="#17">17</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub scan: IntegrityScan,</span></div>
 <div class="line"><span id="18" class="lineNum"><a href="#18">18</a></span><span class="counterUnCov"></span><span class="lineUnCov">}</span></div>
 <div class="line"><span id="19" class="lineNum"><a href="#19">19</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterCov">1676</span><span class="lineCov">#[derive(Debug, Hash, Eq, PartialEq, Clone)]</span></div>
+<div class="line"><span id="20" class="lineNum"><a href="#20">20</a></span><span class="counterCov">1692</span><span class="lineCov">#[derive(Debug, Hash, Eq, PartialEq, Clone)]</span></div>
 <div class="line"><span id="21" class="lineNum"><a href="#21">21</a></span><span class="counterUnCov"></span><span class="lineUnCov">pub struct IntegrityScan {</span></div>
 <div class="line"><span id="22" class="lineNum"><a href="#22">22</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub view_version: u64,</span></div>
 <div class="line"><span id="23" class="lineNum"><a href="#23">23</a></span><span class="counterUnCov"></span><span class="lineUnCov">    pub collection: collection::Id,</span></div>
@@ -107,8 +107,8 @@
 <div class="line"><span id="86" class="lineNum"><a href="#86">86</a></span><span class="counterCov">450</span><span class="lineCov">            if !missing_entries.is_empty() {</span></div>
 <div class="line"><span id="87" class="lineNum"><a href="#87">87</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // Add all missing entries to the invalidated list. The view</span></div>
 <div class="line"><span id="88" class="lineNum"><a href="#88">88</a></span><span class="counterUnCov"></span><span class="lineUnCov">                // mapping job will update them on the next pass.</span></div>
-<div class="line"><span id="89" class="lineNum"><a href="#89">89</a></span><span class="counterCov">56</span><span class="lineCov">                (&amp;invalidated_entries, &amp;view_versions)</span></div>
-<div class="line"><span id="90" class="lineNum"><a href="#90">90</a></span><span class="counterCov">56</span><span class="lineCov">                    .transaction(|(invalidated_entries, view_versions)| {</span></div>
+<div class="line"><span id="89" class="lineNum"><a href="#89">89</a></span><span class="counterCov">40</span><span class="lineCov">                (&amp;invalidated_entries, &amp;view_versions)</span></div>
+<div class="line"><span id="90" class="lineNum"><a href="#90">90</a></span><span class="counterCov">40</span><span class="lineCov">                    .transaction(|(invalidated_entries, view_versions)| {</span></div>
 <div class="line"><span id="91" class="lineNum"><a href="#91">91</a></span><span class="counterCov">40</span><span class="lineCov">                        view_versions.insert(</span></div>
 <div class="line"><span id="92" class="lineNum"><a href="#92">92</a></span><span class="counterCov">40</span><span class="lineCov">                            view_name.as_bytes(),</span></div>
 <div class="line"><span id="93" class="lineNum"><a href="#93">93</a></span><span class="counterCov">40</span><span class="lineCov">                            view_version.as_big_endian_bytes().unwrap().as_ref(),</span></div>
@@ -120,18 +120,18 @@
 <div class="line"><span id="99" class="lineNum"><a href="#99">99</a></span><span class="counterCov">112</span><span class="lineCov">                            )?;</span></div>
 <div class="line"><span id="100" class="lineNum"><a href="#100">100</a></span><span class="counterUnCov"></span><span class="lineUnCov">                        }</span></div>
 <div class="line"><span id="101" class="lineNum"><a href="#101">101</a></span><span class="counterCov">40</span><span class="lineCov">                        Ok(())</span></div>
-<div class="line"><span id="102" class="lineNum"><a href="#102">102</a></span><span class="counterCov">56</span><span class="lineCov">                    })</span></div>
-<div class="line"><span id="103" class="lineNum"><a href="#103">103</a></span><span class="counterCov">56</span><span class="lineCov">                    .map_err(|err| match err {</span></div>
+<div class="line"><span id="102" class="lineNum"><a href="#102">102</a></span><span class="counterCov">40</span><span class="lineCov">                    })</span></div>
+<div class="line"><span id="103" class="lineNum"><a href="#103">103</a></span><span class="counterCov">40</span><span class="lineCov">                    .map_err(|err| match err {</span></div>
 <div class="line"><span id="104" class="lineNum"><a href="#104">104</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        sled::transaction::TransactionError::Abort(err) =&gt; err,</span></div>
 <div class="line"><span id="105" class="lineNum"><a href="#105">105</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                        sled::transaction::TransactionError::Storage(err) =&gt; {</span></div>
 <div class="line"><span id="106" class="lineNum"><a href="#106">106</a></span><span class="counterNoCov">0</span><span class="lineNoCov">                            anyhow::Error::from(err)</span></div>
 <div class="line"><span id="107" class="lineNum"><a href="#107">107</a></span><span class="counterUnCov"></span><span class="lineUnCov">                        }</span></div>
-<div class="line"><span id="108" class="lineNum"><a href="#108">108</a></span><span class="counterCov">56</span><span class="lineCov">                    })?;</span></div>
+<div class="line"><span id="108" class="lineNum"><a href="#108">108</a></span><span class="counterCov">40</span><span class="lineCov">                    })?;</span></div>
 <div class="line"><span id="109" class="lineNum"><a href="#109">109</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="110" class="lineNum"><a href="#110">110</a></span><span class="counterCov">40</span><span class="lineCov">                return Ok(true);</span></div>
-<div class="line"><span id="111" class="lineNum"><a href="#111">111</a></span><span class="counterCov">394</span><span class="lineCov">            }</span></div>
-<div class="line"><span id="112" class="lineNum"><a href="#112">112</a></span><span class="counterCov">394</span><span class="lineCov"></span></div>
-<div class="line"><span id="113" class="lineNum"><a href="#113">113</a></span><span class="counterCov">394</span><span class="lineCov">            Ok(false)</span></div>
+<div class="line"><span id="111" class="lineNum"><a href="#111">111</a></span><span class="counterCov">410</span><span class="lineCov">            }</span></div>
+<div class="line"><span id="112" class="lineNum"><a href="#112">112</a></span><span class="counterCov">410</span><span class="lineCov"></span></div>
+<div class="line"><span id="113" class="lineNum"><a href="#113">113</a></span><span class="counterCov">410</span><span class="lineCov">            Ok(false)</span></div>
 <div class="line"><span id="114" class="lineNum"><a href="#114">114</a></span><span class="counterCov">450</span><span class="lineCov">        })</span></div>
 <div class="line"><span id="115" class="lineNum"><a href="#115">115</a></span><span class="counterNoCov">0</span><span class="lineNoCov">        .await??;</span></div>
 <div class="line"><span id="116" class="lineNum"><a href="#116">116</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
@@ -171,8 +171,8 @@
 <div class="line"><span id="150" class="lineNum"><a href="#150">150</a></span><span class="counterCov">476</span><span class="lineCov">        ids.insert(key);</span></div>
 <div class="line"><span id="151" class="lineNum"><a href="#151">151</a></span><span class="counterUnCov"></span><span class="lineUnCov">    }</span></div>
 <div class="line"><span id="152" class="lineNum"><a href="#152">152</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
-<div class="line"><span id="153" class="lineNum"><a href="#153">153</a></span><span class="counterCov">546</span><span class="lineCov">    Ok(ids)</span></div>
-<div class="line"><span id="154" class="lineNum"><a href="#154">154</a></span><span class="counterCov">546</span><span class="lineCov">}</span></div>
+<div class="line"><span id="153" class="lineNum"><a href="#153">153</a></span><span class="counterCov">562</span><span class="lineCov">    Ok(ids)</span></div>
+<div class="line"><span id="154" class="lineNum"><a href="#154">154</a></span><span class="counterCov">562</span><span class="lineCov">}</span></div>
 <div class="line"><span id="155" class="lineNum"><a href="#155">155</a></span><span class="counterUnCov"></span><span class="lineUnCov"></span></div>
 <div class="line"><span id="156" class="lineNum"><a href="#156">156</a></span><span class="counterUnCov"></span><span class="lineUnCov">impl&lt;DB&gt; Keyed&lt;Task&gt; for IntegrityScanner&lt;DB&gt;</span></div>
 <div class="line"><span id="157" class="lineNum"><a href="#157">157</a></span><span class="counterUnCov"></span><span class="lineUnCov">where</span></div>
