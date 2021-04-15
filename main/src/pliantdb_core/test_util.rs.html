@@ -807,6 +807,8 @@
 <span id="804">804</span>
 <span id="805">805</span>
 <span id="806">806</span>
+<span id="807">807</span>
+<span id="808">808</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">missing_panics_doc</span>)]</span>
 
@@ -818,14 +820,16 @@
     <span class="ident">time</span>::<span class="ident">Duration</span>,
 };
 
+<span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaId</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
-<span class="kw">use</span> <span class="ident">view</span>::<span class="ident">map</span>::<span class="ident">MappedValue</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>},
     <span class="ident">document</span>::<span class="ident">Document</span>,
     <span class="ident">limits</span>::{<span class="ident">LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT</span>, <span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span>},
-    <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">collection</span>, <span class="ident">view</span>, <span class="ident">Collection</span>, <span class="ident">MapResult</span>, <span class="ident">Schema</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>},
+    <span class="ident">schema</span>::{
+        <span class="self">self</span>, <span class="ident">view</span>, <span class="ident">Collection</span>, <span class="ident">CollectionId</span>, <span class="ident">MapResult</span>, <span class="ident">MappedValue</span>, <span class="ident">Schema</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>,
+    },
     <span class="ident">Error</span>,
 };
 
@@ -858,8 +862,8 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">Basic</span> {
-    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">collection</span>::<span class="ident">Id</span> {
-        <span class="ident">collection</span>::<span class="ident">Id</span>::<span class="ident">from</span>(<span class="string">&quot;tests.basic&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span> {
+        <span class="ident">CollectionId</span>::<span class="ident">from</span>(<span class="string">&quot;tests.basic&quot;</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {
@@ -989,8 +993,8 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicSchema</span>;
 
 <span class="kw">impl</span> <span class="ident">Schema</span> <span class="kw">for</span> <span class="ident">BasicSchema</span> {
-    <span class="kw">fn</span> <span class="ident">schema_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">schema</span>::<span class="ident">Id</span> {
-        <span class="ident">schema</span>::<span class="ident">Id</span>::<span class="ident">from</span>(<span class="string">&quot;basic&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">schema_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SchemaId</span> {
+        <span class="ident">SchemaId</span>::<span class="ident">from</span>(<span class="string">&quot;basic&quot;</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {
@@ -1030,7 +1034,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicCollectionWithNoViews</span>;
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">BasicCollectionWithNoViews</span> {
-    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">collection</span>::<span class="ident">Id</span> {
+    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span> {
         <span class="ident">Basic</span>::<span class="ident">collection_id</span>()
     }
 
@@ -1041,7 +1045,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicCollectionWithOnlyBrokenParentId</span>;
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">BasicCollectionWithOnlyBrokenParentId</span> {
-    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">collection</span>::<span class="ident">Id</span> {
+    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span> {
         <span class="ident">Basic</span>::<span class="ident">collection_id</span>()
     }
 
@@ -1054,8 +1058,8 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UnassociatedCollection</span>;
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">UnassociatedCollection</span> {
-    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">collection</span>::<span class="ident">Id</span> {
-        <span class="ident">collection</span>::<span class="ident">Id</span>::<span class="ident">from</span>(<span class="string">&quot;unassociated&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span> {
+        <span class="ident">CollectionId</span>::<span class="ident">from</span>(<span class="string">&quot;unassociated&quot;</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {}

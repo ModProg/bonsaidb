@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Error","Errors related to working with `Client`"]],"mod":[["url","rust-url is an implementation of the URL Standard for the Rust programming language."]],"struct":[["Client","Client for connecting to a `PliantDB` server."]]});
+initSidebarItems({"enum":[["Error","Errors related to working with `Client`"]],"mod":[["url","rust-url is an implementation of the URL Standard for the Rust programming language."]],"struct":[["Client","Client for connecting to a `PliantDB` server."],["RemoteDatabase","A database on a remote server."]]});

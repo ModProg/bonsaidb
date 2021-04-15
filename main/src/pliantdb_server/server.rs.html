@@ -1011,14 +1011,14 @@
     },
     <span class="ident">schema</span>,
     <span class="ident">schema</span>::{
-        <span class="ident">collection</span>,
-        <span class="ident">map</span>::{<span class="self">self</span>, <span class="ident">MappedValue</span>},
-        <span class="ident">Schema</span>, <span class="ident">Schematic</span>,
+        <span class="ident">view</span>::<span class="ident">map</span>::{<span class="self">self</span>, <span class="ident">MappedValue</span>},
+        <span class="ident">CollectionId</span>, <span class="ident">Schema</span>, <span class="ident">Schematic</span>,
     },
     <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
 };
 <span class="kw">use</span> <span class="ident">pliantdb_jobs</span>::{<span class="ident">manager</span>::<span class="ident">Manager</span>, <span class="ident">Job</span>};
 <span class="kw">use</span> <span class="ident">pliantdb_local</span>::{<span class="ident">Internal</span>, <span class="ident">Storage</span>};
+<span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaId</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">net</span>::<span class="ident">TcpListener</span>;
 <span class="kw">use</span> <span class="ident">tokio</span>::{<span class="ident">fs</span>::<span class="ident">File</span>, <span class="ident">sync</span>::<span class="ident">RwLock</span>};
@@ -1043,16 +1043,16 @@
     <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">directory</span>: <span class="ident">PathBuf</span>,
     <span class="ident">admin</span>: <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>,
-    <span class="ident">schemas</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">schema</span>::<span class="ident">Id</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">DatabaseOpener</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">schemas</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">SchemaId</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">DatabaseOpener</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">open_databases</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">available_databases</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">schema</span>::<span class="ident">Id</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">available_databases</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">SchemaId</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">request_processor</span>: <span class="ident">Manager</span>,
     <span class="ident">storage_configuration</span>: <span class="ident">pliantdb_local</span>::<span class="ident">Configuration</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Server</span> {
     <span class="doccomment">/// Creates or opens a [`Server`] with its data stored in `directory`.</span>
-    <span class="doccomment">/// `schemas` is a collection of [`schema::Id`] to [`Schematic`] pairs. [`schema::Id`]s are used as an identifier of a specific `Schema`, which the Server uses to</span>
+    <span class="doccomment">/// `schemas` is a collection of [`SchemaId`] to [`Schematic`] pairs. [`SchemaId`]s are used as an identifier of a specific `Schema`, which the Server uses to</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">directory</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">configuration</span>: <span class="ident">Configuration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span>
             <span class="ident">Storage</span>::<span class="ident">open_local</span>(<span class="ident">directory</span>.<span class="ident">join</span>(<span class="string">&quot;admin.pliantdb&quot;</span>), <span class="kw-2">&amp;</span><span class="ident">configuration</span>.<span class="ident">storage</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -1583,7 +1583,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_database</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-        <span class="ident">schema</span>: <span class="ident">schema</span>::<span class="ident">Id</span>,
+        <span class="ident">schema</span>: <span class="ident">SchemaId</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">Self</span>::<span class="ident">validate_name</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
 
@@ -1677,7 +1677,7 @@
             .<span class="ident">collect</span>())
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">schema</span>::<span class="ident">Id</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaId</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">read</span>().<span class="kw">await</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">available_databases</span>.<span class="ident">values</span>().<span class="ident">unique</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>())
     }
@@ -1690,13 +1690,13 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_from_collection_id</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">id</span>: <span class="ident">u64</span>,
-        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>,
+        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionId</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple_from_collection_id</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">u64</span>],
-        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>,
+        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionId</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">apply_transaction</span>(
@@ -1753,7 +1753,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_from_collection_id</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">id</span>: <span class="ident">u64</span>,
-        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>,
+        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionId</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">Internal</span>::<span class="ident">get_from_collection_id</span>(<span class="self">self</span>, <span class="ident">id</span>, <span class="ident">collection</span>).<span class="kw">await</span>
     }
@@ -1761,7 +1761,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple_from_collection_id</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">u64</span>],
-        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">collection</span>::<span class="ident">Id</span>,
+        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionId</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">Internal</span>::<span class="ident">get_multiple_from_collection_id</span>(<span class="self">self</span>, <span class="ident">ids</span>, <span class="ident">collection</span>).<span class="kw">await</span>
     }

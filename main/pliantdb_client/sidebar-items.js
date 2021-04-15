@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Error","Errors related to working with `Client`"]],"struct":[["Client","Client for connecting to a `PliantDB` server."]]});
+initSidebarItems({"enum":[["Error","Errors related to working with `Client`"]],"struct":[["Client","Client for connecting to a `PliantDB` server."],["RemoteDatabase","A database on a remote server."]]});

@@ -175,14 +175,14 @@
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">document</span>::<span class="ident">Document</span>, <span class="ident">schema</span>::<span class="ident">Collection</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">document</span>::<span class="ident">Document</span>,
+    <span class="ident">schema</span>::{<span class="ident">Collection</span>, <span class="ident">CollectionId</span>},
+};
 
 <span class="doccomment">/// Types for defining a `Map` within a `View`.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">map</span>;
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">map</span>::{<span class="ident">Key</span>, <span class="ident">Map</span>};
-
-<span class="kw">use</span> <span class="self">self</span>::<span class="ident">map</span>::<span class="ident">MappedValue</span>;
-<span class="kw">use</span> <span class="kw">super</span>::<span class="ident">collection</span>;
+<span class="kw">use</span> <span class="ident">map</span>::{<span class="ident">Key</span>, <span class="ident">Map</span>, <span class="ident">MappedValue</span>};
 
 <span class="doccomment">/// Errors that arise when interacting with views.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror</span>::<span class="ident">Error</span>, <span class="ident">Debug</span>)]</span>
@@ -282,7 +282,7 @@
 <span class="doccomment">/// Wraps a [`View`] with serialization to erase the associated types</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Serialized</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> {
     <span class="doccomment">/// Wraps returing [`&lt;View::Collection as Collection&gt;::collection_id()`](crate::schema::Collection::collection_id)</span>
-    <span class="kw">fn</span> <span class="ident">collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">collection</span>::<span class="ident">Id</span>;
+    <span class="kw">fn</span> <span class="ident">collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span>;
     <span class="doccomment">/// Wraps [`View::version`]</span>
     <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span>;
     <span class="doccomment">/// Wraps [`View::name`]</span>
@@ -299,7 +299,7 @@
     <span class="ident">T</span>: <span class="ident">View</span>,
     <span class="op">&lt;</span><span class="ident">T</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span>::<span class="ident">Key</span>: <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">fn</span> <span class="ident">collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">collection</span>::<span class="ident">Id</span> {
+    <span class="kw">fn</span> <span class="ident">collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span> {
         <span class="op">&lt;</span><span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">View</span><span class="op">&gt;</span>::<span class="ident">Collection</span> <span class="kw">as</span> <span class="ident">Collection</span><span class="op">&gt;</span>::<span class="ident">collection_id</span>()
     }
 

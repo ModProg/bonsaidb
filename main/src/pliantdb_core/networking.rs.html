@@ -289,16 +289,16 @@
 
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fabruic</span>;
+<span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaId</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de</span>::<span class="ident">DeserializeOwned</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">QueryKey</span>},
     <span class="ident">document</span>::<span class="ident">Document</span>,
     <span class="ident">schema</span>::{
-        <span class="self">self</span>, <span class="ident">collection</span>,
-        <span class="ident">map</span>::{<span class="self">self</span>},
-        <span class="ident">view</span>::{<span class="self">self</span>, <span class="ident">map</span>::<span class="ident">MappedValue</span>},
-        <span class="ident">Key</span>,
+        <span class="self">self</span>,
+        <span class="ident">view</span>::{<span class="self">self</span>, <span class="ident">map</span>},
+        <span class="ident">CollectionId</span>, <span class="ident">Key</span>, <span class="ident">MappedValue</span>,
     },
     <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
 };
@@ -348,14 +348,14 @@
     <span class="doccomment">/// Retrieve a single document.</span>
     <span class="ident">Get</span> {
         <span class="doccomment">/// The collection of the document.</span>
-        <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
+        <span class="ident">collection</span>: <span class="ident">CollectionId</span>,
         <span class="doccomment">/// The id of the document.</span>
         <span class="ident">id</span>: <span class="ident">u64</span>,
     },
     <span class="doccomment">/// Retrieve multiple documents.</span>
     <span class="ident">GetMultiple</span> {
         <span class="doccomment">/// The collection of the documents.</span>
-        <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
+        <span class="ident">collection</span>: <span class="ident">CollectionId</span>,
         <span class="doccomment">/// The ids of the documents.</span>
         <span class="ident">ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
     },
@@ -428,7 +428,7 @@
     <span class="doccomment">/// A list of available databases.</span>
     <span class="ident">Databases</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&gt;</span>),
     <span class="doccomment">///A list of availble schemas.</span>
-    <span class="ident">AvailableSchemas</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">schema</span>::<span class="ident">Id</span><span class="op">&gt;</span>),
+    <span class="ident">AvailableSchemas</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaId</span><span class="op">&gt;</span>),
 }
 
 <span class="doccomment">/// A response to a [`DatabaseRequest`].</span>
@@ -487,13 +487,13 @@
     <span class="doccomment">/// The name of the database.</span>
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="doccomment">/// The schema defining the database.</span>
-    <span class="kw">pub</span> <span class="ident">schema</span>: <span class="ident">schema</span>::<span class="ident">Id</span>,
+    <span class="kw">pub</span> <span class="ident">schema</span>: <span class="ident">SchemaId</span>,
 }
 
 <span class="doccomment">/// Functions for interacting with a `PliantDB` server.</span>
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ServerConnection</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {
-    <span class="doccomment">/// Creates a database named `name` using the [`schema::Id`] `schema`.</span>
+    <span class="doccomment">/// Creates a database named `name` using the [`SchemaId`] `schema`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ## Errors</span>
     <span class="doccomment">///</span>
@@ -502,7 +502,7 @@
     <span class="doccomment">///   alphanumeric, a period (`.`), or a hyphen (`-`).</span>
     <span class="doccomment">/// * [`Error::DatabaseNameAlreadyTaken]: `name` was already used for a</span>
     <span class="doccomment">///   previous database name. Database names are case insensitive.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">schema</span>: <span class="ident">schema</span>::<span class="ident">Id</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">schema</span>: <span class="ident">SchemaId</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Deletes a database named `name`.</span>
     <span class="doccomment">///</span>
@@ -515,8 +515,8 @@
     <span class="doccomment">/// Lists the databases on this server.</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// Lists the [`schema::Id`]s on this server.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">schema</span>::<span class="ident">Id</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+    <span class="doccomment">/// Lists the [`SchemaId`]s on this server.</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaId</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
 <span class="doccomment">/// A networking error.</span>
@@ -554,19 +554,19 @@
         <span class="ident">database_name</span>: <span class="ident">String</span>,
 
         <span class="doccomment">/// The schema provided for the database.</span>
-        <span class="ident">schema</span>: <span class="ident">schema</span>::<span class="ident">Id</span>,
+        <span class="ident">schema</span>: <span class="ident">SchemaId</span>,
 
         <span class="doccomment">/// The schema stored for the database.</span>
-        <span class="ident">stored_schema</span>: <span class="ident">schema</span>::<span class="ident">Id</span>,
+        <span class="ident">stored_schema</span>: <span class="ident">SchemaId</span>,
     },
 
-    <span class="doccomment">/// The [`schema::Id`] returned has already been registered with this server.</span>
+    <span class="doccomment">/// The [`SchemaId`] returned has already been registered with this server.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;schema &#39;{0}&#39; was already registered&quot;</span>)]</span>
-    <span class="ident">SchemaAlreadyRegistered</span>(<span class="ident">schema</span>::<span class="ident">Id</span>),
+    <span class="ident">SchemaAlreadyRegistered</span>(<span class="ident">SchemaId</span>),
 
-    <span class="doccomment">/// The [`schema::Id`] requested was not registered with this server.</span>
+    <span class="doccomment">/// The [`SchemaId`] requested was not registered with this server.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;schema &#39;{0}&#39; is not registered with this server&quot;</span>)]</span>
-    <span class="ident">SchemaNotRegistered</span>(<span class="ident">schema</span>::<span class="ident">Id</span>),
+    <span class="ident">SchemaNotRegistered</span>(<span class="ident">SchemaId</span>),
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pliantdb_core"></div>

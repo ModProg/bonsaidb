@@ -186,7 +186,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">collections</span>::<span class="ident">HashSet</span>, <span class="ident">hash</span>::<span class="ident">Hash</span>};
 
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
-<span class="kw">use</span> <span class="ident">pliantdb_core</span>::<span class="ident">schema</span>::{<span class="ident">collection</span>, <span class="ident">view</span>, <span class="ident">Key</span>, <span class="ident">Schema</span>};
+<span class="kw">use</span> <span class="ident">pliantdb_core</span>::<span class="ident">schema</span>::{<span class="ident">view</span>, <span class="ident">CollectionId</span>, <span class="ident">Key</span>, <span class="ident">Schema</span>};
 <span class="kw">use</span> <span class="ident">pliantdb_jobs</span>::{<span class="ident">Job</span>, <span class="ident">Keyed</span>};
 <span class="kw">use</span> <span class="ident">sled</span>::{<span class="ident">IVec</span>, <span class="ident">Transactional</span>, <span class="ident">Tree</span>};
 
@@ -205,7 +205,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Hash</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IntegrityScan</span> {
     <span class="kw">pub</span> <span class="ident">view_version</span>: <span class="ident">u64</span>,
-    <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
+    <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">CollectionId</span>,
     <span class="kw">pub</span> <span class="ident">view_name</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>,
 }
 

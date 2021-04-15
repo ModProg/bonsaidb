@@ -323,14 +323,14 @@
     <span class="ident">document</span>::<span class="ident">Document</span>,
     <span class="ident">networking</span>::{<span class="self">self</span>, <span class="ident">DatabaseRequest</span>, <span class="ident">DatabaseResponse</span>, <span class="ident">Request</span>, <span class="ident">Response</span>},
     <span class="ident">schema</span>::{
-        <span class="ident">map</span>::{<span class="self">self</span>, <span class="ident">MappedDocument</span>, <span class="ident">MappedValue</span>},
-        <span class="ident">view</span>, <span class="ident">Collection</span>, <span class="ident">Key</span>, <span class="ident">Map</span>, <span class="ident">Schema</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>,
+        <span class="ident">view</span>, <span class="ident">view</span>::<span class="ident">map</span>, <span class="ident">Collection</span>, <span class="ident">Key</span>, <span class="ident">Map</span>, <span class="ident">MappedDocument</span>, <span class="ident">MappedValue</span>, <span class="ident">Schema</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>,
     },
     <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
 };
 
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">Client</span>;
 
+<span class="doccomment">/// A database on a remote server.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span> {
     <span class="ident">client</span>: <span class="ident">Client</span>,

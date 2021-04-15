@@ -86,9 +86,15 @@
 <span id="83">83</span>
 <span id="84">84</span>
 <span id="85">85</span>
+<span id="86">86</span>
+<span id="87">87</span>
+<span id="88">88</span>
+<span id="89">89</span>
+<span id="90">90</span>
+<span id="91">91</span>
+<span id="92">92</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="doccomment">/// Types for defining a `Collection`.</span>
-<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">collection</span>;
+<span class="kw">mod</span> <span class="ident">collection</span>;
 <span class="kw">mod</span> <span class="ident">schematic</span>;
 <span class="doccomment">/// Types for defining map/reduce-powered `View`s.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">view</span>;
@@ -100,34 +106,42 @@
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{<span class="ident">collection</span>::<span class="kw-2">*</span>, <span class="ident">schematic</span>::<span class="kw-2">*</span>, <span class="ident">view</span>::<span class="kw-2">*</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
+    <span class="ident">collection</span>::{<span class="ident">Collection</span>, <span class="ident">CollectionId</span>},
+    <span class="ident">schematic</span>::<span class="ident">Schematic</span>,
+    <span class="ident">view</span>::{
+        <span class="ident">map</span>::{<span class="ident">Key</span>, <span class="ident">Map</span>, <span class="ident">MappedDocument</span>, <span class="ident">MappedValue</span>},
+        <span class="ident">MapResult</span>, <span class="ident">View</span>,
+    },
+};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">transparent</span>)]</span>
 <span class="doccomment">/// The unique Id of a [`Schema`]. Primarily used to try to protect against</span>
 <span class="doccomment">/// using the incorrect data types across a remote connection.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Id</span>(<span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>);
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">clippy</span>::<span class="ident">module_name_repetitions</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SchemaId</span>(<span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>);
 
-<span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Id</span> {
+<span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SchemaId</span> {
     <span class="kw">fn</span> <span class="ident">as_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="self">self</span>.<span class="number">0</span>.<span class="ident">as_ref</span>()
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Id</span> {
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">SchemaId</span> {
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="ident">Display</span>::<span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>, <span class="ident">f</span>)
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Id</span> {
+<span class="kw">impl</span> <span class="ident">SchemaId</span> {
     <span class="doccomment">/// Creates a new id.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">id</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">id</span>.<span class="ident">into</span>()))
     }
 }
 
-<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Id</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">SchemaId</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span>(<span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="ident">id</span>))
     }
@@ -135,8 +149,8 @@
 
 <span class="doccomment">/// Defines a group of collections that are stored into a single database.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Schema</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
-    <span class="doccomment">/// Returns the unique [`Id`] for this schema.</span>
-    <span class="kw">fn</span> <span class="ident">schema_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Id</span>;
+    <span class="doccomment">/// Returns the unique [`SchemaId`] for this schema.</span>
+    <span class="kw">fn</span> <span class="ident">schema_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SchemaId</span>;
 
     <span class="doccomment">/// Defines the `Collection`s into `schema`.</span>
     <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>);
@@ -153,8 +167,8 @@
 <span class="doccomment">/// This trait is only useful for tools like `pliantdb local-backup`. There is no</span>
 <span class="doccomment">/// real-world use case of connecting to a Database with no schema.</span>
 <span class="kw">impl</span> <span class="ident">Schema</span> <span class="kw">for</span> () {
-    <span class="kw">fn</span> <span class="ident">schema_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Id</span> {
-        <span class="ident">Id</span>::<span class="ident">from</span>(<span class="string">&quot;&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">schema_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SchemaId</span> {
+        <span class="ident">SchemaId</span>::<span class="ident">from</span>(<span class="string">&quot;&quot;</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {}
@@ -164,8 +178,8 @@
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">fn</span> <span class="ident">schema_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Id</span> {
-        <span class="ident">Id</span>(<span class="self">Self</span>::<span class="ident">collection_id</span>().<span class="number">0</span>)
+    <span class="kw">fn</span> <span class="ident">schema_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SchemaId</span> {
+        <span class="ident">SchemaId</span>(<span class="self">Self</span>::<span class="ident">collection_id</span>().<span class="number">0</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {

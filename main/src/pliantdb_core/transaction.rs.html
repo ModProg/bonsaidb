@@ -125,7 +125,7 @@
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">document</span>::<span class="ident">Header</span>, <span class="ident">schema</span>::<span class="ident">collection</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">document</span>::<span class="ident">Header</span>, <span class="ident">schema</span>::<span class="ident">CollectionId</span>};
 
 <span class="doccomment">/// A list of operations to execute as a single unit. If any operation fails,</span>
 <span class="doccomment">/// all changes are aborted. Reads that happen while the transaction is in</span>
@@ -147,7 +147,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The id of the `Collection`.</span>
-    <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
+    <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">CollectionId</span>,
 
     <span class="doccomment">/// The command being performed.</span>
     <span class="kw">pub</span> <span class="ident">command</span>: <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
@@ -191,7 +191,7 @@
     <span class="doccomment">/// A `Document` was updated.</span>
     <span class="ident">DocumentUpdated</span> {
         <span class="doccomment">/// The id of the `Collection` of the updated `Document`.</span>
-        <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
+        <span class="ident">collection</span>: <span class="ident">CollectionId</span>,
 
         <span class="doccomment">/// The header of the updated `Document`.</span>
         <span class="ident">header</span>: <span class="ident">Header</span>,
@@ -200,7 +200,7 @@
     <span class="doccomment">/// A `Document` was deleted.</span>
     <span class="ident">DocumentDeleted</span> {
         <span class="doccomment">/// The id of the `Collection` of the deleted `Document`.</span>
-        <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
+        <span class="ident">collection</span>: <span class="ident">CollectionId</span>,
 
         <span class="doccomment">/// The id of the deleted `Document`.</span>
         <span class="ident">id</span>: <span class="ident">u64</span>,
@@ -232,7 +232,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ChangedDocument</span> {
     <span class="doccomment">/// The id of the `Collection` of the changed `Document`.</span>
-    <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">collection</span>::<span class="ident">Id</span>,
+    <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">CollectionId</span>,
 
     <span class="doccomment">/// The id of the changed `Document`.</span>
     <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">u64</span>,
