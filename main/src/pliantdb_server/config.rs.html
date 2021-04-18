@@ -23,7 +23,7 @@
 <span class="doccomment">/// Configuration options for [`Server`](crate::Server)</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Configuration</span> {
     <span class="doccomment">/// Number of simultaneous requests to be processed. Default value is 16.</span>
-    <span class="kw">pub</span> <span class="ident">request_workers</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">request_workers</span>: <span class="ident">usize</span>,
     <span class="doccomment">/// Configuration options for individual databases.</span>
     <span class="kw">pub</span> <span class="ident">storage</span>: <span class="ident">pliantdb_local</span>::<span class="ident">Configuration</span>,
 }
@@ -33,7 +33,7 @@
         <span class="self">Self</span> {
             <span class="comment">// TODO this was arbitrarily picked, it probably should be higher,</span>
             <span class="comment">// but it also should probably be based on the cpu&#39;s capabilities</span>
-            <span class="ident">request_workers</span>: <span class="prelude-val">Some</span>(<span class="number">16</span>),
+            <span class="ident">request_workers</span>: <span class="number">16</span>,
             <span class="ident">storage</span>: <span class="ident">pliantdb_local</span>::<span class="ident">Configuration</span>::<span class="ident">default</span>(),
         }
     }

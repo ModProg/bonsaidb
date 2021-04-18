@@ -284,10 +284,49 @@
 <span id="281">281</span>
 <span id="282">282</span>
 <span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
+<span class="kw">use</span> <span class="ident">circulate</span>::<span class="ident">Message</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fabruic</span>;
 <span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaId</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de</span>::<span class="ident">DeserializeOwned</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -307,7 +346,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// The unique id for this payload.</span>
-    <span class="kw">pub</span> <span class="ident">id</span>: <span class="ident">u32</span>,
+    <span class="kw">pub</span> <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u32</span><span class="op">&gt;</span>,
     <span class="doccomment">/// The wrapped payload.</span>
     <span class="kw">pub</span> <span class="ident">wrapped</span>: <span class="ident">T</span>,
 }
@@ -399,11 +438,36 @@
     },
     <span class="doccomment">/// Queries the last transaction id.</span>
     <span class="ident">LastTransactionId</span>,
+    <span class="doccomment">/// Creates a `PubSub` [`Subscriber`](crate::pubsub::Subscriber)</span>
+    <span class="ident">CreateSubscriber</span>,
+    <span class="doccomment">/// Publishes a `PubSub` message.</span>
+    <span class="ident">Publish</span>(<span class="ident">Message</span>),
+    <span class="doccomment">/// Subscribes `subscriber_id` to messages for `topic`.</span>
+    <span class="ident">SubscribeTo</span> {
+        <span class="doccomment">/// The id of the [`Subscriber`](crate::pubsub::Subscriber).</span>
+        <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
+        <span class="doccomment">/// The topic to subscribe to.</span>
+        <span class="ident">topic</span>: <span class="ident">String</span>,
+    },
+    <span class="doccomment">/// Unsubscribes `subscriber_id` from messages for `topic`.</span>
+    <span class="ident">UnsubscribeFrom</span> {
+        <span class="doccomment">/// The id of the [`Subscriber`](crate::pubsub::Subscriber).</span>
+        <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
+        <span class="doccomment">/// The topic to unsubscribe from.</span>
+        <span class="ident">topic</span>: <span class="ident">String</span>,
+    },
+    <span class="doccomment">/// Unregisters the subscriber.</span>
+    <span class="ident">UnregisterSubscriber</span> {
+        <span class="doccomment">/// The id of the [`Subscriber`](crate::pubsub::Subscriber).</span>
+        <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
+    },
 }
 
 <span class="doccomment">/// A response from a server.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Response</span> {
+    <span class="doccomment">/// A request succeded but provided no output.</span>
+    <span class="prelude-val">Ok</span>,
     <span class="doccomment">/// A response to a [`ServerRequest`].</span>
     <span class="ident">Server</span>(<span class="ident">ServerResponse</span>),
     <span class="doccomment">/// A response to a [`DatabaseRequest`].</span>
@@ -450,6 +514,18 @@
     <span class="ident">ExecutedTransactions</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Result of [`DatabaseRequest::LastTransactionId`].</span>
     <span class="ident">LastTransactionId</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// A new `PubSub` subscriber was created.</span>
+    <span class="ident">SubscriberCreated</span> {
+        <span class="doccomment">/// The unique ID of the subscriber.</span>
+        <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
+    },
+    <span class="doccomment">/// A PubSub message was received.</span>
+    <span class="ident">MessageReceived</span> {
+        <span class="doccomment">/// The ID of the subscriber receiving the message.</span>
+        <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
+        <span class="doccomment">/// The message received.</span>
+        <span class="ident">message</span>: <span class="ident">Message</span>,
+    },
 }
 
 <span class="doccomment">/// A serialized [`MappedDocument`](map::MappedDocument).</span>
