@@ -1,0 +1,392 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>PliantDB User&#x27;s Guide</title>
+        
+        <meta name="robots" content="noindex" />
+        
+        
+
+
+        <!-- Custom HTML head -->
+        
+
+
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        
+        <link rel="icon" href="favicon.svg">
+        
+        
+        <link rel="shortcut icon" href="favicon.png">
+        
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        
+        <link rel="stylesheet" href="css/print.css" media="print">
+        
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        
+        <link rel="stylesheet" href="fonts/fonts.css">
+        
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        
+
+        
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="introduction.html">Introduction</a></li><li class="chapter-item expanded affix "><li class="part-title">About PliantDB</li><li class="chapter-item expanded "><a href="about/concepts.html"><strong aria-hidden="true">1.</strong> Concepts</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="about/concepts/document.html"><strong aria-hidden="true">1.1.</strong> Document</a></li><li class="chapter-item expanded "><a href="about/concepts/collection.html"><strong aria-hidden="true">1.2.</strong> Collection</a></li><li class="chapter-item expanded "><a href="about/concepts/view.html"><strong aria-hidden="true">1.3.</strong> View</a></li><li class="chapter-item expanded "><a href="about/concepts/schema.html"><strong aria-hidden="true">1.4.</strong> Schema</a></li><li class="chapter-item expanded "><a href="about/concepts/database.html"><strong aria-hidden="true">1.5.</strong> Database</a></li><li class="chapter-item expanded "><a href="about/concepts/server.html"><strong aria-hidden="true">1.6.</strong> Server</a></li><li class="chapter-item expanded "><a href="about/concepts/client.html"><strong aria-hidden="true">1.7.</strong> Client</a></li><li class="chapter-item expanded "><a href="about/concepts/pubsub.html"><strong aria-hidden="true">1.8.</strong> PubSub</a></li></ol></li><li class="chapter-item expanded "><a href="about/access_models.html"><strong aria-hidden="true">2.</strong> How can PliantDB be accessed?</a></li><li class="chapter-item expanded affix "><li class="part-title">Core Traits</li><li class="chapter-item expanded "><a href="traits/connection.html"><strong aria-hidden="true">3.</strong> Connection</a></li><li class="chapter-item expanded "><a href="traits/server_connection.html"><strong aria-hidden="true">4.</strong> ServerConnection</a></li><li class="chapter-item expanded "><a href="traits/pubsub.html"><strong aria-hidden="true">5.</strong> PubSub/Subscriber</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        
+                    </div>
+
+                    <h1 class="menu-title">PliantDB User&#x27;s Guide</h1>
+
+                    <div class="right-buttons">
+                        
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                        
+                        
+                    </div>
+                </div>
+
+                
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" name="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="pliantdb-users-guide"><a class="header" href="#pliantdb-users-guide">PliantDB User's Guide</a></h1>
+<p>PliantDB is an ACID-compliant, document-database written in Rust. It takes heavy inspiration from CouchDB, but makes no efforts to be compatible with CouchDB. Its goal is to be a general-purpose database that aims to simplify development and deployment by providing reliable building blocks that are lightweight enough for hobby projects running with minimal resources, but scalable for when your hobby project becomes a deployed product.</p>
+<p>This user's guide aims to provide a guided walkthrough for users to understand how PliantDB works. This guide is meant to be supplemental <a href="https://pliantdb.dev/main/pliantdb/">to the documentation</a>. If you learn best by exploring examples, <a href="https://github.com/khonsulabs/pliantdb/blob/main/pliantdb/examples">many are available in <code>pliantdb/examples</code></a>. If, however, you learn best by taking a guided tour of how something works, this guide is specifically for you.</p>
+<p>If you have any feedback on this guide, please <a href="https://github.com/khonsulabs/pliantdb/issues">file an issue</a>, and we will try to address any issues or shortcomings.</p>
+<p>Thank you for exploring PliantDB.</p>
+<h1 id="concepts"><a class="header" href="#concepts">Concepts</a></h1>
+<p>This is a list of common concepts that will be used throughout this book as well as the documentation.</p>
+<ul>
+<li><a href="about/./concepts/document.html">Document</a></li>
+<li><a href="about/./concepts/collection.html">Collection</a></li>
+<li><a href="about/./concepts/view.html">View</a></li>
+<li><a href="about/./concepts/schema.html">Schema</a></li>
+<li><a href="about/./concepts/database.html">Database</a></li>
+<li><a href="about/./concepts/server.html">Server</a></li>
+<li><a href="about/./concepts/client.html">Client</a></li>
+<li><a href="about/./concepts/pubsub.html">PubSub</a></li>
+</ul>
+<h1 id="document"><a class="header" href="#document">Document</a></h1>
+<p>A <a href="https://pliantdb.dev/main/pliantdb/core/document/struct.Document.html">Document</a> is a single piece of stored data. Each document is stored within a <a href="about/concepts/./collection.html"><code>Collection</code></a>, and has a unique ID within that Collection. A Document also contains a revision ID as well as a digest matching the current contents of the document.</p>
+<p>When a Document is updated, PliantDB will check that the revision information passed matches the currently stored information. If not, a <a href="https://pliantdb.dev/main/pliantdb/core/enum.Error.html#variant.DocumentConflict">conflict error</a> will be returned. This simple check ensures that if two writers try to update the document simultaneously, one will succeed and the other will receive an error.</p>
+<p>PliantDB provides APIs for storing <a href="https://serde.rs/">serde</a>-compatible data structures using the <a href="https://cbor.io/">CBOR</a> format. CBOR provides larger data type compatibility than JSON, and is a more efficent format. It also provides a bit more resilliance for parsing structures that have changed than some other encoding formats, but care still needs to be taken when updating structures that represent already-stored data.</p>
+<p>If you would prefer to manually manage the data stored inside of a Document, you can directly manage the <a href="https://pliantdb.dev/main/pliantdb/core/document/struct.Document.html#structfield.contents"><code>contents</code></a> field. PliantDB will not interact with the <code>contents</code> of a Document. Only code that you write will parse or update the stored data.</p>
+<h1 id="collection"><a class="header" href="#collection">Collection</a></h1>
+<p>A <a href="https://pliantdb.dev/main/pliantdb/core/schema/trait.Collection.html">Collection</a> is a group of <a href="about/concepts/./document.html">Documents</a> and associated functionality. The goal of a Collection is to encapsulate the logic for a set of data in such a way that Collections could be designed to be shared and reused in multiple <a href="about/concepts/./schema.html">Schemas</a> or applications.</p>
+<p>Each Collection must have a unique <a href="https://pliantdb.dev/main/pliantdb/core/schema/struct.CollectionId.html"><code>CollectionId</code></a>.</p>
+<p>A Collection can contain one or more <a href="about/concepts/./view.html">Views</a>.</p>
+<h1 id="view"><a class="header" href="#view">View</a></h1>
+<p>A <a href="https://pliantdb.dev/main/pliantdb/core/schema/trait.View.html">View</a> is a <a href="https://en.wikipedia.org/wiki/MapReduce">map/reduce</a>-powered method of quickly accessing information inside of a <a href="about/concepts/./collection.html">Collection</a>. A View can only belong to one Collection.</p>
+<p>Views define two important associated types: a Key type and a Value type. You can think of these as the equivalent entries in a map/dictionary-like collection that supports more than one entry for each Key. The Key is used to filter the View's results, and the Value is used by your application or the <code>reduce()</code> function.</p>
+<p>Views are a powerful, yet abstract concept. Let's look at a concrete example: blog posts with categories.</p>
+<pre><code class="language-rust no_run noplayground">#[derive(Serialize, Deserialize, Debug)]
+pub struct BlogPost {
+    pub title: String,
+    pub body: String,
+    pub category: Option&lt;String&gt;,
+}
+</code></pre>
+<p>While <code>category</code> should be an enum, let's first explore using <code>String</code> and upgrade to an enum at the end (it requires one additional step). Let's implement a View that will allow users to find blog posts by their category as well as count the number of posts in each category.</p>
+<pre><code class="language-rust noplayground no_run">pub trait BlogPostsByCategory {
+    type Collection = BlogPost;
+    type Key = Option&lt;String&gt;;
+    type Value = u32;
+
+    fn map(&amp;self, document: &amp;Document&lt;'_&gt;) -&gt; MapResult&lt;Self::Key, Self::Value&gt; {
+        let post = document.contents::&lt;BlogPost&gt;()?;
+        Ok(Some(document.emit_key_and_value(post.category.clone(), 1)))
+    }
+
+    fn reduce(
+        &amp;self,
+        mappings: &amp;[MappedValue&lt;Self::Key, Self::Value&gt;],
+        _rereduce: bool,
+    ) -&gt; Result&lt;Self::Value, Error&gt; {
+        Ok(mappings.iter().map(|mapping| mapping.value).sum())
+    }
+}
+</code></pre>
+<h2 id="map"><a class="header" href="#map">Map</a></h2>
+<p>The first line of the <code>map</code> function calls <a href="https://pliantdb.dev/main/pliantdb/core/document/struct.Document.html#method.contents"><code>Document::contents()</code></a> to deserialize the stored <code>BlogPost</code>. The second line returns an emitted Key and Value -- in our case a clone of the post's category and the value <code>1_u32</code>. With the map function, we're able to use <a href="https://pliantdb.dev/main/pliantdb/core/connection/struct.View.html#method.query"><code>query()</code></a> and <a href="https://pliantdb.dev/main/pliantdb/core/connection/struct.View.html#method.query_with_docs"><code>query_with_docs()</code></a>:</p>
+<pre><code class="language-rust noplayground no_run">    let rust_posts = db
+        .view::&lt;BlogPostsByCategory&gt;()
+        .with_key(Some(String::from(&quot;Rust&quot;)))
+        .query_with_docs().await?;
+</code></pre>
+<p>The above queries the <a href="about/concepts/./database.html">Database</a> for all documents in the <code>BlogPost</code> Collection that emitted a Key of <code>Some(&quot;Rust&quot;)</code>.</p>
+<h2 id="reduce"><a class="header" href="#reduce">Reduce</a></h2>
+<p>The second function to learn about is the <code>reduce()</code> function. It is responsible for turning an array of Key/Value pairs into a single Value. In some cases, PliantDB might need to call <code>reduce()</code> with values that have already been reduced one time. If this is the case, <code>rereduce</code> is set to true.</p>
+<p>In this example, we're using the built-in <code>Iterator::sum()</code>(https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.sum) function to turn our Value of <code>1_u32</code> into a single <code>u32</code> representing the total number of documents.</p>
+<pre><code class="language-rust noplayground no_run">    let rust_post_count = db
+        .view::&lt;BlogPostsByCategory&gt;()
+        .with_key(Some(String::from(&quot;Rust&quot;)))
+        .reduce().await?;
+</code></pre>
+<h3 id="understanding-re-reduce"><a class="header" href="#understanding-re-reduce">Understanding Re-reduce</a></h3>
+<p>Let's examine this data set:</p>
+<table><thead><tr><th>Document ID</th><th>BlogPost Category</th></tr></thead><tbody>
+<tr><td>1</td><td>Some(&quot;Rust&quot;)</td></tr>
+<tr><td>2</td><td>Some(&quot;Rust&quot;)</td></tr>
+<tr><td>3</td><td>Some(&quot;Cooking&quot;)</td></tr>
+<tr><td>4</td><td>None</td></tr>
+</tbody></table>
+<p>When updating views, each view entry is reduced and the value is cached. These are the view entries:</p>
+<table><thead><tr><th>View Entry ID</th><th>Reduced Value</th></tr></thead><tbody>
+<tr><td>Some(&quot;Rust&quot;)</td><td>2</td></tr>
+<tr><td>Some(&quot;Cooking&quot;)</td><td>1</td></tr>
+<tr><td>None</td><td>1</td></tr>
+</tbody></table>
+<p>When a reduce query is issued for a single key, the value can be returned without further processing. But, if the reduce query matches multiple keys, the View's <code>reduce()</code> function will be called with the already reduced values with <code>rereduce</code> set to <code>true</code>. For example, retrieving the total count of blog posts:</p>
+<pre><code class="language-rust noplayground no_run">    let total_post_count = db
+        .view::&lt;BlogPostsByCategory&gt;()
+        .reduce().await?;
+</code></pre>
+<p>Once PliantDB has gathered each of the key's reduced values, it needs to further reduce that list into a single value. To accomplish this, the View's <code>reduce()</code> function to be invoked with <code>rereduce</code> set to <code>true</code>, and with mappings containing:</p>
+<table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>
+<tr><td>Some(&quot;Rust&quot;)</td><td>2</td></tr>
+<tr><td>Some(&quot;Cooking&quot;)</td><td>1</td></tr>
+<tr><td>None</td><td>1</td></tr>
+</tbody></table>
+<p>This produces a final value of 4.</p>
+<h2 id="how-does-pliantdb-make-this-efficient"><a class="header" href="#how-does-pliantdb-make-this-efficient">How does PliantDB make this efficient?</a></h2>
+<p>When saving Documents, PliantDB does not immediately update related views. It instead notes what documents have been updated since the last time the View was indexed.</p>
+<p>When a View is accessed, the queries include an <a href="https://pliantdb.dev/main/pliantdb/core/connection/enum.AccessPolicy.html"><code>AccessPolicy</code></a>. If you aren't overriding it, <a href="https://pliantdb.dev/main/pliantdb/core/connection/enum.AccessPolicy.html#variant.UpdateBefore"><code>UpdateBefore</code></a> is used. This means that when the query is evaluated, PliantDB will first check if the index is out of date due to any updated data. If it is, it will update the View before evaluating the query.</p>
+<p>If you're wanting to get results quickly and are willing to accept data that might not be updated, the access policies <a href="https://pliantdb.dev/main/pliantdb/core/connection/enum.AccessPolicy.html#variant.UpdateAfter"><code>UpdateAfter</code></a> and <a href="https://pliantdb.dev/main/pliantdb/core/connection/enum.AccessPolicy.html#variant.NoUpdate"><code>NoUpdate</code></a> can be used depending on your needs.</p>
+<p>If multiple simulataneous queries are being evaluted for the same View and the View is outdated, PliantDB ensures that only a single view indexer will execute while both queries wait for it to complete.</p>
+<h1 id="schema"><a class="header" href="#schema">Schema</a></h1>
+<p>A <a href="https://pliantdb.dev/main/pliantdb/core/schema/trait.Schema.html">Schema</a> is a group of one or more <a href="about/concepts/./collection.html">Collections</a>. A Schema can be instantiated as a <a href="about/concepts/./database.html">Database</a>. The Schema describes how a set of data behaves, and a Database is a set of data on-disk.</p>
+<h1 id="database"><a class="header" href="#database">Database</a></h1>
+<p>A Database is a set of stored data. Each Database is described by a <a href="about/concepts/./schema.html">Schema</a>. Unlike the other concepts, this concept corresponds to multiple types:</p>
+<ul>
+<li>For pliantdb-local: <a href="https://pliantdb.dev/main/pliantdb/local/struct.Storage.html"><code>Storage</code></a></li>
+<li>For pliantdb-server: <a href="https://pliantdb.dev/main/pliantdb/server/struct.Database.html"><code>hosted::Database</code></a></li>
+<li>For pliantdb-client: <a href="https://pliantdb.dev/main/pliantdb/client/struct.RemoteDatabase.html"><code>RemoteDatabase</code></a></li>
+</ul>
+<p>All of these types implement the <a href="about/concepts/../../traits/connection.html"><code>Connection</code></a> trait.</p>
+<h1 id="server"><a class="header" href="#server">Server</a></h1>
+<p>A <a href="https://pliantdb.dev/main/pliantdb/server/struct.Server.html">Server</a> allows one or more <a href="about/concepts/./schema.html">Schemas</a> to create named <a href="about/concepts/./database.html">Databases</a>. It can be embedded into your existing application and used without any networking, or it can be executed separately and connected to with <a href="https://en.wikipedia.org/wiki/QUIC">QUIC</a> or <a href="https://en.wikipedia.org/wiki/WebSocket">WebSockets</a>. The QUIC protocol is preferred, but it uses UDP which many load balancers don't support. If you're exposing PliantDB behind a load balancer, WebSockets may be the only option depending on your host's capabilities.</p>
+<h1 id="client"><a class="header" href="#client">Client</a></h1>
+<p>A <a href="https://pliantdb.dev/main/pliantdb/client/struct.Client.html">Client</a> is used to access a <a href="about/concepts/./server.html">Server</a> over a network connection.</p>
+<h1 id="pubsub"><a class="header" href="#pubsub">PubSub</a></h1>
+<p>The <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">Publish/Subscribe pattern</a> enables developers to design systems that produce and receive messages. It is implemented for PliantDB through the <a href="about/concepts/../../traits/pubsub.html"><code>PubSub</code> and <code>Subscriber</code></a> traits.</p>
+<p>A common example of what PubSub enables is implementing a simple chat system. Each chat participant can subscribe to messages on the <code>chat</code> topic, and when any participant publishes a <code>chat</code> message, all subscribers will receive a copy of that message.</p>
+<p>A working example of PubSub is available at <a href="https://github.com/khonsulabs/pliantdb/blob/main/pliantdb/examples/pubsub.rs"><code>pliantdb/examples/pubsub.rs</code></a>.</p>
+<h1 id="use-cases-of-pliantdb"><a class="header" href="#use-cases-of-pliantdb">Use cases of PliantDB</a></h1>
+<h2 id="single-database-model-no-networking"><a class="header" href="#single-database-model-no-networking">Single database model (No networking)</a></h2>
+<p>This use case is most similar to utilizing SQLite for your database. In this mode, PliantDB directly interacts with files on your disk to provide your database. Unlike other file-based databases, however, it's very easy to upgrade from a single-database, local-data only storage model to a remote server-based deployment.</p>
+<pre class="mermaid">graph LR
+  code{{Rust Code}}
+  local[(pliantdb-local)]
+  code &lt;--&gt; local
+</pre>
+<p>A working example of how to use a local database can be found at <a href="https://github.com/khonsulabs/pliantdb/blob/main/pliantdb/examples/basic-local.rs"><code>pliantdb/examples/basic-local.rs</code></a>.</p>
+<h2 id="multi-database-model-no-networking"><a class="header" href="#multi-database-model-no-networking">Multi-database model (No networking)</a></h2>
+<p>This model is most similar to using multiple SQLite databases. In this mode, you interact with a <a href="https://pliantdb.dev/main/pliantdb/server/struct.Server.html"><code>Server</code></a> that you spawn within your code. The server uses pliantdb-local as its underlying storage mechanism.</p>
+<pre class="mermaid">graph LR
+  code{{Rust Code}}
+  server[[pliantdb-server]]
+  local[(pliantdb-local)]
+  code &lt;--&gt; server
+  server &lt;--&gt; local
+</pre>
+<h2 id="server-model-quic-or-websockets"><a class="header" href="#server-model-quic-or-websockets">Server model (QUIC or WebSockets)</a></h2>
+<p>This model is most similar to using other document databases, like CouchDB or MongoDB. In this mode, you interact with a <a href="https://pliantdb.dev/main/pliantdb/client/struct.Client.html"><code>Client</code></a> that connects via either QUIC or WebSockets with a server. From the server code's perspective, this model is the same as the multi-database model, except that the server is listening for and responding to network traffic.</p>
+<pre class="mermaid">graph LR
+  code{{Rust Code}}
+  client[[pliantdb-client]]
+  server[[pliantdb-server]]
+  local[(pliantdb-local)]
+  code &lt;--&gt; client
+  client &lt;-. network .-&gt; server
+  server &lt;--&gt; local
+</pre>
+<p>A working example of this model can be found at <a href="https://github.com/khonsulabs/pliantdb/blob/main/pliantdb/examples/server.rs"><code>pliantdb/examples/server.rs</code></a>.</p>
+<h1 id="connection"><a class="header" href="#connection">Connection</a></h1>
+<p><em>Coming soon.</em></p>
+<p>This is an <a href="https://lib.rs/crates/async-trait">async trait</a>, which unfortunately yields <a href="https://pliantdb.dev/main/pliantdb/core/connection/trait.Connection.html">messy documentation</a>.</p>
+<h1 id="serverconnection"><a class="header" href="#serverconnection">ServerConnection</a></h1>
+<p><em>Coming soon.</em></p>
+<h1 id="pubsub-traits"><a class="header" href="#pubsub-traits">PubSub Traits</a></h1>
+<p><em>Coming soon.</em></p>
+<p>These are <a href="https://lib.rs/crates/async-trait">async traits</a>, which unfortunately yield messy documentation: <a href="https://pliantdb.dev/main/pliantdb/core/pubsub/trait.PubSub.html">PubSub</a> and <a href="https://pliantdb.dev/main/pliantdb/core/pubsub/trait.Subscriber.html">Subscriber</a>.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                        
+
+                        
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                
+
+                
+            </nav>
+
+        </div>
+
+        
+
+        
+
+        
+
+        
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        
+
+        
+
+        
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        
+
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+        
+        <script type="text/javascript" src="mermaid.min.js"></script>
+        
+        <script type="text/javascript" src="mermaid-init.js"></script>
+        
+
+        
+        
+        <script type="text/javascript">
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+        
+        
+
+    </body>
+</html>
