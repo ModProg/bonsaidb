@@ -267,9 +267,61 @@
 <span id="264">264</span>
 <span id="265">265</span>
 <span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
+<span id="313">313</span>
+<span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">convert</span>::<span class="ident">TryInto</span>};
 
+<span class="kw">use</span> <span class="ident">num_traits</span>::{<span class="ident">FromPrimitive</span>, <span class="ident">ToPrimitive</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de</span>::<span class="ident">DeserializeOwned</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">document</span>::<span class="ident">Document</span>, <span class="ident">schema</span>::<span class="ident">view</span>};
@@ -360,7 +412,7 @@
 
 <span class="doccomment">/// A trait that enables a type to convert itself to a big-endian/network byte order.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Key</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {
-    <span class="doccomment">/// Convert `self` into an `IVec` containing bytes ordered in big-endian/network byte order.</span>
+    <span class="doccomment">/// Convert `self` into a `Cow&lt;[u8]&gt;` containing bytes ordered in big-endian/network byte order.</span>
     <span class="kw">fn</span> <span class="ident">as_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Convert a slice of bytes into `Self` by interpretting `bytes` in big-endian/network byte order.</span>
@@ -447,6 +499,35 @@
     }
 }
 
+<span class="doccomment">/// Adds `Key` support to an enum. Requires implementing</span>
+<span class="doccomment">/// [`ToPrimitive`](num_traits::ToPrimitive) and</span>
+<span class="doccomment">/// [`FromPrimitive`](num_traits::FromPrimitive), or using a crate like</span>
+<span class="doccomment">/// [num-derive](https://crates.io/crates/num-derive) to do it automatically.</span>
+<span class="doccomment">/// Take care when using enums as keys: if the order changes or if the meaning</span>
+<span class="doccomment">/// of existing numerical values changes, make sure to update any related views&#39;</span>
+<span class="doccomment">/// version number to ensure the values are re-evaluated.</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EnumKey</span>: <span class="ident">ToPrimitive</span> <span class="op">+</span> <span class="ident">FromPrimitive</span> <span class="op">+</span> <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {}
+
+<span class="comment">// ANCHOR: impl_key_for_enumkey</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">Key</span> <span class="kw">for</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">EnumKey</span>,
+{
+    <span class="kw">fn</span> <span class="ident">as_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">to_u64</span>()
+            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">anyhow</span>::<span class="macro">anyhow</span><span class="macro">!</span>(<span class="string">&quot;Primitive::to_u64() returned None&quot;</span>))<span class="question-mark">?</span>
+            .<span class="ident">as_big_endian_bytes</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">bytes</span><span class="op">|</span> <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">bytes</span>.<span class="ident">to_vec</span>()))
+    }
+
+    <span class="kw">fn</span> <span class="ident">from_big_endian_bytes</span>(<span class="ident">bytes</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">primitive</span> <span class="op">=</span> <span class="ident">u64</span>::<span class="ident">from_big_endian_bytes</span>(<span class="ident">bytes</span>)<span class="question-mark">?</span>;
+        <span class="self">Self</span>::<span class="ident">from_u64</span>(<span class="ident">primitive</span>)
+            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">anyhow</span>::<span class="macro">anyhow</span><span class="macro">!</span>(<span class="string">&quot;Primitive::from_u64() returned None&quot;</span>))
+    }
+}
+<span class="comment">// ANCHOR_END: impl_key_for_enumkey</span>
+
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">impl_key_for_primitive</span> {
     (<span class="macro-nonterminal">$</span><span class="kw">type</span>:<span class="macro-nonterminal">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
         <span class="kw">impl</span> <span class="ident">Key</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="kw">type</span> {
@@ -532,6 +613,27 @@
         <span class="ident">vec</span>.<span class="ident">clone</span>(),
         <span class="ident">Cow</span>::<span class="ident">from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">vec</span>.<span class="ident">as_big_endian_bytes</span>()<span class="question-mark">?</span>)<span class="question-mark">?</span>
     );
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="attribute">#[<span class="ident">test</span>]</span>
+<span class="kw">fn</span> <span class="ident">enum_derive_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">num_derive</span>::<span class="ident">ToPrimitive</span>, <span class="ident">num_derive</span>::<span class="ident">FromPrimitive</span>)]</span>
+    <span class="kw">enum</span> <span class="ident">SomeEnum</span> {
+        <span class="ident">One</span> <span class="op">=</span> <span class="number">1</span>,
+        <span class="ident">NineNineNine</span> <span class="op">=</span> <span class="number">999</span>,
+    }
+
+    <span class="kw">impl</span> <span class="ident">EnumKey</span> <span class="kw">for</span> <span class="ident">SomeEnum</span> {}
+
+    <span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">SomeEnum</span>::<span class="ident">One</span>.<span class="ident">as_big_endian_bytes</span>()<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">SomeEnum</span>::<span class="ident">from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>)<span class="question-mark">?</span>;
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="ident">SomeEnum</span>::<span class="ident">One</span>));
+
+    <span class="kw">let</span> <span class="ident">encoded</span> <span class="op">=</span> <span class="ident">SomeEnum</span>::<span class="ident">NineNineNine</span>.<span class="ident">as_big_endian_bytes</span>()<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">SomeEnum</span>::<span class="ident">from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="ident">encoded</span>)<span class="question-mark">?</span>;
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(<span class="ident">value</span>, <span class="ident">SomeEnum</span>::<span class="ident">NineNineNine</span>));
+
     <span class="prelude-val">Ok</span>(())
 }
 </pre></div>

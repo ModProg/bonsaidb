@@ -8,6 +8,13 @@
 </td></tr><tr class="module-item"><td><a class="struct" href="struct.MappedValue.html" title="pliantdb::core::schema::view::map::MappedValue struct">MappedValue</a></td><td class="docblock-short"><p>A key value pair</p>
 </td></tr><tr class="module-item"><td><a class="struct" href="struct.Serialized.html" title="pliantdb::core::schema::view::map::Serialized struct">Serialized</a></td><td class="docblock-short"><p>Represents a document's entry in a View's mappings, serialized and ready to store.</p>
 </td></tr></table><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
-<table><tr class="module-item"><td><a class="trait" href="trait.Key.html" title="pliantdb::core::schema::view::map::Key trait">Key</a></td><td class="docblock-short"><p>A trait that enables a type to convert itself to a big-endian/network byte order.</p>
+<table><tr class="module-item"><td><a class="trait" href="trait.EnumKey.html" title="pliantdb::core::schema::view::map::EnumKey trait">EnumKey</a></td><td class="docblock-short"><p>Adds <code>Key</code> support to an enum. Requires implementing
+<a href="num_traits::ToPrimitive"><code>ToPrimitive</code></a> and
+<a href="num_traits::FromPrimitive"><code>FromPrimitive</code></a>, or using a crate like
+<a href="https://crates.io/crates/num-derive">num-derive</a> to do it automatically.
+Take care when using enums as keys: if the order changes or if the meaning
+of existing numerical values changes, make sure to update any related views'
+version number to ensure the values are re-evaluated.</p>
+</td></tr><tr class="module-item"><td><a class="trait" href="trait.Key.html" title="pliantdb::core::schema::view::map::Key trait">Key</a></td><td class="docblock-short"><p>A trait that enables a type to convert itself to a big-endian/network byte order.</p>
 </td></tr></table></section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../../../../" data-current-crate="pliantdb"></div>
     <script src="../../../../../main.js"></script><script defer src="../../../../../search-index.js"></script></body></html>
