@@ -232,7 +232,7 @@ pub struct BlogPost {
 <p>The above queries the <a href="about/concepts/./database.html">Database</a> for all documents in the <code>BlogPost</code> Collection that emitted a Key of <code>Some(&quot;Rust&quot;)</code>.</p>
 <h2 id="reduce"><a class="header" href="#reduce">Reduce</a></h2>
 <p>The second function to learn about is the <code>reduce()</code> function. It is responsible for turning an array of Key/Value pairs into a single Value. In some cases, PliantDB might need to call <code>reduce()</code> with values that have already been reduced one time. If this is the case, <code>rereduce</code> is set to true.</p>
-<p>In this example, we're using the built-in <code>Iterator::sum()</code>(https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.sum) function to turn our Value of <code>1_u32</code> into a single <code>u32</code> representing the total number of documents.</p>
+<p>In this example, we're using the built-in <a href="https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.sum"><code>Iterator::sum()</code></a> function to turn our Value of <code>1_u32</code> into a single <code>u32</code> representing the total number of documents.</p>
 <pre><code class="language-rust noplayground no_run">    let rust_post_count = db
         .view::&lt;BlogPostsByCategory&gt;()
         .with_key(Some(String::from(&quot;Rust&quot;)))
@@ -269,6 +269,47 @@ pub struct BlogPost {
 <p>When a View is accessed, the queries include an <a href="https://pliantdb.dev/main/pliantdb/core/connection/enum.AccessPolicy.html"><code>AccessPolicy</code></a>. If you aren't overriding it, <a href="https://pliantdb.dev/main/pliantdb/core/connection/enum.AccessPolicy.html#variant.UpdateBefore"><code>UpdateBefore</code></a> is used. This means that when the query is evaluated, PliantDB will first check if the index is out of date due to any updated data. If it is, it will update the View before evaluating the query.</p>
 <p>If you're wanting to get results quickly and are willing to accept data that might not be updated, the access policies <a href="https://pliantdb.dev/main/pliantdb/core/connection/enum.AccessPolicy.html#variant.UpdateAfter"><code>UpdateAfter</code></a> and <a href="https://pliantdb.dev/main/pliantdb/core/connection/enum.AccessPolicy.html#variant.NoUpdate"><code>NoUpdate</code></a> can be used depending on your needs.</p>
 <p>If multiple simulataneous queries are being evaluted for the same View and the View is outdated, PliantDB ensures that only a single view indexer will execute while both queries wait for it to complete.</p>
+<h2 id="using-arbitrary-types-as-a-view-key"><a class="header" href="#using-arbitrary-types-as-a-view-key">Using arbitrary types as a View Key</a></h2>
+<p>In our previous example, we used <code>String</code> for the Key type. The reason is important: Keys must be sortable by <a href="http://sled.rs/">our underlying storage engine</a>, which means special care must be taken. Most serialization types do not guarantee binary sort order. Instead, PliantDB exposes the <a href="https://pliantdb.dev/main/pliantdb/core/schema/trait.Key.html"><code>Key</code></a> trait. On that documentation page, you can see that PliantDB implements <code>Key</code> for many built-in types.</p>
+<h3 id="using-an-enum-as-a-view-key"><a class="header" href="#using-an-enum-as-a-view-key">Using an enum as a View Key</a></h3>
+<p>The easiest way to expose an enum is to derive <a href="https://docs.rs/num-traits/0.2.14/num_traits/cast/trait.FromPrimitive.html"><code>num_traits::FromPrimitive</code></a> and <a href="https://docs.rs/num-traits/0.2.14/num_traits/cast/trait.ToPrimitive.html"><code>num_traits::ToPrimitive</code></a> using <a href="https://lib.rs/num-derive">num-derive</a>, and add an <code>impl EnumKey</code> line:</p>
+<pre><code class="language-rust noplayground no_run">#[derive(Serialize, Deserialize, Debug, num_derive::FromPrimitive, num_derive::ToPrimitive)]
+pub enum Category {
+    Rust,
+    Cooking,
+}
+
+impl EnumKey for Category {}
+</code></pre>
+<p>The View code remains unchanged, although the associated Key type can now be set to <code>Option&lt;Category&gt;</code>. The queries can now use the enum instead of a <code>String</code>:</p>
+<pre><code class="language-rust noplayground no_run">    let rust_post_count = db
+        .view::&lt;BlogPostsByCategory&gt;()
+        .with_key(Some(Category::Rust))
+        .reduce().await?;
+</code></pre>
+<p>PliantDB will convert the enum to a u64 and use that value as the Key. A u64 was chosen to ensure fairly wide compatibility even with some extreme usages of bitmasks. If you wish to customize this behavior, you can implement <code>Key</code> directly.</p>
+<h3 id="implementing-the-key-trait"><a class="header" href="#implementing-the-key-trait">Implementing the <code>Key</code> trait</a></h3>
+<p>The <a href="https://pliantdb.dev/main/pliantdb/core/schema/trait.Key.html"><code>Key</code></a> trait declares two functions: <a href="https://pliantdb.dev/main/pliantdb/core/schema/trait.Key.html#tymethod.as_big_endian_bytes"><code>as_big_endian_bytes()</code></a> and <a href="https://pliantdb.dev/main/pliantdb/core/schema/trait.Key.html#tymethod.from_big_endian_bytes"><code>from_big_endian_bytes</code></a>. The intention is to convert the type to bytes using a network byte order for numerical types, and for non-numerical types, the bytes need to be stored in binary-sortable order.</p>
+<p>Here is how PliantDB implements Key for <code>EnumKey</code>:</p>
+<pre><code class="language-rust noplayground no_run">impl&lt;T&gt; Key for T
+where
+    T: EnumKey,
+{
+    fn as_big_endian_bytes(&amp;self) -&gt; anyhow::Result&lt;Cow&lt;'_, [u8]&gt;&gt; {
+        self.to_u64()
+            .ok_or_else(|| anyhow::anyhow!(&quot;Primitive::to_u64() returned None&quot;))?
+            .as_big_endian_bytes()
+            .map(|bytes| Cow::Owned(bytes.to_vec()))
+    }
+
+    fn from_big_endian_bytes(bytes: &amp;[u8]) -&gt; anyhow::Result&lt;Self&gt; {
+        let primitive = u64::from_big_endian_bytes(bytes)?;
+        Self::from_u64(primitive)
+            .ok_or_else(|| anyhow::anyhow!(&quot;Primitive::from_u64() returned None&quot;))
+    }
+}
+</code></pre>
+<p>By implementing <code>Key</code> you can take full control of converting your view keys.</p>
 <h1 id="schema"><a class="header" href="#schema">Schema</a></h1>
 <p>A <a href="https://pliantdb.dev/main/pliantdb/core/schema/trait.Schema.html">Schema</a> is a group of one or more <a href="about/concepts/./collection.html">Collections</a>. A Schema can be instantiated as a <a href="about/concepts/./database.html">Database</a>. The Schema describes how a set of data behaves, and a Database is a set of data on-disk.</p>
 <h1 id="database"><a class="header" href="#database">Database</a></h1>
@@ -322,6 +363,7 @@ pub struct BlogPost {
 <p>This is an <a href="https://lib.rs/crates/async-trait">async trait</a>, which unfortunately yields <a href="https://pliantdb.dev/main/pliantdb/core/connection/trait.Connection.html">messy documentation</a>.</p>
 <h1 id="serverconnection"><a class="header" href="#serverconnection">ServerConnection</a></h1>
 <p><em>Coming soon.</em></p>
+<p>This is an <a href="https://lib.rs/crates/async-trait">async trait</a>, which unfortunately yields <a href="https://pliantdb.dev/main/pliantdb/core/networking/trait.ServerConnection.html">messy documentation</a>.</p>
 <h1 id="pubsub-traits"><a class="header" href="#pubsub-traits">PubSub Traits</a></h1>
 <p><em>Coming soon.</em></p>
 <p>These are <a href="https://lib.rs/crates/async-trait">async traits</a>, which unfortunately yield messy documentation: <a href="https://pliantdb.dev/main/pliantdb/core/pubsub/trait.PubSub.html">PubSub</a> and <a href="https://pliantdb.dev/main/pliantdb/core/pubsub/trait.Subscriber.html">Subscriber</a>.</p>
