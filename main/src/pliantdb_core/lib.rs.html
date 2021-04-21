@@ -104,6 +104,10 @@
 <span id="101">101</span>
 <span id="102">102</span>
 <span id="103">103</span>
+<span id="104">104</span>
+<span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Core functionality and types for `PliantDB`.</span>
 
@@ -145,7 +149,7 @@
 <span class="doccomment">/// Types for Publish/Subscribe (`PubSub`) messaging.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pubsub</span>;
 
-<span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">CollectionId</span>;
+<span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">CollectionName</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="doccomment">/// an enumeration of errors that this crate can produce</span>
@@ -191,11 +195,15 @@
 
     <span class="doccomment">/// An attempt to update a document that doesn&#39;t exist.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;the requested document id {1} from collection {0} was not found&quot;</span>)]</span>
-    <span class="ident">DocumentNotFound</span>(<span class="ident">CollectionId</span>, <span class="ident">u64</span>),
+    <span class="ident">DocumentNotFound</span>(<span class="ident">CollectionName</span>, <span class="ident">u64</span>),
 
     <span class="doccomment">/// When updating a document, if a situation is detected where the contents have changed on the server since the `Revision` provided, a Conflict error will be returned.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;a conflict was detected while updating document id {1} from collection {0}&quot;</span>)]</span>
-    <span class="ident">DocumentConflict</span>(<span class="ident">CollectionId</span>, <span class="ident">u64</span>),
+    <span class="ident">DocumentConflict</span>(<span class="ident">CollectionName</span>, <span class="ident">u64</span>),
+
+    <span class="doccomment">/// An invalid name was specified during schema creation.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;an invalid name was used in a schema: {0}&quot;</span>)]</span>
+    <span class="ident">InvalidName</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">schema</span>::<span class="ident">InvalidNameError</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">serde_cbor</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {

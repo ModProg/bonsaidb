@@ -812,6 +812,10 @@
 <span id="809">809</span>
 <span id="810">810</span>
 <span id="811">811</span>
+<span id="812">812</span>
+<span id="813">813</span>
+<span id="814">814</span>
+<span id="815">815</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">missing_panics_doc</span>)]</span>
 
@@ -823,7 +827,6 @@
     <span class="ident">time</span>::<span class="ident">Duration</span>,
 };
 
-<span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaId</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -831,7 +834,8 @@
     <span class="ident">document</span>::<span class="ident">Document</span>,
     <span class="ident">limits</span>::{<span class="ident">LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT</span>, <span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span>},
     <span class="ident">schema</span>::{
-        <span class="self">self</span>, <span class="ident">view</span>, <span class="ident">Collection</span>, <span class="ident">CollectionId</span>, <span class="ident">MapResult</span>, <span class="ident">MappedValue</span>, <span class="ident">Schema</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>,
+        <span class="ident">view</span>, <span class="ident">Collection</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">MapResult</span>, <span class="ident">MappedValue</span>, <span class="ident">Name</span>, <span class="ident">Schema</span>,
+        <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>,
     },
     <span class="ident">Error</span>,
 };
@@ -865,13 +869,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">Basic</span> {
-    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span> {
-        <span class="ident">CollectionId</span>::<span class="ident">from</span>(<span class="string">&quot;tests.basic&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">CollectionName</span>::<span class="ident">new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;basic&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {
-        <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicCount</span>);
-        <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicByParentId</span>);
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicCount</span>)<span class="question-mark">?</span>;
+        <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicByParentId</span>)<span class="question-mark">?</span>;
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicByCategory</span>)
     }
 }
@@ -888,8 +892,8 @@
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span> {
-        <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="string">&quot;count&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">Name</span>::<span class="ident">new</span>(<span class="string">&quot;count&quot;</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span> {
@@ -917,8 +921,8 @@
         <span class="number">1</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span> {
-        <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="string">&quot;by-parent-id&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">Name</span>::<span class="ident">new</span>(<span class="string">&quot;by-parent-id&quot;</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span> {
@@ -947,8 +951,8 @@
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span> {
-        <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="string">&quot;by-category&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">Name</span>::<span class="ident">new</span>(<span class="string">&quot;by-category&quot;</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span> {
@@ -983,8 +987,8 @@
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span> {
-        <span class="ident">Cow</span>::<span class="ident">from</span>(<span class="string">&quot;by-parent-id&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">Name</span>::<span class="ident">new</span>(<span class="string">&quot;by-parent-id&quot;</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Key</span>, <span class="self">Self</span>::<span class="ident">Value</span><span class="op">&gt;</span> {
@@ -996,12 +1000,12 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicSchema</span>;
 
 <span class="kw">impl</span> <span class="ident">Schema</span> <span class="kw">for</span> <span class="ident">BasicSchema</span> {
-    <span class="kw">fn</span> <span class="ident">schema_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">SchemaId</span> {
-        <span class="ident">SchemaId</span>::<span class="ident">from</span>(<span class="string">&quot;basic&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">SchemaName</span>::<span class="ident">new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;basic&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {
-        <span class="ident">schema</span>.<span class="ident">define_collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
+    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">schema</span>.<span class="ident">define_collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()
     }
 }
 
@@ -1037,23 +1041,25 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicCollectionWithNoViews</span>;
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">BasicCollectionWithNoViews</span> {
-    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span> {
-        <span class="ident">Basic</span>::<span class="ident">collection_id</span>()
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">Basic</span>::<span class="ident">collection_name</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {}
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(())
+    }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicCollectionWithOnlyBrokenParentId</span>;
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">BasicCollectionWithOnlyBrokenParentId</span> {
-    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span> {
-        <span class="ident">Basic</span>::<span class="ident">collection_id</span>()
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">Basic</span>::<span class="ident">collection_name</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {
-        <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicByBrokenParentId</span>);
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicByBrokenParentId</span>)
     }
 }
 
@@ -1061,11 +1067,13 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UnassociatedCollection</span>;
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">UnassociatedCollection</span> {
-    <span class="kw">fn</span> <span class="ident">collection_id</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">CollectionId</span> {
-        <span class="ident">CollectionId</span>::<span class="ident">from</span>(<span class="string">&quot;unassociated&quot;</span>)
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">CollectionName</span>::<span class="ident">new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;unassociated&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) {}
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(())
+    }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
@@ -1234,7 +1242,7 @@
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">transaction</span>.<span class="ident">changed_documents</span>.<span class="ident">len</span>(), <span class="number">1</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">transaction</span>.<span class="ident">changed_documents</span>[<span class="number">0</span>].<span class="ident">collection</span>,
-            <span class="ident">Basic</span>::<span class="ident">collection_id</span>()
+            <span class="ident">Basic</span>::<span class="ident">collection_name</span>()<span class="question-mark">?</span>
         );
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">transaction</span>.<span class="ident">changed_documents</span>[<span class="number">0</span>].<span class="ident">id</span>, <span class="ident">header</span>.<span class="ident">id</span>);
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">transaction</span>.<span class="ident">changed_documents</span>[<span class="number">0</span>].<span class="ident">deleted</span>, <span class="bool-val">false</span>);
@@ -1250,7 +1258,7 @@
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">transaction</span>.<span class="ident">changed_documents</span>.<span class="ident">len</span>(), <span class="number">1</span>);
     <span class="macro">assert_eq</span><span class="macro">!</span>(
         <span class="ident">transaction</span>.<span class="ident">changed_documents</span>[<span class="number">0</span>].<span class="ident">collection</span>,
-        <span class="ident">Basic</span>::<span class="ident">collection_id</span>()
+        <span class="ident">Basic</span>::<span class="ident">collection_name</span>()<span class="question-mark">?</span>
     );
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">transaction</span>.<span class="ident">changed_documents</span>[<span class="number">0</span>].<span class="ident">id</span>, <span class="ident">header</span>.<span class="ident">id</span>);
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">transaction</span>.<span class="ident">changed_documents</span>[<span class="number">0</span>].<span class="ident">deleted</span>, <span class="bool-val">true</span>);
@@ -1289,7 +1297,7 @@
         .<span class="ident">expect_err</span>(<span class="string">&quot;conflict should have generated an error&quot;</span>)
     {
         <span class="ident">Error</span>::<span class="ident">DocumentConflict</span>(<span class="ident">collection</span>, <span class="ident">id</span>) <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">collection</span>, <span class="ident">Basic</span>::<span class="ident">collection_id</span>());
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">collection</span>, <span class="ident">Basic</span>::<span class="ident">collection_name</span>()<span class="question-mark">?</span>);
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">id</span>, <span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span>);
         }
         <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">anyhow</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">other</span>)),
@@ -1299,10 +1307,10 @@
 }
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">bad_update_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">Document</span>::<span class="ident">with_contents</span>(<span class="number">1</span>, <span class="kw-2">&amp;</span><span class="ident">Basic</span>::<span class="ident">default</span>(), <span class="ident">Basic</span>::<span class="ident">collection_id</span>())<span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">Document</span>::<span class="ident">with_contents</span>(<span class="number">1</span>, <span class="kw-2">&amp;</span><span class="ident">Basic</span>::<span class="ident">default</span>(), <span class="ident">Basic</span>::<span class="ident">collection_name</span>()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
     <span class="kw">match</span> <span class="ident">db</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">doc</span>).<span class="kw">await</span> {
         <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">DocumentNotFound</span>(<span class="ident">collection</span>, <span class="ident">id</span>)) <span class="op">=</span><span class="op">&gt;</span> {
-            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">collection</span>, <span class="ident">Basic</span>::<span class="ident">collection_id</span>());
+            <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">collection</span>, <span class="ident">Basic</span>::<span class="ident">collection_name</span>()<span class="question-mark">?</span>);
             <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">id</span>, <span class="number">1</span>);
             <span class="prelude-val">Ok</span>(())
         }

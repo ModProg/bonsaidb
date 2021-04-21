@@ -5,15 +5,21 @@
 </div><h2 id="modules" class="section-header"><a href="#modules">Modules</a></h2>
 <table><tr class="module-item"><td><a class="mod" href="view/index.html" title="pliantdb_local::core::schema::view mod">view</a></td><td class="docblock-short"><p>Types for defining map/reduce-powered <code>View</code>s.</p>
 </td></tr></table><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
-<table><tr class="module-item"><td><a class="struct" href="struct.CollectionId.html" title="pliantdb_local::core::schema::CollectionId struct">CollectionId</a></td><td class="docblock-short"><p>A unique collection id. Choose collection names that aren't likely to
-conflict with others, so that if someone mixes collections from multiple
-authors in a single database.</p>
+<table><tr class="module-item"><td><a class="struct" href="struct.Authority.html" title="pliantdb_local::core::schema::Authority struct">Authority</a></td><td class="docblock-short"><p>The owner of a schema item. This should represent the company, group, or
+individual that created the item in question. This value is used for
+namespacing. Changing this after values are in use is not supported without
+manual migrations at this time.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.CollectionName.html" title="pliantdb_local::core::schema::CollectionName struct">CollectionName</a></td><td class="docblock-short"><p>The name of a <a href="../../../pliantdb_local/core/schema/trait.Collection.html"><code>Collection</code></a>.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.InvalidNameError.html" title="pliantdb_local::core::schema::InvalidNameError struct">InvalidNameError</a></td><td class="docblock-short"><p>An invalid name was used in a schema definition.</p>
 </td></tr><tr class="module-item"><td><a class="struct" href="struct.Map.html" title="pliantdb_local::core::schema::Map struct">Map</a></td><td class="docblock-short"><p>A document's entry in a View's mappings.</p>
 </td></tr><tr class="module-item"><td><a class="struct" href="struct.MappedDocument.html" title="pliantdb_local::core::schema::MappedDocument struct">MappedDocument</a></td><td class="docblock-short"><p>A document's entry in a View's mappings.</p>
 </td></tr><tr class="module-item"><td><a class="struct" href="struct.MappedValue.html" title="pliantdb_local::core::schema::MappedValue struct">MappedValue</a></td><td class="docblock-short"><p>A key value pair</p>
-</td></tr><tr class="module-item"><td><a class="struct" href="struct.SchemaId.html" title="pliantdb_local::core::schema::SchemaId struct">SchemaId</a></td><td class="docblock-short"><p>The unique Id of a <a href="../../../pliantdb_local/core/schema/trait.Schema.html" title="Schema"><code>Schema</code></a>. Primarily used to try to protect against
-using the incorrect data types across a remote connection.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.Name.html" title="pliantdb_local::core::schema::Name struct">Name</a></td><td class="docblock-short"><p>A valid schema name. Must be alphanumeric (<code>a-zA-Z9-0</code>) or a hyphen (<code>-</code>).
+Cloning this structure shares the underlying string data, regardless of
+whether it's a static string literal or an owned String.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.SchemaName.html" title="pliantdb_local::core::schema::SchemaName struct">SchemaName</a></td><td class="docblock-short"><p>The name of a <a href="../../../pliantdb_local/core/schema/trait.Schema.html"><code>Schema</code></a>.</p>
 </td></tr><tr class="module-item"><td><a class="struct" href="struct.Schematic.html" title="pliantdb_local::core::schema::Schematic struct">Schematic</a></td><td class="docblock-short"><p>A collection of defined collections and views.</p>
+</td></tr><tr class="module-item"><td><a class="struct" href="struct.ViewName.html" title="pliantdb_local::core::schema::ViewName struct">ViewName</a></td><td class="docblock-short"><p>The name of a <a href="../../../pliantdb_local/core/schema/trait.View.html"><code>View</code></a>.</p>
 </td></tr></table><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
 <table><tr class="module-item"><td><a class="trait" href="trait.Collection.html" title="pliantdb_local::core::schema::Collection trait">Collection</a></td><td class="docblock-short"><p>A namespaced collection of <code>Document&lt;Self&gt;</code> items and views.</p>
 </td></tr><tr class="module-item"><td><a class="trait" href="trait.Key.html" title="pliantdb_local::core::schema::Key trait">Key</a></td><td class="docblock-short"><p>A trait that enables a type to convert itself to a big-endian/network byte order.</p>
