@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["pliantdb_core"] = [{"text":"impl <a class=\"trait\" href=\"https://doc.rust-lang.org/nightly/core/cmp/trait.PartialOrd.html\" title=\"trait core::cmp::PartialOrd\">PartialOrd</a>&lt;<a class=\"struct\" href=\"pliantdb_core/kv/struct.Timestamp.html\" title=\"struct pliantdb_core::kv::Timestamp\">Timestamp</a>&gt; for <a class=\"struct\" href=\"pliantdb_core/kv/struct.Timestamp.html\" title=\"struct pliantdb_core::kv::Timestamp\">Timestamp</a>","synthetic":false,"types":["pliantdb_core::kv::Timestamp"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

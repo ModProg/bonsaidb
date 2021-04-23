@@ -320,6 +320,11 @@
 <span id="317">317</span>
 <span id="318">318</span>
 <span id="319">319</span>
+<span id="320">320</span>
+<span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">use</span> <span class="ident">circulate</span>::<span class="ident">Message</span>;
@@ -330,6 +335,7 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">QueryKey</span>},
     <span class="ident">document</span>::<span class="ident">Document</span>,
+    <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>},
     <span class="ident">schema</span>::{
         <span class="self">self</span>,
         <span class="ident">view</span>::{<span class="self">self</span>, <span class="ident">map</span>},
@@ -457,6 +463,8 @@
         <span class="doccomment">/// The id of the [`Subscriber`](crate::pubsub::Subscriber).</span>
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
     },
+    <span class="doccomment">/// Excutes a key-value store operation.</span>
+    <span class="ident">ExecuteKeyOperation</span>(<span class="ident">KeyOperation</span>),
 }
 
 <span class="doccomment">/// A response from a server.</span>
@@ -522,6 +530,8 @@
         <span class="doccomment">/// The message received.</span>
         <span class="ident">message</span>: <span class="ident">Message</span>,
     },
+    <span class="doccomment">/// Output from a [`KeyOperation`] being executed.</span>
+    <span class="ident">KvOutput</span>(<span class="ident">Output</span>),
 }
 
 <span class="doccomment">/// A serialized [`MappedDocument`](map::MappedDocument).</span>

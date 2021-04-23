@@ -282,7 +282,7 @@
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
         <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">pubsub</span>::{<span class="ident">PubSub</span>, <span class="ident">Subscriber</span>};
 
-        <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>(<span class="ident">flavor</span> <span class="op">=</span> <span class="string">&quot;multi_thread&quot;</span>)]</span>
+        <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
         <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">simple_pubsub_test</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness</span>::<span class="ident">new</span>(<span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">test_util</span>::<span class="ident">HarnessTest</span>::<span class="ident">PubSubSimple</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">pubsub</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
@@ -304,7 +304,7 @@
             <span class="prelude-val">Ok</span>(())
         }
 
-        <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>(<span class="ident">flavor</span> <span class="op">=</span> <span class="string">&quot;multi_thread&quot;</span>)]</span>
+        <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
         <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">multiple_subscribers_test</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span>
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness</span>::<span class="ident">new</span>(<span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">test_util</span>::<span class="ident">HarnessTest</span>::<span class="ident">PubSubMultipleSubscribers</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -335,7 +335,7 @@
             <span class="prelude-val">Ok</span>(())
         }
 
-        <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>(<span class="ident">flavor</span> <span class="op">=</span> <span class="string">&quot;multi_thread&quot;</span>)]</span>
+        <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
         <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unsubscribe_test</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness</span>::<span class="ident">new</span>(<span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">test_util</span>::<span class="ident">HarnessTest</span>::<span class="ident">PubSubUnsubscribe</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">pubsub</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;

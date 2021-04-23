@@ -1254,6 +1254,35 @@
 <span id="1251">1251</span>
 <span id="1252">1252</span>
 <span id="1253">1253</span>
+<span id="1254">1254</span>
+<span id="1255">1255</span>
+<span id="1256">1256</span>
+<span id="1257">1257</span>
+<span id="1258">1258</span>
+<span id="1259">1259</span>
+<span id="1260">1260</span>
+<span id="1261">1261</span>
+<span id="1262">1262</span>
+<span id="1263">1263</span>
+<span id="1264">1264</span>
+<span id="1265">1265</span>
+<span id="1266">1266</span>
+<span id="1267">1267</span>
+<span id="1268">1268</span>
+<span id="1269">1269</span>
+<span id="1270">1270</span>
+<span id="1271">1271</span>
+<span id="1272">1272</span>
+<span id="1273">1273</span>
+<span id="1274">1274</span>
+<span id="1275">1275</span>
+<span id="1276">1276</span>
+<span id="1277">1277</span>
+<span id="1278">1278</span>
+<span id="1279">1279</span>
+<span id="1280">1280</span>
+<span id="1281">1281</span>
+<span id="1282">1282</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any</span>::<span class="ident">Any</span>,
@@ -1278,6 +1307,7 @@
     <span class="ident">circulate</span>::{<span class="ident">Message</span>, <span class="ident">Relay</span>, <span class="ident">Subscriber</span>},
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>},
     <span class="ident">document</span>::<span class="ident">Document</span>,
+    <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Kv</span>, <span class="ident">Output</span>},
     <span class="ident">networking</span>::{
         <span class="self">self</span>,
         <span class="ident">fabruic</span>::{<span class="self">self</span>, <span class="ident">Certificate</span>, <span class="ident">Endpoint</span>, <span class="ident">PrivateKey</span>},
@@ -1415,6 +1445,11 @@
 
         <span class="comment">// Open the database.</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">open_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">open_databases</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="comment">// Check that we weren&#39;t in a race to initialize this database.</span>
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">db</span>) <span class="op">=</span> <span class="ident">open_databases</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">db</span>.<span class="ident">clone</span>());
+        }
+
         <span class="kw">let</span> <span class="ident">schema</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>
             .<span class="ident">data</span>
             .<span class="ident">admin</span>
@@ -1876,6 +1911,9 @@
                 <span class="self">self</span>.<span class="ident">handle_database_unregister_subscriber</span>(<span class="ident">subscriber_id</span>, <span class="ident">subscribers</span>)
                     .<span class="kw">await</span>
             }
+            <span class="ident">DatabaseRequest</span>::<span class="ident">ExecuteKeyOperation</span>(<span class="ident">op</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="self">self</span>.<span class="ident">handle_database_kv_request</span>(<span class="ident">database</span>, <span class="ident">op</span>).<span class="kw">await</span>
+            }
         }
     }
 
@@ -2060,6 +2098,16 @@
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="prelude-val">Ok</span>)
         }
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_database_kv_request</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">database</span>: <span class="ident">String</span>,
+        <span class="ident">op</span>: <span class="ident">KeyOperation</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">open_database_without_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">execute_key_operation</span>(<span class="ident">op</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>::<span class="ident">KvOutput</span>(<span class="ident">result</span>)))
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">forward_notifications_for</span>(
@@ -2278,6 +2326,9 @@
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_key_operation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">op</span>: <span class="ident">KeyOperation</span>)
+        <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
@@ -2402,6 +2453,13 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">Connection</span>::<span class="ident">last_transaction_id</span>(<span class="self">self</span>).<span class="kw">await</span>
     }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_key_operation</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">op</span>: <span class="ident">KeyOperation</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">Kv</span>::<span class="ident">execute_key_operation</span>(<span class="self">self</span>, <span class="ident">op</span>).<span class="kw">await</span>
+    }
 }
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -2421,7 +2479,7 @@
     ));
 }
 
-<span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>(<span class="ident">flavor</span> <span class="op">=</span> <span class="string">&quot;multi_thread&quot;</span>)]</span>
+<span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">opening_databases_test</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
     <span class="prelude-val">Ok</span>(())
 }

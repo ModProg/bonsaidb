@@ -874,8 +874,67 @@
 <span id="871">871</span>
 <span id="872">872</span>
 <span id="873">873</span>
+<span id="874">874</span>
+<span id="875">875</span>
+<span id="876">876</span>
+<span id="877">877</span>
+<span id="878">878</span>
+<span id="879">879</span>
+<span id="880">880</span>
+<span id="881">881</span>
+<span id="882">882</span>
+<span id="883">883</span>
+<span id="884">884</span>
+<span id="885">885</span>
+<span id="886">886</span>
+<span id="887">887</span>
+<span id="888">888</span>
+<span id="889">889</span>
+<span id="890">890</span>
+<span id="891">891</span>
+<span id="892">892</span>
+<span id="893">893</span>
+<span id="894">894</span>
+<span id="895">895</span>
+<span id="896">896</span>
+<span id="897">897</span>
+<span id="898">898</span>
+<span id="899">899</span>
+<span id="900">900</span>
+<span id="901">901</span>
+<span id="902">902</span>
+<span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
+<span id="911">911</span>
+<span id="912">912</span>
+<span id="913">913</span>
+<span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
+<span id="924">924</span>
+<span id="925">925</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">collections</span>::<span class="ident">HashMap</span>, <span class="ident">marker</span>::<span class="ident">PhantomData</span>, <span class="ident">path</span>::<span class="ident">Path</span>, <span class="ident">sync</span>::<span class="ident">Arc</span>, <span class="ident">u8</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">borrow</span>::<span class="ident">Cow</span>,
+    <span class="ident">collections</span>::<span class="ident">HashMap</span>,
+    <span class="ident">marker</span>::<span class="ident">PhantomData</span>,
+    <span class="ident">path</span>::<span class="ident">Path</span>,
+    <span class="ident">sync</span>::{<span class="ident">Arc</span>, <span class="ident">RwLock</span>},
+    <span class="ident">u8</span>,
+};
 
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">use</span> <span class="ident">itertools</span>::<span class="ident">Itertools</span>;
@@ -897,6 +956,7 @@
     <span class="ident">IVec</span>, <span class="ident">Transactional</span>, <span class="ident">Tree</span>,
 };
 
+<span class="kw">use</span> <span class="self">self</span>::<span class="ident">kv</span>::<span class="ident">ExpirationUpdate</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">config</span>::<span class="ident">Configuration</span>,
     <span class="ident">error</span>::{<span class="ident">Error</span>, <span class="ident">ResultExt</span> <span class="kw">as</span> <span class="kw">_</span>},
@@ -904,6 +964,8 @@
     <span class="ident">tasks</span>::<span class="ident">TaskManager</span>,
     <span class="ident">views</span>::{<span class="ident">view_entries_tree_name</span>, <span class="ident">view_invalidated_docs_tree_name</span>, <span class="ident">ViewEntry</span>},
 };
+
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">kv</span>;
 
 <span class="doccomment">/// A local, file-based database.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
@@ -917,6 +979,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">sled</span>: <span class="ident">sled</span>::<span class="ident">Db</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tasks</span>: <span class="ident">TaskManager</span>,
     <span class="ident">relay</span>: <span class="ident">Relay</span>,
+    <span class="ident">kv_expirer</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">kv</span>::<span class="ident">ExpirationUpdate</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">_schema</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
 }
 
@@ -933,10 +996,6 @@
     <span class="ident">DB</span>: <span class="ident">Schema</span>,
 {
     <span class="doccomment">/// Opens a local file as a pliantdb.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// # Panics</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Panics if `tokio::task::spawn_blocking` fails</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open_local</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
         <span class="ident">path</span>: <span class="ident">P</span>,
         <span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="ident">Configuration</span>,
@@ -957,6 +1016,7 @@
                         <span class="ident">sled</span>,
                         <span class="ident">schema</span>,
                         <span class="ident">tasks</span>,
+                        <span class="ident">kv_expirer</span>: <span class="ident">RwLock</span>::<span class="ident">default</span>(),
                         <span class="ident">relay</span>: <span class="ident">Relay</span>::<span class="ident">default</span>(),
                         <span class="ident">_schema</span>: <span class="ident">PhantomData</span>::<span class="ident">default</span>(),
                     }),
@@ -976,6 +1036,12 @@
             }
         }
 
+        <span class="ident">storage</span>
+            .<span class="ident">data</span>
+            .<span class="ident">tasks</span>
+            .<span class="ident">spawn_key_value_expiration_loader</span>(<span class="kw-2">&amp;</span><span class="ident">storage</span>)
+            .<span class="kw">await</span>;
+
         <span class="prelude-val">Ok</span>(<span class="ident">storage</span>)
     }
 
@@ -983,6 +1049,29 @@
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">schematic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">Schematic</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schema</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">update_key_expiration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">update</span>: <span class="ident">ExpirationUpdate</span>) {
+        {
+            <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">kv_expirer</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sender</span>) <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">as_ref</span>() {
+                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">update</span>);
+                <span class="kw">return</span>;
+            }
+        }
+
+        <span class="comment">// If we fall through, we need to initialize the expirer task</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">kv_expirer</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+        <span class="kw">if</span> <span class="ident">sender</span>.<span class="ident">is_none</span>() {
+            <span class="kw">let</span> (<span class="ident">kv_sender</span>, <span class="ident">kv_expirer_receiver</span>) <span class="op">=</span> <span class="ident">flume</span>::<span class="ident">unbounded</span>();
+            <span class="kw">let</span> <span class="ident">thread_sled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">sled</span>.<span class="ident">clone</span>();
+            <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+                <span class="ident">kv</span>::<span class="ident">expiration_thread</span>(<span class="ident">kv_expirer_receiver</span>, <span class="ident">thread_sled</span>)
+            });
+            <span class="kw-2">*</span><span class="ident">sender</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">kv_sender</span>);
+        }
+
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">as_ref</span>().<span class="ident">unwrap</span>().<span class="ident">send</span>(<span class="ident">update</span>);
     }
 }
 
@@ -1117,8 +1206,9 @@
             .<span class="ident">unwrap_or</span>(<span class="ident">LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT</span>)
             .<span class="ident">min</span>(<span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span>);
         <span class="kw">if</span> <span class="ident">result_limit</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">block_in_place</span>(<span class="op">|</span><span class="op">|</span> {
-                <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>
+            <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
+            <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+                <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">task_self</span>
                     .<span class="ident">data</span>
                     .<span class="ident">sled</span>
                     .<span class="ident">open_tree</span>(<span class="ident">TRANSACTION_TREE_NAME</span>)
@@ -1145,6 +1235,8 @@
                 }
                 <span class="prelude-val">Ok</span>(<span class="ident">results</span>)
             })
+            .<span class="kw">await</span>
+            .<span class="ident">unwrap</span>()
         } <span class="kw">else</span> {
             <span class="comment">// A request was made to return an empty result? This should probably be</span>
             <span class="comment">// an error, but technically this is a correct response.</span>
@@ -1276,8 +1368,9 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">block_in_place</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>
+        <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
+        <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">task_self</span>
                 .<span class="ident">data</span>
                 .<span class="ident">sled</span>
                 .<span class="ident">open_tree</span>(<span class="ident">TRANSACTION_TREE_NAME</span>)
@@ -1292,6 +1385,8 @@
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
             }
         })
+        .<span class="kw">await</span>
+        .<span class="ident">unwrap</span>()
     }
 }
 
@@ -1632,11 +1727,13 @@
         <span class="ident">id</span>: <span class="ident">u64</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">block_in_place</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>
+        <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
+        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">clone</span>();
+        <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">task_self</span>
                 .<span class="ident">data</span>
                 .<span class="ident">sled</span>
-                .<span class="ident">open_tree</span>(<span class="ident">document_tree_name</span>(<span class="ident">collection</span>))
+                .<span class="ident">open_tree</span>(<span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>))
                 .<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>;
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">vec</span>) <span class="op">=</span> <span class="ident">tree</span>
                 .<span class="ident">get</span>(
@@ -1655,6 +1752,8 @@
                 <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
             }
         })
+        .<span class="kw">await</span>
+        .<span class="ident">unwrap</span>()
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple_from_collection_id</span>(
@@ -1662,11 +1761,14 @@
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">u64</span>],
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">block_in_place</span>(<span class="op">|</span><span class="op">|</span> {
-            <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="self">self</span>
+        <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
+        <span class="kw">let</span> <span class="ident">ids</span> <span class="op">=</span> <span class="ident">ids</span>.<span class="ident">to_vec</span>();
+        <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">clone</span>();
+        <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">task_self</span>
                 .<span class="ident">data</span>
                 .<span class="ident">sled</span>
-                .<span class="ident">open_tree</span>(<span class="ident">document_tree_name</span>(<span class="ident">collection</span>))
+                .<span class="ident">open_tree</span>(<span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="ident">collection</span>))
                 .<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">found_docs</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
             <span class="kw">for</span> <span class="ident">id</span> <span class="kw">in</span> <span class="ident">ids</span> {
@@ -1688,6 +1790,8 @@
 
             <span class="prelude-val">Ok</span>(<span class="ident">found_docs</span>)
         })
+        .<span class="kw">await</span>
+        .<span class="ident">unwrap</span>()
     }
 
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">missing_panics_doc</span>)]</span> <span class="comment">// the only unwrap is impossible to fail</span>
