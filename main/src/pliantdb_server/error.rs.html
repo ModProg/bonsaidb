@@ -137,6 +137,25 @@
 <span id="134">134</span>
 <span id="135">135</span>
 <span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
+<span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 
@@ -163,7 +182,7 @@
 
     <span class="doccomment">/// An error occurred from the QUIC transport layer.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;a networking error occurred: &#39;{0}&#39;&quot;</span>)]</span>
-    <span class="ident">Transport</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">fabruic</span>::<span class="ident">Error</span>),
+    <span class="ident">Transport</span>(<span class="ident">String</span>),
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
     <span class="doccomment">/// An error occurred from the Websocket transport layer.</span>
@@ -215,7 +234,7 @@
             <span class="ident">Error</span>::<span class="ident">Storage</span>(<span class="ident">storage</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Storage</span>(<span class="ident">storage</span>.<span class="ident">to_string</span>()),
             <span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">core</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">core</span>,
             <span class="ident">Error</span>::<span class="ident">Io</span>(<span class="ident">io</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Io</span>(<span class="ident">io</span>.<span class="ident">to_string</span>()),
-            <span class="ident">Error</span>::<span class="ident">Transport</span>(<span class="ident">networking</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Transport</span>(<span class="ident">networking</span>.<span class="ident">to_string</span>()),
+            <span class="ident">Error</span>::<span class="ident">Transport</span>(<span class="ident">networking</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Transport</span>(<span class="ident">networking</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
             <span class="ident">Error</span>::<span class="ident">Websocket</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Websocket</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()),
             <span class="ident">Error</span>::<span class="ident">InvalidDatabaseName</span>(<span class="ident">name</span>) <span class="op">=</span><span class="op">&gt;</span> {
@@ -274,6 +293,25 @@
         )))
     }
 }
+
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">impl_from_fabruic</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+            <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+                <span class="self">Self</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Transport</span>(<span class="ident">other</span>.<span class="ident">to_string</span>()))
+            }
+        }
+    };
+}
+
+<span class="macro">impl_from_fabruic</span><span class="macro">!</span>(<span class="ident">fabruic</span>::<span class="ident">error</span>::<span class="ident">CertificateChain</span>);
+<span class="macro">impl_from_fabruic</span><span class="macro">!</span>(<span class="ident">fabruic</span>::<span class="ident">error</span>::<span class="ident">Receiver</span>);
+<span class="macro">impl_from_fabruic</span><span class="macro">!</span>(<span class="ident">fabruic</span>::<span class="ident">error</span>::<span class="ident">Connecting</span>);
+<span class="macro">impl_from_fabruic</span><span class="macro">!</span>(<span class="ident">fabruic</span>::<span class="ident">error</span>::<span class="ident">PrivateKey</span>);
+<span class="macro">impl_from_fabruic</span><span class="macro">!</span>(<span class="ident">fabruic</span>::<span class="ident">error</span>::<span class="ident">KeyPair</span>);
+<span class="macro">impl_from_fabruic</span><span class="macro">!</span>(<span class="ident">fabruic</span>::<span class="ident">error</span>::<span class="ident">Connection</span>);
+<span class="macro">impl_from_fabruic</span><span class="macro">!</span>(<span class="ident">fabruic</span>::<span class="ident">error</span>::<span class="ident">Incoming</span>);
+<span class="macro">impl_from_fabruic</span><span class="macro">!</span>(<span class="ident">fabruic</span>::<span class="ident">error</span>::<span class="ident">AlreadyClosed</span>);
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pliantdb_server"></div>
     <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
