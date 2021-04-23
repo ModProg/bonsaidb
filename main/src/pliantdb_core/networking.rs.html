@@ -325,6 +325,18 @@
 <span id="322">322</span>
 <span id="323">323</span>
 <span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">use</span> <span class="ident">circulate</span>::<span class="ident">Message</span>;
@@ -442,8 +454,20 @@
     <span class="ident">LastTransactionId</span>,
     <span class="doccomment">/// Creates a `PubSub` [`Subscriber`](crate::pubsub::Subscriber)</span>
     <span class="ident">CreateSubscriber</span>,
-    <span class="doccomment">/// Publishes a `PubSub` message.</span>
-    <span class="ident">Publish</span>(<span class="ident">Message</span>),
+    <span class="doccomment">/// Publishes `payload` to all subscribers of `topic`.</span>
+    <span class="ident">Publish</span> {
+        <span class="doccomment">/// The topics to publish to.</span>
+        <span class="ident">topic</span>: <span class="ident">String</span>,
+        <span class="doccomment">/// The payload to publish.</span>
+        <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    },
+    <span class="doccomment">/// Publishes `payload` to all subscribers of all `topics`.</span>
+    <span class="ident">PublishToAll</span> {
+        <span class="doccomment">/// The topics to publish to.</span>
+        <span class="ident">topics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// The payload to publish.</span>
+        <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    },
     <span class="doccomment">/// Subscribes `subscriber_id` to messages for `topic`.</span>
     <span class="ident">SubscribeTo</span> {
         <span class="doccomment">/// The id of the [`Subscriber`](crate::pubsub::Subscriber).</span>
