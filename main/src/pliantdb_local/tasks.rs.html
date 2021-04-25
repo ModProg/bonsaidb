@@ -173,6 +173,7 @@
 <span id="170">170</span>
 <span id="171">171</span>
 <span id="172">172</span>
+<span id="173">173</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>},
@@ -187,7 +188,7 @@
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">RwLock</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">storage</span>::{<span class="ident">kv</span>::<span class="ident">ExpirationLoader</span>, <span class="ident">Storage</span>},
+    <span class="ident">storage</span>::<span class="ident">Storage</span>,
     <span class="ident">views</span>::{
         <span class="ident">integrity_scanner</span>::{<span class="ident">IntegrityScan</span>, <span class="ident">IntegrityScanner</span>},
         <span class="ident">mapper</span>::{<span class="ident">Map</span>, <span class="ident">Mapper</span>},
@@ -335,12 +336,13 @@
             .<span class="ident">insert</span>((<span class="ident">collection</span>, <span class="ident">view_name</span>), <span class="ident">transaction_id</span>);
     }
 
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">spawn_key_value_expiration_loader</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">storage</span>: <span class="kw-2">&amp;</span><span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span>(), <span class="ident">Task</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">jobs</span>
-            .<span class="ident">enqueue</span>(<span class="ident">ExpirationLoader</span> {
+            .<span class="ident">enqueue</span>(<span class="kw">crate</span>::<span class="ident">storage</span>::<span class="ident">kv</span>::<span class="ident">ExpirationLoader</span> {
                 <span class="ident">storage</span>: <span class="ident">storage</span>.<span class="ident">clone</span>(),
             })
             .<span class="kw">await</span>

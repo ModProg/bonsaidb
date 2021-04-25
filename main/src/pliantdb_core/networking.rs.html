@@ -337,9 +337,9 @@
 <span id="334">334</span>
 <span id="335">335</span>
 <span id="336">336</span>
+<span id="337">337</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
-<span class="kw">use</span> <span class="ident">circulate</span>::<span class="ident">Message</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fabruic</span>;
 <span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaName</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de</span>::<span class="ident">DeserializeOwned</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -551,8 +551,10 @@
     <span class="ident">MessageReceived</span> {
         <span class="doccomment">/// The ID of the subscriber receiving the message.</span>
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
-        <span class="doccomment">/// The message received.</span>
-        <span class="ident">message</span>: <span class="ident">Message</span>,
+        <span class="doccomment">/// The topic the payload was received on.</span>
+        <span class="ident">topic</span>: <span class="ident">String</span>,
+        <span class="doccomment">/// The message payload.</span>
+        <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Output from a [`KeyOperation`] being executed.</span>
     <span class="ident">KvOutput</span>(<span class="ident">Output</span>),
