@@ -427,6 +427,12 @@
 <span id="424">424</span>
 <span id="425">425</span>
 <span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Local database tool to save and load databases into plain an easy-to-consume</span>
 <span class="doccomment">//! filesystem structure.</span>
@@ -495,7 +501,11 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// This command will create a single folder within `output_directory` named</span>
     <span class="doccomment">/// `output_name`. Within that folder, one subfolder will be created for</span>
-    <span class="doccomment">/// each collection [`CollectionName`]. Each folder will contain files named</span>
+    <span class="doccomment">/// each database [`Database`](crate::Database). Inside of each database</span>
+    <span class="doccomment">/// folder will be a folder of any transactions (`_transactions`), as well</span>
+    <span class="doccomment">/// as one folder for each collection&#39;s [`CollectionName`]. The transactions</span>
+    <span class="doccomment">/// folder will have one file for each [`Executed`] transaction. Each</span>
+    <span class="doccomment">/// collection folder will contain files named</span>
     <span class="doccomment">/// `&lt;Document.header.id&gt;.&lt;Document.header.revision.id&gt;`, and the files will</span>
     <span class="doccomment">/// contain the raw bytes stored inside of the documents. Assuming you&#39;re</span>
     <span class="doccomment">/// using the built in Serialization, the data will be in the</span>
@@ -616,9 +626,11 @@
 
             <span class="prelude-val">Ok</span>(())
         })
-        .<span class="kw">await</span><span class="question-mark">?</span><span class="question-mark">?</span>;
+        .<span class="kw">await</span>
+        .<span class="ident">unwrap</span>()
+        .<span class="ident">unwrap</span>();
 
-        <span class="ident">document_writer</span>.<span class="kw">await</span><span class="question-mark">?</span>
+        <span class="ident">document_writer</span>.<span class="kw">await</span>.<span class="ident">unwrap</span>()
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">load</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database_path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">backup</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
