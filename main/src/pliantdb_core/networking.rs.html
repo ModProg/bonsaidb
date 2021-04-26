@@ -263,89 +263,13 @@
 <span id="260">260</span>
 <span id="261">261</span>
 <span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
-<span id="284">284</span>
-<span id="285">285</span>
-<span id="286">286</span>
-<span id="287">287</span>
-<span id="288">288</span>
-<span id="289">289</span>
-<span id="290">290</span>
-<span id="291">291</span>
-<span id="292">292</span>
-<span id="293">293</span>
-<span id="294">294</span>
-<span id="295">295</span>
-<span id="296">296</span>
-<span id="297">297</span>
-<span id="298">298</span>
-<span id="299">299</span>
-<span id="300">300</span>
-<span id="301">301</span>
-<span id="302">302</span>
-<span id="303">303</span>
-<span id="304">304</span>
-<span id="305">305</span>
-<span id="306">306</span>
-<span id="307">307</span>
-<span id="308">308</span>
-<span id="309">309</span>
-<span id="310">310</span>
-<span id="311">311</span>
-<span id="312">312</span>
-<span id="313">313</span>
-<span id="314">314</span>
-<span id="315">315</span>
-<span id="316">316</span>
-<span id="317">317</span>
-<span id="318">318</span>
-<span id="319">319</span>
-<span id="320">320</span>
-<span id="321">321</span>
-<span id="322">322</span>
-<span id="323">323</span>
-<span id="324">324</span>
-<span id="325">325</span>
-<span id="326">326</span>
-<span id="327">327</span>
-<span id="328">328</span>
-<span id="329">329</span>
-<span id="330">330</span>
-<span id="331">331</span>
-<span id="332">332</span>
-<span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fabruic</span>;
 <span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaName</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de</span>::<span class="ident">DeserializeOwned</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">QueryKey</span>},
+    <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Database</span>, <span class="ident">QueryKey</span>},
     <span class="ident">document</span>::<span class="ident">Document</span>,
     <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>},
     <span class="ident">schema</span>::{
@@ -576,10 +500,11 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deserialized</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span>, <span class="ident">V</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="ident">DeserializeOwned</span><span class="op">&gt;</span>(
         <span class="self">self</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">map</span>::<span class="ident">MappedDocument</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Key</span>::<span class="ident">from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">Storage</span>(<span class="ident">view</span>::<span class="ident">Error</span>::<span class="ident">KeySerialization</span>(<span class="ident">err</span>).<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Key</span>::<span class="ident">from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+            <span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">Database</span>(<span class="ident">view</span>::<span class="ident">Error</span>::<span class="ident">KeySerialization</span>(<span class="ident">err</span>).<span class="ident">to_string</span>())
+        })<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">serde_cbor</span>::<span class="ident">from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">Storage</span>(<span class="ident">view</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>).<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">Database</span>(<span class="ident">view</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">err</span>).<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">map</span>::<span class="ident">MappedDocument</span> {
             <span class="ident">document</span>: <span class="self">self</span>.<span class="ident">source</span>,
@@ -589,60 +514,9 @@
     }
 }
 
-<span class="doccomment">/// A database on a server.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Database</span> {
-    <span class="doccomment">/// The name of the database.</span>
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// The schema defining the database.</span>
-    <span class="kw">pub</span> <span class="ident">schema</span>: <span class="ident">SchemaName</span>,
-}
-
-<span class="doccomment">/// Functions for interacting with a `PliantDB` server.</span>
-<span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ServerConnection</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> {
-    <span class="doccomment">/// Creates a database named `name` using the [`SchemaName`] `schema`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * [`Error::InvalidDatabaseName`]: `name` must begin with an alphanumeric</span>
-    <span class="doccomment">///   character (`[a-zA-Z0-9]`), and all remaining characters must be</span>
-    <span class="doccomment">///   alphanumeric, a period (`.`), or a hyphen (`-`).</span>
-    <span class="doccomment">/// * [`Error::DatabaseNameAlreadyTaken]: `name` was already used for a</span>
-    <span class="doccomment">///   previous database name. Database names are case insensitive.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">schema</span>: <span class="ident">SchemaName</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Deletes a database named `name`.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// ## Errors</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// * [`Error::DatabaseNotFound`]: database `name` does not exist.</span>
-    <span class="doccomment">/// * [`Error::Core(core::Error::Io)`]: an error occurred while deleting files.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Lists the databases on this server.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-
-    <span class="doccomment">/// Lists the [`SchemaName`]s on this server.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaName</span><span class="op">&gt;</span>, <span class="kw">crate</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
-}
-
 <span class="doccomment">/// A networking error.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">thiserror</span>::<span class="ident">Error</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
-    <span class="doccomment">/// An invalid database name was specified. See</span>
-    <span class="doccomment">/// [`ServerConnection::create_database()`] for database name requirements.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;invalid database name: {0}&quot;</span>)]</span>
-    <span class="ident">InvalidDatabaseName</span>(<span class="ident">String</span>),
-
-    <span class="doccomment">/// The database name given was not found.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;database &#39;{0}&#39; was not found&quot;</span>)]</span>
-    <span class="ident">DatabaseNotFound</span>(<span class="ident">String</span>),
-
-    <span class="doccomment">/// The database name already exists.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;a database with name &#39;{0}&#39; already exists&quot;</span>)]</span>
-    <span class="ident">DatabaseNameAlreadyTaken</span>(<span class="ident">String</span>),
-
     <span class="doccomment">/// The server responded with a message that wasn&#39;t expected for the request</span>
     <span class="doccomment">/// sent.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;unexpected response: {0}&quot;</span>)]</span>
@@ -651,30 +525,6 @@
     <span class="doccomment">/// The connection was interrupted.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;unexpected disconnection&quot;</span>)]</span>
     <span class="ident">Disconnected</span>,
-
-    <span class="doccomment">/// The database named `database_name` was created with a different schema</span>
-    <span class="doccomment">/// (`stored_schema`) than provided (`schema`).</span>
-    <span class="attribute">#[<span class="ident">error</span>(
-        <span class="string">&quot;database &#39;{database_name}&#39; was created with schema &#39;{stored_schema}&#39;, not &#39;{schema}&#39;&quot;</span>
-    )]</span>
-    <span class="ident">SchemaMismatch</span> {
-        <span class="doccomment">/// The name of the database being accessed.</span>
-        <span class="ident">database_name</span>: <span class="ident">String</span>,
-
-        <span class="doccomment">/// The schema provided for the database.</span>
-        <span class="ident">schema</span>: <span class="ident">SchemaName</span>,
-
-        <span class="doccomment">/// The schema stored for the database.</span>
-        <span class="ident">stored_schema</span>: <span class="ident">SchemaName</span>,
-    },
-
-    <span class="doccomment">/// The [`SchemaName`] returned has already been registered with this server.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;schema &#39;{0}&#39; was already registered&quot;</span>)]</span>
-    <span class="ident">SchemaAlreadyRegistered</span>(<span class="ident">SchemaName</span>),
-
-    <span class="doccomment">/// The [`SchemaName`] requested was not registered with this server.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;schema &#39;{0}&#39; is not registered with this server&quot;</span>)]</span>
-    <span class="ident">SchemaNotRegistered</span>(<span class="ident">SchemaName</span>),
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pliantdb_core"></div>

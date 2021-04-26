@@ -1064,6 +1064,60 @@
 <span id="1061">1061</span>
 <span id="1062">1062</span>
 <span id="1063">1063</span>
+<span id="1064">1064</span>
+<span id="1065">1065</span>
+<span id="1066">1066</span>
+<span id="1067">1067</span>
+<span id="1068">1068</span>
+<span id="1069">1069</span>
+<span id="1070">1070</span>
+<span id="1071">1071</span>
+<span id="1072">1072</span>
+<span id="1073">1073</span>
+<span id="1074">1074</span>
+<span id="1075">1075</span>
+<span id="1076">1076</span>
+<span id="1077">1077</span>
+<span id="1078">1078</span>
+<span id="1079">1079</span>
+<span id="1080">1080</span>
+<span id="1081">1081</span>
+<span id="1082">1082</span>
+<span id="1083">1083</span>
+<span id="1084">1084</span>
+<span id="1085">1085</span>
+<span id="1086">1086</span>
+<span id="1087">1087</span>
+<span id="1088">1088</span>
+<span id="1089">1089</span>
+<span id="1090">1090</span>
+<span id="1091">1091</span>
+<span id="1092">1092</span>
+<span id="1093">1093</span>
+<span id="1094">1094</span>
+<span id="1095">1095</span>
+<span id="1096">1096</span>
+<span id="1097">1097</span>
+<span id="1098">1098</span>
+<span id="1099">1099</span>
+<span id="1100">1100</span>
+<span id="1101">1101</span>
+<span id="1102">1102</span>
+<span id="1103">1103</span>
+<span id="1104">1104</span>
+<span id="1105">1105</span>
+<span id="1106">1106</span>
+<span id="1107">1107</span>
+<span id="1108">1108</span>
+<span id="1109">1109</span>
+<span id="1110">1110</span>
+<span id="1111">1111</span>
+<span id="1112">1112</span>
+<span id="1113">1113</span>
+<span id="1114">1114</span>
+<span id="1115">1115</span>
+<span id="1116">1116</span>
+<span id="1117">1117</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">missing_panics_doc</span>)]</span>
 
@@ -1078,7 +1132,7 @@
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>},
+    <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">ServerConnection</span>},
     <span class="ident">document</span>::<span class="ident">Document</span>,
     <span class="ident">limits</span>::{<span class="ident">LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT</span>, <span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span>},
     <span class="ident">schema</span>::{
@@ -1326,7 +1380,8 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">HarnessTest</span> {
-    <span class="ident">StoreRetrieveUpdate</span> <span class="op">=</span> <span class="number">1</span>,
+    <span class="ident">ServerConnectionTests</span> <span class="op">=</span> <span class="number">1</span>,
+    <span class="ident">StoreRetrieveUpdate</span>,
     <span class="ident">NotFound</span>,
     <span class="ident">Conflict</span>,
     <span class="ident">BadUpdate</span>,
@@ -1366,6 +1421,15 @@
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">define_connection_test_suite</span> {
     (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">server_connection_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+            <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span>
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness</span>::<span class="ident">new</span>(<span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">test_util</span>::<span class="ident">HarnessTest</span>::<span class="ident">ServerConnectionTests</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">server</span>();
+            <span class="macro-nonterminal">$</span><span class="kw">crate</span>::<span class="macro-nonterminal">test_util</span>::<span class="ident">basic_server_connection_tests</span>(<span class="ident">db</span>.<span class="ident">clone</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="ident">harness</span>.<span class="ident">shutdown</span>().<span class="kw">await</span>
+        }
+
         <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
         <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">store_retrieve_update_delete</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span>
@@ -2017,10 +2081,11 @@
                 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">r2</span><span class="question-mark">?</span>, <span class="ident">KeyStatus</span>::<span class="ident">Updated</span>, <span class="string">&quot;b wasn&#39;t an update&quot;</span>);
 
                 <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">kv</span>.<span class="ident">get_key</span>::<span class="op">&lt;</span><span class="ident">u32</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="string">&quot;a&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">a</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>));
 
                 <span class="comment">// Before checking the value, make sure we haven&#39;t elapsed too</span>
                 <span class="comment">// much time. If so, just restart the test.</span>
-                <span class="kw">if</span> <span class="op">!</span><span class="ident">timing</span>.<span class="ident">wait_until</span>(<span class="ident">Duration</span>::<span class="ident">from_secs_f32</span>(<span class="number">2.5</span>)).<span class="kw">await</span> {
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">timing</span>.<span class="ident">wait_until</span>(<span class="ident">Duration</span>::<span class="ident">from_secs_f32</span>(<span class="number">3.</span>)).<span class="kw">await</span> {
                     <span class="macro">println</span><span class="macro">!</span>(
                         <span class="string">&quot;Restarting test {}. Took too long {:?}&quot;</span>,
                         <span class="macro">line</span><span class="macro">!</span>(),
@@ -2029,11 +2094,10 @@
                     <span class="kw">continue</span>;
                 }
 
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">a</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>));
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">kv</span>.<span class="ident">get_key</span>::<span class="op">&lt;</span><span class="ident">u32</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="string">&quot;b&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>, <span class="prelude-val">None</span>);
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">kv</span>.<span class="ident">get_key</span>::<span class="op">&lt;</span><span class="ident">u32</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="string">&quot;b&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>, <span class="prelude-val">None</span>, <span class="string">&quot;b never expired&quot;</span>);
 
                 <span class="ident">timing</span>.<span class="ident">wait_until</span>(<span class="ident">Duration</span>::<span class="ident">from_secs_f32</span>(<span class="number">5.</span>)).<span class="kw">await</span>;
-                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">kv</span>.<span class="ident">get_key</span>::<span class="op">&lt;</span><span class="ident">u32</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="string">&quot;a&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>, <span class="prelude-val">None</span>);
+                <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">kv</span>.<span class="ident">get_key</span>::<span class="op">&lt;</span><span class="ident">u32</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="string">&quot;a&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>, <span class="prelude-val">None</span>, <span class="string">&quot;a never expired&quot;</span>);
                 <span class="kw">break</span>;
             }
             <span class="ident">harness</span>.<span class="ident">shutdown</span>().<span class="kw">await</span><span class="question-mark">?</span>;
@@ -2127,6 +2191,50 @@
             .<span class="ident">checked_duration_since</span>(<span class="self">self</span>.<span class="ident">start</span>)
             .<span class="ident">unwrap_or_default</span>()
     }
+}
+
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">basic_server_connection_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">ServerConnection</span><span class="op">&gt;</span>(<span class="ident">server</span>: <span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">list_available_schemas</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">schemas</span>, <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Basic</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span>]);
+
+    <span class="kw">let</span> <span class="ident">databases</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">list_databases</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">databases</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="kw">crate</span>::<span class="ident">connection</span>::<span class="ident">Database</span> {
+        <span class="ident">name</span>: <span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;tests&quot;</span>),
+        <span class="ident">schema</span>: <span class="ident">Basic</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span>
+    }));
+
+    <span class="ident">server</span>
+        .<span class="ident">create_database</span>(<span class="string">&quot;another-db&quot;</span>, <span class="ident">Basic</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span>)
+        .<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="ident">server</span>.<span class="ident">delete_database</span>(<span class="string">&quot;another-db&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
+        <span class="ident">server</span>.<span class="ident">delete_database</span>(<span class="string">&quot;another-db&quot;</span>).<span class="kw">await</span>,
+        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">DatabaseNotFound</span>(<span class="kw">_</span>))
+    ));
+
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
+        <span class="ident">server</span>.<span class="ident">create_database</span>(<span class="string">&quot;tests&quot;</span>, <span class="ident">Basic</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span>).<span class="kw">await</span>,
+        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">DatabaseNameAlreadyTaken</span>(<span class="kw">_</span>))
+    ));
+
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
+        <span class="macro">dbg</span><span class="macro">!</span>(
+            <span class="ident">server</span>
+                .<span class="ident">create_database</span>(<span class="string">&quot;|invalidname&quot;</span>, <span class="ident">Basic</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span>)
+                .<span class="kw">await</span>
+        ),
+        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">InvalidDatabaseName</span>(<span class="kw">_</span>))
+    ));
+
+    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
+        <span class="ident">server</span>
+            .<span class="ident">create_database</span>(<span class="string">&quot;another-db&quot;</span>, <span class="ident">SchemaName</span>::<span class="ident">new</span>(<span class="string">&quot;unknown&quot;</span>, <span class="string">&quot;unknown-schema&quot;</span>)<span class="question-mark">?</span>)
+            .<span class="kw">await</span>,
+        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">SchemaNotRegistered</span>(<span class="kw">_</span>))
+    ));
+
+    <span class="prelude-val">Ok</span>(())
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pliantdb_core"></div>

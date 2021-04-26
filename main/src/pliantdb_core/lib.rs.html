@@ -112,6 +112,44 @@
 <span id="109">109</span>
 <span id="110">110</span>
 <span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
+<span id="116">116</span>
+<span id="117">117</span>
+<span id="118">118</span>
+<span id="119">119</span>
+<span id="120">120</span>
+<span id="121">121</span>
+<span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Core functionality and types for `PliantDB`.</span>
 
@@ -132,7 +170,7 @@
 )]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">num_traits</span>;
 
-<span class="doccomment">/// Types for interacting with a database.</span>
+<span class="doccomment">/// Types for interacting with `PliantDB`.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">connection</span>;
 <span class="doccomment">/// Types for interacting with `Document`s.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">document</span>;
@@ -149,7 +187,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;networking&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fabruic</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;networking&quot;</span>)]</span>
-<span class="doccomment">/// Types for networked communications.</span>
+<span class="doccomment">/// Types for implementing the `PliantDB` network protocol.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">networking</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
@@ -157,15 +195,53 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pubsub</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">circulate</span>;
-<span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">CollectionName</span>;
+<span class="kw">use</span> <span class="ident">schema</span>::{<span class="ident">CollectionName</span>, <span class="ident">SchemaName</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="doccomment">/// an enumeration of errors that this crate can produce</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">thiserror</span>::<span class="ident">Error</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
+    <span class="doccomment">/// The database named `database_name` was created with a different schema</span>
+    <span class="doccomment">/// (`stored_schema`) than provided (`schema`).</span>
+    <span class="attribute">#[<span class="ident">error</span>(
+        <span class="string">&quot;database &#39;{database_name}&#39; was created with schema &#39;{stored_schema}&#39;, not &#39;{schema}&#39;&quot;</span>
+    )]</span>
+    <span class="ident">SchemaMismatch</span> {
+        <span class="doccomment">/// The name of the database being accessed.</span>
+        <span class="ident">database_name</span>: <span class="ident">String</span>,
+
+        <span class="doccomment">/// The schema provided for the database.</span>
+        <span class="ident">schema</span>: <span class="ident">SchemaName</span>,
+
+        <span class="doccomment">/// The schema stored for the database.</span>
+        <span class="ident">stored_schema</span>: <span class="ident">SchemaName</span>,
+    },
+
+    <span class="doccomment">/// The [`SchemaName`] returned has already been registered with this server.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;schema &#39;{0}&#39; was already registered&quot;</span>)]</span>
+    <span class="ident">SchemaAlreadyRegistered</span>(<span class="ident">SchemaName</span>),
+
+    <span class="doccomment">/// The [`SchemaName`] requested was not registered with this server.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;schema &#39;{0}&#39; is not registered with this server&quot;</span>)]</span>
+    <span class="ident">SchemaNotRegistered</span>(<span class="ident">SchemaName</span>),
+
+    <span class="doccomment">/// An invalid database name was specified. See</span>
+    <span class="doccomment">/// [`ServerConnection::create_database()`](connection::ServerConnection::create_database)</span>
+    <span class="doccomment">/// for database name requirements.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;invalid database name: {0}&quot;</span>)]</span>
+    <span class="ident">InvalidDatabaseName</span>(<span class="ident">String</span>),
+
+    <span class="doccomment">/// The database name given was not found.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;database &#39;{0}&#39; was not found&quot;</span>)]</span>
+    <span class="ident">DatabaseNotFound</span>(<span class="ident">String</span>),
+
+    <span class="doccomment">/// The database name already exists.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;a database with name &#39;{0}&#39; already exists&quot;</span>)]</span>
+    <span class="ident">DatabaseNameAlreadyTaken</span>(<span class="ident">String</span>),
+
     <span class="doccomment">/// An error from interacting with local storage.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error from storage: {0}&quot;</span>)]</span>
-    <span class="ident">Storage</span>(<span class="ident">String</span>),
+    <span class="ident">Database</span>(<span class="ident">String</span>),
 
     <span class="doccomment">/// An error from interacting with a server.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error from server: {0}&quot;</span>)]</span>
@@ -216,7 +292,7 @@
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">serde_cbor</span>::<span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">serde_cbor</span>::<span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span>::<span class="ident">Storage</span>(<span class="ident">err</span>.<span class="ident">to_string</span>())
+        <span class="self">Self</span>::<span class="ident">Database</span>(<span class="ident">err</span>.<span class="ident">to_string</span>())
     }
 }
 

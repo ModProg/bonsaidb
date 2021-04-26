@@ -189,10 +189,8 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
-<span id="189">189</span>
-<span id="190">190</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">collections</span>::<span class="ident">HashSet</span>, <span class="ident">hash</span>::<span class="ident">Hash</span>};
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow</span>::<span class="ident">Cow</span>, <span class="ident">collections</span>::<span class="ident">HashSet</span>, <span class="ident">hash</span>::<span class="ident">Hash</span>, <span class="ident">sync</span>::<span class="ident">Arc</span>};
 
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::<span class="ident">schema</span>::{<span class="ident">view</span>, <span class="ident">CollectionName</span>, <span class="ident">Key</span>, <span class="ident">Schema</span>, <span class="ident">ViewName</span>};
@@ -203,17 +201,18 @@
     <span class="ident">mapper</span>::{<span class="ident">Map</span>, <span class="ident">Mapper</span>},
     <span class="ident">view_document_map_tree_name</span>, <span class="ident">view_invalidated_docs_tree_name</span>, <span class="ident">view_versions_tree_name</span>, <span class="ident">Task</span>,
 };
-<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">storage</span>::{<span class="ident">document_tree_name</span>, <span class="ident">Storage</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">database</span>::{<span class="ident">document_tree_name</span>, <span class="ident">Database</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IntegrityScanner</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span> <span class="ident">storage</span>: <span class="ident">Storage</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">database</span>: <span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">scan</span>: <span class="ident">IntegrityScan</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Hash</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">IntegrityScan</span> {
     <span class="kw">pub</span> <span class="ident">view_version</span>: <span class="ident">u64</span>,
+    <span class="kw">pub</span> <span class="ident">database</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
     <span class="kw">pub</span> <span class="ident">view_name</span>: <span class="ident">ViewName</span>,
 }
@@ -226,33 +225,26 @@
     <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> ();
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Output</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">storage</span>
-            .<span class="ident">data</span>
-            .<span class="ident">sled</span>
-            .<span class="ident">open_tree</span>(<span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">sled</span>().<span class="ident">open_tree</span>(<span class="ident">document_tree_name</span>(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">database</span>.<span class="ident">data</span>.<span class="ident">name</span>,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
+        ))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">view_versions</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">storage</span>
-            .<span class="ident">data</span>
-            .<span class="ident">sled</span>
-            .<span class="ident">open_tree</span>(<span class="ident">view_versions_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">view_versions</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">sled</span>().<span class="ident">open_tree</span>(<span class="ident">view_versions_tree_name</span>(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">database</span>.<span class="ident">data</span>.<span class="ident">name</span>,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
+        ))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">document_map</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">storage</span>
-            .<span class="ident">data</span>
-            .<span class="ident">sled</span>
-            .<span class="ident">open_tree</span>(<span class="ident">view_document_map_tree_name</span>(
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
-                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>,
-            ))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">document_map</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">sled</span>().<span class="ident">open_tree</span>(<span class="ident">view_document_map_tree_name</span>(
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">database</span>.<span class="ident">data</span>.<span class="ident">name</span>,
+            <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>,
+        ))<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">invalidated_entries</span> <span class="op">=</span>
-            <span class="self">self</span>.<span class="ident">storage</span>
-                .<span class="ident">data</span>
-                .<span class="ident">sled</span>
+            <span class="self">self</span>.<span class="ident">database</span>
+                .<span class="ident">sled</span>()
                 .<span class="ident">open_tree</span>(<span class="ident">view_invalidated_docs_tree_name</span>(
-                    <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
+                    <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">database</span>.<span class="ident">data</span>.<span class="ident">name</span>,
                     <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>,
                 ))<span class="question-mark">?</span>;
 
@@ -317,13 +309,15 @@
 
         <span class="kw">if</span> <span class="ident">needs_update</span> {
             <span class="kw">let</span> <span class="ident">job</span> <span class="op">=</span> <span class="self">self</span>
-                .<span class="ident">storage</span>
+                .<span class="ident">database</span>
                 .<span class="ident">data</span>
-                .<span class="ident">tasks</span>
+                .<span class="ident">storage</span>
+                .<span class="ident">tasks</span>()
                 .<span class="ident">jobs</span>
                 .<span class="ident">lookup_or_enqueue</span>(<span class="ident">Mapper</span> {
-                    <span class="ident">storage</span>: <span class="self">self</span>.<span class="ident">storage</span>.<span class="ident">clone</span>(),
+                    <span class="ident">storage</span>: <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">clone</span>(),
                     <span class="ident">map</span>: <span class="ident">Map</span> {
+                        <span class="ident">database</span>: <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">clone</span>(),
                         <span class="ident">collection</span>: <span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(),
                         <span class="ident">view_name</span>: <span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>.<span class="ident">clone</span>(),
                     },
@@ -332,10 +326,12 @@
             <span class="ident">job</span>.<span class="ident">receive</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">map_err</span>(<span class="kw">crate</span>::<span class="ident">Error</span>::<span class="ident">Other</span>)<span class="question-mark">?</span>;
         }
 
-        <span class="self">self</span>.<span class="ident">storage</span>
+        <span class="self">self</span>.<span class="ident">database</span>
             .<span class="ident">data</span>
-            .<span class="ident">tasks</span>
+            .<span class="ident">storage</span>
+            .<span class="ident">tasks</span>()
             .<span class="ident">mark_integrity_check_complete</span>(
+                <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">clone</span>(),
                 <span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(),
                 <span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>.<span class="ident">clone</span>(),
             )
@@ -372,7 +368,7 @@
 <span class="comment">// shared pool of workers. So, we need to come up with a design for the view</span>
 <span class="comment">// updaters to work within this limitation.</span>
 <span class="comment">//</span>
-<span class="comment">// Integrity scan is simple: Have a shared structure on Storage that keeps track</span>
+<span class="comment">// Integrity scan is simple: Have a shared structure on Database that keeps track</span>
 <span class="comment">// of all integrity scan results. It can check for an existing value and return,</span>
 <span class="comment">// or make you wait until the job is finished. For views, I suppose the best</span>
 <span class="comment">// that can be done is a similar approach, but the indexer&#39;s output is the last</span>

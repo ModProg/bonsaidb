@@ -1,1 +1,1 @@
-initSidebarItems({"constant":[["BASIC_SERVER_NAME",""]],"fn":[["basic_server_connection_tests",""],["initialize_basic_server",""]]});
+initSidebarItems({"constant":[["BASIC_SERVER_NAME",""]],"fn":[["initialize_basic_server",""]]});

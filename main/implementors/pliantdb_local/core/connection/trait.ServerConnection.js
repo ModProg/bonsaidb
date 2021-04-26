@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["pliantdb_local"] = [{"text":"impl <a class=\"trait\" href=\"pliantdb_local/core/connection/trait.ServerConnection.html\" title=\"trait pliantdb_local::core::connection::ServerConnection\">ServerConnection</a> for <a class=\"struct\" href=\"pliantdb_local/struct.Storage.html\" title=\"struct pliantdb_local::Storage\">Storage</a>","synthetic":false,"types":["pliantdb_local::storage::Storage"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
