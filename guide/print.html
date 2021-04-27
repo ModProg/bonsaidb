@@ -424,7 +424,7 @@ where
 <li>You need/want to split load between multiple machines.</li>
 </ul>
 <h1 id="integrating-pliantdb-locally"><a class="header" href="#integrating-pliantdb-locally">Integrating PliantDb Locally</a></h1>
-<p><code>PliantDb</code> supports multiple <a href="integration/../about/concepts/database.html">databases</a> and multiple <a href="integration/../about/concepts/schema.html">schemas</a>. However, for many applications, you only need a single database. </p>
+<p><code>PliantDb</code> supports multiple <a href="integration/../about/concepts/database.html">databases</a> and multiple <a href="integration/../about/concepts/schema.html">schemas</a>. However, for many applications, you only need a single database.</p>
 <p>If you're only wanting a single database, the setup is straightforward: (from <a href="https://github.com/khonsulabs/pliantdb/blob/main/pliantdb/examples/basic-local.rs"><code>pliantdb/examples/basic-local.rs</code></a>)</p>
 <pre><code class="language-rust noplayground no_run">let db = Database::&lt;Message&gt;::open_local(
     &quot;basic.pliantdb&quot;, 
@@ -516,7 +516,7 @@ tokio::spawn(async move {
 <!-- TODO: Certificates -->
 <h2 id="common-traits-1"><a class="header" href="#common-traits-1">Common Traits</a></h2>
 <ul>
-<li><a href="https://pliantdb.dev/main/pliantdb/server/struct.Server.html"><code>Server</code></a> implements <a href="integration/../traits/server_connection.html"><code>ServerConnection</code></a>. </li>
+<li><a href="https://pliantdb.dev/main/pliantdb/server/struct.Server.html"><code>Server</code></a> implements <a href="integration/../traits/server_connection.html"><code>ServerConnection</code></a>.</li>
 <li><a href="https://pliantdb.dev/main/pliantdb/server/struct.Server.html#method.database"><code>Server::database()</code></a> returns a local <a href="https://pliantdb.dev/main/pliantdb/local/struct.Database.html"><code>Database</code></a>, which implements <a href="integration/../traits/connection.html"><code>Connection</code></a>, <a href="integration/../traits/kv.html"><code>Kv</code></a>, and <a href="integration/../traits/kv.html"><code>PubSub</code></a>. Local access in the server executable doesn't go over the network.</li>
 <li><a href="https://pliantdb.dev/main/pliantdb/client/struct.Client.html"><code>Client</code></a> implements <a href="integration/../traits/server_connection.html"><code>ServerConnection</code></a>.</li>
 <li><a href="https://pliantdb.dev/main/pliantdb/client/struct.Client.html#method.database"><code>Client::database()</code></a> returns a <a href="https://pliantdb.dev/main/pliantdb/client/struct.RemoteDatabase.html"><code>RemoteDatabase</code></a>, which implements <a href="integration/../traits/connection.html"><code>Connection</code></a>, <a href="integration/../traits/kv.html"><code>Kv</code></a>, and <a href="integration/../traits/kv.html"><code>PubSub</code></a>.</li>
