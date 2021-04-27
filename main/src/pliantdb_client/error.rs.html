@@ -72,6 +72,9 @@
 <span id="69">69</span>
 <span id="70">70</span>
 <span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">pliantdb_core</span> <span class="kw">as</span> <span class="ident">core</span>;
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">fabruic</span>;
@@ -115,7 +118,10 @@
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">core</span>::<span class="ident">Error</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">Self</span>::<span class="ident">Client</span>(<span class="ident">other</span>.<span class="ident">to_string</span>())
+        <span class="kw">match</span> <span class="ident">other</span> {
+            <span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">err</span>,
+            <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Client</span>(<span class="ident">other</span>.<span class="ident">to_string</span>()),
+        }
     }
 }
 
