@@ -1059,7 +1059,7 @@
         <span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">Storage</span>::<span class="ident">open_local</span>(<span class="ident">path</span>, <span class="ident">configuration</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="ident">storage</span>.<span class="ident">register_schema</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="kw">match</span> <span class="ident">storage</span>.<span class="ident">create_database</span>(<span class="string">&quot;default&quot;</span>, <span class="ident">DB</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span>).<span class="kw">await</span> {
+        <span class="kw">match</span> <span class="ident">storage</span>.<span class="ident">create_database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>(<span class="string">&quot;default&quot;</span>).<span class="kw">await</span> {
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">DatabaseNameAlreadyTaken</span>(<span class="kw">_</span>)) <span class="op">=</span><span class="op">&gt;</span> {}
             <span class="ident">err</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">err</span><span class="question-mark">?</span>,
         }

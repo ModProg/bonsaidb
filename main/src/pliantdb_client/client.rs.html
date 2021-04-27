@@ -344,7 +344,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{<span class="ident">circulate</span>::<span class="ident">Message</span>, <span class="ident">networking</span>::<span class="ident">DatabaseRequest</span>};
 
-<span class="doccomment">/// Client for connecting to a `PliantDB` server.</span>
+<span class="doccomment">/// Client for connecting to a `PliantDb` server.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Client</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">data</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span>,
@@ -529,7 +529,7 @@
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span> <span class="ident">ServerConnection</span> <span class="kw">for</span> <span class="ident">Client</span> {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_database</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_database_with_schema</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">schema</span>: <span class="ident">SchemaName</span>,
