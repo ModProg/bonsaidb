@@ -360,6 +360,13 @@
 <span id="357">357</span>
 <span id="358">358</span>
 <span id="359">359</span>
+<span id="360">360</span>
+<span id="361">361</span>
+<span id="362">362</span>
+<span id="363">363</span>
+<span id="364">364</span>
+<span id="365">365</span>
+<span id="366">366</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">VecDeque</span>};
 
@@ -518,15 +525,22 @@
     <span class="attribute">#[<span class="ident">tokio</span>::<span class="ident">test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">basic_expiration</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="ident">run_test</span>(<span class="string">&quot;kv-basic-expiration&quot;</span>, <span class="op">|</span><span class="ident">sender</span>, <span class="ident">sled</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
-            <span class="ident">sled</span>.<span class="ident">drop_tree</span>(<span class="string">b&quot;atree&quot;</span>)<span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">sled</span>.<span class="ident">open_tree</span>(<span class="string">b&quot;db::atree&quot;</span>)<span class="question-mark">?</span>;
-            <span class="ident">tree</span>.<span class="ident">insert</span>(<span class="string">b&quot;akey&quot;</span>, <span class="string">b&quot;somevalue&quot;</span>)<span class="question-mark">?</span>;
-            <span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">ExpirationUpdate</span> {
-                <span class="ident">tree_key</span>: <span class="ident">TreeKey</span>::<span class="ident">new</span>(<span class="string">&quot;db&quot;</span>, <span class="string">&quot;atree&quot;</span>, <span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;akey&quot;</span>)),
-                <span class="ident">expiration</span>: <span class="prelude-val">Some</span>(<span class="ident">Timestamp</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">100</span>)),
-            })<span class="question-mark">?</span>;
-            <span class="ident">tokio</span>::<span class="ident">time</span>::<span class="ident">sleep</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">200</span>)).<span class="kw">await</span>;
-            <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">tree</span>.<span class="ident">get</span>(<span class="string">b&quot;akey&quot;</span>)<span class="question-mark">?</span>.<span class="ident">is_none</span>());
+            <span class="kw">loop</span> {
+                <span class="ident">sled</span>.<span class="ident">drop_tree</span>(<span class="string">b&quot;atree&quot;</span>)<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">sled</span>.<span class="ident">open_tree</span>(<span class="string">b&quot;db::atree&quot;</span>)<span class="question-mark">?</span>;
+                <span class="ident">tree</span>.<span class="ident">insert</span>(<span class="string">b&quot;akey&quot;</span>, <span class="string">b&quot;somevalue&quot;</span>)<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">timing</span> <span class="op">=</span> <span class="ident">TimingTest</span>::<span class="ident">new</span>(<span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">100</span>));
+                <span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">ExpirationUpdate</span> {
+                    <span class="ident">tree_key</span>: <span class="ident">TreeKey</span>::<span class="ident">new</span>(<span class="string">&quot;db&quot;</span>, <span class="string">&quot;atree&quot;</span>, <span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;akey&quot;</span>)),
+                    <span class="ident">expiration</span>: <span class="prelude-val">Some</span>(<span class="ident">Timestamp</span>::<span class="ident">now</span>() <span class="op">+</span> <span class="ident">Duration</span>::<span class="ident">from_millis</span>(<span class="number">100</span>)),
+                })<span class="question-mark">?</span>;
+                <span class="kw">if</span> <span class="op">!</span><span class="ident">timing</span>.<span class="ident">wait_until</span>(<span class="ident">Duration</span>::<span class="ident">from_secs</span>(<span class="number">1</span>)).<span class="kw">await</span> {
+                    <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;basic_expiration restarting due to timing discrepency&quot;</span>);
+                    <span class="kw">continue</span>;
+                }
+                <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">tree</span>.<span class="ident">get</span>(<span class="string">b&quot;akey&quot;</span>)<span class="question-mark">?</span>.<span class="ident">is_none</span>());
+                <span class="kw">break</span>;
+            }
 
             <span class="prelude-val">Ok</span>(())
         })
