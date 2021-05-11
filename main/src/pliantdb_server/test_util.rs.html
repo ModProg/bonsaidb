@@ -31,21 +31,13 @@
 <span id="28">28</span>
 <span id="29">29</span>
 <span id="30">30</span>
-<span id="31">31</span>
-<span id="32">32</span>
-<span id="33">33</span>
-<span id="34">34</span>
-<span id="35">35</span>
-<span id="36">36</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#![<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">Path</span>;
 
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
-    <span class="ident">connection</span>::<span class="ident">ServerConnection</span>,
-    <span class="ident">permissions</span>::{<span class="ident">ActionNameList</span>, <span class="ident">Permissions</span>, <span class="ident">ResourceName</span>, <span class="ident">Statement</span>},
-    <span class="ident">test_util</span>::<span class="ident">BasicSchema</span>,
+    <span class="ident">connection</span>::<span class="ident">ServerConnection</span>, <span class="ident">permissions</span>::<span class="ident">Permissions</span>, <span class="ident">test_util</span>::<span class="ident">BasicSchema</span>,
 };
 
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Configuration</span>, <span class="ident">Server</span>};
@@ -56,11 +48,7 @@
     <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="ident">Server</span>::<span class="ident">open</span>(
         <span class="ident">path</span>,
         <span class="ident">Configuration</span> {
-            <span class="ident">default_permissions</span>: <span class="ident">Permissions</span>::<span class="ident">from</span>(<span class="macro">vec</span><span class="macro">!</span>[<span class="ident">Statement</span> {
-                <span class="ident">resources</span>: <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">ResourceName</span>::<span class="ident">any</span>()],
-                <span class="ident">actions</span>: <span class="ident">ActionNameList</span>::<span class="ident">All</span>,
-                <span class="ident">allowed</span>: <span class="bool-val">true</span>,
-            }]),
+            <span class="ident">default_permissions</span>: <span class="ident">Permissions</span>::<span class="ident">allow_all</span>(),
             ..<span class="ident">Configuration</span>::<span class="ident">default</span>()
         },
     )

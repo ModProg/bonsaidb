@@ -142,6 +142,13 @@
 <span id="139">139</span>
 <span id="140">140</span>
 <span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">flume</span>::<span class="ident">Receiver</span>;
 <span class="kw">use</span> <span class="ident">futures</span>::{
@@ -149,6 +156,7 @@
     <span class="ident">SinkExt</span>, <span class="ident">StreamExt</span>,
 };
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::{<span class="ident">Payload</span>, <span class="ident">Response</span>};
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">net</span>::<span class="ident">TcpStream</span>;
 <span class="kw">use</span> <span class="ident">tokio_tungstenite</span>::{<span class="ident">tungstenite</span>::<span class="ident">Message</span>, <span class="ident">MaybeTlsStream</span>, <span class="ident">WebSocketStream</span>};
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
@@ -160,9 +168,12 @@
     <span class="ident">Error</span>,
 };
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reconnecting_client_loop</span>(
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reconnecting_client_loop</span><span class="op">&lt;</span>
+    <span class="ident">R</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+    <span class="ident">O</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span>,
+<span class="op">&gt;</span>(
     <span class="ident">url</span>: <span class="ident">Url</span>,
-    <span class="kw-2">mut</span> <span class="ident">request_receiver</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">PendingRequest</span><span class="op">&gt;</span>,
+    <span class="kw-2">mut</span> <span class="ident">request_receiver</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">O</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">subscribers</span>: <span class="ident">SubscriberMap</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">request</span>) <span class="op">=</span> <span class="ident">request_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
@@ -208,10 +219,13 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">request_sender</span>(
-    <span class="ident">request_receiver</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">PendingRequest</span><span class="op">&gt;</span>,
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">request_sender</span><span class="op">&lt;</span>
+    <span class="ident">R</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+    <span class="ident">O</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span>,
+<span class="op">&gt;</span>(
+    <span class="ident">request_receiver</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">O</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw-2">mut</span> <span class="ident">sender</span>: <span class="ident">SplitSink</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span><span class="op">&lt;</span><span class="ident">MaybeTlsStream</span><span class="op">&lt;</span><span class="ident">TcpStream</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Message</span><span class="op">&gt;</span>,
-    <span class="ident">outstanding_requests</span>: <span class="ident">OutstandingRequestMapHandle</span>,
+    <span class="ident">outstanding_requests</span>: <span class="ident">OutstandingRequestMapHandle</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">pending</span>) <span class="op">=</span> <span class="ident">request_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
         {
@@ -230,16 +244,16 @@
 }
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">collapsible_else_if</span>)]</span> <span class="comment">// not possible due to cfg statement</span>
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">response_processor</span>(
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">response_processor</span><span class="op">&lt;</span><span class="ident">O</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
     <span class="kw-2">mut</span> <span class="ident">receiver</span>: <span class="ident">SplitStream</span><span class="op">&lt;</span><span class="ident">WebSocketStream</span><span class="op">&lt;</span><span class="ident">MaybeTlsStream</span><span class="op">&lt;</span><span class="ident">TcpStream</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">outstanding_requests</span>: <span class="ident">OutstandingRequestMapHandle</span>,
+    <span class="ident">outstanding_requests</span>: <span class="ident">OutstandingRequestMapHandle</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">subscribers</span>: <span class="ident">SubscriberMap</span>,
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">next</span>().<span class="kw">await</span> {
         <span class="kw">let</span> <span class="ident">message</span> <span class="op">=</span> <span class="ident">message</span><span class="question-mark">?</span>;
         <span class="kw">match</span> <span class="ident">message</span> {
             <span class="ident">Message</span>::<span class="ident">Binary</span>(<span class="ident">response</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">response</span>)<span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">response</span>)<span class="question-mark">?</span>;
 
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload_id</span>) <span class="op">=</span> <span class="ident">payload</span>.<span class="ident">id</span> {
                     <span class="kw">let</span> <span class="ident">responder</span> <span class="op">=</span> {

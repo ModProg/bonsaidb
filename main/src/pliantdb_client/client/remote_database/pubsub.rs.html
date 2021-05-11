@@ -163,11 +163,14 @@
 <span id="160">160</span>
 <span id="161">161</span>
 <span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">Arc</span>;
 
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
+    <span class="ident">backend</span>::<span class="ident">Backend</span>,
     <span class="ident">circulate</span>::<span class="ident">Message</span>,
     <span class="ident">networking</span>::{<span class="ident">DatabaseRequest</span>, <span class="ident">DatabaseResponse</span>, <span class="ident">Request</span>, <span class="ident">Response</span>},
     <span class="ident">pubsub</span>::{<span class="ident">database_topic</span>, <span class="ident">PubSub</span>, <span class="ident">Subscriber</span>},
@@ -178,11 +181,12 @@
 <span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">Client</span>;
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> <span class="ident">PubSub</span> <span class="kw">for</span> <span class="kw">super</span>::<span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">B</span><span class="op">&gt;</span> <span class="ident">PubSub</span> <span class="kw">for</span> <span class="kw">super</span>::<span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">B</span><span class="op">&gt;</span>
 <span class="kw">where</span>
     <span class="ident">DB</span>: <span class="ident">Schema</span>,
+    <span class="ident">B</span>: <span class="ident">Backend</span>,
 {
-    <span class="kw">type</span> <span class="ident">Subscriber</span> <span class="op">=</span> <span class="ident">RemoteSubscriber</span>;
+    <span class="kw">type</span> <span class="ident">Subscriber</span> <span class="op">=</span> <span class="ident">RemoteSubscriber</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_subscriber</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Subscriber</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>
@@ -259,15 +263,15 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RemoteSubscriber</span> {
-    <span class="ident">client</span>: <span class="ident">Client</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RemoteSubscriber</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
+    <span class="ident">client</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
     <span class="ident">database</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">id</span>: <span class="ident">u64</span>,
     <span class="ident">receiver</span>: <span class="ident">flume</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span> <span class="ident">Subscriber</span> <span class="kw">for</span> <span class="ident">RemoteSubscriber</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Subscriber</span> <span class="kw">for</span> <span class="ident">RemoteSubscriber</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">subscribe_to</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">topic</span>: <span class="ident">S</span>,
@@ -316,7 +320,7 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">RemoteSubscriber</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">RemoteSubscriber</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
         <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">database</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">to_string</span>();

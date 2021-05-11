@@ -1297,25 +1297,12 @@
 <span id="1294">1294</span>
 <span id="1295">1295</span>
 <span id="1296">1296</span>
-<span id="1297">1297</span>
-<span id="1298">1298</span>
-<span id="1299">1299</span>
-<span id="1300">1300</span>
-<span id="1301">1301</span>
-<span id="1302">1302</span>
-<span id="1303">1303</span>
-<span id="1304">1304</span>
-<span id="1305">1305</span>
-<span id="1306">1306</span>
-<span id="1307">1307</span>
-<span id="1308">1308</span>
-<span id="1309">1309</span>
-<span id="1310">1310</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">fmt</span>::<span class="ident">Debug</span>,
+    <span class="ident">marker</span>::<span class="ident">PhantomData</span>,
     <span class="ident">ops</span>::<span class="ident">Deref</span>,
     <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
     <span class="ident">sync</span>::<span class="ident">Arc</span>,
@@ -1329,12 +1316,8 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">SinkExt</span>;
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Future</span>, <span class="ident">StreamExt</span>, <span class="ident">TryFutureExt</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
-    <span class="ident">circulate</span>::{<span class="ident">Message</span>, <span class="ident">Relay</span>, <span class="ident">Subscriber</span>},
-    <span class="ident">pubsub</span>::<span class="ident">database_topic</span>,
-};
-<span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
+    <span class="ident">backend</span>::{<span class="ident">Backend</span>, <span class="ident">CustomApi</span>},
     <span class="ident">connection</span>::{<span class="self">self</span>, <span class="ident">AccessPolicy</span>, <span class="ident">QueryKey</span>, <span class="ident">ServerConnection</span>},
     <span class="ident">kv</span>::<span class="ident">KeyOperation</span>,
     <span class="ident">networking</span>::{
@@ -1357,6 +1340,11 @@
     <span class="ident">schema</span>::{<span class="ident">CollectionName</span>, <span class="ident">Schema</span>, <span class="ident">ViewName</span>},
     <span class="ident">transaction</span>::{<span class="ident">Command</span>, <span class="ident">Transaction</span>},
 };
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
+    <span class="ident">circulate</span>::{<span class="ident">Message</span>, <span class="ident">Relay</span>, <span class="ident">Subscriber</span>},
+    <span class="ident">pubsub</span>::<span class="ident">database_topic</span>,
+};
 <span class="kw">use</span> <span class="ident">pliantdb_jobs</span>::{<span class="ident">manager</span>::<span class="ident">Manager</span>, <span class="ident">Job</span>};
 <span class="kw">use</span> <span class="ident">pliantdb_local</span>::{<span class="ident">Database</span>, <span class="ident">OpenDatabase</span>, <span class="ident">Storage</span>};
 <span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaName</span>;
@@ -1367,13 +1355,21 @@
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">async_io_util</span>::<span class="ident">FileExt</span>, <span class="ident">error</span>::<span class="ident">Error</span>, <span class="ident">Configuration</span>};
 
 <span class="doccomment">/// A `PliantDb` server.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Server</span> {
-    <span class="ident">data</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span>,
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
+    <span class="ident">data</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">data</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>(),
+        }
+    }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Data</span> {
+<span class="kw">struct</span> <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
     <span class="ident">endpoint</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Endpoint</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
     <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -1381,13 +1377,15 @@
     <span class="ident">storage</span>: <span class="ident">Storage</span>,
     <span class="ident">request_processor</span>: <span class="ident">Manager</span>,
     <span class="ident">default_permissions</span>: <span class="ident">Permissions</span>,
+    <span class="ident">custom_api</span>: <span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Dispatcher</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
     <span class="ident">relay</span>: <span class="ident">Relay</span>,
+    <span class="ident">_backend</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">Server</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Opens a server using `directory` for storage.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">directory</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">configuration</span>: <span class="ident">Configuration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">directory</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">configuration</span>: <span class="ident">Configuration</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">request_processor</span> <span class="op">=</span> <span class="ident">Manager</span>::<span class="ident">default</span>();
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">configuration</span>.<span class="ident">request_workers</span> {
             <span class="ident">request_processor</span>.<span class="ident">spawn_worker</span>();
@@ -1404,8 +1402,10 @@
                 <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock</span>::<span class="ident">default</span>(),
                 <span class="ident">request_processor</span>,
                 <span class="ident">default_permissions</span>: <span class="ident">configuration</span>.<span class="ident">default_permissions</span>,
+                <span class="ident">custom_api</span>: <span class="ident">configuration</span>.<span class="ident">custom_api_dispatcher</span>,
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
                 <span class="ident">relay</span>: <span class="ident">Relay</span>::<span class="ident">default</span>(),
+                <span class="ident">_backend</span>: <span class="ident">PhantomData</span>::<span class="ident">default</span>(),
             }),
         })
     }
@@ -1585,7 +1585,7 @@
             );
 
             <span class="kw">match</span> <span class="ident">incoming</span>
-                .<span class="ident">accept</span>::<span class="op">&lt;</span><span class="ident">networking</span>::<span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">networking</span>::<span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&gt;</span><span class="op">&gt;</span>()
+                .<span class="ident">accept</span>::<span class="op">&lt;</span><span class="ident">networking</span>::<span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">networking</span>::<span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
                 .<span class="kw">await</span>
             {
                 <span class="prelude-val">Ok</span>((<span class="ident">sender</span>, <span class="ident">receiver</span>)) <span class="op">=</span><span class="op">&gt;</span> {
@@ -1639,7 +1639,9 @@
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload</span>) <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">next</span>().<span class="kw">await</span> {
             <span class="kw">match</span> <span class="ident">payload</span><span class="question-mark">?</span> {
                 <span class="ident">Message</span>::<span class="ident">Binary</span>(<span class="ident">binary</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">binary</span>)<span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">bincode</span>::<span class="ident">deserialize</span>::<span class="op">&lt;</span>
+                        <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+                    <span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">binary</span>)<span class="question-mark">?</span>;
                     <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">payload</span>.<span class="ident">id</span>;
                     <span class="kw">let</span> <span class="ident">task_sender</span> <span class="op">=</span> <span class="ident">response_sender</span>.<span class="ident">clone</span>();
                     <span class="self">self</span>.<span class="ident">handle_request_through_worker</span>(
@@ -1673,19 +1675,21 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_request_through_worker</span><span class="op">&lt;</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">Response</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
         <span class="ident">R</span>: <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span>,
     <span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">request</span>: <span class="ident">Request</span>,
+        <span class="ident">request</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span>,
         <span class="ident">callback</span>: <span class="ident">F</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">response_sender</span>: <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">response_sender</span>: <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span>
+            <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">job</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">data</span>
             .<span class="ident">request_processor</span>
-            .<span class="ident">enqueue</span>(<span class="ident">ClientRequest</span>::<span class="ident">new</span>(
+            .<span class="ident">enqueue</span>(<span class="ident">ClientRequest</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>::<span class="ident">new</span>(
                 <span class="ident">request</span>,
                 <span class="self">self</span>.<span class="ident">clone</span>(),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
@@ -1708,8 +1712,8 @@
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_stream</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">sender</span>: <span class="ident">fabruic</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="kw-2">mut</span> <span class="ident">receiver</span>: <span class="ident">fabruic</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">sender</span>: <span class="ident">fabruic</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="kw-2">mut</span> <span class="ident">receiver</span>: <span class="ident">fabruic</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
         <span class="kw">let</span> <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">default</span>();
@@ -1751,7 +1755,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
         <span class="ident">receiver</span>: <span class="ident">flume</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">sender</span>: <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">sender</span>: <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) {
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">message</span>) <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
             <span class="kw">if</span> <span class="ident">sender</span>
@@ -1799,7 +1803,7 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Server</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">Storage</span>;
 
     <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Target</span> {
@@ -1808,20 +1812,23 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">ClientRequest</span> {
-    <span class="ident">request</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&gt;</span>,
-    <span class="ident">server</span>: <span class="ident">Server</span>,
+<span class="kw">struct</span> <span class="ident">ClientRequest</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
+    <span class="ident">request</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">server</span>: <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
     <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-    <span class="ident">sender</span>: <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">sender</span>: <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
-<span class="kw">impl</span> <span class="ident">ClientRequest</span> {
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">request</span>: <span class="ident">Request</span>,
-        <span class="ident">server</span>: <span class="ident">Server</span>,
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">ClientRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
+        <span class="ident">request</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span>,
+        <span class="ident">server</span>: <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">sender</span>: <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">sender</span>: <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span>
+            <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">request</span>: <span class="prelude-val">Some</span>(<span class="ident">request</span>),
@@ -1835,8 +1842,8 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span> <span class="ident">Job</span> <span class="kw">for</span> <span class="ident">ClientRequest</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Response</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Job</span> <span class="kw">for</span> <span class="ident">ClientRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>::<span class="ident">Output</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">request</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
@@ -1854,7 +1861,7 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span> <span class="ident">ServerConnection</span> <span class="kw">for</span> <span class="ident">Server</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">ServerConnection</span> <span class="kw">for</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_database_with_schema</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
@@ -1880,77 +1887,79 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Dispatcher</span>, <span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">dispatcher</span>(<span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;Request, ServerRequest&quot;</span>)]</span>
-<span class="kw">struct</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">Server</span>,
+<span class="attribute">#[<span class="ident">dispatcher</span>(<span class="ident">input</span> <span class="op">=</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span>, <span class="ident">input</span> <span class="op">=</span> <span class="ident">ServerRequest</span>)]</span>
+<span class="kw">struct</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
+    <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
     <span class="ident">subscribers</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-    <span class="ident">response_sender</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">RequestDispatcher</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Response</span>;
-    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>;
-
-    <span class="kw">type</span> <span class="ident">ServerHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">DatabaseHandler</span> <span class="op">=</span> <span class="self">Self</span>;
+    <span class="ident">response_sender</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ServerHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">RequestDispatcher</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Subaction</span> <span class="op">=</span> <span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span>;
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle</span>(
-        <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>,
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_subaction</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-        <span class="ident">request</span>: <span class="ident">ServerRequest</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">server</span>.<span class="ident">dispatch</span>(<span class="ident">permissions</span>, <span class="ident">request</span>).<span class="kw">await</span>
+        <span class="ident">subaction</span>: <span class="self">Self</span>::<span class="ident">Subaction</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">server</span>
+            .<span class="ident">data</span>
+            .<span class="ident">custom_api</span>
+            .<span class="ident">dispatch</span>(<span class="ident">permissions</span>, <span class="ident">subaction</span>)
+            .<span class="kw">await</span>
+            .<span class="ident">map</span>(<span class="ident">Response</span>::<span class="ident">Api</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;error executing custom api: {:?}&quot;</span>, <span class="ident">err</span>))
+            })
     }
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">DatabaseHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
-
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ServerHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
+        <span class="ident">request</span>: <span class="ident">ServerRequest</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">ServerRequestDispatcher</span>::<span class="ident">dispatch_to_handlers</span>(<span class="self">self</span>, <span class="ident">permissions</span>, <span class="ident">request</span>).<span class="kw">await</span>
+    }
+}
+
+<span class="attribute">#[<span class="ident">async_trait</span>]</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">DatabaseHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">database_name</span>: <span class="ident">String</span>,
         <span class="ident">request</span>: <span class="ident">DatabaseRequest</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">database</span> <span class="op">=</span> <span class="ident">dispatcher</span>
-            .<span class="ident">server</span>
-            .<span class="ident">database_without_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database_name</span>)
-            .<span class="kw">await</span><span class="question-mark">?</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">database</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">database_without_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database_name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="ident">DatabaseDispatcher</span> {
             <span class="ident">name</span>: <span class="ident">database_name</span>,
             <span class="ident">database</span>: <span class="ident">database</span>.<span class="ident">as_ref</span>(),
-            <span class="ident">server_dispatcher</span>: <span class="ident">dispatcher</span>,
+            <span class="ident">server_dispatcher</span>: <span class="self">self</span>,
         }
         .<span class="ident">dispatch</span>(<span class="ident">permissions</span>, <span class="ident">request</span>)
         .<span class="kw">await</span>
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">ServerRequestDispatcher</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Response</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">ServerRequestDispatcher</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>;
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>;
-
-    <span class="kw">type</span> <span class="ident">CreateDatabaseHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">DeleteDatabaseHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">ListDatabasesHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">ListAvailableSchemasHandler</span> <span class="op">=</span> <span class="self">Self</span>;
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">CreateDatabaseHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">CreateDatabaseHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
     <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">_dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">pliantdb_core</span>::<span class="ident">connection</span>::<span class="ident">Database</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>.<span class="ident">name</span>)
@@ -1961,12 +1970,11 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">database</span>: <span class="ident">pliantdb_core</span>::<span class="ident">connection</span>::<span class="ident">Database</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">dispatcher</span>
-            .<span class="ident">server</span>
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">server</span>
             .<span class="ident">create_database_with_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>.<span class="ident">name</span>, <span class="ident">database</span>.<span class="ident">schema</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Server</span>(<span class="ident">ServerResponse</span>::<span class="ident">DatabaseCreated</span> {
@@ -1976,11 +1984,10 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">DeleteDatabaseHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">DeleteDatabaseHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
-    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">_dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>, <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="ident">database_resource_name</span>(<span class="ident">database</span>)
     }
 
@@ -1989,21 +1996,20 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">name</span>: <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">dispatcher</span>.<span class="ident">server</span>.<span class="ident">delete_database</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">delete_database</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Server</span>(<span class="ident">ServerResponse</span>::<span class="ident">DatabaseDeleted</span> { <span class="ident">name</span> }))
     }
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ListDatabasesHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ListDatabasesHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
-    <span class="kw">fn</span> <span class="ident">resource_name</span>(<span class="ident">_dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
         <span class="ident">pliantdb_resource_name</span>()
     }
 
@@ -2012,21 +2018,22 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Server</span>(<span class="ident">ServerResponse</span>::<span class="ident">Databases</span>(
-            <span class="ident">dispatcher</span>.<span class="ident">server</span>.<span class="ident">list_databases</span>().<span class="kw">await</span><span class="question-mark">?</span>,
+            <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">list_databases</span>().<span class="kw">await</span><span class="question-mark">?</span>,
         )))
     }
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ListAvailableSchemasHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ListAvailableSchemasHandler</span>
+    <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>
+{
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
-    <span class="kw">fn</span> <span class="ident">resource_name</span>(<span class="ident">_dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
         <span class="ident">pliantdb_resource_name</span>()
     }
 
@@ -2035,54 +2042,41 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Server</span>(<span class="ident">ServerResponse</span>::<span class="ident">AvailableSchemas</span>(
-            <span class="ident">dispatcher</span>.<span class="ident">server</span>.<span class="ident">list_available_schemas</span>().<span class="kw">await</span><span class="question-mark">?</span>,
+            <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">list_available_schemas</span>().<span class="kw">await</span><span class="question-mark">?</span>,
         )))
     }
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Dispatcher</span>, <span class="ident">Debug</span>)]</span>
-<span class="attribute">#[<span class="ident">dispatcher</span>(<span class="ident">input</span> <span class="op">=</span> <span class="string">&quot;DatabaseRequest&quot;</span>)]</span>
-<span class="kw">struct</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
+<span class="attribute">#[<span class="ident">dispatcher</span>(<span class="ident">input</span> <span class="op">=</span> <span class="ident">DatabaseRequest</span>)]</span>
+<span class="kw">struct</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">B</span>: <span class="ident">Backend</span>,
+{
     <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="kw">dyn</span> <span class="ident">OpenDatabase</span>,
-    <span class="ident">server_dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span>,
+    <span class="ident">server_dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">DatabaseRequestDispatcher</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Response</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">DatabaseRequestDispatcher</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">type</span> <span class="ident">Output</span> <span class="op">=</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>;
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>;
-
-    <span class="kw">type</span> <span class="ident">GetHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">GetMultipleHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">QueryHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">ReduceHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">ApplyTransactionHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">ListExecutedTransactionsHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">LastTransactionIdHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">CreateSubscriberHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">PublishHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">PublishToAllHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">SubscribeToHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">UnsubscribeFromHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">UnregisterSubscriberHandler</span> <span class="op">=</span> <span class="self">Self</span>;
-    <span class="kw">type</span> <span class="ident">ExecuteKeyOperationHandler</span> <span class="op">=</span> <span class="self">Self</span>;
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">GetHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">GetHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
     <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">CollectionName</span>,
         <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u64</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">collection</span>, <span class="kw-2">*</span><span class="ident">id</span>)
+        <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">collection</span>, <span class="kw-2">*</span><span class="ident">id</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2090,12 +2084,12 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
         <span class="ident">id</span>: <span class="ident">u64</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">document</span> <span class="op">=</span> <span class="ident">dispatcher</span>
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">document</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">database</span>
             .<span class="ident">get_from_collection_id</span>(<span class="ident">id</span>, <span class="kw-2">&amp;</span><span class="ident">collection</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>
@@ -2109,17 +2103,15 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">GetMultipleHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
-
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">GetMultipleHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">verify_permissions</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">id</span> <span class="kw">in</span> <span class="ident">ids</span> {
-            <span class="kw">let</span> <span class="ident">document_name</span> <span class="op">=</span> <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">collection</span>, <span class="ident">id</span>);
+            <span class="kw">let</span> <span class="ident">document_name</span> <span class="op">=</span> <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">collection</span>, <span class="ident">id</span>);
             <span class="kw">let</span> <span class="ident">action</span> <span class="op">=</span> <span class="ident">PliantAction</span>::<span class="ident">Database</span>(<span class="ident">DatabaseAction</span>::<span class="ident">Document</span>(<span class="ident">DocumentAction</span>::<span class="ident">Get</span>));
             <span class="kw">if</span> <span class="op">!</span><span class="ident">permissions</span>.<span class="ident">allowed_to</span>(<span class="kw-2">&amp;</span><span class="ident">document_name</span>, <span class="kw-2">&amp;</span><span class="ident">action</span>) {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">PermissionDenied</span> {
@@ -2133,12 +2125,12 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
         <span class="ident">ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="ident">dispatcher</span>
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">database</span>
             .<span class="ident">get_multiple_from_collection_id</span>(<span class="kw-2">&amp;</span><span class="ident">ids</span>, <span class="kw-2">&amp;</span><span class="ident">collection</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -2147,18 +2139,17 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">QueryHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">QueryHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
     <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ViewName</span>,
         <span class="ident">_key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">_access_policy</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AccessPolicy</span>,
         <span class="ident">_with_docs</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bool</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">view_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">view</span>)
+        <span class="ident">view_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">view</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2166,15 +2157,15 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">view</span>: <span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="ident">with_docs</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">with_docs</span> {
-            <span class="kw">let</span> <span class="ident">mappings</span> <span class="op">=</span> <span class="ident">dispatcher</span>
+            <span class="kw">let</span> <span class="ident">mappings</span> <span class="op">=</span> <span class="self">self</span>
                 .<span class="ident">database</span>
                 .<span class="ident">query_with_docs</span>(<span class="kw-2">&amp;</span><span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>)
                 .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -2182,25 +2173,24 @@
                 <span class="ident">mappings</span>,
             )))
         } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">mappings</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">database</span>.<span class="ident">query</span>(<span class="kw-2">&amp;</span><span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">mappings</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">query</span>(<span class="kw-2">&amp;</span><span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>::<span class="ident">ViewMappings</span>(<span class="ident">mappings</span>)))
         }
     }
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ReduceHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ReduceHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
     <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ViewName</span>,
         <span class="ident">_key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">_access_policy</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AccessPolicy</span>,
         <span class="ident">_grouped</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bool</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">view_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">view</span>)
+        <span class="ident">view_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">view</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2208,15 +2198,15 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">view</span>: <span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="ident">grouped</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">grouped</span> {
-            <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="ident">dispatcher</span>
+            <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="self">self</span>
                 .<span class="ident">database</span>
                 .<span class="ident">reduce_grouped</span>(<span class="kw-2">&amp;</span><span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>)
                 .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -2224,36 +2214,33 @@
                 <span class="ident">values</span>,
             )))
         } <span class="kw">else</span> {
-            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">dispatcher</span>
-                .<span class="ident">database</span>
-                .<span class="ident">reduce</span>(<span class="kw-2">&amp;</span><span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>)
-                .<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">reduce</span>(<span class="kw-2">&amp;</span><span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>::<span class="ident">ViewReduction</span>(<span class="ident">value</span>)))
         }
     }
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ApplyTransactionHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
-
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ApplyTransactionHandler</span>
+    <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>
+{
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">verify_permissions</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">transaction</span>: <span class="kw-2">&amp;</span><span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">for</span> <span class="ident">op</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">transaction</span>.<span class="ident">operations</span> {
             <span class="kw">let</span> (<span class="ident">resource</span>, <span class="ident">action</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">command</span> {
                 <span class="ident">Command</span>::<span class="ident">Insert</span> { .. } <span class="op">=</span><span class="op">&gt;</span> (
-                    <span class="ident">collection_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>),
+                    <span class="ident">collection_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>),
                     <span class="ident">PliantAction</span>::<span class="ident">Database</span>(<span class="ident">DatabaseAction</span>::<span class="ident">Document</span>(<span class="ident">DocumentAction</span>::<span class="ident">Insert</span>)),
                 ),
                 <span class="ident">Command</span>::<span class="ident">Update</span> { <span class="ident">header</span>, .. } <span class="op">=</span><span class="op">&gt;</span> (
-                    <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>, <span class="ident">header</span>.<span class="ident">id</span>),
+                    <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>, <span class="ident">header</span>.<span class="ident">id</span>),
                     <span class="ident">PliantAction</span>::<span class="ident">Database</span>(<span class="ident">DatabaseAction</span>::<span class="ident">Document</span>(<span class="ident">DocumentAction</span>::<span class="ident">Update</span>)),
                 ),
                 <span class="ident">Command</span>::<span class="ident">Delete</span> { <span class="ident">header</span> } <span class="op">=</span><span class="op">&gt;</span> (
-                    <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>, <span class="ident">header</span>.<span class="ident">id</span>),
+                    <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>, <span class="ident">header</span>.<span class="ident">id</span>),
                     <span class="ident">PliantAction</span>::<span class="ident">Database</span>(<span class="ident">DatabaseAction</span>::<span class="ident">Document</span>(<span class="ident">DocumentAction</span>::<span class="ident">Delete</span>)),
                 ),
             };
@@ -2269,11 +2256,11 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">transaction</span>: <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">database</span>.<span class="ident">apply_transaction</span>(<span class="ident">transaction</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">apply_transaction</span>(<span class="ident">transaction</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>::<span class="ident">TransactionResults</span>(
             <span class="ident">results</span>,
         )))
@@ -2281,16 +2268,17 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ListExecutedTransactionsHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ListExecutedTransactionsHandler</span>
+    <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>
+{
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
     <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">_starting_id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">_result_limit</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>)
+        <span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2298,14 +2286,13 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">starting_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">result_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>::<span class="ident">ExecutedTransactions</span>(
-            <span class="ident">dispatcher</span>
-                .<span class="ident">database</span>
+            <span class="self">self</span>.<span class="ident">database</span>
                 .<span class="ident">list_executed_transactions</span>(<span class="ident">starting_id</span>, <span class="ident">result_limit</span>)
                 .<span class="kw">await</span><span class="question-mark">?</span>,
         )))
@@ -2313,12 +2300,13 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">LastTransactionIdHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">LastTransactionIdHandler</span>
+    <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>
+{
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
-    <span class="kw">fn</span> <span class="ident">resource_name</span>(<span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-        <span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>)
+    <span class="kw">fn</span> <span class="ident">resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+        <span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2326,22 +2314,23 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>::<span class="ident">LastTransactionId</span>(
-            <span class="ident">dispatcher</span>.<span class="ident">database</span>.<span class="ident">last_transaction_id</span>().<span class="kw">await</span><span class="question-mark">?</span>,
+            <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">last_transaction_id</span>().<span class="kw">await</span><span class="question-mark">?</span>,
         )))
     }
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">CreateSubscriberHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">CreateSubscriberHandler</span>
+    <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>
+{
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
-    <span class="kw">fn</span> <span class="ident">resource_name</span>(<span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
-        <span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>)
+    <span class="kw">fn</span> <span class="ident">resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span> {
+        <span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2350,21 +2339,21 @@
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>), <span class="ident">allow</span>(<span class="ident">unused_variables</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> {
-                <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">server_dispatcher</span>.<span class="ident">server</span>;
+                <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">server</span>;
                 <span class="kw">let</span> <span class="ident">subscriber</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">data</span>.<span class="ident">relay</span>.<span class="ident">create_subscriber</span>().<span class="kw">await</span>;
 
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">write</span>().<span class="kw">await</span>;
                 <span class="kw">let</span> <span class="ident">subscriber_id</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">id</span>();
                 <span class="kw">let</span> <span class="ident">receiver</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">receiver</span>().<span class="ident">clone</span>();
                 <span class="ident">subscribers</span>.<span class="ident">insert</span>(<span class="ident">subscriber_id</span>, <span class="ident">subscriber</span>);
 
                 <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">clone</span>();
-                <span class="kw">let</span> <span class="ident">response_sender</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">server_dispatcher</span>.<span class="ident">response_sender</span>.<span class="ident">clone</span>();
+                <span class="kw">let</span> <span class="ident">response_sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">response_sender</span>.<span class="ident">clone</span>();
                 <span class="ident">tokio</span>::<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
                     <span class="ident">task_self</span>
                         .<span class="ident">forward_notifications_for</span>(<span class="ident">subscriber_id</span>, <span class="ident">receiver</span>, <span class="ident">response_sender</span>.<span class="ident">clone</span>())
@@ -2382,16 +2371,11 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">PublishHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">PublishHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
-    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>,
-        <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>,
-        <span class="ident">_payload</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">topic</span>)
+    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>, <span class="ident">_payload</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2400,20 +2384,20 @@
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>), <span class="ident">allow</span>(<span class="ident">unused_variables</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">topic</span>: <span class="ident">String</span>,
         <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> {
-                <span class="ident">dispatcher</span>
+                <span class="self">self</span>
                     .<span class="ident">server_dispatcher</span>
                     .<span class="ident">server</span>
                     .<span class="ident">data</span>
                     .<span class="ident">relay</span>
                     .<span class="ident">publish_message</span>(<span class="ident">Message</span> {
-                        <span class="ident">topic</span>: <span class="ident">database_topic</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">topic</span>),
+                        <span class="ident">topic</span>: <span class="ident">database_topic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">topic</span>),
                         <span class="ident">payload</span>,
                     })
                     .<span class="kw">await</span>;
@@ -2426,17 +2410,15 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">PublishToAllHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
-
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">PublishToAllHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">verify_permissions</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">topics</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">_payload</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">for</span> <span class="ident">topic</span> <span class="kw">in</span> <span class="ident">topics</span> {
-            <span class="kw">let</span> <span class="ident">topic_name</span> <span class="op">=</span> <span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">topic</span>);
+            <span class="kw">let</span> <span class="ident">topic_name</span> <span class="op">=</span> <span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>);
             <span class="kw">let</span> <span class="ident">action</span> <span class="op">=</span> <span class="ident">PliantAction</span>::<span class="ident">Database</span>(<span class="ident">DatabaseAction</span>::<span class="ident">PubSub</span>(<span class="ident">PubSubAction</span>::<span class="ident">Publish</span>));
             <span class="kw">if</span> <span class="op">!</span><span class="ident">permissions</span>.<span class="ident">allowed_to</span>(<span class="kw-2">&amp;</span><span class="ident">topic_name</span>, <span class="kw-2">&amp;</span><span class="ident">action</span>) {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">from</span>(<span class="ident">PermissionDenied</span> {
@@ -2451,14 +2433,14 @@
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>), <span class="ident">allow</span>(<span class="ident">unused_variables</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">topics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> {
-                <span class="ident">dispatcher</span>
+                <span class="self">self</span>
                     .<span class="ident">server_dispatcher</span>
                     .<span class="ident">server</span>
                     .<span class="ident">data</span>
@@ -2466,7 +2448,7 @@
                     .<span class="ident">publish_serialized_to_all</span>(
                         <span class="ident">topics</span>
                             .<span class="ident">iter</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">topic</span><span class="op">|</span> <span class="ident">database_topic</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">topic</span>))
+                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">topic</span><span class="op">|</span> <span class="ident">database_topic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>))
                             .<span class="ident">collect</span>(),
                         <span class="ident">payload</span>,
                     )
@@ -2480,16 +2462,11 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">SubscribeToHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">SubscribeToHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
-    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>,
-        <span class="ident">_subscriber_id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u64</span>,
-        <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">topic</span>)
+    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">_subscriber_id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u64</span>, <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2498,14 +2475,14 @@
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>), <span class="ident">allow</span>(<span class="ident">unused_variables</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
         <span class="ident">topic</span>: <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> {
-                <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+                <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">subscriber</span>) <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>) {
                     <span class="ident">subscriber</span>.<span class="ident">subscribe_to</span>(<span class="ident">topic</span>).<span class="kw">await</span>;
                     <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="prelude-val">Ok</span>)
@@ -2522,16 +2499,13 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">UnsubscribeFromHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">UnsubscribeFromHandler</span>
+    <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>
+{
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
-    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>,
-        <span class="ident">_subscriber_id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u64</span>,
-        <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">topic</span>)
+    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">_subscriber_id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u64</span>, <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2540,14 +2514,14 @@
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>), <span class="ident">allow</span>(<span class="ident">unused_variables</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
         <span class="ident">topic</span>: <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> {
-                <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+                <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">subscriber</span>) <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>) {
                     <span class="ident">subscriber</span>.<span class="ident">unsubscribe_from</span>(<span class="kw-2">&amp;</span><span class="ident">topic</span>).<span class="kw">await</span>;
                     <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="prelude-val">Ok</span>)
@@ -2564,18 +2538,18 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">UnregisterSubscriberHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
-
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">UnregisterSubscriberHandler</span>
+    <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>
+{
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>), <span class="ident">allow</span>(<span class="ident">unused_variables</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">write</span>().<span class="kw">await</span>;
                 <span class="kw">if</span> <span class="ident">subscribers</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>).<span class="ident">is_none</span>() {
                     <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Error</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="ident">String</span>::<span class="ident">from</span>(
                         <span class="string">&quot;invalid subscriber id&quot;</span>,
@@ -2591,15 +2565,13 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ExecuteKeyOperationHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span><span class="op">&gt;</span> {
-    <span class="kw">type</span> <span class="ident">Dispatcher</span> <span class="op">=</span> <span class="self">Self</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">pliantdb_core</span>::<span class="ident">networking</span>::<span class="ident">ExecuteKeyOperationHandler</span>
+    <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span>
+{
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">PliantAction</span>;
 
-    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">Self</span>::<span class="ident">Dispatcher</span>,
-        <span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">KeyOperation</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-        <span class="ident">kv_key_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">dispatcher</span>.<span class="ident">name</span>, <span class="ident">op</span>.<span class="ident">namespace</span>.<span class="ident">as_deref</span>(), <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">key</span>)
+    <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">KeyOperation</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+        <span class="ident">kv_key_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">op</span>.<span class="ident">namespace</span>.<span class="ident">as_deref</span>(), <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">key</span>)
     }
 
     <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span>::<span class="ident">Action</span> {
@@ -2608,13 +2580,13 @@
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>), <span class="ident">allow</span>(<span class="ident">unused_variables</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
-        <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Dispatcher</span>,
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">op</span>: <span class="ident">KeyOperation</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span> {
-                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">database</span>.<span class="ident">execute_key_operation</span>(<span class="ident">op</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+                <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">execute_key_operation</span>(<span class="ident">op</span>).<span class="kw">await</span><span class="question-mark">?</span>;
                 <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>::<span class="ident">KvOutput</span>(<span class="ident">result</span>)))
             } <span class="kw">else</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;keyvalue is not enabled on this server&quot;</span>)))

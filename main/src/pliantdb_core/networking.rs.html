@@ -287,6 +287,15 @@
 <span id="284">284</span>
 <span id="285">285</span>
 <span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">fabruic</span>;
 <span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaName</span>;
@@ -316,7 +325,7 @@
 <span class="doccomment">/// A request made to a server.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">derive</span>(<span class="ident">actionable</span>::<span class="ident">Actionable</span>))]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Request</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// A server-related request.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>))]</span>
     <span class="ident">Server</span>(<span class="ident">ServerRequest</span>),
@@ -329,6 +338,13 @@
         <span class="doccomment">/// The request made to the database.</span>
         <span class="ident">request</span>: <span class="ident">DatabaseRequest</span>,
     },
+
+    <span class="doccomment">/// A database-related request.</span>
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(
+        <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>,
+        <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>, <span class="ident">subaction</span>)
+    )]</span>
+    <span class="ident">Api</span>(<span class="ident">T</span>),
 }
 
 <span class="doccomment">/// A server-related request.</span>
@@ -465,13 +481,15 @@
 
 <span class="doccomment">/// A response from a server.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Response</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// A request succeded but provided no output.</span>
     <span class="prelude-val">Ok</span>,
     <span class="doccomment">/// A response to a [`ServerRequest`].</span>
     <span class="ident">Server</span>(<span class="ident">ServerResponse</span>),
     <span class="doccomment">/// A response to a [`DatabaseRequest`].</span>
     <span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>),
+    <span class="doccomment">/// A response to an Api request.</span>
+    <span class="ident">Api</span>(<span class="ident">T</span>),
     <span class="doccomment">/// An error occurred processing a request.</span>
     <span class="ident">Error</span>(<span class="kw">crate</span>::<span class="ident">Error</span>),
 }

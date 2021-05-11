@@ -23,11 +23,10 @@ defines several associated types:</p>
 <li><code>Output</code>: The <code>Ok</code> side of the <code>Result</code>.</li>
 <li><code>Error</code>: The <code>Err</code> side of the <code>Result</code>. Must implement
 <code>From&lt;actionable::PermissionDenied&gt;</code>.</li>
-<li>For each variant in the enum, another associated type named
-<code>&lt;VariantName&gt;Handler</code>. For example, if the enum variant was
-<code>Request::AddUser</code>, the associated type will be <code>AddUserHandler</code>. Each of
-these associated types must implement the trait of the same name
-(described in the next section).</li>
+<li>For each variant in the enum, another Trait named <code>&lt;VariantName&gt;Handler</code>.
+For example, if the enum variant was <code>Request::AddUser</code>, the trait will be
+<code>AddUserHandler</code>. Each of these traits must be implemented by any type
+implementing <code>&lt;EnumName&gt;Dispatcher</code>.</li>
 </ul>
 <p>The dispatcher trait has a method available for you to use to dispatch
 requests: <code>async fn dispatch(&amp;self, permissions: &amp;Permissions, request: &lt;EnumName&gt;) -&gt; Result&lt;Self::Output, Self::Error&gt;</code>.</p>
