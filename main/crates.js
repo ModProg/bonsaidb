@@ -1,0 +1,1 @@
+window.ALL_CRATES = ["circulate","pliantdb","pliantdb_client","pliantdb_core","pliantdb_jobs","pliantdb_local","pliantdb_macros","pliantdb_server"];
