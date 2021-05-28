@@ -7,4 +7,5 @@ sourcesIndex["pliantdb_jobs"] = {"name":"","dirs":[{"name":"manager","files":["j
 sourcesIndex["pliantdb_local"] = {"name":"","dirs":[{"name":"admin","files":["database.rs","mod.rs"]},{"name":"database","files":["kv.rs","pubsub.rs"]},{"name":"storage","files":["kv.rs"]},{"name":"views","files":["integrity_scanner.rs","mapper.rs"]}],"files":["backup.rs","config.rs","database.rs","error.rs","lib.rs","open_trees.rs","storage.rs","tasks.rs","views.rs"]};
 sourcesIndex["pliantdb_macros"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["pliantdb_server"] = {"name":"","dirs":[{"name":"cli","files":["certificate.rs","mod.rs","serve.rs"]}],"files":["async_io_util.rs","config.rs","error.rs","lib.rs","server.rs","test_util.rs"]};
+sourcesIndex["xtask"] = {"name":"","files":["main.rs"]};
 createSourceSidebar();
