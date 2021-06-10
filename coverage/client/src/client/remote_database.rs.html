@@ -99,7 +99,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">    backend::Backend,</pre>
+                <pre class="has-background-white py-0 px-2">    connection::{AccessPolicy, Connection, QueryKey},</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -112,7 +112,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">    connection::{AccessPolicy, Connection, QueryKey},</pre>
+                <pre class="has-background-white py-0 px-2">    custom_api::CustomApi,</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -385,7 +385,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">pub struct RemoteDatabase&lt;DB: Schema, B: Backend = ()&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">pub struct RemoteDatabase&lt;DB: Schema, A: CustomApi = ()&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -398,7 +398,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">    client: Client&lt;B&gt;,</pre>
+                <pre class="has-background-white py-0 px-2">    client: Client&lt;A&gt;,</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -476,7 +476,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">impl&lt;DB: Schema, B: Backend&gt; Clone for RemoteDatabase&lt;DB, B&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">impl&lt;DB: Schema, A: CustomApi&gt; Clone for RemoteDatabase&lt;DB, A&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -619,7 +619,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">impl&lt;DB: Schema, B: Backend&gt; RemoteDatabase&lt;DB, B&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">impl&lt;DB: Schema, A: CustomApi&gt; RemoteDatabase&lt;DB, A&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -632,7 +632,7 @@
                 542
             </div>
             <div class="column has-background-success-light p-0">
-                <pre class="has-background-success-light py-0 px-2">    pub(crate) fn new(client: Client&lt;B&gt;, name: String, schema: Arc&lt;Schematic&gt;) -&gt; Self {</pre>
+                <pre class="has-background-success-light py-0 px-2">    pub(crate) fn new(client: Client&lt;A&gt;, name: String, schema: Arc&lt;Schematic&gt;) -&gt; Self {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -775,7 +775,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">impl&lt;DB: Schema, B: Backend&gt; Connection for RemoteDatabase&lt;DB, B&gt; {</pre>
+                <pre class="has-background-white py-0 px-2">impl&lt;DB: Schema, A: CustomApi&gt; Connection for RemoteDatabase&lt;DB, A&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -4225,7 +4225,7 @@
         </div></div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2021-05-28 02:30</p>
+                <p class="heading">Date: 2021-06-10 17:38</p>
             </div>
         </footer>
     </body>
