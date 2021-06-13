@@ -1297,6 +1297,81 @@
 <span id="1294">1294</span>
 <span id="1295">1295</span>
 <span id="1296">1296</span>
+<span id="1297">1297</span>
+<span id="1298">1298</span>
+<span id="1299">1299</span>
+<span id="1300">1300</span>
+<span id="1301">1301</span>
+<span id="1302">1302</span>
+<span id="1303">1303</span>
+<span id="1304">1304</span>
+<span id="1305">1305</span>
+<span id="1306">1306</span>
+<span id="1307">1307</span>
+<span id="1308">1308</span>
+<span id="1309">1309</span>
+<span id="1310">1310</span>
+<span id="1311">1311</span>
+<span id="1312">1312</span>
+<span id="1313">1313</span>
+<span id="1314">1314</span>
+<span id="1315">1315</span>
+<span id="1316">1316</span>
+<span id="1317">1317</span>
+<span id="1318">1318</span>
+<span id="1319">1319</span>
+<span id="1320">1320</span>
+<span id="1321">1321</span>
+<span id="1322">1322</span>
+<span id="1323">1323</span>
+<span id="1324">1324</span>
+<span id="1325">1325</span>
+<span id="1326">1326</span>
+<span id="1327">1327</span>
+<span id="1328">1328</span>
+<span id="1329">1329</span>
+<span id="1330">1330</span>
+<span id="1331">1331</span>
+<span id="1332">1332</span>
+<span id="1333">1333</span>
+<span id="1334">1334</span>
+<span id="1335">1335</span>
+<span id="1336">1336</span>
+<span id="1337">1337</span>
+<span id="1338">1338</span>
+<span id="1339">1339</span>
+<span id="1340">1340</span>
+<span id="1341">1341</span>
+<span id="1342">1342</span>
+<span id="1343">1343</span>
+<span id="1344">1344</span>
+<span id="1345">1345</span>
+<span id="1346">1346</span>
+<span id="1347">1347</span>
+<span id="1348">1348</span>
+<span id="1349">1349</span>
+<span id="1350">1350</span>
+<span id="1351">1351</span>
+<span id="1352">1352</span>
+<span id="1353">1353</span>
+<span id="1354">1354</span>
+<span id="1355">1355</span>
+<span id="1356">1356</span>
+<span id="1357">1357</span>
+<span id="1358">1358</span>
+<span id="1359">1359</span>
+<span id="1360">1360</span>
+<span id="1361">1361</span>
+<span id="1362">1362</span>
+<span id="1363">1363</span>
+<span id="1364">1364</span>
+<span id="1365">1365</span>
+<span id="1366">1366</span>
+<span id="1367">1367</span>
+<span id="1368">1368</span>
+<span id="1369">1369</span>
+<span id="1370">1370</span>
+<span id="1371">1371</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">HashMap</span>;
@@ -1316,9 +1391,14 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">futures</span>::<span class="ident">SinkExt</span>;
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Future</span>, <span class="ident">StreamExt</span>, <span class="ident">TryFutureExt</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
-    <span class="ident">backend</span>::{<span class="ident">Backend</span>, <span class="ident">CustomApi</span>},
+    <span class="ident">circulate</span>::{<span class="ident">Message</span>, <span class="ident">Relay</span>, <span class="ident">Subscriber</span>},
+    <span class="ident">pubsub</span>::<span class="ident">database_topic</span>,
+};
+<span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
     <span class="ident">connection</span>::{<span class="self">self</span>, <span class="ident">AccessPolicy</span>, <span class="ident">QueryKey</span>, <span class="ident">ServerConnection</span>},
+    <span class="ident">custom_api</span>::<span class="ident">CustomApi</span>,
     <span class="ident">kv</span>::<span class="ident">KeyOperation</span>,
     <span class="ident">networking</span>::{
         <span class="self">self</span>,
@@ -1340,27 +1420,32 @@
     <span class="ident">schema</span>::{<span class="ident">CollectionName</span>, <span class="ident">Schema</span>, <span class="ident">ViewName</span>},
     <span class="ident">transaction</span>::{<span class="ident">Command</span>, <span class="ident">Transaction</span>},
 };
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
-    <span class="ident">circulate</span>::{<span class="ident">Message</span>, <span class="ident">Relay</span>, <span class="ident">Subscriber</span>},
-    <span class="ident">pubsub</span>::<span class="ident">database_topic</span>,
-};
 <span class="kw">use</span> <span class="ident">pliantdb_jobs</span>::{<span class="ident">manager</span>::<span class="ident">Manager</span>, <span class="ident">Job</span>};
-<span class="kw">use</span> <span class="ident">pliantdb_local</span>::{<span class="ident">Database</span>, <span class="ident">OpenDatabase</span>, <span class="ident">Storage</span>};
+<span class="kw">use</span> <span class="ident">pliantdb_local</span>::{<span class="ident">OpenDatabase</span>, <span class="ident">Storage</span>};
 <span class="kw">use</span> <span class="ident">schema</span>::<span class="ident">SchemaName</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">net</span>::<span class="ident">TcpListener</span>;
 <span class="kw">use</span> <span class="ident">tokio</span>::{<span class="ident">fs</span>::<span class="ident">File</span>, <span class="ident">sync</span>::<span class="ident">RwLock</span>};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">async_io_util</span>::<span class="ident">FileExt</span>, <span class="ident">error</span>::<span class="ident">Error</span>, <span class="ident">Configuration</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">async_io_util</span>::<span class="ident">FileExt</span>, <span class="ident">error</span>::<span class="ident">Error</span>, <span class="ident">Backend</span>, <span class="ident">Configuration</span>};
+
+<span class="kw">mod</span> <span class="ident">database</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">database</span>::<span class="ident">ServerDatabase</span>;
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">database</span>::<span class="ident">ServerSubscriber</span>;
 
 <span class="doccomment">/// A `PliantDb` server.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
+<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy</span>::<span class="ident">module_name_repetitions</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
     <span class="ident">data</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+<span class="doccomment">/// A `PliantDb` server without a custom bakend.</span>
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Server</span> <span class="op">=</span> <span class="ident">CustomServer</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">data</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>(),
@@ -1369,7 +1454,7 @@
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
+<span class="kw">struct</span> <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
     <span class="ident">endpoint</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Endpoint</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
     <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -1377,15 +1462,17 @@
     <span class="ident">storage</span>: <span class="ident">Storage</span>,
     <span class="ident">request_processor</span>: <span class="ident">Manager</span>,
     <span class="ident">default_permissions</span>: <span class="ident">Permissions</span>,
-    <span class="ident">custom_api</span>: <span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Dispatcher</span>,
+    <span class="ident">custom_api</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApiDispatcher</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
     <span class="ident">relay</span>: <span class="ident">Relay</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+    <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">_backend</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Opens a server using `directory` for storage.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">directory</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">configuration</span>: <span class="ident">Configuration</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">directory</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">configuration</span>: <span class="ident">Configuration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">request_processor</span> <span class="op">=</span> <span class="ident">Manager</span>::<span class="ident">default</span>();
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">configuration</span>.<span class="ident">request_workers</span> {
             <span class="ident">request_processor</span>.<span class="ident">spawn_worker</span>();
@@ -1402,18 +1489,29 @@
                 <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock</span>::<span class="ident">default</span>(),
                 <span class="ident">request_processor</span>,
                 <span class="ident">default_permissions</span>: <span class="ident">configuration</span>.<span class="ident">default_permissions</span>,
-                <span class="ident">custom_api</span>: <span class="ident">configuration</span>.<span class="ident">custom_api_dispatcher</span>,
+                <span class="ident">custom_api</span>: <span class="ident">RwLock</span>::<span class="ident">default</span>(),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
                 <span class="ident">relay</span>: <span class="ident">Relay</span>::<span class="ident">default</span>(),
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+                <span class="ident">subscribers</span>: <span class="ident">Arc</span>::<span class="ident">default</span>(),
                 <span class="ident">_backend</span>: <span class="ident">PhantomData</span>::<span class="ident">default</span>(),
             }),
         })
     }
 
-    <span class="doccomment">/// Retrieves a database. This function only verifies that the database exists</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Opens a server using `directory` for storage.</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_custom_api_dispatcher</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dispatcher</span>: <span class="ident">B</span>::<span class="ident">CustomApiDispatcher</span>) {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">server_dispatcher</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">custom_api</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw-2">*</span><span class="ident">server_dispatcher</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">dispatcher</span>);
+    }
+
+    <span class="doccomment">/// Retrieves a database. This function only verifies that the database exists.</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ServerDatabase</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">B</span>, <span class="ident">DB</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">database</span>(<span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">db</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">ServerDatabase</span> { <span class="ident">server</span>: <span class="self">self</span>, <span class="ident">db</span> })
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database_without_schema</span>(
@@ -1633,9 +1731,6 @@
             <span class="prelude-ty">Result</span>::<span class="op">&lt;</span>(), <span class="ident">anyhow</span>::<span class="ident">Error</span><span class="op">&gt;</span>::<span class="prelude-val">Ok</span>(())
         });
 
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-        <span class="kw">let</span> <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">default</span>();
-
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload</span>) <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">next</span>().<span class="kw">await</span> {
             <span class="kw">match</span> <span class="ident">payload</span><span class="question-mark">?</span> {
                 <span class="ident">Message</span>::<span class="ident">Binary</span>(<span class="ident">binary</span>) <span class="op">=</span><span class="op">&gt;</span> {
@@ -1655,7 +1750,7 @@
                             <span class="prelude-val">Ok</span>(())
                         },
                         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-                        <span class="ident">subscribers</span>.<span class="ident">clone</span>(),
+                        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">clone</span>(),
                         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
                         <span class="ident">response_sender</span>.<span class="ident">clone</span>(),
                     )
@@ -1715,8 +1810,6 @@
         <span class="ident">sender</span>: <span class="ident">fabruic</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="kw-2">mut</span> <span class="ident">receiver</span>: <span class="ident">fabruic</span>::<span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-        <span class="kw">let</span> <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Arc</span>::<span class="ident">default</span>();
         <span class="kw">let</span> (<span class="ident">payload_sender</span>, <span class="ident">payload_receiver</span>) <span class="op">=</span> <span class="ident">flume</span>::<span class="ident">unbounded</span>();
         <span class="ident">tokio</span>::<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
             <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">payload</span>) <span class="op">=</span> <span class="ident">payload_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
@@ -1740,7 +1833,7 @@
                     <span class="prelude-val">Ok</span>(())
                 },
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-                <span class="ident">subscribers</span>.<span class="ident">clone</span>(),
+                <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">clone</span>(),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
                 <span class="ident">payload_sender</span>.<span class="ident">clone</span>(),
             )
@@ -1801,9 +1894,91 @@
 
         <span class="prelude-val">Ok</span>(())
     }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">publish_message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
+        <span class="self">self</span>.<span class="ident">data</span>
+            .<span class="ident">relay</span>
+            .<span class="ident">publish_message</span>(<span class="ident">Message</span> {
+                <span class="ident">topic</span>: <span class="ident">database_topic</span>(<span class="ident">database</span>, <span class="ident">topic</span>),
+                <span class="ident">payload</span>,
+            })
+            .<span class="kw">await</span>
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">publish_serialized_to_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">topics</span>: <span class="kw-2">&amp;</span>[<span class="ident">String</span>], <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
+        <span class="self">self</span>.<span class="ident">data</span>
+            .<span class="ident">relay</span>
+            .<span class="ident">publish_serialized_to_all</span>(
+                <span class="ident">topics</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">topic</span><span class="op">|</span> <span class="ident">database_topic</span>(<span class="ident">database</span>, <span class="ident">topic</span>))
+                    .<span class="ident">collect</span>(),
+                <span class="ident">payload</span>,
+            )
+            .<span class="kw">await</span>;
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_subscriber</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ServerSubscriber</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">subscriber</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">relay</span>.<span class="ident">create_subscriber</span>().<span class="kw">await</span>;
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">subscriber_id</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">id</span>();
+        <span class="kw">let</span> <span class="ident">receiver</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">receiver</span>().<span class="ident">clone</span>();
+        <span class="ident">subscribers</span>.<span class="ident">insert</span>(<span class="ident">subscriber_id</span>, <span class="ident">subscriber</span>);
+
+        <span class="ident">ServerSubscriber</span> {
+            <span class="ident">server</span>: <span class="self">self</span>.<span class="ident">clone</span>(),
+            <span class="ident">database</span>,
+            <span class="ident">receiver</span>,
+            <span class="ident">id</span>: <span class="ident">subscriber_id</span>,
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">subscribe_to</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
+        <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">topic</span>: <span class="ident">S</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">subscriber</span>) <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>) {
+            <span class="ident">subscriber</span>
+                .<span class="ident">subscribe_to</span>(<span class="ident">database_topic</span>(<span class="ident">database</span>, <span class="kw-2">&amp;</span><span class="ident">topic</span>.<span class="ident">into</span>()))
+                .<span class="kw">await</span>;
+            <span class="prelude-val">Ok</span>(())
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="ident">String</span>::<span class="ident">from</span>(
+                <span class="string">&quot;invalid subscriber id&quot;</span>,
+            )))
+        }
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unsubscribe_from</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
+        <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">subscriber</span>) <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>) {
+            <span class="ident">subscriber</span>
+                .<span class="ident">unsubscribe_from</span>(<span class="kw-2">&amp;</span><span class="ident">database_topic</span>(<span class="ident">database</span>, <span class="ident">topic</span>))
+                .<span class="kw">await</span>;
+            <span class="prelude-val">Ok</span>(())
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="ident">String</span>::<span class="ident">from</span>(
+                <span class="string">&quot;invalid subscriber id&quot;</span>,
+            )))
+        }
+    }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">Storage</span>;
 
     <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="self">Self</span>::<span class="ident">Target</span> {
@@ -1814,7 +1989,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">ClientRequest</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
     <span class="ident">request</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">server</span>: <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+    <span class="ident">server</span>: <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
     <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
@@ -1824,7 +1999,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">ClientRequest</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(
         <span class="ident">request</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span>,
-        <span class="ident">server</span>: <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+        <span class="ident">server</span>: <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">sender</span>: <span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span>
             <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -1861,7 +2036,7 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">ServerConnection</span> <span class="kw">for</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">ServerConnection</span> <span class="kw">for</span> <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_database_with_schema</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
@@ -1889,7 +2064,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Dispatcher</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">dispatcher</span>(<span class="ident">input</span> <span class="op">=</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Request</span><span class="op">&gt;</span>, <span class="ident">input</span> <span class="op">=</span> <span class="ident">ServerRequest</span>)]</span>
 <span class="kw">struct</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
-    <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">Server</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+    <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
     <span class="ident">subscribers</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;s</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
@@ -1907,15 +2082,20 @@
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">subaction</span>: <span class="self">Self</span>::<span class="ident">Subaction</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">self</span>.<span class="ident">server</span>
-            .<span class="ident">data</span>
-            .<span class="ident">custom_api</span>
-            .<span class="ident">dispatch</span>(<span class="ident">permissions</span>, <span class="ident">subaction</span>)
-            .<span class="kw">await</span>
-            .<span class="ident">map</span>(<span class="ident">Response</span>::<span class="ident">Api</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-                <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;error executing custom api: {:?}&quot;</span>, <span class="ident">err</span>))
-            })
+        <span class="kw">let</span> <span class="ident">dispatcher</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">data</span>.<span class="ident">custom_api</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dispatcher</span>) <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">as_ref</span>() {
+            <span class="ident">dispatcher</span>
+                .<span class="ident">dispatch</span>(<span class="ident">permissions</span>, <span class="ident">subaction</span>)
+                .<span class="kw">await</span>
+                .<span class="ident">map</span>(<span class="ident">Response</span>::<span class="ident">Api</span>)
+                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                    <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;error executing custom api: {:?}&quot;</span>, <span class="ident">err</span>))
+                })
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="ident">String</span>::<span class="ident">from</span>(
+                <span class="string">&quot;No dispatcher to handle request&quot;</span>,
+            )))
+        }
     }
 }
 
@@ -2345,21 +2525,16 @@
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> {
                 <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">server</span>;
-                <span class="kw">let</span> <span class="ident">subscriber</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">data</span>.<span class="ident">relay</span>.<span class="ident">create_subscriber</span>().<span class="kw">await</span>;
-
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">write</span>().<span class="kw">await</span>;
-                <span class="kw">let</span> <span class="ident">subscriber_id</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">id</span>();
-                <span class="kw">let</span> <span class="ident">receiver</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">receiver</span>().<span class="ident">clone</span>();
-                <span class="ident">subscribers</span>.<span class="ident">insert</span>(<span class="ident">subscriber_id</span>, <span class="ident">subscriber</span>);
+                <span class="kw">let</span> <span class="ident">subscriber</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">create_subscriber</span>(<span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>()).<span class="kw">await</span>;
+                <span class="kw">let</span> <span class="ident">subscriber_id</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">id</span>;
 
                 <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">clone</span>();
                 <span class="kw">let</span> <span class="ident">response_sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">response_sender</span>.<span class="ident">clone</span>();
                 <span class="ident">tokio</span>::<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
                     <span class="ident">task_self</span>
-                        .<span class="ident">forward_notifications_for</span>(<span class="ident">subscriber_id</span>, <span class="ident">receiver</span>, <span class="ident">response_sender</span>.<span class="ident">clone</span>())
+                        .<span class="ident">forward_notifications_for</span>(<span class="ident">subscriber</span>.<span class="ident">id</span>, <span class="ident">subscriber</span>.<span class="ident">receiver</span>, <span class="ident">response_sender</span>.<span class="ident">clone</span>())
                         .<span class="kw">await</span>
                 });
-
                 <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>::<span class="ident">SubscriberCreated</span> {
                     <span class="ident">subscriber_id</span>,
                 }))
@@ -2394,12 +2569,7 @@
                 <span class="self">self</span>
                     .<span class="ident">server_dispatcher</span>
                     .<span class="ident">server</span>
-                    .<span class="ident">data</span>
-                    .<span class="ident">relay</span>
-                    .<span class="ident">publish_message</span>(<span class="ident">Message</span> {
-                        <span class="ident">topic</span>: <span class="ident">database_topic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">topic</span>),
-                        <span class="ident">payload</span>,
-                    })
+                    .<span class="ident">publish_message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">topic</span>, <span class="ident">payload</span>)
                     .<span class="kw">await</span>;
                 <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="prelude-val">Ok</span>)
             } <span class="kw">else</span> {
@@ -2443,13 +2613,9 @@
                 <span class="self">self</span>
                     .<span class="ident">server_dispatcher</span>
                     .<span class="ident">server</span>
-                    .<span class="ident">data</span>
-                    .<span class="ident">relay</span>
                     .<span class="ident">publish_serialized_to_all</span>(
-                        <span class="ident">topics</span>
-                            .<span class="ident">iter</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">topic</span><span class="op">|</span> <span class="ident">database_topic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>))
-                            .<span class="ident">collect</span>(),
+                        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>,
+                        <span class="kw-2">&amp;</span><span class="ident">topics</span>,
                         <span class="ident">payload</span>,
                     )
                     .<span class="kw">await</span>;
@@ -2482,15 +2648,7 @@
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> {
-                <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">subscriber</span>) <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>) {
-                    <span class="ident">subscriber</span>.<span class="ident">subscribe_to</span>(<span class="ident">topic</span>).<span class="kw">await</span>;
-                    <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="prelude-val">Ok</span>)
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Error</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="ident">String</span>::<span class="ident">from</span>(
-                        <span class="string">&quot;invalid subscriber id&quot;</span>,
-                    ))))
-                }
+                <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">server</span>.<span class="ident">subscribe_to</span>(<span class="ident">subscriber_id</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>).<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Response</span>::<span class="prelude-val">Ok</span>)
             } <span class="kw">else</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;pubsub is not enabled on this server&quot;</span>)))
             }
@@ -2521,15 +2679,7 @@
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B</span>::<span class="ident">CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span>::<span class="ident">Response</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="macro">cfg_if</span><span class="macro">!</span> {
             <span class="kw">if</span> <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> {
-                <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
-                <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">subscriber</span>) <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>) {
-                    <span class="ident">subscriber</span>.<span class="ident">unsubscribe_from</span>(<span class="kw-2">&amp;</span><span class="ident">topic</span>).<span class="kw">await</span>;
-                    <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="prelude-val">Ok</span>)
-                } <span class="kw">else</span> {
-                    <span class="prelude-val">Ok</span>(<span class="ident">Response</span>::<span class="ident">Error</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="ident">String</span>::<span class="ident">from</span>(
-                        <span class="string">&quot;invalid subscriber id&quot;</span>,
-                    ))))
-                }
+                <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">server</span>.<span class="ident">unsubscribe_from</span>(<span class="ident">subscriber_id</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">topic</span>).<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Response</span>::<span class="prelude-val">Ok</span>)
             } <span class="kw">else</span> {
                 <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Server</span>(<span class="ident">String</span>::<span class="ident">from</span>(<span class="string">&quot;pubsub is not enabled on this server&quot;</span>)))
             }

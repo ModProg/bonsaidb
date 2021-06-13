@@ -1,0 +1,1 @@
+initSidebarItems({"trait":[["CustomApi","A definition of a custom API. The `Request` associated type is what a connected client can send. The `Response` associated type is what your API is expecetd to send from the server to the client. The `Dispatcher` is the type that will handle the custom API requests."]]});

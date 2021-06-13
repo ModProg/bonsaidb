@@ -328,8 +328,8 @@
 
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
-    <span class="ident">backend</span>::<span class="ident">Backend</span>,
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>},
+    <span class="ident">custom_api</span>::<span class="ident">CustomApi</span>,
     <span class="ident">document</span>::<span class="ident">Document</span>,
     <span class="ident">networking</span>::{<span class="self">self</span>, <span class="ident">DatabaseRequest</span>, <span class="ident">DatabaseResponse</span>, <span class="ident">Request</span>, <span class="ident">Response</span>},
     <span class="ident">schema</span>::{
@@ -350,14 +350,14 @@
 
 <span class="doccomment">/// A database on a remote server.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span>, <span class="ident">B</span>: <span class="ident">Backend</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
-    <span class="ident">client</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span>, <span class="ident">A</span>: <span class="ident">CustomApi</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
+    <span class="ident">client</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>,
     <span class="ident">name</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="ident">schema</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Schematic</span><span class="op">&gt;</span>,
     <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span>, <span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">A</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">client</span>: <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">clone</span>(),
@@ -368,8 +368,8 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">client</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">schema</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Schematic</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span>, <span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">A</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">client</span>: <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">schema</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Schematic</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">client</span>,
             <span class="ident">name</span>: <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">name</span>),
@@ -380,7 +380,7 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Connection</span> <span class="kw">for</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">B</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span>, <span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> <span class="ident">Connection</span> <span class="kw">for</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">A</span><span class="op">&gt;</span> {
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Collection</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">id</span>: <span class="ident">u64</span>,
