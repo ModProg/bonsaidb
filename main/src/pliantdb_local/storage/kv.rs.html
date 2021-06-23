@@ -403,7 +403,7 @@
             <span class="kw">let</span> <span class="ident">remaining_time</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">timeout</span> <span class="op">-</span> <span class="ident">now</span>;
             <span class="kw">let</span> <span class="ident">received_update</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">remaining_time</span>) <span class="op">=</span> <span class="ident">remaining_time</span> {
                 <span class="comment">// Allow flume to receive updates for the remaining time.</span>
-                <span class="kw">match</span> <span class="ident">updates</span>.<span class="ident">recv_timeout</span>(<span class="macro">dbg</span><span class="macro">!</span>(<span class="ident">remaining_time</span>)) {
+                <span class="kw">match</span> <span class="ident">updates</span>.<span class="ident">recv_timeout</span>(<span class="ident">remaining_time</span>) {
                     <span class="prelude-val">Ok</span>(<span class="ident">update</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">update</span>),
                     <span class="prelude-val">Err</span>(<span class="ident">flume</span>::<span class="ident">RecvTimeoutError</span>::<span class="ident">Timeout</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(()),
                     <span class="prelude-val">Err</span>(<span class="ident">flume</span>::<span class="ident">RecvTimeoutError</span>::<span class="ident">Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
@@ -714,13 +714,13 @@
         });
 
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>((<span class="ident">tree</span>, <span class="ident">key</span>, <span class="ident">expiration</span>)) <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
-            <span class="self">self</span>.<span class="ident">storage</span>.<span class="ident">update_key_expiration</span>(<span class="macro">dbg</span><span class="macro">!</span>(<span class="ident">ExpirationUpdate</span> {
+            <span class="self">self</span>.<span class="ident">storage</span>.<span class="ident">update_key_expiration</span>(<span class="ident">ExpirationUpdate</span> {
                 <span class="ident">tree_key</span>: <span class="ident">TreeKey</span> {
                     <span class="ident">tree</span>: <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="ident">tree</span>)<span class="question-mark">?</span>,
                     <span class="ident">key</span>: <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="ident">key</span>)<span class="question-mark">?</span>,
                 },
                 <span class="ident">expiration</span>,
-            }));
+            });
         }
 
         <span class="prelude-val">Ok</span>(())
