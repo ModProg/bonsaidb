@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Builder","Executes [`Command::Set`] when awaited. Also offers methods to customize the options for the operation."]]});
