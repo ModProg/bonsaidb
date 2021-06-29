@@ -446,7 +446,10 @@ let db = storage.database::&lt;Message&gt;(&quot;default&quot;).await?;
 <p>The first step is to create a <a href="https://pliantdb.dev/main/pliantdb/local/struct.Storage.html"><code>Server</code></a>, which uses local <a href="https://pliantdb.dev/main/pliantdb/local/struct.Storage.html"><code>Storage</code></a> under the hood. This means that if you're already using <code>PliantDb</code> in local mode, you can swap your usage of <a href="https://pliantdb.dev/main/pliantdb/local/struct.Storage.html"><code>Storage</code></a> with <a href="https://pliantdb.dev/main/pliantdb/server/struct.Server.html"><code>Server</code></a> in your server code without running your database through any tools. Here's the setup code from <a href="https://github.com/khonsulabs/pliantdb/blob/main/pliantdb/examples/server.rs"><code>pliantdb/examples/server.rs</code></a></p>
 <pre><code class="language-rust noplayground no_run">    let server = Server::open(
         Path::new(&quot;server-data.pliantdb&quot;),
-        Configuration::default(),
+        Configuration {
+            default_permissions: Permissions::allow_all(),
+            ..Default::default()
+        },
     )
     .await?;
     if server.certificate().await.is_err() {
