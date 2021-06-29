@@ -40,15 +40,38 @@
 <span id="37">37</span>
 <span id="38">38</span>
 <span id="39">39</span>
+<span id="40">40</span>
+<span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
+<span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fmt</span>::<span class="ident">Debug</span>;
 
 <span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
 <span class="kw">use</span> <span class="ident">pliantdb_core</span>::{<span class="ident">custom_api</span>::<span class="ident">CustomApi</span>, <span class="ident">permissions</span>::<span class="ident">Dispatcher</span>};
 
+<span class="kw">use</span> <span class="kw">crate</span>::<span class="ident">server</span>::<span class="ident">ConnectedClient</span>;
+
 <span class="doccomment">/// Tailors the behavior of a server to your needs.</span>
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Backend</span>: <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Backend</span>: <span class="ident">Debug</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Sized</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
     <span class="doccomment">/// The custom API definition. If you do not wish to have an API, `()` may be provided.</span>
     <span class="kw">type</span> <span class="ident">CustomApi</span>: <span class="ident">CustomApi</span>;
 
@@ -59,6 +82,25 @@
         <span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Debug</span>;
 
     <span class="comment">// TODO: add client connections events, client errors, etc.</span>
+    <span class="doccomment">/// A client disconnected from the server. This is invoked before authentication has been performed.</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">client_connected</span>(<span class="ident">client</span>: <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) {
+        <span class="macro">println</span><span class="macro">!</span>(
+            <span class="string">&quot;{:?} client connected from {:?}&quot;</span>,
+            <span class="ident">client</span>.<span class="ident">transport</span>(),
+            <span class="ident">client</span>.<span class="ident">address</span>()
+        );
+    }
+
+    <span class="doccomment">/// A client disconnected from the server.</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">client_disconnected</span>(<span class="ident">client</span>: <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) {
+        <span class="macro">println</span><span class="macro">!</span>(
+            <span class="string">&quot;{:?} client disconnected ({:?})&quot;</span>,
+            <span class="ident">client</span>.<span class="ident">transport</span>(),
+            <span class="ident">client</span>.<span class="ident">address</span>()
+        );
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Backend</span> <span class="kw">for</span> () {
