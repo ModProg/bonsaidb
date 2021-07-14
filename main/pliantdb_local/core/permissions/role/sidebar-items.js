@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ByName","A unique view of roles by name."],["Role","An assignable role, which grants permissions based on the associated `PermissionGroup`s."]]});

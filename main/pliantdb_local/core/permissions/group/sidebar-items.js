@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["ByName","A unique view of permission groups by name."],["PermissionGroup","A named group of permissions statements."]]});
