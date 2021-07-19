@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `local/src/storage.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>storage.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../pliantdb_local/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../pliantdb_local/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
                 <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
@@ -457,33 +457,332 @@
 <span id="454">454</span>
 <span id="455">455</span>
 <span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
+<span id="603">603</span>
+<span id="604">604</span>
+<span id="605">605</span>
+<span id="606">606</span>
+<span id="607">607</span>
+<span id="608">608</span>
+<span id="609">609</span>
+<span id="610">610</span>
+<span id="611">611</span>
+<span id="612">612</span>
+<span id="613">613</span>
+<span id="614">614</span>
+<span id="615">615</span>
+<span id="616">616</span>
+<span id="617">617</span>
+<span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
+<span id="624">624</span>
+<span id="625">625</span>
+<span id="626">626</span>
+<span id="627">627</span>
+<span id="628">628</span>
+<span id="629">629</span>
+<span id="630">630</span>
+<span id="631">631</span>
+<span id="632">632</span>
+<span id="633">633</span>
+<span id="634">634</span>
+<span id="635">635</span>
+<span id="636">636</span>
+<span id="637">637</span>
+<span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+<span id="657">657</span>
+<span id="658">658</span>
+<span id="659">659</span>
+<span id="660">660</span>
+<span id="661">661</span>
+<span id="662">662</span>
+<span id="663">663</span>
+<span id="664">664</span>
+<span id="665">665</span>
+<span id="666">666</span>
+<span id="667">667</span>
+<span id="668">668</span>
+<span id="669">669</span>
+<span id="670">670</span>
+<span id="671">671</span>
+<span id="672">672</span>
+<span id="673">673</span>
+<span id="674">674</span>
+<span id="675">675</span>
+<span id="676">676</span>
+<span id="677">677</span>
+<span id="678">678</span>
+<span id="679">679</span>
+<span id="680">680</span>
+<span id="681">681</span>
+<span id="682">682</span>
+<span id="683">683</span>
+<span id="684">684</span>
+<span id="685">685</span>
+<span id="686">686</span>
+<span id="687">687</span>
+<span id="688">688</span>
+<span id="689">689</span>
+<span id="690">690</span>
+<span id="691">691</span>
+<span id="692">692</span>
+<span id="693">693</span>
+<span id="694">694</span>
+<span id="695">695</span>
+<span id="696">696</span>
+<span id="697">697</span>
+<span id="698">698</span>
+<span id="699">699</span>
+<span id="700">700</span>
+<span id="701">701</span>
+<span id="702">702</span>
+<span id="703">703</span>
+<span id="704">704</span>
+<span id="705">705</span>
+<span id="706">706</span>
+<span id="707">707</span>
+<span id="708">708</span>
+<span id="709">709</span>
+<span id="710">710</span>
+<span id="711">711</span>
+<span id="712">712</span>
+<span id="713">713</span>
+<span id="714">714</span>
+<span id="715">715</span>
+<span id="716">716</span>
+<span id="717">717</span>
+<span id="718">718</span>
+<span id="719">719</span>
+<span id="720">720</span>
+<span id="721">721</span>
+<span id="722">722</span>
+<span id="723">723</span>
+<span id="724">724</span>
+<span id="725">725</span>
+<span id="726">726</span>
+<span id="727">727</span>
+<span id="728">728</span>
+<span id="729">729</span>
+<span id="730">730</span>
+<span id="731">731</span>
+<span id="732">732</span>
 </pre><div class="example-wrap"><pre class="rust ">
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any</span>::<span class="ident">Any</span>, <span class="ident">collections</span>::<span class="ident">HashMap</span>, <span class="ident">fmt</span>::<span class="ident">Debug</span>, <span class="ident">marker</span>::<span class="ident">PhantomData</span>, <span class="ident">path</span>::<span class="ident">Path</span>, <span class="ident">sync</span>::<span class="ident">Arc</span>};
-
-<span class="kw">use</span> <span class="ident">async_trait</span>::<span class="ident">async_trait</span>;
-<span class="kw">use</span> <span class="ident">itertools</span>::<span class="ident">Itertools</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pliantdb_core</span>::<span class="ident">circulate</span>::<span class="ident">Relay</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">pliantdb_core</span>::<span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>};
-<span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
-    <span class="ident">connection</span>::{<span class="self">self</span>, <span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">ServerConnection</span>},
-    <span class="ident">document</span>::<span class="ident">Document</span>,
-    <span class="ident">networking</span>,
-    <span class="ident">schema</span>::{<span class="ident">view</span>::<span class="ident">map</span>, <span class="ident">CollectionName</span>, <span class="ident">MappedValue</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>, <span class="ident">ViewName</span>},
-    <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
+<span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">any::Any</span>,
+    <span class="ident">collections::HashMap</span>,
+    <span class="ident">convert::TryFrom</span>,
+    <span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Display</span>},
+    <span class="ident">marker::PhantomData</span>,
+    <span class="ident">path::Path</span>,
+    <span class="ident">sync::Arc</span>,
 };
-<span class="kw">use</span> <span class="ident">pliantdb_jobs</span>::<span class="ident">manager</span>::<span class="ident">Manager</span>;
-<span class="kw">use</span> <span class="ident">tokio</span>::<span class="ident">sync</span>::<span class="ident">RwLock</span>;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
+<span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
+<span class="kw">use</span> <span class="ident">futures::TryFutureExt</span>;
+<span class="kw">use</span> <span class="ident">itertools::Itertools</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">pliantdb_core::circulate::Relay</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;internal-apis&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">pliantdb_core::custodian_password</span>::{<span class="ident">LoginResponse</span>, <span class="ident">ServerLogin</span>};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">pliantdb_core::kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>};
+<span class="kw">use</span> <span class="ident">pliantdb_core</span>::{
     <span class="ident">admin</span>::{
         <span class="ident">database</span>::{<span class="self">self</span>, <span class="ident">ByName</span>, <span class="ident">Database</span> <span class="kw">as</span> <span class="ident">DatabaseRecord</span>},
+        <span class="ident">password_config::PasswordConfig</span>,
+        <span class="ident">user</span>::{<span class="self">self</span>, <span class="ident">User</span>},
         <span class="ident">Admin</span>,
     },
-    <span class="ident">config</span>::<span class="ident">Configuration</span>,
-    <span class="ident">error</span>::<span class="ident">ResultExt</span>,
-    <span class="ident">tasks</span>::<span class="ident">TaskManager</span>,
+    <span class="ident">connection</span>::{<span class="self">self</span>, <span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">ServerConnection</span>},
+    <span class="ident">custodian_password::ServerRegistration</span>,
+    <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">KeyId</span>},
+    <span class="ident">networking</span>,
+    <span class="ident">permissions::Permissions</span>,
+    <span class="ident">schema</span>::{
+        <span class="ident">view::map</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">MappedValue</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>,
+        <span class="ident">ViewName</span>,
+    },
+    <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
+};
+<span class="kw">use</span> <span class="ident">pliantdb_jobs::manager::Manager</span>;
+<span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">thread_rng</span>, <span class="ident">Rng</span>};
+<span class="kw">use</span> <span class="ident">tokio</span>::{
+    <span class="ident">fs</span>::{<span class="self">self</span>, <span class="ident">File</span>},
+    <span class="ident">io</span>::{<span class="ident">AsyncReadExt</span>, <span class="ident">AsyncWriteExt</span>},
+    <span class="ident">sync::RwLock</span>,
+};
+
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">config::Configuration</span>,
+    <span class="ident">tasks::TaskManager</span>,
+    <span class="ident">vault</span>::{<span class="self">self</span>, <span class="ident">LocalVaultKeyStorage</span>, <span class="ident">Vault</span>},
     <span class="ident">Database</span>, <span class="ident">Error</span>,
 };
 
@@ -498,13 +797,16 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">Data</span> {
-    <span class="ident">sled</span>: <span class="ident">sled</span>::<span class="ident">Db</span>,
+    <span class="ident">id</span>: <span class="ident">StorageId</span>,
+    <span class="ident">sled</span>: <span class="ident">sled::Db</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tasks</span>: <span class="ident">TaskManager</span>,
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">vault</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Vault</span><span class="op">&gt;</span>,
     <span class="ident">schemas</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">DatabaseOpener</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">available_databases</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">SchemaName</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">default_encryption_key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">check_view_integrity_on_database_open</span>: <span class="ident">bool</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
-    <span class="ident">kv_expirer</span>: <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">flume</span>::<span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">kv</span>::<span class="ident">ExpirationUpdate</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">kv_expirer</span>: <span class="ident">std::sync::RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">flume::Sender</span><span class="op">&lt;</span><span class="ident">kv::ExpirationUpdate</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
     <span class="ident">relay</span>: <span class="ident">Relay</span>,
 }
@@ -513,36 +815,57 @@
     <span class="doccomment">/// Creates or opens a multi-database [`Storage`] with its data stored in `directory`.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open_local</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
         <span class="ident">path</span>: <span class="ident">P</span>,
-        <span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="ident">Configuration</span>,
+        <span class="ident">configuration</span>: <span class="ident">Configuration</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">owned_path</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">as_ref</span>().<span class="ident">to_owned</span>();
 
-        <span class="kw">let</span> <span class="ident">manager</span> <span class="op">=</span> <span class="ident">Manager</span>::<span class="ident">default</span>();
+        <span class="kw">let</span> <span class="ident">manager</span> <span class="op">=</span> <span class="ident">Manager::default</span>();
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">configuration</span>.<span class="ident">workers</span>.<span class="ident">worker_count</span> {
             <span class="ident">manager</span>.<span class="ident">spawn_worker</span>();
         }
-        <span class="kw">let</span> <span class="ident">tasks</span> <span class="op">=</span> <span class="ident">TaskManager</span>::<span class="ident">new</span>(<span class="ident">manager</span>);
+        <span class="kw">let</span> <span class="ident">tasks</span> <span class="op">=</span> <span class="ident">TaskManager::new</span>(<span class="ident">manager</span>);
+
+        <span class="ident">fs::create_dir_all</span>(<span class="kw-2">&amp;</span><span class="ident">owned_path</span>)
+            .<span class="kw">await</span>
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::Other</span>(<span class="ident">Arc::new</span>(<span class="ident">anyhow::Error::from</span>(<span class="ident">err</span>))))<span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="self">Self</span><span class="ident">::lookup_or_create_id</span>(<span class="kw-2">&amp;</span><span class="ident">configuration</span>, <span class="kw-2">&amp;</span><span class="ident">owned_path</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">let</span> <span class="ident">vault_key_storage</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">configuration</span>.<span class="ident">vault_key_storage</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">storage</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">storage</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Box::new</span>(
+                <span class="ident">LocalVaultKeyStorage::new</span>(<span class="ident">owned_path</span>.<span class="ident">join</span>(<span class="string">&quot;vault-keys&quot;</span>))
+                    .<span class="kw">await</span>
+                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::Vault</span>(<span class="ident">vault::Error::Initializing</span>(<span class="ident">err</span>.<span class="ident">to_string</span>())))<span class="question-mark">?</span>,
+            ),
+        };
+
+        <span class="kw">let</span> <span class="ident">vault</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Vault::initialize</span>(<span class="ident">id</span>, <span class="kw-2">&amp;</span><span class="ident">owned_path</span>, <span class="ident">vault_key_storage</span>).<span class="kw">await</span><span class="question-mark">?</span>);
 
         <span class="kw">let</span> <span class="ident">check_view_integrity_on_database_open</span> <span class="op">=</span> <span class="ident">configuration</span>.<span class="ident">views</span>.<span class="ident">check_integrity_on_open</span>;
-        <span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-            <span class="ident">sled</span>::<span class="ident">open</span>(<span class="ident">owned_path</span>)
+        <span class="kw">let</span> <span class="ident">default_encryption_key</span> <span class="op">=</span> <span class="ident">configuration</span>.<span class="ident">default_encryption_key</span>;
+        <span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">tokio::task::spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+            <span class="ident">sled::open</span>(<span class="ident">owned_path</span>)
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">sled</span><span class="op">|</span> <span class="self">Self</span> {
-                    <span class="ident">data</span>: <span class="ident">Arc</span>::<span class="ident">new</span>(<span class="ident">Data</span> {
+                    <span class="ident">data</span>: <span class="ident">Arc::new</span>(<span class="ident">Data</span> {
+                        <span class="ident">id</span>,
                         <span class="ident">sled</span>,
                         <span class="ident">tasks</span>,
-                        <span class="ident">schemas</span>: <span class="ident">RwLock</span>::<span class="ident">default</span>(),
-                        <span class="ident">available_databases</span>: <span class="ident">RwLock</span>::<span class="ident">default</span>(),
+                        <span class="ident">vault</span>,
+                        <span class="ident">default_encryption_key</span>,
+                        <span class="ident">schemas</span>: <span class="ident">RwLock::default</span>(),
+                        <span class="ident">available_databases</span>: <span class="ident">RwLock::default</span>(),
                         <span class="ident">check_view_integrity_on_database_open</span>,
                         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
-                        <span class="ident">kv_expirer</span>: <span class="ident">std</span>::<span class="ident">sync</span>::<span class="ident">RwLock</span>::<span class="ident">default</span>(),
+                        <span class="ident">kv_expirer</span>: <span class="ident">std::sync::RwLock::default</span>(),
                         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-                        <span class="ident">relay</span>: <span class="ident">Relay</span>::<span class="ident">default</span>(),
+                        <span class="ident">relay</span>: <span class="ident">Relay::default</span>(),
                     }),
                 })
-                .<span class="ident">map_err</span>(<span class="ident">Error</span>::<span class="ident">from</span>)
+                .<span class="ident">map_err</span>(<span class="ident">Error::from</span>)
         })
         .<span class="kw">await</span>
-        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">Database</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span><span class="question-mark">?</span>;
+        .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">pliantdb_core::Error::Database</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span><span class="question-mark">?</span>;
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
         <span class="ident">storage</span>
@@ -551,21 +874,112 @@
             .<span class="ident">spawn_key_value_expiration_loader</span>(<span class="kw-2">&amp;</span><span class="ident">storage</span>)
             .<span class="kw">await</span>;
 
-        {
-            <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="ident">storage</span>
-                .<span class="ident">admin</span>()
-                .<span class="kw">await</span>
-                .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">ByName</span><span class="op">&gt;</span>()
-                .<span class="ident">query</span>()
-                .<span class="kw">await</span><span class="question-mark">?</span>
-                .<span class="ident">into_iter</span>()
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> (<span class="ident">map</span>.<span class="ident">key</span>, <span class="ident">map</span>.<span class="ident">value</span>))
-                .<span class="ident">collect</span>();
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage_databases</span> <span class="op">=</span> <span class="ident">storage</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">write</span>().<span class="kw">await</span>;
-            <span class="kw-2">*</span><span class="ident">storage_databases</span> <span class="op">=</span> <span class="ident">available_databases</span>;
-        }
+        <span class="ident">storage</span>.<span class="ident">cache_available_databases</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="ident">storage</span>.<span class="ident">create_admin_database_if_needed</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">storage</span>)
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">lookup_or_create_id</span>(
+        <span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="ident">Configuration</span>,
+        <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">StorageId</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">StorageId</span>(<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">configuration</span>.<span class="ident">unique_id</span> {
+            <span class="comment">// The configuraiton id override is not persisted to disk. This is</span>
+            <span class="comment">// mostly to prevent someone from accidentally adding this</span>
+            <span class="comment">// configuration, realizing it breaks things, and then wanting to</span>
+            <span class="comment">// revert. This makes reverting to the old value easier.</span>
+            <span class="ident">id</span>
+        } <span class="kw">else</span> {
+            <span class="comment">// Load/Store a randomly generated id into a file. While the value</span>
+            <span class="comment">// is numerical, the file contents are the ascii decimal, making it</span>
+            <span class="comment">// easier for a human to view, and if needed, edit.</span>
+            <span class="kw">let</span> <span class="ident">id_path</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">join</span>(<span class="string">&quot;server-id&quot;</span>);
+
+            <span class="kw">if</span> <span class="ident">id_path</span>.<span class="ident">exists</span>() {
+                <span class="comment">// This value is important enought to not allow launching the</span>
+                <span class="comment">// server if the file can&#39;t be read or contains unexpected data.</span>
+                <span class="kw">let</span> <span class="ident">existing_id</span> <span class="op">=</span> <span class="ident">String::from_utf8</span>(
+                    <span class="ident">File::open</span>(<span class="ident">id_path</span>)
+                        .<span class="ident">and_then</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">f</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
+                            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+                            <span class="ident">f</span>.<span class="ident">read_to_end</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bytes</span>).<span class="kw">await</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">bytes</span>)
+                        })
+                        .<span class="kw">await</span>
+                        .<span class="ident">expect</span>(<span class="string">&quot;error reading server-id file&quot;</span>),
+                )
+                .<span class="ident">expect</span>(<span class="string">&quot;server-id contains invalid data&quot;</span>);
+
+                <span class="ident">existing_id</span>.<span class="ident">parse</span>().<span class="ident">expect</span>(<span class="string">&quot;server-id isn&#39;t numeric&quot;</span>)
+            } <span class="kw">else</span> {
+                <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> { <span class="ident">thread_rng</span>().<span class="ident">gen</span>::<span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>() };
+                <span class="ident">File::create</span>(<span class="ident">id_path</span>)
+                    .<span class="ident">and_then</span>(<span class="op">|</span><span class="kw-2">mut</span> <span class="ident">file</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
+                        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">id</span>.<span class="ident">to_string</span>();
+                        <span class="ident">file</span>.<span class="ident">write_all</span>(<span class="ident">id</span>.<span class="ident">as_bytes</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
+                        <span class="ident">file</span>.<span class="ident">shutdown</span>().<span class="kw">await</span>
+                    })
+                    .<span class="kw">await</span>
+                    .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                        <span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::Configuration</span>(<span class="macro">format!</span>(
+                            <span class="string">&quot;Error writing server-id file: {}&quot;</span>,
+                            <span class="ident">err</span>
+                        )))
+                    })<span class="question-mark">?</span>;
+                <span class="ident">id</span>
+            }
+        }))
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">cache_available_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>
+            .<span class="ident">admin</span>()
+            .<span class="kw">await</span>
+            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">ByName</span><span class="op">&gt;</span>()
+            .<span class="ident">query</span>()
+            .<span class="kw">await</span><span class="question-mark">?</span>
+            .<span class="ident">into_iter</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> (<span class="ident">map</span>.<span class="ident">key</span>, <span class="ident">map</span>.<span class="ident">value</span>))
+            .<span class="ident">collect</span>();
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw-2">*</span><span class="ident">storage_databases</span> <span class="op">=</span> <span class="ident">available_databases</span>;
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_admin_database_if_needed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">register_schema</span>::<span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">database</span>::<span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>(<span class="string">&quot;admin&quot;</span>).<span class="kw">await</span> {
+            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {}
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::DatabaseNotFound</span>(<span class="kw">_</span>))) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="self">self</span>.<span class="ident">create_database</span>::<span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>(<span class="string">&quot;admin&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            }
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
+        }
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Returns the unique id of the server.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This value is set from the [`Configuration`] or randomly generated when</span>
+    <span class="doccomment">/// creating a server. It shouldn&#39;t be changed after a server is in use, as</span>
+    <span class="doccomment">/// doing can cause issues. For example, the vault that manages encrypted</span>
+    <span class="doccomment">/// storage uses the server ID to store the vault key. If the server ID</span>
+    <span class="doccomment">/// changes, the vault key storage will need to be updated with the new</span>
+    <span class="doccomment">/// server ID.</span>
+    <span class="attribute">#[<span class="ident">must_use</span>]</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unique_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">StorageId</span> {
+        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">id</span>
+    }
+
+    <span class="attribute">#[<span class="ident">must_use</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">vault</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Vault</span> {
+        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">vault</span>
+    }
+
+    <span class="attribute">#[<span class="ident">must_use</span>]</span>
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">default_encryption_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">default_encryption_key</span>.<span class="ident">as_ref</span>()
     }
 
     <span class="doccomment">/// Registers a schema for use within the server.</span>
@@ -573,41 +987,57 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>.<span class="ident">write</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="ident">schemas</span>
             .<span class="ident">insert</span>(
-                <span class="ident">DB</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span>,
-                <span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">StorageSchemaOpener</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>::<span class="ident">new</span>()<span class="question-mark">?</span>),
+                <span class="ident">DB::schema_name</span>()<span class="question-mark">?</span>,
+                <span class="ident">Box::new</span>(<span class="ident">StorageSchemaOpener</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span><span class="ident">::new</span>()<span class="question-mark">?</span>),
             )
             .<span class="ident">is_none</span>()
         {
             <span class="prelude-val">Ok</span>(())
         } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">SchemaAlreadyRegistered</span>(
-                <span class="ident">DB</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::SchemaAlreadyRegistered</span>(
+                <span class="ident">DB::schema_name</span>()<span class="question-mark">?</span>,
             )))
         }
     }
 
-    <span class="doccomment">/// Retrieves a database. This function only verifies that the database exists</span>
+    <span class="doccomment">/// Retrieves a database. This function checks that the database exists and</span>
+    <span class="doccomment">/// that the schema matches.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">read</span>().<span class="kw">await</span>;
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stored_schema</span>) <span class="op">=</span> <span class="ident">available_databases</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
-            <span class="kw">if</span> <span class="ident">stored_schema</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">DB</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">Database</span>::<span class="ident">new</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>(), <span class="self">self</span>.<span class="ident">clone</span>()).<span class="kw">await</span><span class="question-mark">?</span>)
+            <span class="kw">if</span> <span class="ident">stored_schema</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">DB::schema_name</span>()<span class="question-mark">?</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">Database::new</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>(), <span class="self">self</span>.<span class="ident">clone</span>()).<span class="kw">await</span><span class="question-mark">?</span>)
             } <span class="kw">else</span> {
-                <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">SchemaMismatch</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::SchemaMismatch</span> {
                     <span class="ident">database_name</span>: <span class="ident">name</span>.<span class="ident">to_owned</span>(),
-                    <span class="ident">schema</span>: <span class="ident">DB</span>::<span class="ident">schema_name</span>()<span class="question-mark">?</span>,
+                    <span class="ident">schema</span>: <span class="ident">DB::schema_name</span>()<span class="question-mark">?</span>,
                     <span class="ident">stored_schema</span>: <span class="ident">stored_schema</span>.<span class="ident">clone</span>(),
                 }))
             }
         } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">DatabaseNotFound</span>(
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::DatabaseNotFound</span>(
                 <span class="ident">name</span>.<span class="ident">to_owned</span>(),
             )))
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">sled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">sled</span>::<span class="ident">Db</span> {
+    <span class="comment">// pub async fn database_with_foreign_schema&lt;DB: Schema&gt;(</span>
+    <span class="comment">//     &amp;self,</span>
+    <span class="comment">//     name: &amp;&#39;_ str,</span>
+    <span class="comment">// ) -&gt; Result&lt;Database&lt;DB&gt;, Error&gt; {</span>
+    <span class="comment">//     let available_databases = self.data.available_databases.read().await;</span>
+
+    <span class="comment">//     if let Some(stored_schema) = available_databases.get(name) {</span>
+    <span class="comment">//         Ok(Database::new(name.to_owned(), self.clone()).await?)</span>
+    <span class="comment">//     } else {</span>
+    <span class="comment">//         Err(Error::Core(pliantdb_core::Error::DatabaseNotFound(</span>
+    <span class="comment">//             name.to_owned(),</span>
+    <span class="comment">//         )))</span>
+    <span class="comment">//     }</span>
+    <span class="comment">// }</span>
+
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">sled</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">sled::Db</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">sled</span>
     }
 
@@ -625,7 +1055,7 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">update_key_expiration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">update</span>: <span class="ident">kv</span>::<span class="ident">ExpirationUpdate</span>) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">update_key_expiration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">update</span>: <span class="ident">kv::ExpirationUpdate</span>) {
         {
             <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">kv_expirer</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sender</span>) <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">as_ref</span>() {
@@ -637,10 +1067,10 @@
         <span class="comment">// If we fall through, we need to initialize the expirer task</span>
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">kv_expirer</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
         <span class="kw">if</span> <span class="ident">sender</span>.<span class="ident">is_none</span>() {
-            <span class="kw">let</span> (<span class="ident">kv_sender</span>, <span class="ident">kv_expirer_receiver</span>) <span class="op">=</span> <span class="ident">flume</span>::<span class="ident">unbounded</span>();
+            <span class="kw">let</span> (<span class="ident">kv_sender</span>, <span class="ident">kv_expirer_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
             <span class="kw">let</span> <span class="ident">thread_sled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">sled</span>.<span class="ident">clone</span>();
-            <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-                <span class="ident">kv</span>::<span class="ident">expiration_thread</span>(<span class="ident">kv_expirer_receiver</span>, <span class="ident">thread_sled</span>)
+            <span class="ident">tokio::task::spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+                <span class="ident">kv::expiration_thread</span>(<span class="ident">kv_expirer_receiver</span>, <span class="ident">thread_sled</span>)
             });
             <span class="kw-2">*</span><span class="ident">sender</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">kv_sender</span>);
         }
@@ -656,14 +1086,16 @@
         {
             <span class="prelude-val">Ok</span>(())
         } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">InvalidDatabaseName</span>(
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::InvalidDatabaseName</span>(
                 <span class="ident">name</span>.<span class="ident">to_owned</span>(),
             )))
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">admin</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Database</span><span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span> {
-        <span class="ident">Database</span>::<span class="ident">new</span>(<span class="string">&quot;admin&quot;</span>, <span class="self">self</span>.<span class="ident">clone</span>()).<span class="kw">await</span>.<span class="ident">unwrap</span>()
+    <span class="doccomment">/// Returns the administration database.</span>
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_panics_doc</span>)]</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">admin</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Database</span><span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span> {
+        <span class="ident">Database::new</span>(<span class="string">&quot;admin&quot;</span>, <span class="self">self</span>.<span class="ident">clone</span>()).<span class="kw">await</span>.<span class="ident">unwrap</span>()
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;internal-apis&quot;</span>)]</span>
@@ -676,7 +1108,7 @@
         <span class="kw">let</span> <span class="ident">schema</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>
             .<span class="ident">admin</span>()
             .<span class="kw">await</span>
-            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">database</span>::<span class="ident">ByName</span><span class="op">&gt;</span>()
+            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">database::ByName</span><span class="op">&gt;</span>()
             .<span class="ident">with_key</span>(<span class="ident">name</span>.<span class="ident">to_ascii_lowercase</span>())
             .<span class="ident">query</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>
@@ -684,7 +1116,7 @@
         {
             <span class="prelude-val">Some</span>(<span class="ident">entry</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">entry</span>.<span class="ident">value</span>.<span class="ident">clone</span>(),
             <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">DatabaseNotFound</span>(
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::DatabaseNotFound</span>(
                     <span class="ident">name</span>.<span class="ident">to_string</span>(),
                 )))
             }
@@ -694,10 +1126,37 @@
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">schema</span>) <span class="op">=</span> <span class="ident">schemas</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">schema</span>) {
             <span class="ident">schema</span>.<span class="ident">open</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">clone</span>()).<span class="kw">await</span>
         } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">SchemaNotRegistered</span>(
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::SchemaNotRegistered</span>(
                 <span class="ident">schema</span>,
             )))
         }
+    }
+
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;internal-apis&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="doccomment">/// Authenticates a user.</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">internal_login_with_password</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">login_request</span>: <span class="ident">pliantdb_core::custodian_password::LoginRequest</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">ServerLogin</span>, <span class="ident">LoginResponse</span>), <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">admin</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">config</span> <span class="op">=</span> <span class="ident">PasswordConfig::load</span>(<span class="kw-2">&amp;</span><span class="ident">admin</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">admin</span>
+            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">user::ByName</span><span class="op">&gt;</span>()
+            .<span class="ident">with_key</span>(<span class="ident">username</span>.<span class="ident">to_owned</span>())
+            .<span class="ident">query_with_docs</span>()
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+
+        <span class="kw">let</span> (<span class="ident">user_id</span>, <span class="ident">existing_password_hash</span>) <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">entry</span>) <span class="op">=</span> <span class="ident">result</span>.<span class="ident">into_iter</span>().<span class="ident">next</span>() {
+            <span class="kw">let</span> <span class="ident">user</span> <span class="op">=</span> <span class="ident">entry</span>.<span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
+            (<span class="prelude-val">Some</span>(<span class="ident">entry</span>.<span class="ident">document</span>.<span class="ident">header</span>.<span class="ident">id</span>), <span class="ident">user</span>.<span class="ident">password_hash</span>)
+        } <span class="kw">else</span> {
+            (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>)
+        };
+
+        <span class="kw">let</span> (<span class="ident">login</span>, <span class="ident">response</span>) <span class="op">=</span> <span class="ident">ServerLogin::login</span>(<span class="kw-2">&amp;</span><span class="ident">config</span>, <span class="ident">existing_password_hash</span>, <span class="ident">login_request</span>)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>((<span class="ident">user_id</span>, <span class="ident">login</span>, <span class="ident">response</span>))
     }
 }
 
@@ -718,10 +1177,10 @@
     <span class="ident">DB</span>: <span class="ident">Schema</span>,
 {
     <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">schematic</span> <span class="op">=</span> <span class="ident">DB</span>::<span class="ident">schematic</span>()<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">schematic</span> <span class="op">=</span> <span class="ident">DB::schematic</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
             <span class="ident">schematic</span>,
-            <span class="ident">_phantom</span>: <span class="ident">PhantomData</span>::<span class="ident">default</span>(),
+            <span class="ident">_phantom</span>: <span class="ident">PhantomData::default</span>(),
         })
     }
 }
@@ -736,8 +1195,8 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">storage</span>: <span class="ident">Storage</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>::<span class="ident">new</span>(<span class="ident">name</span>, <span class="ident">storage</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">Box</span>::<span class="ident">new</span>(<span class="ident">db</span>))
+        <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">name</span>, <span class="ident">storage</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">Box::new</span>(<span class="ident">db</span>))
     }
 }
 
@@ -751,58 +1210,62 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">id</span>: <span class="ident">u64</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple_from_collection_id</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">u64</span>],
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">apply_transaction</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">transaction</span>: <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map</span>::<span class="ident">Serialized</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::Serialized</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query_with_docs</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">networking</span>::<span class="ident">MappedDocument</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">networking::MappedDocument</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce_grouped</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_executed_transactions</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">starting_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">result_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_key_operation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">op</span>: <span class="ident">KeyOperation</span>)
-        <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span>;
+        <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span>;
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
@@ -811,33 +1274,33 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">schema</span>: <span class="ident">SchemaName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">Self</span>::<span class="ident">validate_name</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span> {
+        <span class="self">Self</span><span class="ident">::validate_name</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
 
         {
             <span class="kw">let</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>.<span class="ident">read</span>().<span class="kw">await</span>;
             <span class="kw">if</span> <span class="op">!</span><span class="ident">schemas</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">schema</span>) {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">SchemaNotRegistered</span>(<span class="ident">schema</span>));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core::Error::SchemaNotRegistered</span>(<span class="ident">schema</span>));
             }
         }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">write</span>().<span class="kw">await</span>;
         <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">admin</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="op">!</span><span class="ident">admin</span>
-            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">database</span>::<span class="ident">ByName</span><span class="op">&gt;</span>()
+            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">database::ByName</span><span class="op">&gt;</span>()
             .<span class="ident">with_key</span>(<span class="ident">name</span>.<span class="ident">to_ascii_lowercase</span>())
             .<span class="ident">query</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>
             .<span class="ident">is_empty</span>()
         {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">DatabaseNameAlreadyTaken</span>(
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core::Error::DatabaseNameAlreadyTaken</span>(
                 <span class="ident">name</span>.<span class="ident">to_string</span>(),
             ));
         }
 
         <span class="ident">admin</span>
             .<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">DatabaseRecord</span><span class="op">&gt;</span>()
-            .<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">connection</span>::<span class="ident">Database</span> {
+            .<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">connection::Database</span> {
                 <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(),
                 <span class="ident">schema</span>: <span class="ident">schema</span>.<span class="ident">clone</span>(),
             })
@@ -847,26 +1310,26 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">write</span>().<span class="kw">await</span>;
 
-        <span class="kw">let</span> <span class="ident">prefix</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}::&quot;</span>, <span class="ident">name</span>);
+        <span class="kw">let</span> <span class="ident">prefix</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;{}::&quot;</span>, <span class="ident">name</span>);
         <span class="kw">let</span> <span class="ident">sled</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">sled</span>.<span class="ident">clone</span>();
-        <span class="ident">tokio</span>::<span class="ident">task</span>::<span class="ident">spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+        <span class="ident">tokio::task::spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
             <span class="kw">for</span> <span class="ident">name</span> <span class="kw">in</span> <span class="ident">sled</span>.<span class="ident">tree_names</span>() {
                 <span class="kw">if</span> <span class="ident">name</span>.<span class="ident">starts_with</span>(<span class="ident">prefix</span>.<span class="ident">as_bytes</span>()) {
                     <span class="ident">sled</span>.<span class="ident">drop_tree</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
                 }
             }
-            <span class="prelude-ty">Result</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">sled</span>::<span class="ident">Error</span><span class="op">&gt;</span>::<span class="prelude-val">Ok</span>(())
+            <span class="prelude-ty">Result</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="ident">sled::Error</span><span class="op">&gt;</span><span class="ident">::Ok</span>(())
         })
         .<span class="kw">await</span>
         .<span class="ident">unwrap</span>()
-        .<span class="ident">map_err_to_core</span>()<span class="question-mark">?</span>;
+        .<span class="ident">map_err</span>(<span class="ident">Error::from</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">admin</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">entry</span>) <span class="op">=</span> <span class="ident">admin</span>
-            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">database</span>::<span class="ident">ByName</span><span class="op">&gt;</span>()
+            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">database::ByName</span><span class="op">&gt;</span>()
             .<span class="ident">with_key</span>(<span class="ident">name</span>.<span class="ident">to_ascii_lowercase</span>())
             .<span class="ident">query_with_docs</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>
@@ -877,43 +1340,132 @@
 
             <span class="prelude-val">Ok</span>(())
         } <span class="kw">else</span> {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">DatabaseNotFound</span>(<span class="ident">name</span>.<span class="ident">to_string</span>()));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core::Error::DatabaseNotFound</span>(<span class="ident">name</span>.<span class="ident">to_string</span>()));
         }
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">connection</span>::<span class="ident">Database</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">connection::Database</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">read</span>().<span class="kw">await</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">available_databases</span>
             .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">name</span>, <span class="ident">schema</span>)<span class="op">|</span> <span class="ident">connection</span>::<span class="ident">Database</span> {
+            .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">name</span>, <span class="ident">schema</span>)<span class="op">|</span> <span class="ident">connection::Database</span> {
                 <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(),
                 <span class="ident">schema</span>: <span class="ident">schema</span>.<span class="ident">clone</span>(),
             })
             .<span class="ident">collect</span>())
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaName</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaName</span><span class="op">&gt;</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">read</span>().<span class="kw">await</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">available_databases</span>.<span class="ident">values</span>().<span class="ident">unique</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>())
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_user</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>
+            .<span class="ident">admin</span>()
+            .<span class="kw">await</span>
+            .<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span>()
+            .<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">User::default_with_username</span>(<span class="ident">username</span>))
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">result</span>.<span class="ident">id</span>)
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_user_password</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">password_request</span>: <span class="ident">pliantdb_core::custodian_password::RegistrationRequest</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">pliantdb_core::custodian_password::RegistrationResponse</span>, <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">admin</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">admin</span>
+            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">user::ByName</span><span class="op">&gt;</span>()
+            .<span class="ident">with_key</span>(<span class="ident">username</span>.<span class="ident">to_owned</span>())
+            .<span class="ident">query_with_docs</span>()
+            .<span class="kw">await</span>
+            .<span class="ident">unwrap</span>();
+        <span class="kw">if</span> <span class="ident">result</span>.<span class="ident">is_empty</span>() {
+            <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core::Error::UserNotFound</span>)
+        } <span class="kw">else</span> {
+            <span class="kw">let</span> <span class="ident">config</span> <span class="op">=</span> <span class="ident">PasswordConfig::load</span>(<span class="kw-2">&amp;</span><span class="ident">admin</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>();
+            <span class="kw">let</span> (<span class="ident">register</span>, <span class="ident">response</span>) <span class="op">=</span> <span class="ident">ServerRegistration::register</span>(<span class="kw-2">&amp;</span><span class="ident">config</span>, <span class="ident">password_request</span>)<span class="question-mark">?</span>;
+
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span>
+                <span class="ident">CollectionDocument</span>::<span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span><span class="ident">::try_from</span>(<span class="ident">result</span>.<span class="ident">into_iter</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">document</span>)<span class="question-mark">?</span>;
+            <span class="ident">doc</span>.<span class="ident">contents</span>.<span class="ident">pending_password_change_state</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">register</span>);
+            <span class="ident">doc</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">admin</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+            <span class="prelude-val">Ok</span>(<span class="ident">response</span>)
+        }
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">finish_set_user_password</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+        <span class="ident">password_finalization</span>: <span class="ident">pliantdb_core::custodian_password::RegistrationFinalization</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">pliantdb_core::Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">admin</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">admin</span>
+            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">user::ByName</span><span class="op">&gt;</span>()
+            .<span class="ident">with_key</span>(<span class="ident">username</span>.<span class="ident">to_owned</span>())
+            .<span class="ident">query_with_docs</span>()
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="ident">result</span>.<span class="ident">is_empty</span>() {
+            <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core::Error::UserNotFound</span>)
+        } <span class="kw">else</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span>
+                <span class="ident">CollectionDocument</span>::<span class="op">&lt;</span><span class="ident">User</span><span class="op">&gt;</span><span class="ident">::try_from</span>(<span class="ident">result</span>.<span class="ident">into_iter</span>().<span class="ident">next</span>().<span class="ident">unwrap</span>().<span class="ident">document</span>)<span class="question-mark">?</span>;
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">registration</span>) <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">contents</span>.<span class="ident">pending_password_change_state</span>.<span class="ident">take</span>() {
+                <span class="kw">let</span> <span class="ident">file</span> <span class="op">=</span> <span class="ident">registration</span>.<span class="ident">finish</span>(<span class="ident">password_finalization</span>)<span class="question-mark">?</span>;
+                <span class="ident">doc</span>.<span class="ident">contents</span>.<span class="ident">password_hash</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">file</span>);
+                <span class="ident">doc</span>.<span class="ident">update</span>(<span class="kw-2">&amp;</span><span class="ident">admin</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+
+                <span class="prelude-val">Ok</span>(())
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">pliantdb_core::Error::Password</span>(<span class="ident">String::from</span>(
+                    <span class="string">&quot;no existing state found&quot;</span>,
+                )))
+            }
+        }
     }
 }
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">name_validation_tests</span>() {
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(<span class="ident">Storage</span>::<span class="ident">validate_name</span>(<span class="string">&quot;azAZ09.-&quot;</span>), <span class="prelude-val">Ok</span>(())));
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
-        <span class="ident">Storage</span>::<span class="ident">validate_name</span>(<span class="string">&quot;.alphaunmericfirstrequired&quot;</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">InvalidDatabaseName</span>(<span class="kw">_</span>)))
+    <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">Storage::validate_name</span>(<span class="string">&quot;azAZ09.-&quot;</span>), <span class="prelude-val">Ok</span>(())));
+    <span class="macro">assert!</span>(<span class="macro">matches!</span>(
+        <span class="ident">Storage::validate_name</span>(<span class="string">&quot;.alphaunmericfirstrequired&quot;</span>),
+        <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::InvalidDatabaseName</span>(<span class="kw">_</span>)))
     ));
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
-        <span class="ident">Storage</span>::<span class="ident">validate_name</span>(<span class="string">&quot;-alphaunmericfirstrequired&quot;</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">InvalidDatabaseName</span>(<span class="kw">_</span>)))
+    <span class="macro">assert!</span>(<span class="macro">matches!</span>(
+        <span class="ident">Storage::validate_name</span>(<span class="string">&quot;-alphaunmericfirstrequired&quot;</span>),
+        <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::InvalidDatabaseName</span>(<span class="kw">_</span>)))
     ));
-    <span class="macro">assert</span><span class="macro">!</span>(<span class="macro">matches</span><span class="macro">!</span>(
-        <span class="ident">Storage</span>::<span class="ident">validate_name</span>(<span class="string">&quot;\u{2661}&quot;</span>),
-        <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Core</span>(<span class="ident">pliantdb_core</span>::<span class="ident">Error</span>::<span class="ident">InvalidDatabaseName</span>(<span class="kw">_</span>)))
+    <span class="macro">assert!</span>(<span class="macro">matches!</span>(
+        <span class="ident">Storage::validate_name</span>(<span class="string">&quot;\u{2661}&quot;</span>),
+        <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">pliantdb_core::Error::InvalidDatabaseName</span>(<span class="kw">_</span>)))
     ));
 }
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>, <span class="ident">Hash</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StorageId</span>(<span class="ident">u64</span>);
+
+<span class="kw">impl</span> <span class="ident">StorageId</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">as_u64</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+        <span class="self">self</span>.<span class="number">0</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">StorageId</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+        <span class="comment">// let formatted_length = format!();</span>
+        <span class="macro">write!</span>(<span class="ident">f</span>, <span class="string">&quot;{:016x}&quot;</span>, <span class="self">self</span>.<span class="number">0</span>)
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">StorageId</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+        <span class="ident">Debug::fmt</span>(<span class="self">self</span>, <span class="ident">f</span>)
+    }
+}
 </pre></div>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pliantdb_local" data-search-js="../../search-index.js"></div>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="pliantdb_local" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
     <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script></body></html>

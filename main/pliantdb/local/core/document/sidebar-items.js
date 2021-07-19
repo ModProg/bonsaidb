@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Document","Contains a serialized document in the database."],["Header","The header of a `Document`."],["Revision","Information about a `Document`’s revision history."]]});
+initSidebarItems({"enum":[["KeyId","The ID of an encryption key."]],"struct":[["Document","Contains a serialized document in the database."],["Header","The header of a `Document`."],["Revision","Information about a `Document`’s revision history."]]});
