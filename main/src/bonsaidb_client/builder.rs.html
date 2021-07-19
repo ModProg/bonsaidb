@@ -69,10 +69,22 @@
 <span id="66">66</span>
 <span id="67">67</span>
 <span id="68">68</span>
+<span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
+<span id="78">78</span>
+<span id="79">79</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">sync::Arc</span>};
 
 <span class="kw">use</span> <span class="ident">bonsaidb_core::custom_api::CustomApi</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
 <span class="kw">use</span> <span class="ident">fabruic::Certificate</span>;
 <span class="kw">use</span> <span class="ident">url::Url</span>;
 
@@ -82,8 +94,9 @@
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Builder</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
     <span class="ident">url</span>: <span class="ident">Url</span>,
-    <span class="ident">certificate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">fabruic::Certificate</span><span class="op">&gt;</span>,
     <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A::Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
+    <span class="ident">certificate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">fabruic::Certificate</span><span class="op">&gt;</span>,
     <span class="ident">_api</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>,
 }
 
@@ -92,8 +105,9 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">url</span>,
-            <span class="ident">certificate</span>: <span class="prelude-val">None</span>,
             <span class="ident">custom_api_callback</span>: <span class="prelude-val">None</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
+            <span class="ident">certificate</span>: <span class="prelude-val">None</span>,
             <span class="ident">_api</span>: <span class="ident">PhantomData::default</span>(),
         }
     }
@@ -104,8 +118,9 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_custom_api</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Builder</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
         <span class="ident">Builder</span> {
             <span class="ident">url</span>: <span class="self">self</span>.<span class="ident">url</span>,
-            <span class="ident">certificate</span>: <span class="self">self</span>.<span class="ident">certificate</span>,
             <span class="ident">custom_api_callback</span>: <span class="prelude-val">None</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
+            <span class="ident">certificate</span>: <span class="self">self</span>.<span class="ident">certificate</span>,
             <span class="ident">_api</span>: <span class="ident">PhantomData::default</span>(),
         }
     }
@@ -118,8 +133,9 @@
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Builder</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
         <span class="ident">Builder</span> {
             <span class="ident">url</span>: <span class="self">self</span>.<span class="ident">url</span>,
-            <span class="ident">certificate</span>: <span class="self">self</span>.<span class="ident">certificate</span>,
             <span class="ident">custom_api_callback</span>: <span class="prelude-val">Some</span>(<span class="ident">Arc::new</span>(<span class="ident">callback</span>)),
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
+            <span class="ident">certificate</span>: <span class="self">self</span>.<span class="ident">certificate</span>,
             <span class="ident">_api</span>: <span class="ident">PhantomData::default</span>(),
         }
     }
@@ -127,6 +143,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> <span class="ident">Builder</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Connects to a server using a pinned `certificate`. Only supported with `BonsaiDb` protocol-based connections.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_certificate</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">certificate</span>: <span class="ident">Certificate</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">certificate</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">certificate</span>);
         <span class="self">self</span>
@@ -134,8 +151,13 @@
 
     <span class="doccomment">/// Finishes building the client.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">finish</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Client</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">Client</span>::<span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="ident">::new_with_certificate</span>(<span class="self">self</span>.<span class="ident">url</span>, <span class="self">self</span>.<span class="ident">certificate</span>, <span class="self">self</span>.<span class="ident">custom_api_callback</span>)
-            .<span class="kw">await</span>
+        <span class="ident">Client</span>::<span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="ident">::new_from_parts</span>(
+            <span class="self">self</span>.<span class="ident">url</span>,
+            <span class="self">self</span>.<span class="ident">custom_api_callback</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
+            <span class="self">self</span>.<span class="ident">certificate</span>,
+        )
+        .<span class="kw">await</span>
     }
 }
 </pre></div>
