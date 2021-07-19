@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Admin","The `PliantDb` administration schema."],["Database","A database stored in `PliantDb`."],["PermissionGroup","A named group of permissions statements."],["Role","An assignable role, which grants permissions based on the associated `PermissionGroup`s."],["User","A user that can authenticate with `PliantDb`."]]});

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Admin","The `BonsaiDb` administration schema."],["Database","A database stored in `BonsaiDb`."],["PermissionGroup","A named group of permissions statements."],["Role","An assignable role, which grants permissions based on the associated `PermissionGroup`s."],["User","A user that can authenticate with `BonsaiDb`."]]});

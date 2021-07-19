@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Encryption and secret management."><meta name="keywords" content="rust, rustlang, rust-lang, vault"><title>bonsaidb::local::vault - Rust</title><link rel="stylesheet" type="text/css" href="../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../../ayu.css" disabled ><script id="default-settings"></script><script src="../../../storage.js"></script><script src="../../../crates.js"></script><noscript><link rel="stylesheet" href="../../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+<link rel="alternate icon" type="image/png" href="../../../favicon-16x16.png">
+<link rel="alternate icon" type="image/png" href="../../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../../bonsaidb/index.html'><div class='logo-container rust-logo'><img src='../../../rust-logo.png' alt='logo'></div></a><p class="location">Module vault</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li></ul></div><p class="location"><a href="../../index.html">bonsaidb</a>::<wbr><a href="../index.html">local</a></p><div id="sidebar-vars" data-name="vault" data-ty="mod" data-relpath="../"></div><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
+                <a id="settings-menu" href="../../../settings.html"><img src="../../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class="fqn"><span class="in-band">Module <a href="../../index.html">bonsaidb</a>::<wbr><a href="../index.html">local</a>::<wbr><a class="mod" href="">vault</a><button id="copy-path" onclick="copy_path(this)">⎘</button></span><span class="out-of-band"><span id="render-detail"><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class="inner">&#x2212;</span>]</a></span><a class="srclink" href="../../../src/bonsaidb_local/lib.rs.html#26" title="goto source code">[src]</a></span></h1><div class="docblock"><p>Encryption and secret management.</p>
+<p><code>BonsaiDb</code>’s vault is the core of encryption and secret management. To offer
+this security, <code>BonsaiDb</code> relies on external <a href="../../server/local/vault/trait.VaultKeyStorage.html" title="VaultKeyStorage"><code>VaultKeyStorage</code></a> to provide
+the key needed to decrypt the master keys. After the master keys have been
+decrypted, the vault is able to function without <a href="../../server/local/vault/trait.VaultKeyStorage.html" title="VaultKeyStorage"><code>VaultKeyStorage</code></a>. This
+design ensures that if a copy of a database was stolen, the data that is
+stored at-rest cannot be decrypted without gaining access to
+<a href="../../server/local/vault/trait.VaultKeyStorage.html" title="VaultKeyStorage"><code>VaultKeyStorage</code></a>.</p>
+<h2 id="at-rest-encryption" class="section-header"><a href="#at-rest-encryption">At-Rest Encryption</a></h2>
+<p>At-rest encryption only ensures that if the database files are stolen that
+an attacker cannot access the data without the encryption key. <code>BonsaiDb</code>
+will regularly decrypt data to process it, and while the data is in-memory,
+it is subject to the security of the machine running it. If using <code>BonsaiDb</code>
+over a network, the network transport layer’s encryption is what ensures
+your data’s safety – the document is not e</p>
+<h3 id="what-cant-be-encrypted" class="section-header"><a href="#what-cant-be-encrypted">What can’t be encrypted?</a></h3><h4 id="schema" class="section-header"><a href="#schema">Schema</a></h4>
+<p><code>BonsaiDb</code> makes no effort to encrypt or obscure the names of the
+collections, views, or databases.</p>
+<h4 id="views" class="section-header"><a href="#views">Views</a></h4>
+<p><code>BonsaiDb</code> offers range-based queries for views. The keys emitted in views
+that rely on these range queries cannot be encrypted. This is controlled by
+<a href="../../server/local/core/schema/trait.View.html#method.keys_are_encryptable"><code>View::keys_are_encryptable()</code></a>.
+If a view returns true from that function, range queries will return an
+error even if encryption isn’t enabled. This ensures that if you choose to
+enable encryption at a later date, all data that you expect to be encrypted
+will be.</p>
+<p>Even if a view doesn’t support encrypting keys, the view entries are still
+encrypted. This means the values emitted are still encrypted.</p>
+<h2 id="security-best-practices" class="section-header"><a href="#security-best-practices">Security Best Practices</a></h2><h3 id="vault-key-storage" class="section-header"><a href="#vault-key-storage">Vault Key Storage</a></h3>
+<p>In most situations, do not use <a href="../../server/local/vault/struct.LocalVaultKeyStorage.html" title="LocalVaultKeyStorage"><code>LocalVaultKeyStorage</code></a> in a production
+environment. If you store the vault keys on the same disk as the database,
+it’s similar to hiding a key to your house under your doormat. It might stop
+the casual person from entering your house, but give any attacker a few
+minutes, and they’ll find the key.</p>
+<p>Instead, you should use a storage location that provides authentication and
+encryption. Our recommendation for production enviroments is to find an
+Amazon S3-compatible storage service and use <code>S3VaultKeyStorage</code> (coming
+soon). Eventually, other <code>BonsaiDb</code> servers will be able to operate as key
+storage for each other.</p>
+<h2 id="encryption-algorithms-used" class="section-header"><a href="#encryption-algorithms-used">Encryption Algorithms Used</a></h2>
+<p><code>BonsaiDb</code> uses the <a href="https://github.com/rozbb/rust-hpke"><code>hpke</code></a> crate to
+provide Hybrid Public Key Encryption (HPKE) when public key encryption is
+being used. This is currently only utilized for encrypting the master keys
+with the vault key. Our HPKE uses <code>X25519+HKDF-SHA256+ChaCha20Poly1305</code>.
+Long term, we plan to offer public key encryption APIs on top of these same
+choices.</p>
+<p>For at-rest data encryption, the <a href="https://github.com/RustCrypto/AEADs"><code>AEAD</code>
+<code>XChaCha20Poly1305</code></a> implementation is
+used directly. This variant of <code>ChaCha20Poly1305</code> extends the nonce from 12
+bytes to 24 bytes, which allows for random nonces to be used.</p>
+</div><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
+<table><tr class="module-item"><td><a class="struct" href="struct.LocalVaultKeyStorage.html" title="bonsaidb::local::vault::LocalVaultKeyStorage struct">LocalVaultKeyStorage</a></td><td class="docblock-short"><p>Stores vault key locally on disk. This is in general considered insecure,
+and shouldn’t be used without careful consideration.</p>
+</td></tr></table><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<table><tr class="module-item"><td><a class="enum" href="enum.Error.html" title="bonsaidb::local::vault::Error enum">Error</a></td><td class="docblock-short"><p>Errors relating to encryption and/or secret storage.</p>
+</td></tr><tr class="module-item"><td><a class="enum" href="enum.LocalVaultKeyStorageError.html" title="bonsaidb::local::vault::LocalVaultKeyStorageError enum">LocalVaultKeyStorageError</a></td><td class="docblock-short"><p>Errors from local vault key storage.</p>
+</td></tr></table><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
+<table><tr class="module-item"><td><a class="trait" href="trait.AnyVaultKeyStorage.html" title="bonsaidb::local::vault::AnyVaultKeyStorage trait">AnyVaultKeyStorage</a></td><td class="docblock-short"><p>A <a href="../../server/local/vault/trait.VaultKeyStorage.html" title="VaultKeyStorage"><code>VaultKeyStorage</code></a> trait that wraps the Error type before returning. This
+type is used to allow the Vault to operate without any generic parameters.
+This trait is auto-implemented for all <a href="../../server/local/vault/trait.VaultKeyStorage.html" title="VaultKeyStorage"><code>VaultKeyStorage</code></a> implementors.</p>
+</td></tr><tr class="module-item"><td><a class="trait" href="trait.VaultKeyStorage.html" title="bonsaidb::local::vault::VaultKeyStorage trait">VaultKeyStorage</a></td><td class="docblock-short"><p>Stores encrypted keys for a vault.</p>
+</td></tr></table></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="bonsaidb" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
+    <script src="../../../main.js"></script></body></html>

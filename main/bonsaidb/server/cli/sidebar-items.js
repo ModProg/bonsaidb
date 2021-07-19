@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Command","Available commands for `bonsaidb server`."]],"mod":[["certificate","Command-line interface for managing the root certificate."],["serve","Command-line interface for hosting a server."]],"struct":[["Cli","Command-line interface for `bonsaidb server`."]]});

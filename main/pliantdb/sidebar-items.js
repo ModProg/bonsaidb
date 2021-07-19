@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["cli","`PliantDb` command line tools."],["client","Client for `pliantdb-server`."],["core","Core functionality and types for `PliantDb`."],["local","Local storage backend for `PliantDb`."],["server","The `PliantDb` Server."]]});

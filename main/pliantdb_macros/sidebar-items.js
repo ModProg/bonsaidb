@@ -1,1 +1,0 @@
-initSidebarItems({"derive":[["Action","Derives the `pliantdb_core::permissions::Action` trait."]]});

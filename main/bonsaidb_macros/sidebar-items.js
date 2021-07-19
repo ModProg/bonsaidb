@@ -1,0 +1,1 @@
+initSidebarItems({"derive":[["Action","Derives the `bonsaidb_core::permissions::Action` trait."]]});

@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["circulate","pliantdb","pliantdb_client","pliantdb_core","pliantdb_jobs","pliantdb_local","pliantdb_macros","pliantdb_server","xtask"];
+window.ALL_CRATES = ["bonsaidb","bonsaidb_client","bonsaidb_core","bonsaidb_jobs","bonsaidb_local","bonsaidb_macros","bonsaidb_server","circulate","xtask"];
