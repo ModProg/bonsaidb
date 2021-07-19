@@ -153,16 +153,16 @@
 </pre>
 <p>A working example of how to use a local database can be found at <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples/basic-local.rs"><code>bonsaidb/examples/basic-local.rs</code></a>.</p>
 <h2 id="multi-database-model-no-networking"><a class="header" href="#multi-database-model-no-networking">Multi-database model (No networking)</a></h2>
-<p>This model is most similar to using multiple SQLite databases. In this mode, you interact with a <a href="https://bonsaidb.dev/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> that you spawn within your code.</p>
+<p>This model is most similar to using multiple SQLite databases. In this mode, you interact with a <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> that you spawn within your code.</p>
 <pre class="mermaid">graph LR
   code{{Rust Code}}
   local[(bonsaidb-local::Storage)]
   code &lt;--&gt; server
   server &lt;--&gt; local
 </pre>
-<p>If you look at the source behind <a href="https://bonsaidb.dev/main/bonsaidb/local/struct.Storage.html#method.open_local"><code>Database::open_local</code></a>, you'll see that the single-database model is using <code>Storage</code> under the hood.</p>
+<p>If you look at the source behind <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html#method.open_local"><code>Database::open_local</code></a>, you'll see that the single-database model is using <code>Storage</code> under the hood.</p>
 <h2 id="server-model-quic-or-websockets"><a class="header" href="#server-model-quic-or-websockets">Server model (QUIC or WebSockets)</a></h2>
-<p>This model is most similar to using other document databases, like CouchDB or MongoDB. In this mode, you interact with a <a href="https://bonsaidb.dev/main/bonsaidb/client/struct.Client.html"><code>Client</code></a> that connects via either QUIC or WebSockets with a server. From the server code's perspective, this model is the same as the multi-database model, except that the server is listening for and responding to network traffic.</p>
+<p>This model is most similar to using other document databases, like CouchDB or MongoDB. In this mode, you interact with a <a href="https://dev.bonsaidb.io/main/bonsaidb/client/struct.Client.html"><code>Client</code></a> that connects via either QUIC or WebSockets with a server. From the server code's perspective, this model is the same as the multi-database model, except that the server is listening for and responding to network traffic.</p>
 <pre class="mermaid">graph LR
   client-code{{Rust Client Code}}
   server-code{{Rust Server Code}}
