@@ -366,6 +366,32 @@
 <span id="363">363</span>
 <span id="364">364</span>
 <span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
+<span id="376">376</span>
+<span id="377">377</span>
+<span id="378">378</span>
+<span id="379">379</span>
+<span id="380">380</span>
+<span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">actionable::Permissions</span>;
 <span class="kw">use</span> <span class="ident">custodian_password</span>::{
@@ -382,7 +408,7 @@
     <span class="ident">schema</span>::{
         <span class="self">self</span>,
         <span class="ident">view</span>::{<span class="self">self</span>, <span class="ident">map</span>},
-        <span class="ident">CollectionName</span>, <span class="ident">Key</span>, <span class="ident">MappedValue</span>, <span class="ident">ViewName</span>,
+        <span class="ident">CollectionName</span>, <span class="ident">Key</span>, <span class="ident">MappedValue</span>, <span class="ident">NamedReference</span>, <span class="ident">ViewName</span>,
     },
     <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
 };
@@ -467,8 +493,8 @@
     <span class="doccomment">/// Sets a user&#39;s password.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;simple&quot;</span>))]</span>
     <span class="ident">SetPassword</span> {
-        <span class="doccomment">/// The username of the user to set the password for.</span>
-        <span class="ident">username</span>: <span class="ident">String</span>,
+        <span class="doccomment">/// The username or id of the user to set the password for.</span>
+        <span class="ident">user</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
 
         <span class="doccomment">/// A registration request for a password.</span>
         <span class="ident">password_request</span>: <span class="ident">RegistrationRequest</span>,
@@ -477,11 +503,37 @@
     <span class="doccomment">/// Finishes setting the password for a user.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>))]</span>
     <span class="ident">FinishSetPassword</span> {
-        <span class="doccomment">/// The username of the user to set the password for.</span>
-        <span class="ident">username</span>: <span class="ident">String</span>,
+        <span class="doccomment">/// The username or id of the user to set the password for.</span>
+        <span class="ident">user</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
 
         <span class="doccomment">/// The finalization payload for the password change.</span>
         <span class="ident">password_finalization</span>: <span class="ident">RegistrationFinalization</span>,
+    },
+
+    <span class="doccomment">/// Alter&#39;s a user&#39;s membership in a permission group.</span>
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;simple&quot;</span>))]</span>
+    <span class="ident">AlterUserPermissionGroupMembership</span> {
+        <span class="doccomment">/// The username or id of the user.</span>
+        <span class="ident">user</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+
+        <span class="doccomment">/// The name or id of the group.</span>
+        <span class="ident">group</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+
+        <span class="doccomment">/// Whether the user should be in the group.</span>
+        <span class="ident">should_be_member</span>: <span class="ident">bool</span>,
+    },
+
+    <span class="doccomment">/// Alter&#39;s a user&#39;s role</span>
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;simple&quot;</span>))]</span>
+    <span class="ident">AlterUserRoleMembership</span> {
+        <span class="doccomment">/// The username or id of the user.</span>
+        <span class="ident">user</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+
+        <span class="doccomment">/// The name or id of the role.</span>
+        <span class="ident">role</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+
+        <span class="doccomment">/// Whether the user should have the role.</span>
+        <span class="ident">should_be_member</span>: <span class="ident">bool</span>,
     },
 }
 

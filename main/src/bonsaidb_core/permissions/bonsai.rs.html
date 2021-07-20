@@ -243,6 +243,11 @@
 <span id="240">240</span>
 <span id="241">241</span>
 <span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
+<span id="247">247</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// When generating docs with either keyvalue or pubsub features disabled, there</span>
 <span class="comment">// will be broken links in these docs. Instead of failing to generate docs with</span>
@@ -335,10 +340,10 @@
         })
 }
 
-<span class="doccomment">/// Creates a resource name for the user with `username`.</span>
+<span class="doccomment">/// Creates a resource name for `user_id`.</span>
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">I</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Identifier</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">username</span>: <span class="ident">I</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="ident">bonsaidb_resource_name</span>().<span class="ident">and</span>(<span class="string">&quot;user&quot;</span>).<span class="ident">and</span>(<span class="ident">username</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">user_resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">user_id</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">bonsaidb_resource_name</span>().<span class="ident">and</span>(<span class="string">&quot;user&quot;</span>).<span class="ident">and</span>(<span class="ident">user_id</span>)
 }
 
 <span class="doccomment">/// Actions that can be permitted within `BonsaiDb`.</span>
@@ -373,6 +378,11 @@
     <span class="ident">SetPassword</span>,
     <span class="doccomment">/// Permits the ability to log in with a password.</span>
     <span class="ident">LoginWithPassword</span>,
+    <span class="doccomment">/// Permits [`ServerConnection::add_permission_group_to_user`](crate::connection::ServerConnection::add_permission_group_to_user) and [`ServerConnection::remove_permission_group_from_user`](crate::connection::ServerConnection::remove_permission_group_from_user).</span>
+    <span class="ident">ModifyUserPermissionGroups</span>,
+    <span class="doccomment">/// Permits .</span>
+    <span class="doccomment">/// Permits [`ServerConnection::add_role_to_user`](crate::connection::ServerConnection::add_role_to_user) and [`ServerConnection::remove_role_from_user`](crate::connection::ServerConnection::remove_role_from_user).</span>
+    <span class="ident">ModifyUserRoles</span>,
 }
 
 <span class="doccomment">/// Actions that operate on a specific database.</span>

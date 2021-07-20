@@ -134,7 +134,17 @@
 <span id="131">131</span>
 <span id="132">132</span>
 <span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
 </pre><div class="example-wrap"><pre class="rust ">
+<span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -143,7 +153,10 @@
     <span class="ident">custodian_password</span>::{<span class="ident">ServerFile</span>, <span class="ident">ServerRegistration</span>},
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">KeyId</span>},
     <span class="ident">permissions::Permissions</span>,
-    <span class="ident">schema</span>::{<span class="ident">Collection</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">MapResult</span>, <span class="ident">Name</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>},
+    <span class="ident">schema</span>::{
+        <span class="ident">Collection</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">MapResult</span>, <span class="ident">Name</span>, <span class="ident">NamedCollection</span>, <span class="ident">Schematic</span>,
+        <span class="ident">View</span>,
+    },
     <span class="ident">Error</span>,
 };
 
@@ -224,6 +237,7 @@
     }
 }
 
+<span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">User</span> {
     <span class="kw">fn</span> <span class="ident">default_encryption_key</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
         <span class="prelude-val">Some</span>(<span class="ident">KeyId::Master</span>)
@@ -236,6 +250,10 @@
     <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">ByName</span>)
     }
+}
+
+<span class="kw">impl</span> <span class="ident">NamedCollection</span> <span class="kw">for</span> <span class="ident">User</span> {
+    <span class="kw">type</span> <span class="ident">ByNameView</span> <span class="op">=</span> <span class="ident">ByName</span>;
 }
 
 <span class="doccomment">/// A unique view of users by name.</span>
