@@ -1825,20 +1825,6 @@
 <span id="1822">1822</span>
 <span id="1823">1823</span>
 <span id="1824">1824</span>
-<span id="1825">1825</span>
-<span id="1826">1826</span>
-<span id="1827">1827</span>
-<span id="1828">1828</span>
-<span id="1829">1829</span>
-<span id="1830">1830</span>
-<span id="1831">1831</span>
-<span id="1832">1832</span>
-<span id="1833">1833</span>
-<span id="1834">1834</span>
-<span id="1835">1835</span>
-<span id="1836">1836</span>
-<span id="1837">1837</span>
-<span id="1838">1838</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">hash_map</span>, <span class="ident">HashMap</span>},
@@ -1939,7 +1925,6 @@
     <span class="ident">clients</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">request_processor</span>: <span class="ident">Manager</span>,
     <span class="ident">default_permissions</span>: <span class="ident">Permissions</span>,
-    <span class="ident">custom_api</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">B::CustomApiDispatcher</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">endpoint</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Endpoint</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
     <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -1968,7 +1953,6 @@
                 <span class="ident">endpoint</span>: <span class="ident">RwLock::default</span>(),
                 <span class="ident">request_processor</span>,
                 <span class="ident">default_permissions</span>: <span class="ident">configuration</span>.<span class="ident">default_permissions</span>,
-                <span class="ident">custom_api</span>: <span class="ident">RwLock::default</span>(),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
                 <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock::default</span>(),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
@@ -1984,12 +1968,6 @@
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">directory</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">PathBuf</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">directory</span>
-    }
-
-    <span class="doccomment">/// Opens a server using `directory` for storage.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_custom_api_dispatcher</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">dispatcher</span>: <span class="ident">B::CustomApiDispatcher</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">server_dispatcher</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">custom_api</span>.<span class="ident">write</span>().<span class="kw">await</span>;
-        <span class="kw-2">*</span><span class="ident">server_dispatcher</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">dispatcher</span>);
     }
 
     <span class="doccomment">/// Retrieves a database. This function only verifies that the database exists.</span>
@@ -2757,20 +2735,14 @@
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">subaction</span>: <span class="self">Self</span><span class="ident">::Subaction</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Response</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">dispatcher</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">data</span>.<span class="ident">custom_api</span>.<span class="ident">read</span>().<span class="kw">await</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">dispatcher</span>) <span class="op">=</span> <span class="ident">dispatcher</span>.<span class="ident">as_ref</span>() {
-            <span class="ident">dispatcher</span>
-                .<span class="ident">dispatch</span>(<span class="ident">permissions</span>, <span class="ident">subaction</span>)
-                .<span class="kw">await</span>
-                .<span class="ident">map</span>(<span class="ident">Response::Api</span>)
-                .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-                    <span class="ident">bonsaidb_core::Error::Server</span>(<span class="macro">format!</span>(<span class="string">&quot;error executing custom api: {:?}&quot;</span>, <span class="ident">err</span>))
-                })
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::Server</span>(<span class="ident">String::from</span>(
-                <span class="string">&quot;No dispatcher to handle request&quot;</span>,
-            )))
-        }
+        <span class="kw">let</span> <span class="ident">dispatcher</span> <span class="op">=</span> <span class="ident">B::dispatcher_for</span>(<span class="self">self</span>.<span class="ident">server</span>, <span class="self">self</span>.<span class="ident">client</span>);
+        <span class="ident">dispatcher</span>
+            .<span class="ident">dispatch</span>(<span class="ident">permissions</span>, <span class="ident">subaction</span>)
+            .<span class="kw">await</span>
+            .<span class="ident">map</span>(<span class="ident">Response::Api</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+                <span class="ident">bonsaidb_core::Error::Server</span>(<span class="macro">format!</span>(<span class="string">&quot;error executing custom api: {:?}&quot;</span>, <span class="ident">err</span>))
+            })
     }
 }
 
