@@ -1,7 +1,6 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `server/src/server.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>server.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings"></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg">
 <link rel="alternate icon" type="image/png" href="../../favicon-16x16.png">
-<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../bonsaidb_server/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" class="help-button">?</button>
-                <a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">   1</span>
+<link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../bonsaidb_server/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img src="../../brush.svg" width="18" height="18" alt="Pick another theme!"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img src="../../wheel.svg" width="18" height="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">   1</span>
 <span id="2">   2</span>
 <span id="3">   3</span>
 <span id="4">   4</span>
@@ -1825,7 +1824,73 @@
 <span id="1822">1822</span>
 <span id="1823">1823</span>
 <span id="1824">1824</span>
-</pre><div class="example-wrap"><pre class="rust ">
+<span id="1825">1825</span>
+<span id="1826">1826</span>
+<span id="1827">1827</span>
+<span id="1828">1828</span>
+<span id="1829">1829</span>
+<span id="1830">1830</span>
+<span id="1831">1831</span>
+<span id="1832">1832</span>
+<span id="1833">1833</span>
+<span id="1834">1834</span>
+<span id="1835">1835</span>
+<span id="1836">1836</span>
+<span id="1837">1837</span>
+<span id="1838">1838</span>
+<span id="1839">1839</span>
+<span id="1840">1840</span>
+<span id="1841">1841</span>
+<span id="1842">1842</span>
+<span id="1843">1843</span>
+<span id="1844">1844</span>
+<span id="1845">1845</span>
+<span id="1846">1846</span>
+<span id="1847">1847</span>
+<span id="1848">1848</span>
+<span id="1849">1849</span>
+<span id="1850">1850</span>
+<span id="1851">1851</span>
+<span id="1852">1852</span>
+<span id="1853">1853</span>
+<span id="1854">1854</span>
+<span id="1855">1855</span>
+<span id="1856">1856</span>
+<span id="1857">1857</span>
+<span id="1858">1858</span>
+<span id="1859">1859</span>
+<span id="1860">1860</span>
+<span id="1861">1861</span>
+<span id="1862">1862</span>
+<span id="1863">1863</span>
+<span id="1864">1864</span>
+<span id="1865">1865</span>
+<span id="1866">1866</span>
+<span id="1867">1867</span>
+<span id="1868">1868</span>
+<span id="1869">1869</span>
+<span id="1870">1870</span>
+<span id="1871">1871</span>
+<span id="1872">1872</span>
+<span id="1873">1873</span>
+<span id="1874">1874</span>
+<span id="1875">1875</span>
+<span id="1876">1876</span>
+<span id="1877">1877</span>
+<span id="1878">1878</span>
+<span id="1879">1879</span>
+<span id="1880">1880</span>
+<span id="1881">1881</span>
+<span id="1882">1882</span>
+<span id="1883">1883</span>
+<span id="1884">1884</span>
+<span id="1885">1885</span>
+<span id="1886">1886</span>
+<span id="1887">1887</span>
+<span id="1888">1888</span>
+<span id="1889">1889</span>
+<span id="1890">1890</span>
+</pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">hash_map</span>, <span class="ident">HashMap</span>},
     <span class="ident">fmt::Debug</span>,
@@ -1834,7 +1899,7 @@
     <span class="ident">ops::Deref</span>,
     <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
     <span class="ident">sync</span>::{
-        <span class="ident">atomic</span>::{<span class="ident">AtomicU32</span>, <span class="ident">Ordering</span>},
+        <span class="ident">atomic</span>::{<span class="ident">AtomicU32</span>, <span class="ident">AtomicUsize</span>, <span class="ident">Ordering</span>},
         <span class="ident">Arc</span>,
     },
     <span class="ident">time::Duration</span>,
@@ -1926,6 +1991,7 @@
     <span class="ident">request_processor</span>: <span class="ident">Manager</span>,
     <span class="ident">default_permissions</span>: <span class="ident">Permissions</span>,
     <span class="ident">endpoint</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Endpoint</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">client_simultaneous_request_limit</span>: <span class="ident">usize</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
     <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
@@ -1953,6 +2019,7 @@
                 <span class="ident">endpoint</span>: <span class="ident">RwLock::default</span>(),
                 <span class="ident">request_processor</span>,
                 <span class="ident">default_permissions</span>: <span class="ident">configuration</span>.<span class="ident">default_permissions</span>,
+                <span class="ident">client_simultaneous_request_limit</span>: <span class="ident">configuration</span>.<span class="ident">client_simultaneous_request_limit</span>,
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
                 <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock::default</span>(),
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
@@ -2181,7 +2248,7 @@
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clients</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clients</span>.<span class="ident">write</span>().<span class="kw">await</span>;
             <span class="ident">clients</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>)
         } {
-            <span class="ident">B::client_disconnected</span>(<span class="ident">client</span>, <span class="self">self</span>).<span class="kw">await</span>
+            <span class="ident">B::client_disconnected</span>(<span class="ident">client</span>, <span class="self">self</span>).<span class="kw">await</span>;
         }
     }
 
@@ -2290,31 +2357,24 @@
             <span class="prelude-ty">Result</span>::<span class="op">&lt;</span>(), <span class="ident">anyhow::Error</span><span class="op">&gt;</span><span class="ident">::Ok</span>(())
         });
 
+        <span class="kw">let</span> (<span class="ident">request_sender</span>, <span class="ident">request_receiver</span>) <span class="op">=</span>
+            <span class="ident">flume::bounded</span>::<span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Request</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+                <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_simultaneous_request_limit</span>,
+            );
+        <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
+        <span class="ident">tokio::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
+            <span class="ident">task_self</span>
+                .<span class="ident">handle_client_requests</span>(<span class="ident">client</span>.<span class="ident">clone</span>(), <span class="ident">request_receiver</span>, <span class="ident">response_sender</span>)
+                .<span class="kw">await</span>;
+        });
+
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload</span>) <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">next</span>().<span class="kw">await</span> {
             <span class="kw">match</span> <span class="ident">payload</span><span class="question-mark">?</span> {
                 <span class="ident">Message::Binary</span>(<span class="ident">binary</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">bincode::deserialize</span>::<span class="op">&lt;</span>
                         <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Request</span><span class="op">&gt;</span><span class="op">&gt;</span>,
                     <span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">binary</span>)<span class="question-mark">?</span>;
-                    <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">payload</span>.<span class="ident">id</span>;
-                    <span class="kw">let</span> <span class="ident">task_sender</span> <span class="op">=</span> <span class="ident">response_sender</span>.<span class="ident">clone</span>();
-                    <span class="self">self</span>.<span class="ident">handle_request_through_worker</span>(
-                        <span class="ident">payload</span>.<span class="ident">wrapped</span>,
-                        <span class="kw">move</span> <span class="op">|</span><span class="ident">response</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
-                            <span class="ident">drop</span>(<span class="ident">task_sender</span>.<span class="ident">send</span>(<span class="ident">Payload</span> {
-                                <span class="ident">id</span>,
-                                <span class="ident">wrapped</span>: <span class="ident">response</span>,
-                            }));
-
-                            <span class="prelude-val">Ok</span>(())
-                        },
-                        <span class="ident">client</span>.<span class="ident">clone</span>(),
-                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-                        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">clone</span>(),
-                        <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-                        <span class="ident">response_sender</span>.<span class="ident">clone</span>(),
-                    )
-                    .<span class="kw">await</span><span class="question-mark">?</span>;
+                    <span class="ident">drop</span>(<span class="ident">request_sender</span>.<span class="ident">send_async</span>(<span class="ident">payload</span>).<span class="kw">await</span>);
                 }
                 <span class="ident">Message::Close</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
                 <span class="ident">Message::Ping</span>(<span class="ident">payload</span>) <span class="op">=</span><span class="op">&gt;</span> {
@@ -2327,6 +2387,65 @@
         }
 
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_client_requests</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">client</span>: <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
+        <span class="ident">request_receiver</span>: <span class="ident">flume::Receiver</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Request</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">response_sender</span>: <span class="ident">flume::Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    ) {
+        <span class="kw">let</span> (<span class="ident">request_completion_sender</span>, <span class="ident">request_completion_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span>();
+        <span class="kw">let</span> <span class="ident">requests_in_queue</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">AtomicUsize::new</span>(<span class="number">0</span>));
+        <span class="kw">loop</span> {
+            <span class="kw">let</span> <span class="ident">current_requests</span> <span class="op">=</span> <span class="ident">requests_in_queue</span>.<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>);
+            <span class="kw">if</span> <span class="ident">current_requests</span> <span class="op">=</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_simultaneous_request_limit</span> {
+                <span class="comment">// Wait for requests to finish.</span>
+                <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">request_completion_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span>;
+                <span class="comment">// Clear the queue</span>
+                <span class="kw">while</span> <span class="ident">request_completion_receiver</span>.<span class="ident">try_recv</span>().<span class="ident">is_ok</span>() {}
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">requests_in_queue</span>
+                .<span class="ident">compare_exchange</span>(
+                    <span class="ident">current_requests</span>,
+                    <span class="ident">current_requests</span> <span class="op">+</span> <span class="number">1</span>,
+                    <span class="ident">Ordering::SeqCst</span>,
+                    <span class="ident">Ordering::SeqCst</span>,
+                )
+                .<span class="ident">is_ok</span>()
+            {
+                <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">request_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
+                    <span class="prelude-val">Ok</span>(<span class="ident">payload</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">payload</span>,
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
+                };
+                <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">payload</span>.<span class="ident">id</span>;
+                <span class="kw">let</span> <span class="ident">task_sender</span> <span class="op">=</span> <span class="ident">response_sender</span>.<span class="ident">clone</span>();
+
+                <span class="kw">let</span> <span class="ident">request_completion_sender</span> <span class="op">=</span> <span class="ident">request_completion_sender</span>.<span class="ident">clone</span>();
+                <span class="kw">let</span> <span class="ident">requests_in_queue</span> <span class="op">=</span> <span class="ident">requests_in_queue</span>.<span class="ident">clone</span>();
+                <span class="self">self</span>.<span class="ident">handle_request_through_worker</span>(
+                    <span class="ident">payload</span>.<span class="ident">wrapped</span>,
+                    <span class="kw">move</span> <span class="op">|</span><span class="ident">response</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
+                        <span class="ident">drop</span>(<span class="ident">task_sender</span>.<span class="ident">send</span>(<span class="ident">Payload</span> {
+                            <span class="ident">id</span>,
+                            <span class="ident">wrapped</span>: <span class="ident">response</span>,
+                        }));
+
+                        <span class="ident">requests_in_queue</span>.<span class="ident">fetch_sub</span>(<span class="number">1</span>, <span class="ident">Ordering::SeqCst</span>);
+
+                        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">request_completion_sender</span>.<span class="ident">send</span>(());
+
+                        <span class="prelude-val">Ok</span>(())
+                    },
+                    <span class="ident">client</span>.<span class="ident">clone</span>(),
+                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+                    <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">clone</span>(),
+                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
+                    <span class="ident">response_sender</span>.<span class="ident">clone</span>(),
+                )
+                .<span class="kw">await</span>
+                .<span class="ident">unwrap</span>();
+            }
+        }
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_request_through_worker</span><span class="op">&lt;</span>
@@ -2382,26 +2501,38 @@
             }
         });
 
-        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload</span>) <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">next</span>().<span class="kw">await</span> {
-            <span class="kw">let</span> <span class="ident">Payload</span> { <span class="ident">id</span>, <span class="ident">wrapped</span> } <span class="op">=</span> <span class="ident">payload</span><span class="question-mark">?</span>;
-            <span class="kw">let</span> <span class="ident">task_sender</span> <span class="op">=</span> <span class="ident">payload_sender</span>.<span class="ident">clone</span>();
-            <span class="self">self</span>.<span class="ident">handle_request_through_worker</span>(
-                <span class="ident">wrapped</span>,
-                <span class="kw">move</span> <span class="op">|</span><span class="ident">response</span><span class="op">|</span> <span class="kw">async</span> <span class="kw">move</span> {
-                    <span class="ident">drop</span>(<span class="ident">task_sender</span>.<span class="ident">send</span>(<span class="ident">Payload</span> {
-                        <span class="ident">id</span>,
-                        <span class="ident">wrapped</span>: <span class="ident">response</span>,
-                    }));
+        <span class="kw">let</span> (<span class="ident">request_sender</span>, <span class="ident">request_receiver</span>) <span class="op">=</span>
+            <span class="ident">flume::bounded</span>::<span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Request</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>(
+                <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_simultaneous_request_limit</span>,
+            );
+        <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
+        <span class="ident">tokio::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
+            <span class="ident">task_self</span>
+                .<span class="ident">handle_client_requests</span>(<span class="ident">client</span>.<span class="ident">clone</span>(), <span class="ident">request_receiver</span>, <span class="ident">payload_sender</span>)
+                .<span class="kw">await</span>;
+        });
 
-                    <span class="prelude-val">Ok</span>(())
-                },
-                <span class="ident">client</span>.<span class="ident">clone</span>(),
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-                <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">clone</span>(),
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-                <span class="ident">payload_sender</span>.<span class="ident">clone</span>(),
-            )
-            .<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload</span>) <span class="op">=</span> <span class="ident">receiver</span>.<span class="ident">next</span>().<span class="kw">await</span> {
+            <span class="ident">drop</span>(<span class="ident">request_sender</span>.<span class="ident">send_async</span>(<span class="ident">payload</span><span class="question-mark">?</span>).<span class="kw">await</span>);
+            <span class="comment">// let Payload { id, wrapped } = ;</span>
+            <span class="comment">// let task_sender = payload_sender.clone();</span>
+            <span class="comment">// self.handle_request_through_worker(</span>
+            <span class="comment">//     wrapped,</span>
+            <span class="comment">//     move |response| async move {</span>
+            <span class="comment">//         drop(task_sender.send(Payload {</span>
+            <span class="comment">//             id,</span>
+            <span class="comment">//             wrapped: response,</span>
+            <span class="comment">//         }));</span>
+
+            <span class="comment">//         Ok(())</span>
+            <span class="comment">//     },</span>
+            <span class="comment">//     client.clone(),</span>
+            <span class="comment">//     #[cfg(feature = &quot;pubsub&quot;)]</span>
+            <span class="comment">//     self.data.subscribers.clone(),</span>
+            <span class="comment">//     #[cfg(feature = &quot;pubsub&quot;)]</span>
+            <span class="comment">//     payload_sender.clone(),</span>
+            <span class="comment">// )</span>
+            <span class="comment">// .await?;</span>
         }
 
         <span class="prelude-val">Ok</span>(())
@@ -2467,7 +2598,7 @@
                 <span class="ident">topic</span>: <span class="ident">database_topic</span>(<span class="ident">database</span>, <span class="ident">topic</span>),
                 <span class="ident">payload</span>,
             })
-            .<span class="kw">await</span>
+            .<span class="kw">await</span>;
     }
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
@@ -3420,7 +3551,7 @@
                 <span class="ident">tokio::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
                     <span class="ident">task_self</span>
                         .<span class="ident">forward_notifications_for</span>(<span class="ident">subscriber</span>.<span class="ident">id</span>, <span class="ident">subscriber</span>.<span class="ident">receiver</span>, <span class="ident">response_sender</span>.<span class="ident">clone</span>())
-                        .<span class="kw">await</span>
+                        .<span class="kw">await</span>;
                 });
                 <span class="prelude-val">Ok</span>(<span class="ident">Response::Database</span>(<span class="ident">DatabaseResponse::SubscriberCreated</span> {
                     <span class="ident">subscriber_id</span>,
@@ -3651,5 +3782,4 @@
     }
 }
 </pre></div>
-</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bonsaidb_server" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
-    <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script></body></html>
+</section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bonsaidb_server" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script></body></html>
