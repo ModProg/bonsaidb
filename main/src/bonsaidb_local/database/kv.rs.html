@@ -753,6 +753,8 @@
 <span id="753">753</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{
+    <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">VecDeque</span>},
+    <span class="ident">convert::Infallible</span>,
     <span class="ident">hash::Hash</span>,
     <span class="ident">sync::atomic</span>::{<span class="ident">AtomicBool</span>, <span class="ident">Ordering</span>},
 };
@@ -762,17 +764,15 @@
     <span class="ident">kv</span>::{<span class="ident">Command</span>, <span class="ident">KeyCheck</span>, <span class="ident">KeyOperation</span>, <span class="ident">KeyStatus</span>, <span class="ident">Kv</span>, <span class="ident">Numeric</span>, <span class="ident">Output</span>, <span class="ident">Timestamp</span>, <span class="ident">Value</span>},
     <span class="ident">schema::Schema</span>,
 };
-<span class="kw">use</span> <span class="ident">nebari</span>::{<span class="ident">io::fs::StdFile</span>, <span class="ident">tree::UnversionedTreeRoot</span>, <span class="ident">Buffer</span>, <span class="ident">CompareAndSwapError</span>, <span class="ident">Tree</span>};
+<span class="kw">use</span> <span class="ident">bonsaidb_jobs::Job</span>;
+<span class="kw">use</span> <span class="ident">nebari</span>::{
+    <span class="ident">io::fs::StdFile</span>,
+    <span class="ident">tree</span>::{<span class="ident">KeyEvaluation</span>, <span class="ident">UnversionedTreeRoot</span>},
+    <span class="ident">Buffer</span>, <span class="ident">CompareAndSwapError</span>, <span class="ident">Tree</span>,
+};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">database::Context</span>, <span class="ident">Database</span>, <span class="ident">Error</span>};
-<span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">VecDeque</span>},
-    <span class="ident">convert::Infallible</span>,
-};
-
-<span class="kw">use</span> <span class="ident">bonsaidb_jobs::Job</span>;
-<span class="kw">use</span> <span class="ident">nebari::tree::KeyEvaluation</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Entry</span> {
