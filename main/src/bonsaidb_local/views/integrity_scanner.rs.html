@@ -191,6 +191,12 @@
 <span id="191">191</span>
 <span id="192">192</span>
 <span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">collections::HashSet</span>, <span class="ident">hash::Hash</span>, <span class="ident">sync::Arc</span>};
 
@@ -234,21 +240,27 @@
         <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">database</span>
             .<span class="ident">roots</span>()
-            .<span class="ident">tree</span>(<span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>))<span class="question-mark">?</span>;
+            .<span class="ident">tree</span>(<span class="ident">VersionedTreeRoot::tree</span>(<span class="ident">document_tree_name</span>(
+                <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
+            )))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">view_versions</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">database</span>
-            .<span class="ident">roots</span>()
-            .<span class="ident">tree</span>::<span class="op">&lt;</span><span class="ident">UnversionedTreeRoot</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">view_versions_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">view_versions</span> <span class="op">=</span>
+            <span class="self">self</span>.<span class="ident">database</span>
+                .<span class="ident">roots</span>()
+                .<span class="ident">tree</span>(<span class="ident">UnversionedTreeRoot::tree</span>(<span class="ident">view_versions_tree_name</span>(
+                    <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
+                )))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">document_map</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">database</span>
-            .<span class="ident">roots</span>()
-            .<span class="ident">tree</span>(<span class="ident">view_document_map_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>))<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">document_map</span> <span class="op">=</span>
+            <span class="self">self</span>.<span class="ident">database</span>
+                .<span class="ident">roots</span>()
+                .<span class="ident">tree</span>(<span class="ident">UnversionedTreeRoot::tree</span>(<span class="ident">view_document_map_tree_name</span>(
+                    <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>,
+                )))<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">invalidated_entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">roots</span>().<span class="ident">tree</span>::<span class="op">&lt;</span><span class="ident">UnversionedTreeRoot</span>, <span class="kw">_</span><span class="op">&gt;</span>(
+        <span class="kw">let</span> <span class="ident">invalidated_entries</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">roots</span>().<span class="ident">tree</span>(<span class="ident">UnversionedTreeRoot::tree</span>(
             <span class="ident">view_invalidated_docs_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>),
-        )<span class="question-mark">?</span>;
+        ))<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">view_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">view_version</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_version</span>;

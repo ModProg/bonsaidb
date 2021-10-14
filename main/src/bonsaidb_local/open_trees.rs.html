@@ -61,7 +61,7 @@
 <span class="kw">use</span> <span class="ident">bonsaidb_core::schema</span>::{<span class="ident">CollectionName</span>, <span class="ident">Schematic</span>};
 <span class="kw">use</span> <span class="ident">nebari</span>::{
     <span class="ident">io::fs::StdFile</span>,
-    <span class="ident">tree</span>::{<span class="ident">Root</span>, <span class="ident">TreeRoot</span>, <span class="ident">UnversionedTreeRoot</span>, <span class="ident">VersionedTreeRoot</span>},
+    <span class="ident">tree</span>::{<span class="ident">AnyTreeRoot</span>, <span class="ident">Root</span>, <span class="ident">UnversionedTreeRoot</span>, <span class="ident">VersionedTreeRoot</span>},
 };
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -75,7 +75,7 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">OpenTrees</span> {
-    <span class="kw">pub</span> <span class="ident">trees</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">TreeRoot</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">trees</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">AnyTreeRoot</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">trees_index_by_name</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
 }
 
@@ -84,7 +84,7 @@
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">trees_index_by_name</span>.<span class="ident">contains_key</span>(<span class="ident">name</span>) {
             <span class="self">self</span>.<span class="ident">trees_index_by_name</span>
                 .<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">trees</span>.<span class="ident">len</span>());
-            <span class="self">self</span>.<span class="ident">trees</span>.<span class="ident">push</span>(<span class="ident">R::tree</span>(<span class="ident">name</span>.<span class="ident">to_string</span>()));
+            <span class="self">self</span>.<span class="ident">trees</span>.<span class="ident">push</span>(<span class="ident">Box::new</span>(<span class="ident">R::tree</span>(<span class="ident">name</span>.<span class="ident">to_string</span>())));
         }
     }
 
