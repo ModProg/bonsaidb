@@ -854,7 +854,6 @@
 <span id="854">854</span>
 <span id="855">855</span>
 <span id="856">856</span>
-<span id="857">857</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>,
@@ -882,7 +881,6 @@
     <span class="ident">connection</span>::{<span class="self">self</span>, <span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">ServerConnection</span>},
     <span class="ident">custodian_password</span>::{<span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>, <span class="ident">ServerRegistration</span>},
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">KeyId</span>},
-    <span class="ident">networking</span>,
     <span class="ident">permissions::Permissions</span>,
     <span class="ident">schema</span>::{
         <span class="ident">view::map</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">MappedValue</span>, <span class="ident">NamedCollection</span>,
@@ -1413,7 +1411,7 @@
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">networking::MappedDocument</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::MappedSerialized</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,

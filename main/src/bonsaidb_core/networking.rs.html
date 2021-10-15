@@ -355,40 +355,6 @@
 <span id="355">355</span>
 <span id="356">356</span>
 <span id="357">357</span>
-<span id="358">358</span>
-<span id="359">359</span>
-<span id="360">360</span>
-<span id="361">361</span>
-<span id="362">362</span>
-<span id="363">363</span>
-<span id="364">364</span>
-<span id="365">365</span>
-<span id="366">366</span>
-<span id="367">367</span>
-<span id="368">368</span>
-<span id="369">369</span>
-<span id="370">370</span>
-<span id="371">371</span>
-<span id="372">372</span>
-<span id="373">373</span>
-<span id="374">374</span>
-<span id="375">375</span>
-<span id="376">376</span>
-<span id="377">377</span>
-<span id="378">378</span>
-<span id="379">379</span>
-<span id="380">380</span>
-<span id="381">381</span>
-<span id="382">382</span>
-<span id="383">383</span>
-<span id="384">384</span>
-<span id="385">385</span>
-<span id="386">386</span>
-<span id="387">387</span>
-<span id="388">388</span>
-<span id="389">389</span>
-<span id="390">390</span>
-<span id="391">391</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">actionable::Permissions</span>;
 <span class="kw">use</span> <span class="ident">custodian_password</span>::{
@@ -396,17 +362,13 @@
     <span class="ident">RegistrationResponse</span>,
 };
 <span class="kw">use</span> <span class="ident">schema::SchemaName</span>;
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de::DeserializeOwned</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Database</span>, <span class="ident">QueryKey</span>},
     <span class="ident">document::Document</span>,
     <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>},
-    <span class="ident">schema</span>::{
-        <span class="self">self</span>,
-        <span class="ident">view</span>::{<span class="self">self</span>, <span class="ident">map</span>},
-        <span class="ident">CollectionName</span>, <span class="ident">Key</span>, <span class="ident">MappedValue</span>, <span class="ident">NamedReference</span>, <span class="ident">ViewName</span>,
-    },
+    <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">view::map</span>, <span class="ident">CollectionName</span>, <span class="ident">MappedValue</span>, <span class="ident">NamedReference</span>, <span class="ident">ViewName</span>},
     <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
 };
 
@@ -712,7 +674,7 @@
     <span class="doccomment">/// Results of [`DatabaseRequest::Query`] when `with_docs` is false.</span>
     <span class="ident">ViewMappings</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::Serialized</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Results of [`DatabaseRequest::Query`] when `with_docs` is true.</span>
-    <span class="ident">ViewMappingsWithDocs</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedDocument</span><span class="op">&gt;</span>),
+    <span class="ident">ViewMappingsWithDocs</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::MappedSerialized</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Result of [`DatabaseRequest::Reduce`] when `grouped` is false.</span>
     <span class="ident">ViewReduction</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Result of [`DatabaseRequest::Reduce`] when `grouped` is true.</span>
@@ -737,36 +699,6 @@
     },
     <span class="doccomment">/// Output from a [`KeyOperation`] being executed.</span>
     <span class="ident">KvOutput</span>(<span class="ident">Output</span>),
-}
-
-<span class="doccomment">/// A serialized [`MappedDocument`](map::MappedDocument).</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MappedDocument</span> {
-    <span class="doccomment">/// The serialized key.</span>
-    <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The serialized value.</span>
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The source document.</span>
-    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">MappedDocument</span> {
-    <span class="doccomment">/// Deserialize into a [`MappedDocument`](map::MappedDocument).</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deserialized</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span>, <span class="ident">V</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="ident">DeserializeOwned</span><span class="op">&gt;</span>(
-        <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">map::MappedDocument</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>, <span class="kw">crate</span><span class="ident">::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Key::from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
-            <span class="kw">crate</span><span class="ident">::Error::Database</span>(<span class="ident">view::Error::KeySerialization</span>(<span class="ident">err</span>).<span class="ident">to_string</span>())
-        })<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">serde_cbor::from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)
-            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="kw">crate</span><span class="ident">::Error::Database</span>(<span class="ident">view::Error::from</span>(<span class="ident">err</span>).<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
-
-        <span class="prelude-val">Ok</span>(<span class="ident">map::MappedDocument</span> {
-            <span class="ident">document</span>: <span class="self">self</span>.<span class="ident">source</span>,
-            <span class="ident">key</span>,
-            <span class="ident">value</span>,
-        })
-    }
 }
 
 <span class="doccomment">/// A networking error.</span>

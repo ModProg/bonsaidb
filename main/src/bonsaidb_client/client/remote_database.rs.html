@@ -343,7 +343,7 @@
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>},
     <span class="ident">custom_api::CustomApi</span>,
     <span class="ident">document::Document</span>,
-    <span class="ident">networking</span>::{<span class="self">self</span>, <span class="ident">DatabaseRequest</span>, <span class="ident">DatabaseResponse</span>, <span class="ident">Request</span>, <span class="ident">Response</span>},
+    <span class="ident">networking</span>::{<span class="ident">DatabaseRequest</span>, <span class="ident">DatabaseResponse</span>, <span class="ident">Request</span>, <span class="ident">Response</span>},
     <span class="ident">schema</span>::{
         <span class="ident">view</span>, <span class="ident">view::map</span>, <span class="ident">Collection</span>, <span class="ident">Key</span>, <span class="ident">Map</span>, <span class="ident">MappedDocument</span>, <span class="ident">MappedValue</span>, <span class="ident">Schema</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>,
     },
@@ -521,7 +521,7 @@
         {
             <span class="ident">Response::Database</span>(<span class="ident">DatabaseResponse::ViewMappingsWithDocs</span>(<span class="ident">mappings</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>
                 .<span class="ident">into_iter</span>()
-                .<span class="ident">map</span>(<span class="ident">networking::MappedDocument::deserialized</span>::<span class="op">&lt;</span><span class="ident">V::Key</span>, <span class="ident">V::Value</span><span class="op">&gt;</span>)
+                .<span class="ident">map</span>(<span class="ident">map::MappedSerialized::deserialized</span>::<span class="op">&lt;</span><span class="ident">V::Key</span>, <span class="ident">V::Value</span><span class="op">&gt;</span>)
                 .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()
                 .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">bonsaidb_core::Error::Database</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()))<span class="question-mark">?</span>),
             <span class="ident">Response::Error</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
