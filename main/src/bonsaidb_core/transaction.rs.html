@@ -118,22 +118,12 @@
 <span id="118">118</span>
 <span id="119">119</span>
 <span id="120">120</span>
-<span id="121">121</span>
-<span id="122">122</span>
-<span id="123">123</span>
-<span id="124">124</span>
-<span id="125">125</span>
-<span id="126">126</span>
-<span id="127">127</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">document</span>::{<span class="ident">Header</span>, <span class="ident">KeyId</span>},
-    <span class="ident">schema::CollectionName</span>,
-};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">document::Header</span>, <span class="ident">schema::CollectionName</span>};
 
 <span class="doccomment">/// A list of operations to execute as a single unit. If any operation fails,</span>
 <span class="doccomment">/// all changes are aborted. Reads that happen while the transaction is in</span>
@@ -166,9 +156,6 @@
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Inserts a new document containing `contents`.</span>
     <span class="ident">Insert</span> {
-        <span class="doccomment">/// The encryption key to use for the document.</span>
-        <span class="ident">encryption_key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span>,
-
         <span class="doccomment">/// The initial contents of the document.</span>
         <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
     },
@@ -178,8 +165,7 @@
     <span class="doccomment">/// command fill fail with a `DocumentConflict` error.</span>
     <span class="ident">Update</span> {
         <span class="doccomment">/// The header of the `Document`. The revision must match the current</span>
-        <span class="doccomment">/// document. Changing the encryption key will encrypt the document with</span>
-        <span class="doccomment">/// the new key.</span>
+        <span class="doccomment">/// document.</span>
         <span class="ident">header</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Header</span><span class="op">&gt;</span>,
 
         <span class="doccomment">/// The new contents to store within the `Document`.</span>

@@ -197,18 +197,6 @@
 <span id="197">197</span>
 <span id="198">198</span>
 <span id="199">199</span>
-<span id="200">200</span>
-<span id="201">201</span>
-<span id="202">202</span>
-<span id="203">203</span>
-<span id="204">204</span>
-<span id="205">205</span>
-<span id="206">206</span>
-<span id="207">207</span>
-<span id="208">208</span>
-<span id="209">209</span>
-<span id="210">210</span>
-<span id="211">211</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
@@ -274,12 +262,6 @@
     <span class="doccomment">/// [`Error::UniqueKeyViolation`](crate::Error::UniqueKeyViolation) will be</span>
     <span class="doccomment">/// returned.</span>
     <span class="kw">fn</span> <span class="ident">unique</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="bool-val">false</span>
-    }
-
-    <span class="doccomment">/// If true, keys will be encrypted if a `default_encryption_key` is</span>
-    <span class="doccomment">/// specified. This prevents the ability to use range-based queries.</span>
-    <span class="kw">fn</span> <span class="ident">keys_are_encryptable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="bool-val">false</span>
     }
 
@@ -356,8 +338,6 @@
     <span class="kw">fn</span> <span class="ident">unique</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>;
     <span class="doccomment">/// Wraps [`View::version`]</span>
     <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span>;
-    <span class="doccomment">/// Wraps [`View::keys_are_encryptable`]</span>
-    <span class="kw">fn</span> <span class="ident">keys_are_encryptable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span>;
     <span class="doccomment">/// Wraps [`View::view_name`]</span>
     <span class="kw">fn</span> <span class="ident">view_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ViewName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span>;
     <span class="doccomment">/// Wraps [`View::map`]</span>
@@ -415,10 +395,6 @@
         };
 
         <span class="ident">serde_cbor::to_vec</span>(<span class="kw-2">&amp;</span><span class="ident">reduced_value</span>).<span class="ident">map_err</span>(<span class="ident">Error::from</span>)
-    }
-
-    <span class="kw">fn</span> <span class="ident">keys_are_encryptable</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
-        <span class="self">self</span>.<span class="ident">keys_are_encryptable</span>()
     }
 }
 </pre></div>

@@ -278,10 +278,10 @@
     <span class="doccomment">/// Defines all `View`s in this collection in `schema`.</span>
     <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
 
-    <span class="doccomment">/// If a [`KeyId`] is returned, documents will be encrypted with this key if</span>
-    <span class="doccomment">/// no key is specified during creation.</span>
+    <span class="doccomment">/// If a [`KeyId`] is returned, this collection will be stored encrypted</span>
+    <span class="doccomment">/// at-rest using the key specified.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">fn</span> <span class="ident">default_encryption_key</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">encryption_key</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
         <span class="prelude-val">None</span>
     }
 

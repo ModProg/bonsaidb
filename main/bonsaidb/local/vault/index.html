@@ -12,20 +12,7 @@ an attacker cannot access the data without the encryption key. <code>BonsaiDb</c
 will regularly decrypt data to process it, and while the data is in-memory,
 it is subject to the security of the machine running it. If using <code>BonsaiDb</code>
 over a network, the network transport layer’s encryption is what ensures
-your data’s safety – the document is not e</p>
-<h3 id="what-cant-be-encrypted" class="section-header"><a href="#what-cant-be-encrypted">What can’t be encrypted?</a></h3><h4 id="schema" class="section-header"><a href="#schema">Schema</a></h4>
-<p><code>BonsaiDb</code> makes no effort to encrypt or obscure the names of the
-collections, views, or databases.</p>
-<h4 id="views" class="section-header"><a href="#views">Views</a></h4>
-<p><code>BonsaiDb</code> offers range-based queries for views. The keys emitted in views
-that rely on these range queries cannot be encrypted. This is controlled by
-<a href="../../server/local/core/schema/trait.View.html#method.keys_are_encryptable"><code>View::keys_are_encryptable()</code></a>.
-If a view returns true from that function, range queries will return an
-error even if encryption isn’t enabled. This ensures that if you choose to
-enable encryption at a later date, all data that you expect to be encrypted
-will be.</p>
-<p>Even if a view doesn’t support encrypting keys, the view entries are still
-encrypted. This means the values emitted are still encrypted.</p>
+your data’s safety.</p>
 <h2 id="security-best-practices" class="section-header"><a href="#security-best-practices">Security Best Practices</a></h2><h3 id="vault-key-storage" class="section-header"><a href="#vault-key-storage">Vault Key Storage</a></h3>
 <p>In most situations, do not use <a href="../../server/local/vault/struct.LocalVaultKeyStorage.html" title="LocalVaultKeyStorage"><code>LocalVaultKeyStorage</code></a> in a production
 environment. If you store the vault keys on the same disk as the database,
