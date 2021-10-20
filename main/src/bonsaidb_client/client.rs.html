@@ -791,7 +791,7 @@
 <span class="kw">use</span> <span class="ident">async_lock::Mutex</span>;
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
-    <span class="ident">connection</span>::{<span class="ident">Database</span>, <span class="ident">ServerConnection</span>},
+    <span class="ident">connection</span>::{<span class="ident">Database</span>, <span class="ident">PasswordResult</span>, <span class="ident">ServerConnection</span>},
     <span class="ident">custodian_password</span>::{
         <span class="ident">ClientConfig</span>, <span class="ident">ClientFile</span>, <span class="ident">ClientLogin</span>, <span class="ident">LoginFinalization</span>, <span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>,
     },
@@ -1131,16 +1131,16 @@
         <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">password</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">previous_file</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ClientFile</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ClientFile</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PasswordResult</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">login</span>, <span class="ident">request</span>) <span class="op">=</span> <span class="ident">ClientLogin::login</span>(
             <span class="kw-2">&amp;</span><span class="ident">ClientConfig::new</span>(<span class="ident">PASSWORD_CONFIG</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>,
             <span class="ident">previous_file</span>,
             <span class="ident">password</span>,
         )<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">login_with_password</span>(<span class="ident">username</span>, <span class="ident">request</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> (<span class="ident">new_file</span>, <span class="ident">login_finalization</span>, <span class="ident">_export_key</span>) <span class="op">=</span> <span class="ident">login</span>.<span class="ident">finish</span>(<span class="ident">response</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> (<span class="ident">file</span>, <span class="ident">login_finalization</span>, <span class="ident">export_key</span>) <span class="op">=</span> <span class="ident">login</span>.<span class="ident">finish</span>(<span class="ident">response</span>)<span class="question-mark">?</span>;
         <span class="self">self</span>.<span class="ident">finish_login_with_password</span>(<span class="ident">login_finalization</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">new_file</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">PasswordResult</span> { <span class="ident">file</span>, <span class="ident">export_key</span> })
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">send_request</span>(
