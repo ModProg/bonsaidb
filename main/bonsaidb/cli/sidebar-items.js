@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Command","The command line interface for `bonsaidb`."]]});
+initSidebarItems({"enum":[["Command","All available command line commands."],["ConnectionTarget","A target to connect to."]],"struct":[["Args","The command line interface for `bonsaidb`."]]});

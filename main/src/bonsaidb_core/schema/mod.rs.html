@@ -57,6 +57,7 @@
 <span id="57">57</span>
 <span id="58">58</span>
 <span id="59">59</span>
+<span id="60">60</span>
 </pre><pre class="rust">
 <span class="kw">mod</span> <span class="ident">collection</span>;
 <span class="kw">mod</span> <span class="ident">names</span>;
@@ -92,8 +93,9 @@
     }
 }
 
-<span class="doccomment">/// This trait is only useful for tools like `bonsaidb local-backup`. There is no</span>
-<span class="doccomment">/// real-world use case of connecting to a Database with no schema.</span>
+<span class="doccomment">/// This implementation is for accessing databases when interacting with</span>
+<span class="doccomment">/// collections isn&#39;t required. For example, accessing only the key-value store</span>
+<span class="doccomment">/// or pubsub.</span>
 <span class="kw">impl</span> <span class="ident">Schema</span> <span class="kw">for</span> () {
     <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">SchemaName::new</span>(<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>)
