@@ -15,7 +15,7 @@
         <div>
             <p class="heading">Lines</p>
             <p class="title has-text-danger">
-                <abbr title="0 / 39">0 %</abbr></p>
+                <abbr title="0 / 31">0 %</abbr></p>
         </div>
     </div>
 
@@ -99,7 +99,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">use std::{future::Future, path::PathBuf, str::FromStr};</pre>
+                <pre class="has-background-white py-0 px-2">use std::{path::PathBuf, str::FromStr};</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -892,7 +892,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">impl Args {</pre>
+                <pre class="has-background-white py-0 px-2">impl&lt;B: Backend&gt; Args&lt;B&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -918,7 +918,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">    pub async fn execute&lt;</pre>
+                <pre class="has-background-danger-light py-0 px-2">    pub async fn execute(self) -&gt; anyhow::Result&lt;()&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -931,7 +931,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">        F: FnOnce(Storage) -&gt; Fut + Send,</pre>
+                <pre class="has-background-danger-light py-0 px-2">        match self.command {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -944,7 +944,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">        Fut: Future&lt;Output = anyhow::Result&lt;()&gt;&gt; + Send,</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Command::Server(server) =&gt; server.execute(&amp;self.connection.path()?).await,</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -957,7 +957,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">    &gt;(</pre>
+                <pre class="has-background-danger-light py-0 px-2">            Command::Admin(command) =&gt; match self.connection {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -970,7 +970,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">        self,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                ConnectionTarget::Path(path) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -983,7 +983,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">        schema_registrar: F,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    let storage = Storage::open_local(</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -996,7 +996,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">    ) -&gt; anyhow::Result&lt;()&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        &amp;path,</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1009,7 +1009,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">        match self.command {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                        bonsaidb_local::config::Configuration::default(),</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1022,7 +1022,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">            Command::Server(server) =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    )</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1035,7 +1035,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                server</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    .await?;</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1048,7 +1048,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                    .execute(&amp;self.connection.path()?, schema_registrar)</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    let admin = storage.admin().await;</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1061,7 +1061,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">                    .await</pre>
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1070,11 +1070,11 @@
                 <a href="#80">80</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
                 
             </div>
-            <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">            }</pre>
+            <div class="column has-background-danger-light p-0">
+                <pre class="has-background-danger-light py-0 px-2">                    command.execute(admin, storage).await</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1083,11 +1083,11 @@
                 <a href="#81">81</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
                 
             </div>
-            <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">            Command::Admin(command) =&gt; match self.connection {</pre>
+            <div class="column has-background-white p-0">
+                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1100,7 +1100,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                ConnectionTarget::Path(path) =&gt; {</pre>
+                <pre class="has-background-danger-light py-0 px-2">                ConnectionTarget::Url(server_url) =&gt; {</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1113,7 +1113,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                    let storage = Storage::open_local(</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    let client = Client::new(server_url).await?;</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1126,7 +1126,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                        &amp;path,</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    let admin = client.database::&lt;Admin&gt;(&quot;admin&quot;).await?;</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1135,11 +1135,11 @@
                 <a href="#85">85</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
                 
             </div>
-            <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                        bonsaidb_local::config::Configuration::default(),</pre>
+            <div class="column has-background-white p-0">
+                <pre class="has-background-white py-0 px-2"></pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1152,7 +1152,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                    )</pre>
+                <pre class="has-background-danger-light py-0 px-2">                    command.execute(admin, client).await</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1161,11 +1161,11 @@
                 <a href="#87">87</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
                 
             </div>
-            <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                    .await?;</pre>
+            <div class="column has-background-white p-0">
+                <pre class="has-background-white py-0 px-2">                }</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1174,11 +1174,11 @@
                 <a href="#88">88</a>
             </div>
             <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
+                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
                 
             </div>
-            <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                    let admin = storage.admin().await;</pre>
+            <div class="column has-background-white p-0">
+                <pre class="has-background-white py-0 px-2">            },</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1191,7 +1191,7 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2"></pre>
+                <pre class="has-background-white py-0 px-2">        }</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1204,7 +1204,7 @@
                 
             </div>
             <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                    command.execute(admin, storage).await</pre>
+                <pre class="has-background-danger-light py-0 px-2">    }</pre>
             </div>
         </div><div class="columns p-0 m-0">
             <div
@@ -1217,142 +1217,12 @@
                 
             </div>
             <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">                }</pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="92">
-                <a href="#92">92</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
-                
-            </div>
-            <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                ConnectionTarget::Url(server_url) =&gt; {</pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="93">
-                <a href="#93">93</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
-                
-            </div>
-            <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                    let client = Client::new(server_url).await?;</pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="94">
-                <a href="#94">94</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
-                
-            </div>
-            <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                    let admin = client.database::&lt;Admin&gt;(&quot;admin&quot;).await?;</pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="95">
-                <a href="#95">95</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
-                
-            </div>
-            <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2"></pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="96">
-                <a href="#96">96</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
-                
-            </div>
-            <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">                    command.execute(admin, client).await</pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="97">
-                <a href="#97">97</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
-                
-            </div>
-            <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">                }</pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="98">
-                <a href="#98">98</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
-                
-            </div>
-            <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">            },</pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="99">
-                <a href="#99">99</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
-                
-            </div>
-            <div class="column has-background-white p-0">
-                <pre class="has-background-white py-0 px-2">        }</pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="100">
-                <a href="#100">100</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-danger-light has-background-danger">
-                
-            </div>
-            <div class="column has-background-danger-light p-0">
-                <pre class="has-background-danger-light py-0 px-2">    }</pre>
-            </div>
-        </div><div class="columns p-0 m-0">
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered"
-                id="101">
-                <a href="#101">101</a>
-            </div>
-            <div
-                class="column is-1 is-narrow p-0 has-text-centered has-text-white has-background-white">
-                
-            </div>
-            <div class="column has-background-white p-0">
                 <pre class="has-background-white py-0 px-2">}</pre>
             </div>
         </div></div>
         <footer class="footer">
             <div class="content has-text-centered">
-                <p class="heading">Date: 2021-10-20 17:18</p>
+                <p class="heading">Date: 2021-10-20 21:51</p>
             </div>
         </footer>
     </body>
