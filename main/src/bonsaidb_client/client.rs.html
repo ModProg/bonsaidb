@@ -864,6 +864,13 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Client</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="doccomment">/// Returns a builder for a new client connecting to `url`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Builder</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="ident">Builder::new</span>(<span class="ident">url</span>)
+    }
+}
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Initialize a client connecting to `url`. This client can be shared by</span>
     <span class="doccomment">/// cloning it. All requests are done asynchronously over the same</span>
     <span class="doccomment">/// connection.</span>
@@ -888,13 +895,6 @@
         .<span class="kw">await</span>
     }
 
-    <span class="doccomment">/// Returns a builder for a new client connecting to `url`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">build</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Builder</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-        <span class="ident">Builder::new</span>(<span class="ident">url</span>)
-    }
-}
-
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Initialize a client connecting to `url` with `certificate` being used to</span>
     <span class="doccomment">/// validate and encrypt the connection. This client can be shared by</span>
     <span class="doccomment">/// cloning it. All requests are done asynchronously over the same</span>

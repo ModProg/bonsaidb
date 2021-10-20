@@ -1870,9 +1870,6 @@
 <span id="1870">1870</span>
 <span id="1871">1871</span>
 <span id="1872">1872</span>
-<span id="1873">1873</span>
-<span id="1874">1874</span>
-<span id="1875">1875</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">hash_map</span>, <span class="ident">HashMap</span>},
@@ -1994,7 +1991,7 @@
 
         <span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">Storage::open_local</span>(<span class="ident">directory</span>, <span class="ident">configuration</span>.<span class="ident">storage</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
+        <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="self">Self</span> {
             <span class="ident">data</span>: <span class="ident">Arc::new</span>(<span class="ident">Data</span> {
                 <span class="ident">clients</span>: <span class="ident">RwLock::default</span>(),
                 <span class="ident">storage</span>,
@@ -2011,17 +2008,15 @@
                 <span class="ident">subscribers</span>: <span class="ident">Arc::default</span>(),
                 <span class="ident">_backend</span>: <span class="ident">PhantomData::default</span>(),
             }),
-        })
+        };
+        <span class="ident">B::initialize</span>(<span class="kw-2">&amp;</span><span class="ident">server</span>).<span class="kw">await</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">server</span>)
     }
 
     <span class="doccomment">/// Returns the path to the directory that stores this server&#39;s data.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">directory</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">PathBuf</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">directory</span>
-    }
-
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">storage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Storage</span> {
-        <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>
     }
 
     <span class="doccomment">/// Retrieves a database. This function only verifies that the database exists.</span>
@@ -3034,11 +3029,10 @@
         <span class="ident">username</span>: <span class="ident">String</span>,
         <span class="ident">password_request</span>: <span class="ident">LoginRequest</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Response</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">user_id</span>, <span class="ident">login</span>, <span class="ident">response</span>) <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">server</span>
-            .<span class="ident">internal_login_with_password</span>(<span class="kw-2">&amp;</span><span class="ident">username</span>, <span class="ident">password_request</span>)
+        <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="self">self</span>
+            .<span class="ident">client</span>
+            .<span class="ident">initiate_login</span>(<span class="kw-2">&amp;</span><span class="ident">username</span>, <span class="ident">password_request</span>, <span class="self">self</span>.<span class="ident">server</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">set_pending_password_login</span>(<span class="ident">user_id</span>, <span class="ident">login</span>).<span class="kw">await</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Server</span>(<span class="ident">ServerResponse::PasswordLoginResponse</span> {
             <span class="ident">response</span>: <span class="ident">Box::new</span>(<span class="ident">response</span>),
         }))
