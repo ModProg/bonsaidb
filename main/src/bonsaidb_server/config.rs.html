@@ -28,6 +28,15 @@
 <span id="28">28</span>
 <span id="29">29</span>
 <span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
+<span id="38">38</span>
+<span id="39">39</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">bonsaidb_core::permissions::Permissions</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">bonsaidb_local::config::Configuration</span> <span class="kw">as</span> <span class="ident">StorageConfiguration</span>;
@@ -44,7 +53,7 @@
     <span class="doccomment">/// Configuration options for individual databases.</span>
     <span class="kw">pub</span> <span class="ident">storage</span>: <span class="ident">StorageConfiguration</span>,
     <span class="doccomment">/// The permissions granted to all connections to this server.</span>
-    <span class="kw">pub</span> <span class="ident">default_permissions</span>: <span class="ident">Permissions</span>,
+    <span class="kw">pub</span> <span class="ident">default_permissions</span>: <span class="ident">DefaultPermissions</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Configuration</span> {
@@ -55,9 +64,18 @@
             <span class="comment">// but it also should probably be based on the cpu&#39;s capabilities</span>
             <span class="ident">request_workers</span>: <span class="number">16</span>,
             <span class="ident">storage</span>: <span class="ident">bonsaidb_local::config::Configuration::default</span>(),
-            <span class="ident">default_permissions</span>: <span class="ident">Permissions::default</span>(),
+            <span class="ident">default_permissions</span>: <span class="ident">DefaultPermissions::Permissions</span>(<span class="ident">Permissions::default</span>()),
         }
     }
+}
+
+<span class="doccomment">/// The default permissions to use for all connections to the server.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DefaultPermissions</span> {
+    <span class="doccomment">/// Allow all permissions. Do not use outside of completely trusted environments.</span>
+    <span class="ident">AllowAll</span>,
+    <span class="doccomment">/// A defined set of permissions.</span>
+    <span class="ident">Permissions</span>(<span class="ident">Permissions</span>),
 }
 </pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bonsaidb_server" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>

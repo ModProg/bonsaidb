@@ -36,7 +36,6 @@
 <span id="36">36</span>
 <span id="37">37</span>
 <span id="38">38</span>
-<span id="39">39</span>
 </pre><pre class="rust">
 <span class="doccomment">/// Command-line interface for managing the root certificate.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">certificate</span>;
@@ -45,10 +44,9 @@
 
 <span class="kw">use</span> <span class="ident">std::path::Path</span>;
 
-<span class="kw">use</span> <span class="ident">actionable::Permissions</span>;
 <span class="kw">use</span> <span class="ident">structopt::StructOpt</span>;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Backend</span>, <span class="ident">Configuration</span>, <span class="ident">CustomServer</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">config::DefaultPermissions</span>, <span class="ident">Backend</span>, <span class="ident">Configuration</span>, <span class="ident">CustomServer</span>};
 
 <span class="doccomment">/// Available commands for `bonsaidb server`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">StructOpt</span>, <span class="ident">Debug</span>)]</span>
@@ -66,7 +64,7 @@
         <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="ident">CustomServer</span>::<span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="ident">::open</span>(
             <span class="ident">database_path</span>,
             <span class="ident">Configuration</span> {
-                <span class="ident">default_permissions</span>: <span class="ident">Permissions::allow_all</span>(),
+                <span class="ident">default_permissions</span>: <span class="ident">DefaultPermissions::AllowAll</span>,
                 ..<span class="ident">Configuration::default</span>()
             },
         )

@@ -169,6 +169,11 @@
 <span id="169">169</span>
 <span id="170">170</span>
 <span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
 </pre><pre class="rust">
 <span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
 
@@ -213,6 +218,11 @@
         )
         .<span class="kw">await</span>
         {
+            <span class="macro">println!</span>(
+                <span class="string">&quot;Received an error: {:?}. Had request: {:?}&quot;</span>,
+                <span class="ident">err</span>,
+                <span class="ident">failed_request</span>.<span class="ident">is_some</span>()
+            );
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">failed_request</span>) <span class="op">=</span> <span class="ident">failed_request</span> {
                 <span class="ident">drop</span>(<span class="ident">failed_request</span>.<span class="ident">responder</span>.<span class="ident">send</span>(<span class="prelude-val">Err</span>(<span class="ident">err</span>)));
             }
