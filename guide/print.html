@@ -265,17 +265,18 @@ impl EnumKey for Category {}
 where
     T: EnumKey,
 {
-    fn as_big_endian_bytes(&amp;self) -&gt; anyhow::Result&lt;Cow&lt;'_, [u8]&gt;&gt; {
+    type Error = IncorrectByteLength;
+
+    fn as_big_endian_bytes(&amp;self) -&gt; Result&lt;Cow&lt;'_, [u8]&gt;, Self::Error&gt; {
         self.to_u64()
-            .ok_or_else(|| anyhow::anyhow!(&quot;Primitive::to_u64() returned None&quot;))?
+            .ok_or(IncorrectByteLength)?
             .as_big_endian_bytes()
             .map(|bytes| Cow::Owned(bytes.to_vec()))
     }
 
-    fn from_big_endian_bytes(bytes: &amp;[u8]) -&gt; anyhow::Result&lt;Self&gt; {
+    fn from_big_endian_bytes(bytes: &amp;[u8]) -&gt; Result&lt;Self, Self::Error&gt; {
         let primitive = u64::from_big_endian_bytes(bytes)?;
-        Self::from_u64(primitive)
-            .ok_or_else(|| anyhow::anyhow!(&quot;Primitive::from_u64() returned None&quot;))
+        Self::from_u64(primitive).ok_or(IncorrectByteLength)
     }
 }
 </code></pre>
