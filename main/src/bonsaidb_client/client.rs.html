@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client&#x2F;src&#x2F;client.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>client.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../bonsaidb_client/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input"name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `client&#x2F;src&#x2F;client.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>client.rs - source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../light.css"  id="themeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css" disabled ><link rel="stylesheet" type="text/css" href="../../ayu.css" disabled ><script id="default-settings" ></script><script src="../../storage.js"></script><script src="../../crates.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="alternate icon" type="image/png" href="../../favicon-16x16.png"><link rel="alternate icon" type="image/png" href="../../favicon-32x32.png"><link rel="icon" type="image/svg+xml" href="../../favicon.svg"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu" role="button">&#9776;</div><a href='../../bonsaidb_client/index.html'><div class='logo-container rust-logo'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!" aria-haspopup="menu" title="themes"><img width="18" height="18" alt="Pick another theme!" src="../../brush.svg"></button><div id="theme-choices" role="menu"></div></div><nav class="sub"><form class="search-form"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" disabled autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><button type="button" id="help-button" title="help">?</button><a id="settings-menu" href="../../settings.html" title="settings"><img width="18" height="18" alt="Change settings" src="../../wheel.svg"></a></div></form></nav><section id="main" class="content"><div class="example-wrap"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -775,13 +775,15 @@
 <span id="775">775</span>
 <span id="776">776</span>
 <span id="777">777</span>
-</pre><pre class="rust">
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test-util&quot;</span>)]</span>
+<span id="778">778</span>
+<span id="779">779</span>
+</pre><pre class="rust"><code><span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test-util&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std::sync::atomic::AtomicBool</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::TypeId</span>,
     <span class="ident">collections::HashMap</span>,
     <span class="ident">fmt::Debug</span>,
+    <span class="ident">marker::PhantomData</span>,
     <span class="ident">sync</span>::{
         <span class="ident">atomic</span>::{<span class="ident">AtomicU32</span>, <span class="ident">Ordering</span>},
         <span class="ident">Arc</span>,
@@ -795,20 +797,20 @@
     <span class="ident">custodian_password</span>::{
         <span class="ident">ClientConfig</span>, <span class="ident">ClientFile</span>, <span class="ident">ClientLogin</span>, <span class="ident">LoginFinalization</span>, <span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>,
     },
-    <span class="ident">custom_api::CustomApi</span>,
+    <span class="ident">custom_api</span>::{<span class="ident">CustomApi</span>, <span class="ident">CustomApiResult</span>},
     <span class="ident">networking</span>::{<span class="self">self</span>, <span class="ident">Payload</span>, <span class="ident">Request</span>, <span class="ident">Response</span>, <span class="ident">ServerRequest</span>, <span class="ident">ServerResponse</span>},
+    <span class="ident">password_config</span>,
     <span class="ident">permissions::Permissions</span>,
     <span class="ident">schema</span>::{<span class="ident">NamedReference</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>},
-    <span class="ident">PASSWORD_CONFIG</span>,
 };
 <span class="kw">use</span> <span class="ident">flume::Sender</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
 <span class="kw">use</span> <span class="ident">tokio::task::JoinHandle</span>;
 <span class="kw">use</span> <span class="ident">url::Url</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::remote_database::RemoteDatabase</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::remote_database::RemoteDatabase</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span><span class="ident">::remote_database::RemoteSubscriber</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::remote_database::RemoteSubscriber</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">error::Error</span>, <span class="ident">Builder</span>};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
@@ -845,15 +847,11 @@
     }
 }
 
-<span class="attribute">#[<span class="ident">allow</span>(<span class="ident">type_alias_bounds</span>)]</span> <span class="comment">// Causes compilation errors without it</span>
-<span class="kw">type</span> <span class="ident">BackendPendingRequest</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> <span class="op">=</span>
-    <span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">A</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Request</span>, <span class="op">&lt;</span><span class="ident">A</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Response</span><span class="op">&gt;</span>;
-
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> {
-    <span class="ident">request_sender</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">BackendPendingRequest</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">request_sender</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
-    <span class="ident">worker</span>: <span class="ident">CancellableHandle</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">worker</span>: <span class="ident">CancellableHandle</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">effective_permissions</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">schemas</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">TypeId</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Schematic</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">request_id</span>: <span class="ident">AtomicU32</span>,
@@ -885,8 +883,8 @@
     <span class="doccomment">/// to recover and reconnect, each component of the apps built can adopt a</span>
     <span class="doccomment">/// &quot;retry-to-recover&quot; design, or &quot;abort-and-fail&quot; depending on how critical</span>
     <span class="doccomment">/// the database is to operation.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="self">Self</span><span class="ident">::new_from_parts</span>(
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">url</span>: <span class="ident">Url</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+        <span class="ident"><span class="self">Self</span>::new_from_parts</span>(
             <span class="ident">url</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
             <span class="prelude-val">None</span>,
@@ -912,18 +910,18 @@
     <span class="doccomment">/// the database is to operation.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_from_parts</span>(
         <span class="ident">url</span>: <span class="ident">Url</span>,
-        <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A::Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span> <span class="ident">certificate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">fabruic::Certificate</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="ident">url</span>.<span class="ident">scheme</span>() {
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
-            <span class="string">&quot;bonsaidb&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="self">Self</span><span class="ident">::new_bonsai_client</span>(
+            <span class="string">&quot;bonsaidb&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::new_bonsai_client</span>(
                 <span class="ident">url</span>,
                 <span class="ident">certificate</span>,
                 <span class="ident">custom_api_callback</span>,
             )),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
-            <span class="string">&quot;wss&quot;</span> <span class="op">|</span> <span class="string">&quot;ws&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">Self</span><span class="ident">::new_websocket_client</span>(<span class="ident">url</span>, <span class="ident">custom_api_callback</span>).<span class="kw">await</span>,
+            <span class="string">&quot;wss&quot;</span> <span class="op">|</span> <span class="string">&quot;ws&quot;</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::new_websocket_client</span>(<span class="ident">url</span>, <span class="ident">custom_api_callback</span>).<span class="kw">await</span>,
             <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::InvalidUrl</span>(<span class="macro">format!</span>(<span class="string">&quot;unsupported scheme {}&quot;</span>, <span class="ident">other</span>)));
             }
@@ -934,7 +932,7 @@
     <span class="kw">fn</span> <span class="ident">new_bonsai_client</span>(
         <span class="ident">url</span>: <span class="ident">Url</span>,
         <span class="ident">certificate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">fabruic::Certificate</span><span class="op">&gt;</span>,
-        <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A::Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="kw">let</span> (<span class="ident">request_sender</span>, <span class="ident">request_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
 
@@ -974,8 +972,8 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>, <span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_websocket_client</span>(
         <span class="ident">url</span>: <span class="ident">Url</span>,
-        <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A::Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">request_sender</span>, <span class="ident">request_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
@@ -1017,7 +1015,7 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>, <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_websocket_client</span>(
         <span class="ident">url</span>: <span class="ident">Url</span>,
-        <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A::Response</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">request_sender</span>, <span class="ident">request_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
 
@@ -1060,7 +1058,10 @@
     <span class="doccomment">/// Returns a structure representing a remote database. No validations are</span>
     <span class="doccomment">/// done when this method is executed. The server will validate the schema</span>
     <span class="doccomment">/// and database name when a [`Connection`](bonsaidb_core::connection::Connection) function is called.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">A</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
         <span class="kw">let</span> <span class="ident">type_id</span> <span class="op">=</span> <span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>();
         <span class="kw">let</span> <span class="ident">schematic</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">schematic</span>) <span class="op">=</span> <span class="ident">schemas</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">type_id</span>) {
@@ -1133,7 +1134,7 @@
         <span class="ident">previous_file</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ClientFile</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">PasswordResult</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">login</span>, <span class="ident">request</span>) <span class="op">=</span> <span class="ident">ClientLogin::login</span>(
-            <span class="kw-2">&amp;</span><span class="ident">ClientConfig::new</span>(<span class="ident">PASSWORD_CONFIG</span>, <span class="prelude-val">None</span>)<span class="question-mark">?</span>,
+            <span class="ident">ClientConfig::new</span>(<span class="ident">password_config</span>(), <span class="prelude-val">None</span>)<span class="question-mark">?</span>,
             <span class="ident">previous_file</span>,
             <span class="ident">password</span>,
         )<span class="question-mark">?</span>;
@@ -1146,7 +1147,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">send_request</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">request</span>: <span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">A</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Request</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">A</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Response</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">result_sender</span>, <span class="ident">result_receiver</span>) <span class="op">=</span> <span class="ident">flume::bounded</span>(<span class="number">1</span>);
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">request_id</span>.<span class="ident">fetch_add</span>(<span class="number">1</span>, <span class="ident">Ordering::SeqCst</span>);
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">request_sender</span>.<span class="ident">send</span>(<span class="ident">PendingRequest</span> {
@@ -1155,6 +1156,7 @@
                 <span class="ident">wrapped</span>: <span class="ident">request</span>,
             },
             <span class="ident">responder</span>: <span class="ident">result_sender</span>.<span class="ident">clone</span>(),
+            <span class="ident">_phantom</span>: <span class="ident">PhantomData</span>,
         })<span class="question-mark">?</span>;
 
         <span class="ident">result_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span><span class="question-mark">?</span>
@@ -1164,9 +1166,9 @@
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">send_api_request</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">request</span>: <span class="op">&lt;</span><span class="ident">A</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Request</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">A</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Response</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">A::Response</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">send_request</span>(<span class="ident">Request::Api</span>(<span class="ident">request</span>)).<span class="kw">await</span><span class="question-mark">?</span> {
-            <span class="ident">Response::Api</span>(<span class="ident">response</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">response</span>),
+            <span class="ident">Response::Api</span>(<span class="ident">response</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">response</span>.<span class="ident">map_err</span>(<span class="ident">Error::Api</span>),
             <span class="ident">Response::Error</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">err</span>)),
             <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Network</span>(<span class="ident">networking::Error::UnexpectedResponse</span>(
                 <span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">other</span>),
@@ -1437,13 +1439,14 @@
     }
 }
 
-<span class="kw">type</span> <span class="ident">OutstandingRequestMap</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">O</span><span class="op">&gt;</span><span class="op">&gt;</span>;
-<span class="kw">type</span> <span class="ident">OutstandingRequestMapHandle</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">O</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">OutstandingRequestMap</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">O</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="kw">type</span> <span class="ident">OutstandingRequestMap</span><span class="op">&lt;</span><span class="ident">Api</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u32</span>, <span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">Api</span><span class="op">&gt;</span><span class="op">&gt;</span>;
+<span class="kw">type</span> <span class="ident">OutstandingRequestMapHandle</span><span class="op">&lt;</span><span class="ident">Api</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">OutstandingRequestMap</span><span class="op">&lt;</span><span class="ident">Api</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">O</span><span class="op">&gt;</span> {
-    <span class="ident">request</span>: <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">responder</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">Api</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> {
+    <span class="ident">request</span>: <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="ident">Api::Request</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">responder</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">Api</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">Api::Error</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">Api</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
@@ -1463,10 +1466,10 @@
     }
 }
 
-<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">process_response_payload</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>, <span class="ident">O</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(
-    <span class="ident">payload</span>: <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">outstanding_requests</span>: <span class="kw-2">&amp;</span><span class="ident">OutstandingRequestMapHandle</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">O</span><span class="op">&gt;</span>,
-    <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">O</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">async</span> <span class="kw">fn</span> <span class="ident">process_response_payload</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span>(
+    <span class="ident">payload</span>: <span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">outstanding_requests</span>: <span class="kw-2">&amp;</span><span class="ident">OutstandingRequestMapHandle</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>,
+    <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span> <span class="ident">subscribers</span>: <span class="kw-2">&amp;</span><span class="ident">SubscriberMap</span>,
 ) {
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">payload_id</span>) <span class="op">=</span> <span class="ident">payload</span>.<span class="ident">id</span> {
@@ -1520,16 +1523,16 @@
 
 <span class="doccomment">/// A handler of [`CustomApi`] responses.</span>
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
     <span class="doccomment">/// An out-of-band `response` was received. This happens when the server</span>
     <span class="doccomment">/// sends a response that isn&#39;t in response to a request.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">response_received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="ident">T</span>);
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">response_received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>);
 
     <span class="doccomment">/// A response was received. Unlike in `response_received` this response</span>
     <span class="doccomment">/// will be returned to the original requestor. This is invoked before the</span>
     <span class="doccomment">/// requestor recives the response.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">request_response_received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">request_response_received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="kw-2">&amp;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>) {
         <span class="comment">// This is provided in case you&#39;d like to see a response always, even if</span>
         <span class="comment">// it is also being handled by the code that made the request.</span>
     }
@@ -1538,10 +1541,10 @@
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">F</span>
 <span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">T</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-    <span class="ident">T</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">T</span>: <span class="ident">CustomApi</span>,
 {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">response_received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="ident">T</span>) {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">response_received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">response</span>: <span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {
         <span class="self">self</span>(<span class="ident">response</span>);
     }
 }
@@ -1549,11 +1552,11 @@
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="kw">for</span> ()
 <span class="kw">where</span>
-    <span class="ident">T</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">T</span>: <span class="ident">CustomApi</span>,
 {
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">response_received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_response</span>: <span class="ident">T</span>) {}
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">response_received</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_response</span>: <span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) {}
 }
-</pre></div>
+</code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bonsaidb_client" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
     <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script>
 </body></html>
