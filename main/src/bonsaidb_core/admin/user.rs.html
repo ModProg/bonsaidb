@@ -136,6 +136,7 @@
 <span id="136">136</span>
 <span id="137">137</span>
 <span id="138">138</span>
+<span id="139">139</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -215,14 +216,15 @@
 
         <span class="comment">// Combine the permissions from all the groups into one.</span>
         <span class="kw">let</span> <span class="ident">merged_permissions</span> <span class="op">=</span> <span class="ident">Permissions::merged</span>(
-            <span class="kw-2">&amp;</span><span class="ident">groups</span>
+            <span class="ident">groups</span>
                 .<span class="ident">into_iter</span>()
                 .<span class="ident">map</span>(<span class="op">|</span><span class="ident">group</span><span class="op">|</span> {
                     <span class="ident">group</span>
                         .<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">group::PermissionGroup</span><span class="op">&gt;</span>()
                         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">group</span><span class="op">|</span> <span class="ident">Permissions::from</span>(<span class="ident">group</span>.<span class="ident">statements</span>))
                 })
-                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
+                .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>()<span class="question-mark">?</span>
+                .<span class="ident">iter</span>(),
         );
 
         <span class="prelude-val">Ok</span>(<span class="ident">merged_permissions</span>)

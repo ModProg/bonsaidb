@@ -230,6 +230,7 @@
 <span id="230">230</span>
 <span id="231">231</span>
 <span id="232">232</span>
+<span id="233">233</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Core functionality and types for `BonsaiDb`.</span>
 
 <span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
@@ -449,9 +450,10 @@
 }
 
 <span class="doccomment">/// The configuration used for `OPAQUE` password authentication.</span>
+<span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">password_config</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Config</span> {
     <span class="ident">Config::new</span>(
-        <span class="ident">Ake::X25519</span>,
+        <span class="ident">Ake::Ristretto255</span>,
         <span class="ident">Group::Ristretto255</span>,
         <span class="ident">Hash::Blake3</span>,
         <span class="ident">Mhf::Argon2</span>(<span class="ident">Argon2Params::default</span>()),
