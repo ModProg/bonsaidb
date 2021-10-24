@@ -149,6 +149,7 @@
 <span id="149">149</span>
 <span id="150">150</span>
 <span id="151">151</span>
+<span id="152">152</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
 <span class="kw">use</span> <span class="ident">actionable::PermissionDenied</span>;
@@ -286,6 +287,7 @@
     }
 }
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">CustomApiError</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">bincode::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">BackendError</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">bincode::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Server</span>(<span class="ident">Error::from</span>(<span class="ident">bonsaidb_local::Error::from</span>(<span class="ident">other</span>)))
