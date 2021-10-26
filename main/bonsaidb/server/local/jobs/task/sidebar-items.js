@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Handle","References a background task."],["Id","he `Id` of an executing task."]]});

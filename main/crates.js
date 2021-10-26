@@ -1,1 +1,1 @@
-window.ALL_CRATES = ["bonsaidb","bonsaidb_client","bonsaidb_core","bonsaidb_jobs","bonsaidb_local","bonsaidb_macros","bonsaidb_server","circulate","xtask"];
+window.ALL_CRATES = ["bonsaidb","bonsaidb_client","bonsaidb_core","bonsaidb_local","bonsaidb_macros","bonsaidb_server","circulate","xtask"];

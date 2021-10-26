@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Manager","A background jobs manager."]]});
