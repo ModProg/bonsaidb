@@ -229,8 +229,6 @@
 <span id="229">229</span>
 <span id="230">230</span>
 <span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Core functionality and types for `BonsaiDb`.</span>
 
 <span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
@@ -276,14 +274,12 @@
 <span class="doccomment">/// Types for implementing the `BonsaiDb` network protocol.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">networking</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
 <span class="doccomment">/// Types for Publish/Subscribe (`PubSub`) messaging.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">pubsub</span>;
 
 <span class="kw">use</span> <span class="ident">std::string::FromUtf8Error</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">async_trait</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">circulate</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">custodian_password</span>;
 <span class="kw">use</span> <span class="ident">custodian_password</span>::{<span class="ident">Ake</span>, <span class="ident">Argon2Params</span>, <span class="ident">Config</span>, <span class="ident">Group</span>, <span class="ident">Hash</span>, <span class="ident">Mhf</span>};

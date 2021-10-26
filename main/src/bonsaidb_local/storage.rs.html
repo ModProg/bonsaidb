@@ -850,12 +850,6 @@
 <span id="850">850</span>
 <span id="851">851</span>
 <span id="852">852</span>
-<span id="853">853</span>
-<span id="854">854</span>
-<span id="855">855</span>
-<span id="856">856</span>
-<span id="857">857</span>
-<span id="858">858</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>,
     <span class="ident">collections::HashMap</span>,
@@ -866,12 +860,9 @@
 };
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">bonsaidb_core::circulate::Relay</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;internal-apis&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">bonsaidb_core::custodian_password</span>::{<span class="ident">LoginResponse</span>, <span class="ident">ServerLogin</span>};
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">bonsaidb_core::kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>};
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">admin</span>::{
         <span class="ident">database</span>::{<span class="self">self</span>, <span class="ident">ByName</span>, <span class="ident">Database</span> <span class="kw">as</span> <span class="ident">DatabaseRecord</span>},
@@ -882,6 +873,7 @@
     <span class="ident">connection</span>::{<span class="self">self</span>, <span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">ServerConnection</span>},
     <span class="ident">custodian_password</span>::{<span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>, <span class="ident">ServerRegistration</span>},
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">KeyId</span>},
+    <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>},
     <span class="ident">permissions::Permissions</span>,
     <span class="ident">schema</span>::{
         <span class="ident">view::map</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">MappedValue</span>, <span class="ident">NamedCollection</span>,
@@ -935,7 +927,6 @@
     <span class="ident">chunk_cache</span>: <span class="ident">ChunkCache</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">check_view_integrity_on_database_open</span>: <span class="ident">bool</span>,
     <span class="ident">runtime</span>: <span class="ident">tokio::runtime::Handle</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
     <span class="ident">relay</span>: <span class="ident">Relay</span>,
 }
 
@@ -999,7 +990,6 @@
                     <span class="ident">open_roots</span>: <span class="ident">Mutex::default</span>(),
                     <span class="ident">check_view_integrity_on_database_open</span>,
                     <span class="ident">runtime</span>: <span class="ident">tokio::runtime::Handle::current</span>(),
-                    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
                     <span class="ident">relay</span>: <span class="ident">Relay::default</span>(),
                 }),
             })
@@ -1216,7 +1206,6 @@
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">check_view_integrity_on_database_open</span>
     }
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;pubsub&quot;</span>)]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">relay</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">Relay</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">relay</span>
     }
@@ -1438,7 +1427,6 @@
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
 
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keyvalue&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_key_operation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">op</span>: <span class="ident">KeyOperation</span>)
         <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
 }
