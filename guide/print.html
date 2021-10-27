@@ -137,7 +137,7 @@
                     <main>
                         <h1 id="bonsaidb-users-guide"><a class="header" href="#bonsaidb-users-guide">BonsaiDb User's Guide</a></h1>
 <p>BonsaiDb is an ACID-compliant, document-database written in Rust. It takes heavy inspiration from CouchDB, but makes no efforts to be compatible with CouchDB. Its goal is to be a general-purpose database that aims to simplify development and deployment by providing reliable building blocks that are lightweight enough for hobby projects running with minimal resources, but scalable for when your hobby project becomes a deployed product.</p>
-<p>This user's guide aims to provide a guided walkthrough for users to understand how BonsaiDb works. This guide is meant to be supplemental <a href="https://dev.bonsaidb.io/main/bonsaidb/">to the documentation</a>. If you learn best by exploring examples, <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples">many are available in <code>bonsaidb/examples</code></a>. If, however, you learn best by taking a guided tour of how something works, this guide is specifically for you.</p>
+<p>This user's guide aims to provide a guided walkthrough for users to understand how BonsaiDb works. This guide is meant to be supplemental <a href="https://dev.bonsaidb.io/main/bonsaidb/">to the documentation</a>. If you learn best by exploring examples, <a href="https://github.com/khonsulabs/bonsaidb/blob/main/crates/bonsaidb/examples">many are available in <code>bonsaidb/examples</code></a>. If, however, you learn best by taking a guided tour of how something works, this guide is specifically for you.</p>
 <p>If you have any feedback on this guide, please <a href="https://github.com/khonsulabs/bonsaidb/issues">file an issue</a>, and we will try to address any issues or shortcomings.</p>
 <p>Thank you for exploring BonsaiDb.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="concepts"><a class="header" href="#concepts">Concepts</a></h1>
@@ -303,7 +303,7 @@ where
 <div style="break-before: page; page-break-before: always;"></div><h1 id="pubsub"><a class="header" href="#pubsub">PubSub</a></h1>
 <p>The <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">Publish/Subscribe pattern</a> enables developers to design systems that produce and receive messages. It is implemented for BonsaiDb through the <a href="about/concepts/../../traits/pubsub.html"><code>PubSub</code> and <code>Subscriber</code></a> traits.</p>
 <p>A common example of what PubSub enables is implementing a simple chat system. Each chat participant can subscribe to messages on the <code>chat</code> topic, and when any participant publishes a <code>chat</code> message, all subscribers will receive a copy of that message.</p>
-<p>A working example of PubSub is available at <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples/pubsub.rs"><code>bonsaidb/examples/pubsub.rs</code></a>.</p>
+<p>A working example of PubSub is available at <a href="https://github.com/khonsulabs/bonsaidb/blob/main/crates/bonsaidb/examples/pubsub.rs"><code>bonsaidb/examples/pubsub.rs</code></a>.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="use-cases-of-bonsaidb"><a class="header" href="#use-cases-of-bonsaidb">Use cases of BonsaiDb</a></h1>
 <h2 id="single-database-model-no-networking"><a class="header" href="#single-database-model-no-networking">Single database model (No networking)</a></h2>
 <p>This use case is most similar to utilizing SQLite for your database. In this mode, BonsaiDb directly interacts with files on your disk to provide your database. Unlike other file-based databases, however, it's easy to migrate to any of these scenarios from this starting position:</p>
@@ -312,7 +312,7 @@ where
   local[(bonsaidb-local::Database)]
   code &lt;--&gt; local
 </pre>
-<p>A working example of how to use a local database can be found at <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples/basic-local.rs"><code>bonsaidb/examples/basic-local.rs</code></a>.</p>
+<p>A working example of how to use a local database can be found at <a href="https://github.com/khonsulabs/bonsaidb/blob/main/crates/bonsaidb/examples/basic-local.rs"><code>bonsaidb/examples/basic-local.rs</code></a>.</p>
 <h2 id="multi-database-model-no-networking"><a class="header" href="#multi-database-model-no-networking">Multi-database model (No networking)</a></h2>
 <p>This model is most similar to using multiple SQLite databases. In this mode, you interact with a <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> that you spawn within your code.</p>
 <pre class="mermaid">graph LR
@@ -335,7 +335,7 @@ where
   server &lt;--&gt; local
   server-code &lt;--&gt; server
 </pre>
-<p>A working example of this model can be found at <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples/server.rs"><code>bonsaidb/examples/server.rs</code></a>. When writing client/server applications that utilize <code>BonsaiDb</code>, you can have the <code>BonsaiDb</code> server running withing your server application. This means that your server still has the ability not use networking to interact with <code>BonsaiDb</code>. Regardless of if you run any other server code, your <code>BonsaiDb</code> server will be accessible through a <code>Client</code> over the network.</p>
+<p>A working example of this model can be found at <a href="https://github.com/khonsulabs/bonsaidb/blob/main/crates/bonsaidb/examples/server.rs"><code>bonsaidb/examples/server.rs</code></a>. When writing client/server applications that utilize <code>BonsaiDb</code>, you can have the <code>BonsaiDb</code> server running withing your server application. This means that your server still has the ability not use networking to interact with <code>BonsaiDb</code>. Regardless of if you run any other server code, your <code>BonsaiDb</code> server will be accessible through a <code>Client</code> over the network.</p>
 <h2 id="coming-later-api-platform-model-quic-or-websockets"><a class="header" href="#coming-later-api-platform-model-quic-or-websockets">Coming Later: API Platform model (QUIC or WebSockets)</a></h2>
 <p>If you're finding yourself developing an API for your application, and all of the consumers of this API are already connected to <code>BonsaiDb</code>, you may want to take advantage of the <code>platform</code> feature. This is not implemented yet, but the vision is that by implementing a few callbacks to handle and respond to your own serde-compatible request type, you can implement a custom API that can be used directly from clients. And, by taking advantage of the permissions model that will be developed, you can even expose this API over the internet safely.</p>
 <pre class="mermaid">graph LR
@@ -396,13 +396,13 @@ where
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="integrating-bonsaidb-locally"><a class="header" href="#integrating-bonsaidb-locally">Integrating BonsaiDb Locally</a></h1>
 <p><code>BonsaiDb</code> supports multiple <a href="integration/../about/concepts/database.html">databases</a> and multiple <a href="integration/../about/concepts/schema.html">schemas</a>. However, for many applications, you only need a single database.</p>
-<p>If you're only wanting a single database, the setup is straightforward: (from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples/basic-local.rs"><code>bonsaidb/examples/basic-local.rs</code></a>)</p>
+<p>If you're only wanting a single database, the setup is straightforward: (from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/crates/bonsaidb/examples/basic-local.rs"><code>bonsaidb/examples/basic-local.rs</code></a>)</p>
 <pre><code class="language-rust noplayground no_run">let db = Database::&lt;Message&gt;::open_local(
     &quot;basic.bonsaidb&quot;, 
     &amp;Configuration::default()
 ).await?;
 </code></pre>
-<p>Under the hood, <code>BonsaiDb</code> is creating a multi-database <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> with a local <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Database.html"><code>Database</code></a> named <code>default</code> for you. If you need to switch to a multi-database model, you can open the storage and access the <code>default</code> database: (adapted from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples/basic-local-multidb.rs"><code>bonsaidb/examples/basic-local.rs</code></a>)</p>
+<p>Under the hood, <code>BonsaiDb</code> is creating a multi-database <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> with a local <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Database.html"><code>Database</code></a> named <code>default</code> for you. If you need to switch to a multi-database model, you can open the storage and access the <code>default</code> database: (adapted from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/crates/bonsaidb/examples/basic-local-multidb.rs"><code>bonsaidb/examples/basic-local.rs</code></a>)</p>
 <pre><code class="language-rust noplayground no_run">let storage = Storage::open_local(
     &quot;basic.bonsaidb&quot;,
     &amp;Configuration::default()
@@ -417,7 +417,7 @@ let db = storage.database::&lt;Message&gt;(&quot;default&quot;).await?;
 <li><a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Database.html"><code>Database</code></a> implements <a href="integration/../traits/connection.html"><code>Connection</code></a>, <a href="integration/../traits/kv.html"><code>Kv</code></a>, and <a href="integration/../traits/kv.html"><code>PubSub</code></a>.</li>
 <li><a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> implements <a href="integration/../traits/server_connection.html"><code>ServerConnection</code></a>.</li>
 </ul>
-<p>For example, <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples/basic-local-multidb.rs"><code>bonsaidb/examples/basic-local.rs</code></a> uses this helper method to insert a record:</p>
+<p>For example, <a href="https://github.com/khonsulabs/bonsaidb/blob/main/crates/bonsaidb/examples/basic-local-multidb.rs"><code>bonsaidb/examples/basic-local.rs</code></a> uses this helper method to insert a record:</p>
 <pre><code class="language-rust noplayground no_run">async fn insert_a_message&lt;C: Connection&gt;(
     connection: &amp;C,
     value: &amp;str,
@@ -434,7 +434,7 @@ let db = storage.database::&lt;Message&gt;(&quot;default&quot;).await?;
 <div style="break-before: page; page-break-before: always;"></div><h1 id="integrating-the-networked-bonsaidb-server"><a class="header" href="#integrating-the-networked-bonsaidb-server">Integrating the networked BonsaiDb Server</a></h1>
 <p>To access <code>BonsaiDb</code> over the network, you're going to be writing two pieces of code: the server code and the client code.</p>
 <h2 id="your-bonsaidb-server"><a class="header" href="#your-bonsaidb-server">Your BonsaiDb Server</a></h2>
-<p>The first step is to create a <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Server</code></a>, which uses local <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> under the hood. This means that if you're already using <code>BonsaiDb</code> in local mode, you can swap your usage of <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> with <a href="https://dev.bonsaidb.io/main/bonsaidb/server/type.Server.html"><code>Server</code></a> in your server code without running your database through any tools. Here's the setup code from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples/server.rs"><code>bonsaidb/examples/server.rs</code></a></p>
+<p>The first step is to create a <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Server</code></a>, which uses local <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> under the hood. This means that if you're already using <code>BonsaiDb</code> in local mode, you can swap your usage of <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> with <a href="https://dev.bonsaidb.io/main/bonsaidb/server/type.Server.html"><code>Server</code></a> in your server code without running your database through any tools. Here's the setup code from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/crates/bonsaidb/examples/server.rs"><code>bonsaidb/examples/server.rs</code></a></p>
 <pre><code class="language-rust noplayground no_run">    let server = Server::open(
         Path::new(&quot;server-data.bonsaidb&quot;),
         Configuration {
@@ -478,7 +478,7 @@ tokio::spawn(async move {
 <li><code>bonsaidb://host:port</code> will connect using the native <code>BonsaiDb</code> protocol.</li>
 <li><code>ws://host:port</code> will connect using WebSockets.</li>
 </ul>
-<p>Here's how to connect, from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/bonsaidb/examples/server.rs"><code>bonsaidb/examples/server.rs</code></a>:</p>
+<p>Here's how to connect, from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/crates/bonsaidb/examples/server.rs"><code>bonsaidb/examples/server.rs</code></a>:</p>
 <pre><code class="language-rust noplayground no_run">Client::new(
     Url::parse(&quot;bonsaidb://localhost:5645&quot;)?,
     Some(certificate),
