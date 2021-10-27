@@ -413,7 +413,7 @@
                 .<span class="ident">as_big_endian_bytes</span>()
                 .<span class="ident">map_err</span>(<span class="ident">view::Error::key_serialization</span>)<span class="question-mark">?</span>
                 .<span class="ident">to_vec</span>(),
-            <span class="ident">value</span>: <span class="ident">serde_cbor::to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)<span class="question-mark">?</span>,
+            <span class="ident">value</span>: <span class="ident">pot::to_vec</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)<span class="question-mark">?</span>,
         })
     }
 }
@@ -459,7 +459,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">Map</span> {
             <span class="ident">source</span>: <span class="self">self</span>.<span class="ident">source</span>,
             <span class="ident">key</span>: <span class="ident">K::from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>).<span class="ident">map_err</span>(<span class="ident">view::Error::key_serialization</span>)<span class="question-mark">?</span>,
-            <span class="ident">value</span>: <span class="ident">serde_cbor::from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)<span class="question-mark">?</span>,
+            <span class="ident">value</span>: <span class="ident">pot::from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)<span class="question-mark">?</span>,
         })
     }
 }
@@ -483,7 +483,7 @@
         <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Key::from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span>: <span class="ident">K::Error</span><span class="op">|</span> {
             <span class="ident"><span class="kw">crate</span>::Error::Database</span>(<span class="ident">view::Error::key_serialization</span>(<span class="ident">err</span>).<span class="ident">to_string</span>())
         })<span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">serde_cbor::from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)
+        <span class="kw">let</span> <span class="ident">value</span> <span class="op">=</span> <span class="ident">pot::from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident"><span class="kw">crate</span>::Error::Database</span>(<span class="ident">view::Error::from</span>(<span class="ident">err</span>).<span class="ident">to_string</span>()))<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">MappedDocument</span> {
