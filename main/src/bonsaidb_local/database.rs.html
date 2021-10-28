@@ -1169,9 +1169,6 @@
 <span id="1169">1169</span>
 <span id="1170">1170</span>
 <span id="1171">1171</span>
-<span id="1172">1172</span>
-<span id="1173">1173</span>
-<span id="1174">1174</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>, <span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">convert::Infallible</span>, <span class="ident">marker::PhantomData</span>,
     <span class="ident">path::Path</span>, <span class="ident">sync::Arc</span>, <span class="ident">u8</span>,
@@ -1314,10 +1311,7 @@
         <span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">Storage::open_local</span>(<span class="ident">path</span>, <span class="ident">configuration</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="ident">storage</span>.<span class="ident">register_schema</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="kw">match</span> <span class="ident">storage</span>.<span class="ident">create_database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>(<span class="string">&quot;default&quot;</span>).<span class="kw">await</span> {
-            <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">|</span> <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::DatabaseNameAlreadyTaken</span>(<span class="kw">_</span>)) <span class="op">=</span><span class="op">&gt;</span> {}
-            <span class="ident">err</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">err</span><span class="question-mark">?</span>,
-        }
+        <span class="ident">storage</span>.<span class="ident">create_database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>(<span class="string">&quot;default&quot;</span>, <span class="bool-val">true</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">storage</span>.<span class="ident">database</span>(<span class="string">&quot;default&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>)
     }

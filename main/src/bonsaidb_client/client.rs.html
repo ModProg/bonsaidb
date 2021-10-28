@@ -762,6 +762,10 @@
 <span id="762">762</span>
 <span id="763">763</span>
 <span id="764">764</span>
+<span id="765">765</span>
+<span id="766">766</span>
+<span id="767">767</span>
+<span id="768">768</span>
 </pre><pre class="rust"><code><span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test-util&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std::sync::atomic::AtomicBool</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -1185,12 +1189,16 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">schema</span>: <span class="ident">SchemaName</span>,
+        <span class="ident">only_if_needed</span>: <span class="ident">bool</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span>
-            .<span class="ident">send_request</span>(<span class="ident">Request::Server</span>(<span class="ident">ServerRequest::CreateDatabase</span>(<span class="ident">Database</span> {
-                <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(),
-                <span class="ident">schema</span>,
-            })))
+            .<span class="ident">send_request</span>(<span class="ident">Request::Server</span>(<span class="ident">ServerRequest::CreateDatabase</span> {
+                <span class="ident">database</span>: <span class="ident">Database</span> {
+                    <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(),
+                    <span class="ident">schema</span>,
+                },
+                <span class="ident">only_if_needed</span>,
+            }))
             .<span class="kw">await</span><span class="question-mark">?</span>
         {
             <span class="ident">Response::Server</span>(<span class="ident">ServerResponse::DatabaseCreated</span> { .. }) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),

@@ -1828,6 +1828,9 @@
 <span id="1828">1828</span>
 <span id="1829">1829</span>
 <span id="1830">1830</span>
+<span id="1831">1831</span>
+<span id="1832">1832</span>
+<span id="1833">1833</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">hash_map</span>, <span class="ident">HashMap</span>},
     <span class="ident">fmt::Debug</span>,
@@ -2655,10 +2658,11 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">schema</span>: <span class="ident">SchemaName</span>,
+        <span class="ident">only_if_needed</span>: <span class="ident">bool</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>
             .<span class="ident">storage</span>
-            .<span class="ident">create_database_with_schema</span>(<span class="ident">name</span>, <span class="ident">schema</span>)
+            .<span class="ident">create_database_with_schema</span>(<span class="ident">name</span>, <span class="ident">schema</span>, <span class="ident">only_if_needed</span>)
             .<span class="kw">await</span>
     }
 
@@ -2832,6 +2836,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bonsaidb_core::connection::Database</span>,
+        <span class="ident">_only_if_needed</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bool</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>.<span class="ident">name</span>))
     }
@@ -2844,9 +2849,10 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">database</span>: <span class="ident">bonsaidb_core::connection::Database</span>,
+        <span class="ident">only_if_needed</span>: <span class="ident">bool</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">server</span>
-            .<span class="ident">create_database_with_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>.<span class="ident">name</span>, <span class="ident">database</span>.<span class="ident">schema</span>)
+            .<span class="ident">create_database_with_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>.<span class="ident">name</span>, <span class="ident">database</span>.<span class="ident">schema</span>, <span class="ident">only_if_needed</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Server</span>(<span class="ident">ServerResponse::DatabaseCreated</span> {
             <span class="ident">name</span>: <span class="ident">database</span>.<span class="ident">name</span>.<span class="ident">clone</span>(),
