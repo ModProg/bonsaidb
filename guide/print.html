@@ -450,14 +450,7 @@ let db = storage.database::&lt;Message&gt;(&quot;default&quot;).await?;
     }
     let certificate = server.certificate().await?;
     server.register_schema::&lt;Shape&gt;().await?;
-    match server.create_database::&lt;Shape&gt;(&quot;my-database&quot;).await {
-        Ok(()) =&gt; {}
-        Err(Error::DatabaseNameAlreadyTaken(_)) =&gt; {}
-        Err(err) =&gt; panic!(
-            &quot;Unexpected error from server during create_database: {:?}&quot;,
-            err
-        ),
-    }
+    server.create_database::&lt;Shape&gt;(&quot;my-database&quot;, true).await?;
 </code></pre>
 <p>Once you have a server initialized, calling <a href="https://dev.bonsaidb.io/main/bonsaidb/server/struct.CustomServer.html#method.listen_on"><code>listen_on</code></a> will begin listening for connections on the port specified. This uses the preferred native protocol which uses UDP. If you find that UDP is not working for your setup or want to put <code>BonsaiDb</code> behind a load balancer that doesn't support UDP, you can enable WebSocket support and call <a href="https://dev.bonsaidb.io/main/bonsaidb/server/struct.CustomServer.html#method.listen_for_websockets_on"><code>listen_for_websockets_on</code></a>.</p>
 <p>You can call both, but since these functions don't return until the server is shut down, you should spawn them instead:</p>
