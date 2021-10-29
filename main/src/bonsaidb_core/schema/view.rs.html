@@ -207,6 +207,33 @@
 <span id="207">207</span>
 <span id="208">208</span>
 <span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -225,10 +252,6 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror::Error</span>, <span class="ident">Debug</span>)]</span>
 <span class="comment">// TODO add which view name and collection</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Error</span> {
-    <span class="doccomment">/// An error occurred while serializing or deserializing.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error deserializing document {0}&quot;</span>)]</span>
-    <span class="ident">Serialization</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">pot::Error</span>),
-
     <span class="doccomment">/// An error occurred while serializing or deserializing keys emitted in a view.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error serializing view keys {0}&quot;</span>)]</span>
     <span class="ident">KeySerialization</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">AnyError</span><span class="op">&gt;</span>),
@@ -240,12 +263,43 @@
     <span class="doccomment">/// Range queries are not supported on collections with encryptable keys.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;range queries are not supported on collections with encryptable keys&quot;</span>)]</span>
     <span class="ident">RangeQueryNotSupported</span>,
+
+    <span class="doccomment">/// An error unrelated to views.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;core error: {0}&quot;</span>)]</span>
+    <span class="ident">Core</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident"><span class="kw">crate</span>::Error</span>),
 }
 
 <span class="kw">impl</span> <span class="ident">Error</span> {
     <span class="doccomment">/// Returns a [`Self::KeySerialization`] instance after boxing the error.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">key_serialization</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">AnyError</span><span class="op">&gt;</span>(<span class="ident">error</span>: <span class="ident">E</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::KeySerialization</span>(<span class="ident">Box::new</span>(<span class="ident">error</span>))
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">pot::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">pot::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>(<span class="ident">err</span>))
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">serde_json::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">serde_json::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>(<span class="ident">err</span>))
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cbor&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">serde_cbor::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">serde_cbor::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>(<span class="ident">err</span>))
+    }
+}
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;bincode&quot;</span>)]</span>
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">bincode::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">bincode::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>(<span class="ident">err</span>))
     }
 }
 

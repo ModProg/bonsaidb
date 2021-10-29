@@ -546,14 +546,6 @@
 <span id="546">546</span>
 <span id="547">547</span>
 <span id="548">548</span>
-<span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">ops::Range</span>};
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
@@ -564,6 +556,7 @@
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">admin::Database</span>,
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">Header</span>},
     <span class="ident">password_config</span>,
     <span class="ident">schema</span>::{
@@ -750,7 +743,7 @@
 
     <span class="doccomment">/// Adds a new `Document&lt;Cl&gt;` with the contents `item`.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">push</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">item</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Header</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">pot::to_vec</span>(<span class="ident">item</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">Cl::serializer</span>().<span class="ident">serialize</span>(<span class="ident">item</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">insert</span>::<span class="op">&lt;</span><span class="ident">Cl</span><span class="op">&gt;</span>(<span class="ident">contents</span>).<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
@@ -1087,15 +1080,6 @@
         <span class="ident">user</span>: <span class="ident">U</span>,
         <span class="ident">role</span>: <span class="ident">R</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span>;
-}
-
-<span class="doccomment">/// A database on a server.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Database</span> {
-    <span class="doccomment">/// The name of the database.</span>
-    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
-    <span class="doccomment">/// The schema defining the database.</span>
-    <span class="kw">pub</span> <span class="ident">schema</span>: <span class="ident">SchemaName</span>,
 }
 
 <span class="doccomment">/// The result of logging in with a password or setting a password.</span>
