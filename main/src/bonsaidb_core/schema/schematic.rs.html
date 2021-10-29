@@ -300,17 +300,17 @@
 <span class="kw">fn</span> <span class="ident">schema_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="kw">crate</span>::{
         <span class="ident">schema::Schema</span>,
-        <span class="ident">test_util</span>::{<span class="ident">Basic</span>, <span class="ident">BasicCount</span>, <span class="ident">BasicSchema</span>},
+        <span class="ident">test_util</span>::{<span class="ident">Basic</span>, <span class="ident">BasicCount</span>},
     };
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schema</span> <span class="op">=</span> <span class="ident">Schematic::default</span>();
-    <span class="ident">BasicSchema::define_collections</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schema</span>)<span class="question-mark">?</span>;
+    <span class="ident">Basic::define_collections</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schema</span>)<span class="question-mark">?</span>;
 
-    <span class="macro">assert_eq!</span>(<span class="ident">schema</span>.<span class="ident">collections_by_type_id</span>.<span class="ident">len</span>(), <span class="number">3</span>);
+    <span class="macro">assert_eq!</span>(<span class="ident">schema</span>.<span class="ident">collections_by_type_id</span>.<span class="ident">len</span>(), <span class="number">1</span>);
     <span class="macro">assert_eq!</span>(
         <span class="ident">schema</span>.<span class="ident">collections_by_type_id</span>[<span class="kw-2">&amp;</span><span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()],
         <span class="ident">Basic::collection_name</span>()<span class="question-mark">?</span>
     );
-    <span class="macro">assert_eq!</span>(<span class="ident">schema</span>.<span class="ident">views</span>.<span class="ident">len</span>(), <span class="number">8</span>);
+    <span class="macro">assert_eq!</span>(<span class="ident">schema</span>.<span class="ident">views</span>.<span class="ident">len</span>(), <span class="number">4</span>);
     <span class="macro">assert_eq!</span>(
         <span class="ident">schema</span>.<span class="ident">views</span>[<span class="kw-2">&amp;</span><span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">BasicCount</span><span class="op">&gt;</span>()].<span class="ident">view_name</span>()<span class="question-mark">?</span>,
         <span class="ident">View::view_name</span>(<span class="kw-2">&amp;</span><span class="ident">BasicCount</span>)<span class="question-mark">?</span>
