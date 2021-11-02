@@ -104,6 +104,11 @@
 <span id="104">104</span>
 <span id="105">105</span>
 <span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
 </pre><pre class="rust"><code><span class="doccomment">//! A programmable document database inspired by `CouchDB` written in Rust.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! This crate provides a convenient way to access all functionality of</span>
@@ -172,6 +177,10 @@
 <span class="doccomment">//! - `client-trusted-dns`: Enables using trust-dns for DNS resolution. If not</span>
 <span class="doccomment">//!   enabled, all DNS resolution is done with the OS&#39;s default name resolver.</span>
 <span class="doccomment">//! - `client-websockets`: Enables `WebSocket` support for `bonsaidb-client`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ### `VaultKeyStorage` options</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! - `keystorage-s3`: Enables S3-compatible key storage.</span>
 
 <span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
 <span class="attribute">#![<span class="ident">warn</span>(
@@ -208,6 +217,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keystorage-s3&quot;</span>)]</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">keystorage</span> {
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;keystorage-s3&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
     <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">bonsaidb_keystorage_s3</span> <span class="kw">as</span> <span class="ident">s3</span>;
 }
 </code></pre></div>
