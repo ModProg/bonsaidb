@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["S3VaultKeyStorage","S3-compatible [`VaultKeyStorage`] implementor."]]});
