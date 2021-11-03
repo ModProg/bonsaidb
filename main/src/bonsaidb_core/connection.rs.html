@@ -559,6 +559,30 @@
 <span id="559">559</span>
 <span id="560">560</span>
 <span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">ops::Range</span>};
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
@@ -734,6 +758,18 @@
     <span class="doccomment">/// Fetches the last transaction id that has been committed, if any.</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
+    <span class="doccomment">/// Compacts the entire database to reclaim unused disk space.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This process is done by writing data to a new file and swapping the file</span>
+    <span class="doccomment">/// once the process completes. This ensures that if a hardware failure,</span>
+    <span class="doccomment">/// power outage, or crash occurs that the original collection data is left</span>
+    <span class="doccomment">/// untouched.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * [`Error::Io)`]: an error occurred while compacting the database.</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span>;
+
     <span class="doccomment">/// Compacts the collection to reclaim unused disk space.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// This process is done by writing data to a new file and swapping the file</span>
@@ -745,7 +781,19 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * [`Error::CollectionNotFound`]: database `name` does not exist.</span>
     <span class="doccomment">/// * [`Error::Io)`]: an error occurred while compacting the database.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span>;
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Compacts the key value store to reclaim unused disk space.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This process is done by writing data to a new file and swapping the file</span>
+    <span class="doccomment">/// once the process completes. This ensures that if a hardware failure,</span>
+    <span class="doccomment">/// power outage, or crash occurs that the original collection data is left</span>
+    <span class="doccomment">/// untouched.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * [`Error::Io)`]: an error occurred while compacting the database.</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span>;
 }
 
 <span class="doccomment">/// Interacts with a collection over a `Connection`.</span>
