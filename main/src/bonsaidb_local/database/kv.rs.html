@@ -1149,7 +1149,7 @@
                     <span class="prelude-val">Err</span>(<span class="ident">flume::RecvTimeoutError::Disconnected</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
                 }
             } <span class="kw">else</span> {
-                <span class="prelude-val">Err</span>(())
+                <span class="ident">updates</span>.<span class="ident">try_recv</span>().<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {})
             };
 
             <span class="comment">// If we&#39;ve received an update, we bubble it up to process</span>
