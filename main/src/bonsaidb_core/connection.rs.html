@@ -546,6 +546,19 @@
 <span id="546">546</span>
 <span id="547">547</span>
 <span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">ops::Range</span>};
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
@@ -720,6 +733,19 @@
 
     <span class="doccomment">/// Fetches the last transaction id that has been committed, if any.</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Compacts the collection to reclaim unused disk space.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This process is done by writing data to a new file and swapping the file</span>
+    <span class="doccomment">/// once the process completes. This ensures that if a hardware failure,</span>
+    <span class="doccomment">/// power outage, or crash occurs that the original collection data is left</span>
+    <span class="doccomment">/// untouched.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Errors</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// * [`Error::CollectionNotFound`]: database `name` does not exist.</span>
+    <span class="doccomment">/// * [`Error::Io)`]: an error occurred while compacting the database.</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span>;
 }
 
 <span class="doccomment">/// Interacts with a collection over a `Connection`.</span>

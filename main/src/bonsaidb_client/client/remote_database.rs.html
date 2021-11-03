@@ -332,6 +332,24 @@
 <span id="332">332</span>
 <span id="333">333</span>
 <span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
+<span id="346">346</span>
+<span id="347">347</span>
+<span id="348">348</span>
+<span id="349">349</span>
+<span id="350">350</span>
+<span id="351">351</span>
+<span id="352">352</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">ops::Deref</span>, <span class="ident">sync::Arc</span>};
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
@@ -659,6 +677,24 @@
             .<span class="kw">await</span><span class="question-mark">?</span>
         {
             <span class="ident">Response::Database</span>(<span class="ident">DatabaseResponse::LastTransactionId</span>(<span class="ident">result</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">result</span>),
+            <span class="ident">Response::Error</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
+            <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::Networking</span>(
+                <span class="ident">bonsaidb_core::networking::Error::UnexpectedResponse</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">other</span>)),
+            )),
+        }
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Collection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+        <span class="kw">match</span> <span class="self">self</span>
+            .<span class="ident">send_request</span>(<span class="ident">Request::Database</span> {
+                <span class="ident">database</span>: <span class="self">self</span>.<span class="ident">name</span>.<span class="ident">to_string</span>(),
+                <span class="ident">request</span>: <span class="ident">DatabaseRequest::CompactCollection</span> {
+                    <span class="ident">name</span>: <span class="ident">C::collection_name</span>()<span class="question-mark">?</span>,
+                },
+            })
+            .<span class="kw">await</span><span class="question-mark">?</span>
+        {
+            <span class="ident">Response::Database</span>(<span class="ident">DatabaseResponse::CollectionCompacted</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(()),
             <span class="ident">Response::Error</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
             <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::Networking</span>(
                 <span class="ident">bonsaidb_core::networking::Error::UnexpectedResponse</span>(<span class="macro">format!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">other</span>)),
