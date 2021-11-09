@@ -1210,16 +1210,6 @@
 <span id="1210">1210</span>
 <span id="1211">1211</span>
 <span id="1212">1212</span>
-<span id="1213">1213</span>
-<span id="1214">1214</span>
-<span id="1215">1215</span>
-<span id="1216">1216</span>
-<span id="1217">1217</span>
-<span id="1218">1218</span>
-<span id="1219">1219</span>
-<span id="1220">1220</span>
-<span id="1221">1221</span>
-<span id="1222">1222</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>, <span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">convert::Infallible</span>, <span class="ident">marker::PhantomData</span>,
     <span class="ident">path::Path</span>, <span class="ident">sync::Arc</span>, <span class="ident">u8</span>,
@@ -1778,22 +1768,12 @@
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>) <span class="op">=</span> <span class="ident">key</span> {
             <span class="kw">match</span> <span class="ident">key</span> {
                 <span class="ident">QueryKey::Range</span>(<span class="ident">range</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="ident">Buffer::from</span>(
-                        <span class="ident">range</span>
-                            .<span class="ident">start</span>
-                            .<span class="ident">as_big_endian_bytes</span>()
-                            .<span class="ident">map_err</span>(<span class="ident">view::Error::key_serialization</span>)<span class="question-mark">?</span>
-                            .<span class="ident">to_vec</span>(),
-                    );
-                    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="ident">Buffer::from</span>(
-                        <span class="ident">range</span>
-                            .<span class="ident">end</span>
-                            .<span class="ident">as_big_endian_bytes</span>()
-                            .<span class="ident">map_err</span>(<span class="ident">view::Error::key_serialization</span>)<span class="question-mark">?</span>
-                            .<span class="ident">to_vec</span>(),
-                    );
+                    <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">range</span>
+                        .<span class="ident">as_big_endian_bytes</span>()
+                        .<span class="ident">map_err</span>(<span class="ident">view::Error::key_serialization</span>)<span class="question-mark">?</span>
+                        .<span class="ident">map</span>(<span class="ident">Buffer::from</span>);
                     <span class="ident">view_entries</span>.<span class="ident">scan</span>::<span class="op">&lt;</span><span class="ident">Infallible</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                        <span class="ident">start</span>..<span class="ident">end</span>,
+                        <span class="ident">range</span>,
                         <span class="bool-val">true</span>,
                         <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="bool-val">true</span>,
                         <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="ident">KeyEvaluation::ReadData</span>,
