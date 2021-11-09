@@ -381,6 +381,14 @@
 <span id="381">381</span>
 <span id="382">382</span>
 <span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
+<span id="386">386</span>
+<span id="387">387</span>
+<span id="388">388</span>
+<span id="389">389</span>
+<span id="390">390</span>
+<span id="391">391</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">actionable::Permissions</span>;
 <span class="kw">use</span> <span class="ident">custodian_password</span>::{
     <span class="ident">LoginFinalization</span>, <span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>, <span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>,
@@ -391,7 +399,7 @@
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">admin::Database</span>,
-    <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>},
+    <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>, <span class="ident">Sort</span>},
     <span class="ident">document::Document</span>,
     <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>},
     <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">view::map</span>, <span class="ident">CollectionName</span>, <span class="ident">MappedValue</span>, <span class="ident">NamedReference</span>, <span class="ident">ViewName</span>},
@@ -554,6 +562,10 @@
         <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
         <span class="doccomment">/// The range of ids to list.</span>
         <span class="ident">ids</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// The order for the query into the collection.</span>
+        <span class="ident">order</span>: <span class="ident">Sort</span>,
+        <span class="doccomment">/// The maximum number of results to return.</span>
+        <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Queries a view.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;simple&quot;</span>))]</span>
@@ -562,6 +574,10 @@
         <span class="ident">view</span>: <span class="ident">ViewName</span>,
         <span class="doccomment">/// The filter for the view.</span>
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// The order for the query into the view.</span>
+        <span class="ident">order</span>: <span class="ident">Sort</span>,
+        <span class="doccomment">/// The maximum number of results to return.</span>
+        <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The access policy for the query.</span>
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="doccomment">/// If true, [`DatabaseResponse::ViewMappingsWithDocs`] will be</span>
