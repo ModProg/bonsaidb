@@ -1925,6 +1925,8 @@
 <span id="1925">1925</span>
 <span id="1926">1926</span>
 <span id="1927">1927</span>
+<span id="1928">1928</span>
+<span id="1929">1929</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">hash_map</span>, <span class="ident">HashMap</span>},
     <span class="ident">fmt::Debug</span>,
@@ -1993,8 +1995,10 @@
 <span class="kw">mod</span> <span class="ident">connected_client</span>;
 <span class="kw">mod</span> <span class="ident">database</span>;
 
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>))]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;http&quot;</span>)]</span>
 <span class="kw">mod</span> <span class="ident">http</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
+<span class="kw">mod</span> <span class="ident">websockets</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="self">self</span>::connected_client::OwnedClient</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{
@@ -2037,8 +2041,8 @@
     <span class="ident">acme</span>: <span class="ident">AcmeConfiguration</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>)]</span>
     <span class="ident">alpn_keys</span>: <span class="ident">AlpnKeys</span>,
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
-    <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;http&quot;</span>)]</span>
+    <span class="ident">http_shutdown</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Sender</span><span class="op">&lt;</span>()<span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">relay</span>: <span class="ident">Relay</span>,
     <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">_backend</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
@@ -2093,8 +2097,8 @@
                 <span class="ident">acme</span>: <span class="ident">configuration</span>.<span class="ident">acme</span>,
                 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>)]</span>
                 <span class="ident">alpn_keys</span>: <span class="ident">AlpnKeys::default</span>(),
-                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
-                <span class="ident">websocket_shutdown</span>: <span class="ident">RwLock::default</span>(),
+                <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;http&quot;</span>)]</span>
+                <span class="ident">http_shutdown</span>: <span class="ident">RwLock::default</span>(),
                 <span class="ident">relay</span>: <span class="ident">Relay::default</span>(),
                 <span class="ident">subscribers</span>: <span class="ident">Arc::default</span>(),
                 <span class="ident">_backend</span>: <span class="ident">PhantomData::default</span>(),
