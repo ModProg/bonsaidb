@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["bonsaidb_server"] = [{"text":"impl&lt;B:&nbsp;<a class=\"trait\" href=\"bonsaidb_server/trait.Backend.html\" title=\"trait bonsaidb_server::Backend\">Backend</a>&gt; AcmeCache for <a class=\"struct\" href=\"bonsaidb_server/struct.CustomServer.html\" title=\"struct bonsaidb_server::CustomServer\">CustomServer</a>&lt;B&gt;","synthetic":false,"types":["bonsaidb_server::server::CustomServer"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

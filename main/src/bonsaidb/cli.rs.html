@@ -98,7 +98,7 @@
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">path::PathBuf</span>, <span class="ident">str::FromStr</span>};
 
 <span class="kw">use</span> <span class="ident">bonsaidb_client::Client</span>;
-<span class="kw">use</span> <span class="ident">bonsaidb_core::admin::Admin</span>;
+<span class="kw">use</span> <span class="ident">bonsaidb_core::admin</span>::{<span class="ident">Admin</span>, <span class="ident">ADMIN_DATABASE_NAME</span>};
 <span class="kw">use</span> <span class="ident">bonsaidb_local::Storage</span>;
 <span class="kw">use</span> <span class="ident">bonsaidb_server::Backend</span>;
 <span class="kw">use</span> <span class="ident">structopt::StructOpt</span>;
@@ -175,7 +175,7 @@
                 }
                 <span class="ident">ConnectionTarget::Url</span>(<span class="ident">server_url</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">Client::new</span>(<span class="ident">server_url</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-                    <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">database</span>::<span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>(<span class="string">&quot;admin&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">database</span>::<span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>(<span class="ident">ADMIN_DATABASE_NAME</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
                     <span class="ident">command</span>.<span class="ident">execute</span>(<span class="ident">admin</span>, <span class="ident">client</span>).<span class="kw">await</span><span class="question-mark">?</span>;
                     <span class="prelude-val">Ok</span>(())

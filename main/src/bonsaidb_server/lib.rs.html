@@ -46,6 +46,11 @@
 <span id="46">46</span>
 <span id="47">47</span>
 <span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
 </pre><pre class="rust"><code><span class="doccomment">//! The `BonsaiDb` Server.</span>
 
 <span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
@@ -73,8 +78,13 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">cli</span>;
 <span class="kw">mod</span> <span class="ident">config</span>;
 <span class="kw">mod</span> <span class="ident">error</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod</span> <span class="ident">hosted</span>;
 <span class="kw">mod</span> <span class="ident">server</span>;
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">config</span>::{
+    <span class="ident">AcmeConfiguration</span>, <span class="ident">LETS_ENCRYPT_PRODUCTION_DIRECTORY</span>, <span class="ident">LETS_ENCRYPT_STAGING_DIRECTORY</span>,
+};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">server::ServerSubscriber</span>;
 
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::{

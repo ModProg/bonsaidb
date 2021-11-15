@@ -2004,12 +2004,9 @@
 <span id="2004">2004</span>
 <span id="2005">2005</span>
 <span id="2006">2006</span>
-<span id="2007">2007</span>
-<span id="2008">2008</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::missing_panics_doc</span>)]</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">borrow::Cow</span>,
     <span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Display</span>},
     <span class="ident">io::ErrorKind</span>,
     <span class="ident">ops::Deref</span>,
@@ -2774,7 +2771,9 @@
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::UserManagement</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">_db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">server</span>();
-            <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">database</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::admin::Admin</span><span class="op">&gt;</span>(<span class="string">&quot;admin&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="ident">server</span>
+                .<span class="ident">database</span>::<span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::admin::Admin</span><span class="op">&gt;</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::admin::ADMIN_DATABASE_NAME</span>)
+                .<span class="kw">await</span><span class="question-mark">?</span>;
 
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::user_management_tests</span>(
                 <span class="kw-2">&amp;</span><span class="ident">admin</span>,
@@ -2932,7 +2931,7 @@
 
     <span class="comment">// To generate a conflict, let&#39;s try to do the same update again by</span>
     <span class="comment">// reverting the header</span>
-    <span class="ident">doc</span>.<span class="ident">header</span> <span class="op">=</span> <span class="ident">Cow::Owned</span>(<span class="ident">header</span>);
+    <span class="ident">doc</span>.<span class="ident">header</span> <span class="op">=</span> <span class="ident">header</span>;
     <span class="kw">match</span> <span class="ident">db</span>
         .<span class="ident">update</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">doc</span>)
         .<span class="kw">await</span>
@@ -2971,7 +2970,7 @@
         .<span class="ident">expect</span>(<span class="string">&quot;couldn&#39;t retrieve stored item&quot;</span>);
     <span class="ident">db</span>.<span class="ident">update</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">doc</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
-    <span class="macro">assert_eq!</span>(<span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">as_ref</span>(), <span class="kw-2">&amp;</span><span class="ident">header</span>);
+    <span class="macro">assert_eq!</span>(<span class="ident">doc</span>.<span class="ident">header</span>, <span class="ident">header</span>);
 
     <span class="prelude-val">Ok</span>(())
 }
@@ -3158,12 +3157,14 @@
 }
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unassociated_collection_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="macro">assert!</span>(<span class="macro">matches!</span>(
-        <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">UnassociatedCollection</span><span class="op">&gt;</span>()
-            .<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::default</span>())
-            .<span class="kw">await</span>,
-        <span class="prelude-val">Err</span>(<span class="ident">Error::CollectionNotFound</span>)
-    ));
+    <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">db</span>
+        .<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">UnassociatedCollection</span><span class="op">&gt;</span>()
+        .<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::default</span>())
+        .<span class="kw">await</span>;
+    <span class="kw">match</span> <span class="ident">result</span> {
+        <span class="prelude-val">Err</span>(<span class="ident">Error::CollectionNotFound</span>) <span class="op">=</span><span class="op">&gt;</span> {}
+        <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(<span class="string">&quot;unexpected result: {:?}&quot;</span>, <span class="ident">other</span>),
+    }
 
     <span class="prelude-val">Ok</span>(())
 }
@@ -3968,13 +3969,8 @@
 ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">list_available_schemas</span>().<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="ident">schemas</span>.<span class="ident">sort</span>();
-    <span class="macro">assert_eq!</span>(
-        <span class="ident">schemas</span>,
-        <span class="macro">vec!</span>[
-            <span class="ident">Basic::schema_name</span>()<span class="question-mark">?</span>,
-            <span class="ident">SchemaName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;bonsaidb-admin&quot;</span>)<span class="question-mark">?</span>
-        ]
-    );
+    <span class="macro">assert!</span>(<span class="ident">schemas</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::schema_name</span>()<span class="question-mark">?</span>));
+    <span class="macro">assert!</span>(<span class="ident">schemas</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">SchemaName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;bonsaidb-admin&quot;</span>)<span class="question-mark">?</span>));
 
     <span class="kw">let</span> <span class="ident">databases</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">list_databases</span>().<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="macro">assert!</span>(<span class="ident">databases</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">Database</span> {
