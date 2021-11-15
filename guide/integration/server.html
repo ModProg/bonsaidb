@@ -147,9 +147,7 @@
     )
     .await?;
     if server.certificate_chain().await.is_err() {
-        server
-            .install_self_signed_certificate(&quot;example-server&quot;, true)
-            .await?;
+        server.install_self_signed_certificate(true).await?;
     }
     let certificate = server
         .certificate_chain()
@@ -158,7 +156,7 @@
     server.register_schema::&lt;Shape&gt;().await?;
     server.create_database::&lt;Shape&gt;(&quot;my-database&quot;, true).await?;
 </code></pre>
-<p>Once you have a server initialized, calling <a href="https://dev.bonsaidb.io/main/bonsaidb/server/struct.CustomServer.html#method.listen_on"><code>listen_on</code></a> will begin listening for connections on the port specified. This uses the preferred native protocol which uses UDP. If you find that UDP is not working for your setup or want to put <code>BonsaiDb</code> behind a load balancer that doesn't support UDP, you can enable WebSocket support and call <a href="https://dev.bonsaidb.io/main/bonsaidb/server/struct.CustomServer.html#method.listen_for_websockets_on"><code>listen_for_websockets_on</code></a>.</p>
+<p>Once you have a server initialized, calling <a href="https://dev.bonsaidb.io/main/bonsaidb/server/struct.CustomServer.html#method.listen_on"><code>listen_on</code></a> will begin listening for connections on the port specified. This uses the preferred native protocol which uses UDP. If you find that UDP is not working for your setup or want to put <code>BonsaiDb</code> behind a load balancer that doesn't support UDP, you can enable WebSocket support and call <a href="https://dev.bonsaidb.io/main/bonsaidb/server/struct.CustomServer.html#method.listen_for_http_on"><code>listen_for_http_on</code></a>.</p>
 <p>You can call both, but since these functions don't return until the server is shut down, you should spawn them instead:</p>
 <pre><code class="language-rust noplayground no_run">let task_server = server.clone();
 tokio::spawn(async move {
@@ -166,7 +164,7 @@ tokio::spawn(async move {
 });
 let server = server.clone();
 tokio::spawn(async move {
-    task_server.listen_for_websockets_on(&quot;localhost:8080&quot;).await
+    task_server.listen_for_http_on(&quot;localhost:8080&quot;).await
 });
 </code></pre>
 <p>If you're not running any of your own code on the server, and you're only using one listening method, you can just await the listen method of your choice in your server's main.</p>
