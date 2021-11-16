@@ -216,7 +216,7 @@
         <span class="ident">client</span>: <span class="kw-2">&amp;</span><span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
         <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="ident">CustomServer</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ConnectionHandling</span> {
-        <span class="macro">println!</span>(
+        <span class="macro">log::info!</span>(
             <span class="string">&quot;{:?} client connected from {:?}&quot;</span>,
             <span class="ident">client</span>.<span class="ident">transport</span>(),
             <span class="ident">client</span>.<span class="ident">address</span>()
@@ -228,7 +228,7 @@
     <span class="doccomment">/// A client disconnected from the server.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">client_disconnected</span>(<span class="ident">client</span>: <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="ident">CustomServer</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) {
-        <span class="macro">println!</span>(
+        <span class="macro">log::info!</span>(
             <span class="string">&quot;{:?} client disconnected ({:?})&quot;</span>,
             <span class="ident">client</span>.<span class="ident">transport</span>(),
             <span class="ident">client</span>.<span class="ident">address</span>()
@@ -238,7 +238,7 @@
     <span class="doccomment">/// A client successfully authenticated.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">unused_variables</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">client_authenticated</span>(<span class="ident">client</span>: <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="ident">CustomServer</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>) {
-        <span class="macro">println!</span>(
+        <span class="macro">log::info!</span>(
             <span class="string">&quot;{:?} client authenticated as user: {}&quot;</span>,
             <span class="ident">client</span>.<span class="ident">transport</span>(),
             <span class="ident">client</span>.<span class="ident">user_id</span>().<span class="kw">await</span>.<span class="ident">unwrap</span>()

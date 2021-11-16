@@ -191,7 +191,7 @@
             <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">pending</span>) <span class="kw">in</span> <span class="ident">outstanding_requests</span>.<span class="ident">drain</span>() {
                 <span class="ident">drop</span>(<span class="ident">pending</span>.<span class="ident">responder</span>.<span class="ident">send</span>(<span class="prelude-val">Err</span>(<span class="ident">Error::Disconnected</span>)));
             }
-            <span class="macro">eprintln!</span>(<span class="string">&quot;Error on socket {:?}&quot;</span>, <span class="ident">err</span>);
+            <span class="macro">log::error!</span>(<span class="string">&quot;Error on socket {:?}&quot;</span>, <span class="ident">err</span>);
         }
     }
 
@@ -241,7 +241,7 @@
                 .<span class="kw">await</span>;
             }
             <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> {
-                <span class="macro">eprintln!</span>(<span class="string">&quot;Unexpected websocket message: {:?}&quot;</span>, <span class="ident">other</span>);
+                <span class="macro">log::error!</span>(<span class="string">&quot;Unexpected websocket message: {:?}&quot;</span>, <span class="ident">other</span>);
             }
         }
     }

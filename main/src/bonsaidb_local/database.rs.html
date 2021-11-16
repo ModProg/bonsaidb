@@ -1326,6 +1326,28 @@
 <span id="1326">1326</span>
 <span id="1327">1327</span>
 <span id="1328">1328</span>
+<span id="1329">1329</span>
+<span id="1330">1330</span>
+<span id="1331">1331</span>
+<span id="1332">1332</span>
+<span id="1333">1333</span>
+<span id="1334">1334</span>
+<span id="1335">1335</span>
+<span id="1336">1336</span>
+<span id="1337">1337</span>
+<span id="1338">1338</span>
+<span id="1339">1339</span>
+<span id="1340">1340</span>
+<span id="1341">1341</span>
+<span id="1342">1342</span>
+<span id="1343">1343</span>
+<span id="1344">1344</span>
+<span id="1345">1345</span>
+<span id="1346">1346</span>
+<span id="1347">1347</span>
+<span id="1348">1348</span>
+<span id="1349">1349</span>
+<span id="1350">1350</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>, <span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">convert::Infallible</span>, <span class="ident">marker::PhantomData</span>,
     <span class="ident">path::Path</span>, <span class="ident">sync::Arc</span>, <span class="ident">u8</span>,
@@ -2073,6 +2095,7 @@
 <span class="kw">where</span>
     <span class="ident">DB</span>: <span class="ident">Schema</span>,
 {
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">transaction</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">apply_transaction</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">transaction</span>: <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
@@ -2172,6 +2195,7 @@
         .<span class="ident">map_err</span>(<span class="ident">bonsaidb_core::Error::from</span>)
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">id</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">id</span>: <span class="ident">u64</span>,
@@ -2180,6 +2204,7 @@
             .<span class="kw">await</span>
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">ids</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">u64</span>],
@@ -2188,6 +2213,7 @@
             .<span class="kw">await</span>
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">ids</span>, <span class="ident">order</span>, <span class="ident">limit</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span>, <span class="ident">R</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Range</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">ids</span>: <span class="ident">R</span>,
@@ -2198,6 +2224,10 @@
             .<span class="kw">await</span>
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(
+        <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>,
+        <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">starting_id</span>, <span class="ident">result_limit</span>))
+    )]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_executed_transactions</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">starting_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
@@ -2244,6 +2274,10 @@
         }
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(
+        <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>,
+        <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">key</span>, <span class="ident">order</span>, <span class="ident">limit</span>, <span class="ident">access_policy</span>))
+    )]</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -2275,6 +2309,10 @@
         <span class="prelude-val">Ok</span>(<span class="ident">results</span>)
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(
+        <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>,
+        <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">key</span>, <span class="ident">order</span>, <span class="ident">limit</span>, <span class="ident">access_policy</span>))
+    )]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query_with_docs</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -2310,6 +2348,7 @@
             .<span class="ident">collect</span>())
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">key</span>, <span class="ident">access_policy</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -2336,6 +2375,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">value</span>)
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">key</span>, <span class="ident">access_policy</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce_grouped</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -2369,10 +2409,12 @@
             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span><span class="op">&gt;</span>()
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">roots</span>().<span class="ident">transactions</span>().<span class="ident">current_transaction_id</span>())
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
@@ -2381,6 +2423,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
@@ -2389,6 +2432,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()

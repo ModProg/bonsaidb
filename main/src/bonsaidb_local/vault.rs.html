@@ -1218,7 +1218,7 @@
         <span class="kw">if</span> <span class="self">self</span>.<span class="number">1</span>.<span class="ident">is_none</span>() {
             <span class="kw">match</span> <span class="ident">region::lock</span>(<span class="self">self</span>.<span class="ident">key</span>().<span class="ident">as_ptr</span>(), <span class="self">self</span>.<span class="ident">key</span>().<span class="ident">len</span>()) {
                 <span class="prelude-val">Ok</span>(<span class="ident">guard</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="number">1</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">guard</span>),
-                <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">eprintln!</span>(<span class="string">&quot;Security Warning: Unable to lock memory {:?}&quot;</span>, <span class="ident">err</span>),
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">log::error!</span>(<span class="string">&quot;Security Warning: Unable to lock memory {:?}&quot;</span>, <span class="ident">err</span>),
             }
         }
     }
