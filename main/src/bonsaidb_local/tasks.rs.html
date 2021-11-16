@@ -212,12 +212,6 @@
 <span id="212">212</span>
 <span id="213">213</span>
 <span id="214">214</span>
-<span id="215">215</span>
-<span id="216">216</span>
-<span id="217">217</span>
-<span id="218">218</span>
-<span id="219">219</span>
-<span id="220">220</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
     <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>},
@@ -226,7 +220,7 @@
 
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">connection::Connection</span>,
-    <span class="ident">schema</span>::{<span class="ident">view</span>, <span class="ident">CollectionName</span>, <span class="ident">Schema</span>, <span class="ident">ViewName</span>},
+    <span class="ident">schema</span>::{<span class="ident">view</span>, <span class="ident">CollectionName</span>, <span class="ident">ViewName</span>},
 };
 <span class="kw">use</span> <span class="ident">tokio::sync::RwLock</span>;
 
@@ -268,10 +262,10 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">update_view_if_needed</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">update_view_if_needed</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">view::Serialized</span>,
-        <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
+        <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">Database</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">view_name</span> <span class="op">=</span> <span class="ident">view</span>.<span class="ident">view_name</span>();
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">job</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">spawn_integrity_check</span>(<span class="ident">view</span>, <span class="ident">database</span>).<span class="kw">await</span><span class="question-mark">?</span> {
@@ -333,10 +327,10 @@
             .<span class="ident">contains</span>(<span class="kw-2">&amp;</span>(<span class="ident">database</span>, <span class="ident">collection</span>.<span class="ident">clone</span>(), <span class="ident">view_name</span>))
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">spawn_integrity_check</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">spawn_integrity_check</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">view::Serialized</span>,
-        <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
+        <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">Database</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Handle</span><span class="op">&lt;</span>(), <span class="ident">Error</span>, <span class="ident">Task</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">view_name</span> <span class="op">=</span> <span class="ident">view</span>.<span class="ident">view_name</span>()<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>
@@ -390,9 +384,9 @@
             .<span class="ident">insert</span>((<span class="ident">database</span>, <span class="ident">collection</span>, <span class="ident">view_name</span>), <span class="ident">transaction_id</span>);
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">spawn_key_value_expiration_loader</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">spawn_key_value_expiration_loader</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="kw">crate</span>::Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
+        <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="kw">crate</span>::Database</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span>(), <span class="ident">Error</span>, <span class="ident">Task</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">jobs</span>
             .<span class="ident">enqueue</span>(<span class="ident"><span class="kw">crate</span>::database::kv::ExpirationLoader</span> {
@@ -401,9 +395,9 @@
             .<span class="kw">await</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_collection</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_collection</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">database</span>: <span class="ident"><span class="kw">crate</span>::Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
+        <span class="ident">database</span>: <span class="ident"><span class="kw">crate</span>::Database</span>,
         <span class="ident">collection_name</span>: <span class="ident">CollectionName</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>
@@ -414,10 +408,7 @@
             .<span class="kw">await</span><span class="question-mark">?</span><span class="question-mark">?</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">database</span>: <span class="ident"><span class="kw">crate</span>::Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="ident"><span class="kw">crate</span>::Database</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>
             .<span class="ident">jobs</span>
             .<span class="ident">lookup_or_enqueue</span>(<span class="ident">Compactor::keyvalue</span>(<span class="ident">database</span>))
@@ -426,10 +417,7 @@
             .<span class="kw">await</span><span class="question-mark">?</span><span class="question-mark">?</span>)
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_database</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">database</span>: <span class="ident"><span class="kw">crate</span>::Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="ident"><span class="kw">crate</span>::Database</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>
             .<span class="ident">jobs</span>
             .<span class="ident">lookup_or_enqueue</span>(<span class="ident">Compactor::database</span>(<span class="ident">database</span>))

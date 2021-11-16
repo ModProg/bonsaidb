@@ -91,6 +91,9 @@
 <span id="91">91</span>
 <span id="92">92</span>
 <span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
+<span id="96">96</span>
 </pre><pre class="rust"><code><span class="doccomment">//! `BonsaiDb` command line tools.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Available commands:</span>
@@ -98,7 +101,10 @@
 <span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">path::PathBuf</span>, <span class="ident">str::FromStr</span>};
 
 <span class="kw">use</span> <span class="ident">bonsaidb_client::Client</span>;
-<span class="kw">use</span> <span class="ident">bonsaidb_core::admin</span>::{<span class="ident">Admin</span>, <span class="ident">ADMIN_DATABASE_NAME</span>};
+<span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
+    <span class="ident">admin</span>::{<span class="ident">Admin</span>, <span class="ident">ADMIN_DATABASE_NAME</span>},
+    <span class="ident">connection::ServerConnection</span>,
+};
 <span class="kw">use</span> <span class="ident">bonsaidb_local::Storage</span>;
 <span class="kw">use</span> <span class="ident">bonsaidb_server::Backend</span>;
 <span class="kw">use</span> <span class="ident">structopt::StructOpt</span>;
@@ -174,7 +180,7 @@
                     <span class="prelude-val">Ok</span>(())
                 }
                 <span class="ident">ConnectionTarget::Url</span>(<span class="ident">server_url</span>) <span class="op">=</span><span class="op">&gt;</span> {
-                    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">Client::new</span>(<span class="ident">server_url</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">client</span> <span class="op">=</span> <span class="ident">Client</span>::<span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">server_url</span>).<span class="kw">await</span><span class="question-mark">?</span>;
                     <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="ident">client</span>.<span class="ident">database</span>::<span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>(<span class="ident">ADMIN_DATABASE_NAME</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
                     <span class="ident">command</span>.<span class="ident">execute</span>(<span class="ident">admin</span>, <span class="ident">client</span>).<span class="kw">await</span><span class="question-mark">?</span>;

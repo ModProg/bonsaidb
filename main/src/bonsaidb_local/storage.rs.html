@@ -887,18 +887,6 @@
 <span id="887">887</span>
 <span id="888">888</span>
 <span id="889">889</span>
-<span id="890">890</span>
-<span id="891">891</span>
-<span id="892">892</span>
-<span id="893">893</span>
-<span id="894">894</span>
-<span id="895">895</span>
-<span id="896">896</span>
-<span id="897">897</span>
-<span id="898">898</span>
-<span id="899">899</span>
-<span id="900">900</span>
-<span id="901">901</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>,
     <span class="ident">collections::HashMap</span>,
@@ -1129,11 +1117,11 @@
         <span class="self">self</span>.<span class="ident">register_schema</span>::<span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">database</span>::<span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>(<span class="ident">ADMIN_DATABASE_NAME</span>).<span class="kw">await</span> {
             <span class="prelude-val">Ok</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {}
-            <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::DatabaseNotFound</span>(<span class="kw">_</span>))) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::DatabaseNotFound</span>(<span class="kw">_</span>)) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="self">self</span>.<span class="ident">create_database</span>::<span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span>(<span class="ident">ADMIN_DATABASE_NAME</span>, <span class="bool-val">true</span>)
                     .<span class="kw">await</span><span class="question-mark">?</span>;
             }
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>),
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">err</span>)),
         }
         <span class="prelude-val">Ok</span>(())
     }
@@ -1179,31 +1167,6 @@
         }
     }
 
-    <span class="doccomment">/// Retrieves a database. This function checks that the database exists and</span>
-    <span class="doccomment">/// that the schema matches.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">read</span>().<span class="kw">await</span>;
-
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stored_schema</span>) <span class="op">=</span> <span class="ident">available_databases</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
-            <span class="kw">if</span> <span class="ident">stored_schema</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">DB::schema_name</span>()<span class="question-mark">?</span> {
-                <span class="prelude-val">Ok</span>(
-                    <span class="ident">Database::new</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>(), <span class="self">self</span>.<span class="ident">open_roots</span>(<span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>, <span class="self">self</span>.<span class="ident">clone</span>())
-                        .<span class="kw">await</span><span class="question-mark">?</span>,
-                )
-            } <span class="kw">else</span> {
-                <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::SchemaMismatch</span> {
-                    <span class="ident">database_name</span>: <span class="ident">name</span>.<span class="ident">to_owned</span>(),
-                    <span class="ident">schema</span>: <span class="ident">DB::schema_name</span>()<span class="question-mark">?</span>,
-                    <span class="ident">stored_schema</span>: <span class="ident">stored_schema</span>.<span class="ident">clone</span>(),
-                }))
-            }
-        } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::DatabaseNotFound</span>(
-                <span class="ident">name</span>.<span class="ident">to_owned</span>(),
-            )))
-        }
-    }
-
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open_roots</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Context</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">open_roots</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">open_roots</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">roots</span>) <span class="op">=</span> <span class="ident">open_roots</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
@@ -1234,21 +1197,6 @@
         }
     }
 
-    <span class="comment">// pub async fn database_with_foreign_schema&lt;DB: Schema&gt;(</span>
-    <span class="comment">//     &amp;self,</span>
-    <span class="comment">//     name: &amp;&#39;_ str,</span>
-    <span class="comment">// ) -&gt; Result&lt;Database&lt;DB&gt;, Error&gt; {</span>
-    <span class="comment">//     let available_databases = self.data.available_databases.read().await;</span>
-
-    <span class="comment">//     if let Some(stored_schema) = available_databases.get(name) {</span>
-    <span class="comment">//         Ok(Database::new(name.to_owned(), self.clone()).await?)</span>
-    <span class="comment">//     } else {</span>
-    <span class="comment">//         Err(Error::Core(bonsaidb_core::Error::DatabaseNotFound(</span>
-    <span class="comment">//             name.to_owned(),</span>
-    <span class="comment">//         )))</span>
-    <span class="comment">//     }</span>
-    <span class="comment">// }</span>
-
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">tasks</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">TaskManager</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">tasks</span>
     }
@@ -1277,8 +1225,8 @@
 
     <span class="doccomment">/// Returns the administration database.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_panics_doc</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">admin</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Database</span><span class="op">&lt;</span><span class="ident">Admin</span><span class="op">&gt;</span> {
-        <span class="ident">Database::new</span>(
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">admin</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Database</span> {
+        <span class="ident">Database::new</span>::<span class="op">&lt;</span><span class="ident">Admin</span>, <span class="kw">_</span><span class="op">&gt;</span>(
             <span class="ident">ADMIN_DATABASE_NAME</span>,
             <span class="self">self</span>.<span class="ident">open_roots</span>(<span class="ident">ADMIN_DATABASE_NAME</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>(),
             <span class="self">self</span>.<span class="ident">clone</span>(),
@@ -1410,7 +1358,7 @@
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">storage</span>: <span class="ident">Storage</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">roots</span> <span class="op">=</span> <span class="ident">storage</span>.<span class="ident">open_roots</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="ident">name</span>, <span class="ident">roots</span>, <span class="ident">storage</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Database::new</span>::<span class="op">&lt;</span><span class="ident">DB</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">name</span>, <span class="ident">roots</span>, <span class="ident">storage</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Box::new</span>(<span class="ident">db</span>))
     }
 }
@@ -1506,6 +1454,8 @@
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span> <span class="ident">ServerConnection</span> <span class="kw">for</span> <span class="ident">Storage</span> {
+    <span class="kw">type</span> <span class="ident">Database</span> <span class="op">=</span> <span class="ident">Database</span>;
+
     <span class="attribute">#[<span class="ident">cfg_attr</span>(
         <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>,
         <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">name</span>, <span class="ident">schema</span>, <span class="ident">only_if_needed</span>))
@@ -1553,6 +1503,32 @@
         <span class="ident">available_databases</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="ident">schema</span>);
 
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Database</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stored_schema</span>) <span class="op">=</span> <span class="ident">available_databases</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
+            <span class="kw">if</span> <span class="ident">stored_schema</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">DB::schema_name</span>()<span class="question-mark">?</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">Database::new</span>::<span class="op">&lt;</span><span class="ident">DB</span>, <span class="kw">_</span><span class="op">&gt;</span>(
+                    <span class="ident">name</span>.<span class="ident">to_owned</span>(),
+                    <span class="self">self</span>.<span class="ident">open_roots</span>(<span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>,
+                    <span class="self">self</span>.<span class="ident">clone</span>(),
+                )
+                .<span class="kw">await</span><span class="question-mark">?</span>)
+            } <span class="kw">else</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::SchemaMismatch</span> {
+                    <span class="ident">database_name</span>: <span class="ident">name</span>.<span class="ident">to_owned</span>(),
+                    <span class="ident">schema</span>: <span class="ident">DB::schema_name</span>()<span class="question-mark">?</span>,
+                    <span class="ident">stored_schema</span>: <span class="ident">stored_schema</span>.<span class="ident">clone</span>(),
+                })
+            }
+        } <span class="kw">else</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::DatabaseNotFound</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>()))
+        }
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">name</span>)))]</span>

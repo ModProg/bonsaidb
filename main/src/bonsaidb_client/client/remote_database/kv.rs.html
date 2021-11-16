@@ -30,20 +30,16 @@
 <span id="30">30</span>
 <span id="31">31</span>
 <span id="32">32</span>
-<span id="33">33</span>
-<span id="34">34</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">custom_api::CustomApi</span>,
     <span class="ident">kv::Kv</span>,
     <span class="ident">networking</span>::{<span class="ident">DatabaseRequest</span>, <span class="ident">DatabaseResponse</span>, <span class="ident">Request</span>, <span class="ident">Response</span>},
-    <span class="ident">schema::Schema</span>,
 };
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">A</span><span class="op">&gt;</span> <span class="ident">Kv</span> <span class="kw">for</span> <span class="ident"><span class="kw">super</span>::RemoteDatabase</span><span class="op">&lt;</span><span class="ident">DB</span>, <span class="ident">A</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> <span class="ident">Kv</span> <span class="kw">for</span> <span class="ident"><span class="kw">super</span>::RemoteDatabase</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">DB</span>: <span class="ident">Schema</span>,
     <span class="ident">A</span>: <span class="ident">CustomApi</span>,
 {
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_key_operation</span>(

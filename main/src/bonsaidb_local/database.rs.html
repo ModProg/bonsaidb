@@ -1335,22 +1335,8 @@
 <span id="1335">1335</span>
 <span id="1336">1336</span>
 <span id="1337">1337</span>
-<span id="1338">1338</span>
-<span id="1339">1339</span>
-<span id="1340">1340</span>
-<span id="1341">1341</span>
-<span id="1342">1342</span>
-<span id="1343">1343</span>
-<span id="1344">1344</span>
-<span id="1345">1345</span>
-<span id="1346">1346</span>
-<span id="1347">1347</span>
-<span id="1348">1348</span>
-<span id="1349">1349</span>
-<span id="1350">1350</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">any::Any</span>, <span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">convert::Infallible</span>, <span class="ident">marker::PhantomData</span>,
-    <span class="ident">path::Path</span>, <span class="ident">sync::Arc</span>, <span class="ident">u8</span>,
+    <span class="ident">any::Any</span>, <span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">convert::Infallible</span>, <span class="ident">path::Path</span>, <span class="ident">sync::Arc</span>, <span class="ident">u8</span>,
 };
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
@@ -1397,20 +1383,19 @@
 
 <span class="doccomment">/// A local, file-based database.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">data</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Database</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">data</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Data</span> {
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">context</span>: <span class="ident">Context</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">storage</span>: <span class="ident">Storage</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">schema</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Schematic</span><span class="op">&gt;</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">effective_permissions</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
-    <span class="ident">_schema</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
 }
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Database</span> {
     <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">data</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>(),
@@ -1418,12 +1403,9 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> <span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">DB</span>: <span class="ident">Schema</span>,
-{
+<span class="kw">impl</span> <span class="ident">Database</span> {
     <span class="doccomment">/// Opens a local file as a bonsaidb.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span>, <span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
         <span class="ident">name</span>: <span class="ident">S</span>,
         <span class="ident">context</span>: <span class="ident">Context</span>,
         <span class="ident">storage</span>: <span class="ident">Storage</span>,
@@ -1437,7 +1419,6 @@
                 <span class="ident">storage</span>: <span class="ident">storage</span>.<span class="ident">clone</span>(),
                 <span class="ident">schema</span>,
                 <span class="ident">effective_permissions</span>: <span class="prelude-val">None</span>,
-                <span class="ident">_schema</span>: <span class="ident">PhantomData::default</span>(),
             }),
         };
 
@@ -1471,7 +1452,6 @@
                 <span class="ident">storage</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">clone</span>(),
                 <span class="ident">schema</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schema</span>.<span class="ident">clone</span>(),
                 <span class="ident">effective_permissions</span>: <span class="prelude-val">Some</span>(<span class="ident">effective_permissions</span>),
-                <span class="ident">_schema</span>: <span class="ident">PhantomData::default</span>(),
             }),
         }
     }
@@ -1483,8 +1463,8 @@
     }
 
     <span class="doccomment">/// Creates a `Storage` with a single-database named &quot;default&quot; with its data stored at `path`.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open_local</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
-        <span class="ident">path</span>: <span class="ident">P</span>,
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open_local</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
+        <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>,
         <span class="ident">configuration</span>: <span class="ident">Configuration</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">Storage::open_local</span>(<span class="ident">path</span>, <span class="ident">configuration</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -1492,7 +1472,7 @@
 
         <span class="ident">storage</span>.<span class="ident">create_database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>(<span class="string">&quot;default&quot;</span>, <span class="bool-val">true</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="prelude-val">Ok</span>(<span class="ident">storage</span>.<span class="ident">database</span>(<span class="string">&quot;default&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">storage</span>.<span class="ident">database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>(<span class="string">&quot;default&quot;</span>).<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
     <span class="doccomment">/// Returns the [`Storage`] that this database belongs to.</span>
@@ -1501,7 +1481,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>
     }
 
-    <span class="doccomment">/// Returns the [`Schematic`] for `DB`.</span>
+    <span class="doccomment">/// Returns the [`Schematic`] for the schema for this database.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">schematic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">Schematic</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schema</span>
@@ -2091,10 +2071,7 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">DB</span><span class="op">&gt;</span> <span class="ident">Connection</span> <span class="kw">for</span> <span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">DB</span>: <span class="ident">Schema</span>,
-{
+<span class="kw">impl</span> <span class="ident">Connection</span> <span class="kw">for</span> <span class="ident">Database</span> {
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">transaction</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">apply_transaction</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -2418,7 +2395,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
-            .<span class="ident">compact_collection</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">C::collection_name</span>()<span class="question-mark">?</span>)
+            .<span class="ident">compact_collection</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">C::collection_name</span>()<span class="question-mark">?</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
@@ -2427,7 +2404,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
-            .<span class="ident">compact_database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+            .<span class="ident">compact_database</span>(<span class="self">self</span>.<span class="ident">clone</span>())
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
@@ -2436,7 +2413,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
-            .<span class="ident">compact_key_value_store</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>(<span class="self">self</span>.<span class="ident">clone</span>())
+            .<span class="ident">compact_key_value_store</span>(<span class="self">self</span>.<span class="ident">clone</span>())
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
     }
@@ -2511,10 +2488,7 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span> <span class="ident">OpenDatabase</span> <span class="kw">for</span> <span class="ident">Database</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">DB</span>: <span class="ident">Schema</span>,
-{
+<span class="kw">impl</span> <span class="ident">OpenDatabase</span> <span class="kw">for</span> <span class="ident">Database</span> {
     <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">Any</span> {
         <span class="self">self</span>
     }
