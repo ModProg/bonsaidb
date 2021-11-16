@@ -1944,6 +1944,78 @@
 <span id="1944">1944</span>
 <span id="1945">1945</span>
 <span id="1946">1946</span>
+<span id="1947">1947</span>
+<span id="1948">1948</span>
+<span id="1949">1949</span>
+<span id="1950">1950</span>
+<span id="1951">1951</span>
+<span id="1952">1952</span>
+<span id="1953">1953</span>
+<span id="1954">1954</span>
+<span id="1955">1955</span>
+<span id="1956">1956</span>
+<span id="1957">1957</span>
+<span id="1958">1958</span>
+<span id="1959">1959</span>
+<span id="1960">1960</span>
+<span id="1961">1961</span>
+<span id="1962">1962</span>
+<span id="1963">1963</span>
+<span id="1964">1964</span>
+<span id="1965">1965</span>
+<span id="1966">1966</span>
+<span id="1967">1967</span>
+<span id="1968">1968</span>
+<span id="1969">1969</span>
+<span id="1970">1970</span>
+<span id="1971">1971</span>
+<span id="1972">1972</span>
+<span id="1973">1973</span>
+<span id="1974">1974</span>
+<span id="1975">1975</span>
+<span id="1976">1976</span>
+<span id="1977">1977</span>
+<span id="1978">1978</span>
+<span id="1979">1979</span>
+<span id="1980">1980</span>
+<span id="1981">1981</span>
+<span id="1982">1982</span>
+<span id="1983">1983</span>
+<span id="1984">1984</span>
+<span id="1985">1985</span>
+<span id="1986">1986</span>
+<span id="1987">1987</span>
+<span id="1988">1988</span>
+<span id="1989">1989</span>
+<span id="1990">1990</span>
+<span id="1991">1991</span>
+<span id="1992">1992</span>
+<span id="1993">1993</span>
+<span id="1994">1994</span>
+<span id="1995">1995</span>
+<span id="1996">1996</span>
+<span id="1997">1997</span>
+<span id="1998">1998</span>
+<span id="1999">1999</span>
+<span id="2000">2000</span>
+<span id="2001">2001</span>
+<span id="2002">2002</span>
+<span id="2003">2003</span>
+<span id="2004">2004</span>
+<span id="2005">2005</span>
+<span id="2006">2006</span>
+<span id="2007">2007</span>
+<span id="2008">2008</span>
+<span id="2009">2009</span>
+<span id="2010">2010</span>
+<span id="2011">2011</span>
+<span id="2012">2012</span>
+<span id="2013">2013</span>
+<span id="2014">2014</span>
+<span id="2015">2015</span>
+<span id="2016">2016</span>
+<span id="2017">2017</span>
+<span id="2018">2018</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">hash_map</span>, <span class="ident">HashMap</span>},
     <span class="ident">fmt::Debug</span>,
@@ -1996,7 +2068,11 @@
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Future</span>, <span class="ident">StreamExt</span>};
 <span class="kw">use</span> <span class="ident">rustls::sign::CertifiedKey</span>;
 <span class="kw">use</span> <span class="ident">schema::SchemaName</span>;
-<span class="kw">use</span> <span class="ident">tokio::sync::RwLock</span>;
+<span class="kw">use</span> <span class="ident">signal_hook</span>::{
+    <span class="ident">consts</span>::{<span class="ident">SIGINT</span>, <span class="ident">SIGQUIT</span>},
+    <span class="ident">iterator::Signals</span>,
+};
+<span class="kw">use</span> <span class="ident">tokio::sync</span>::{<span class="ident">Mutex</span>, <span class="ident">RwLock</span>};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config::AcmeConfiguration</span>;
@@ -2594,6 +2670,69 @@
                 }
             } <span class="kw">else</span> {
                 <span class="ident">server</span>.<span class="ident">close</span>().<span class="kw">await</span>;
+            }
+        }
+
+        <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Listens for signals from the operating system that the server should</span>
+    <span class="doccomment">/// shut down and attempts to gracefully shut down.</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">listen_for_shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">shutdown_state</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">ShutdownState::Running</span>));
+        <span class="kw">match</span> <span class="ident">Signals::new</span>(<span class="kw-2">&amp;</span>[<span class="ident">SIGINT</span>, <span class="ident">SIGQUIT</span>]) {
+            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">signals</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="lifetime">&#39;outer</span>: <span class="kw">loop</span> {
+                    <span class="kw">for</span> <span class="ident">signal</span> <span class="kw">in</span> <span class="ident">signals</span>.<span class="ident">pending</span>() {
+                        <span class="kw">match</span> <span class="ident">signal</span> {
+                            <span class="ident">SIGINT</span> <span class="op">=</span><span class="op">&gt;</span> {
+                                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">shutdown_state</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+                                <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">state</span> {
+                                    <span class="ident">ShutdownState::Running</span> <span class="op">=</span><span class="op">&gt;</span> {
+                                        <span class="macro">log::error!</span>(
+                                            <span class="string">&quot;Interrupt signal received. Shutting down gracefully.&quot;</span>
+                                        );
+                                        <span class="kw">let</span> <span class="ident">task_server</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
+                                        <span class="kw">let</span> (<span class="ident">shutdown_sender</span>, <span class="ident">shutdown_receiver</span>) <span class="op">=</span>
+                                            <span class="ident">flume::bounded</span>(<span class="number">1</span>);
+                                        <span class="ident">tokio::task::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
+                                            <span class="ident">task_server</span>
+                                                .<span class="ident">shutdown</span>(<span class="prelude-val">Some</span>(<span class="ident">Duration::from_secs</span>(<span class="number">30</span>)))
+                                                .<span class="kw">await</span><span class="question-mark">?</span>;
+                                            <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">shutdown_sender</span>.<span class="ident">send</span>(());
+                                            <span class="prelude-ty">Result</span>::<span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span><span class="ident">::Ok</span>(())
+                                        });
+                                        <span class="kw-2">*</span><span class="ident">state</span> <span class="op">=</span> <span class="ident">ShutdownState::ShuttingDown</span>(<span class="ident">shutdown_receiver</span>);
+                                    }
+                                    <span class="ident">ShutdownState::ShuttingDown</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                                        <span class="comment">// Two interrupts, go ahead and force the shutdown</span>
+                                        <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
+                                    }
+                                }
+                            }
+                            <span class="ident">SIGQUIT</span> <span class="op">=</span><span class="op">&gt;</span> {
+                                <span class="macro">log::error!</span>(<span class="string">&quot;Quit signal received. Shutting down.&quot;</span>);
+                                <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
+                            }
+                            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                        }
+                    }
+
+                    <span class="kw">let</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">shutdown_state</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+                    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">ShutdownState::ShuttingDown</span>(<span class="ident">receiver</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">state</span> {
+                        <span class="kw">if</span> <span class="ident">receiver</span>.<span class="ident">try_recv</span>().<span class="ident">is_ok</span>() {
+                            <span class="comment">// Fully shut down.</span>
+                            <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
+                        }
+                    }
+
+                    <span class="ident">tokio::time::sleep</span>(<span class="ident">Duration::from_millis</span>(<span class="number">300</span>)).<span class="kw">await</span>;
+                }
+                <span class="self">self</span>.<span class="ident">shutdown</span>(<span class="prelude-val">None</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            }
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="macro">log::error!</span>(<span class="string">&quot;Error installing signals for graceful shutdown: {:?}&quot;</span>, <span class="ident">err</span>);
+                <span class="ident">tokio::time::sleep</span>(<span class="ident">Duration::MAX</span>).<span class="kw">await</span>;
             }
         }
 
@@ -3889,6 +4028,11 @@
     <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
+}
+
+<span class="kw">enum</span> <span class="ident">ShutdownState</span> {
+    <span class="ident">Running</span>,
+    <span class="ident">ShuttingDown</span>(<span class="ident">flume::Receiver</span><span class="op">&lt;</span>()<span class="op">&gt;</span>),
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bonsaidb_server" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
