@@ -58,6 +58,8 @@
 <span id="58">58</span>
 <span id="59">59</span>
 <span id="60">60</span>
+<span id="61">61</span>
+<span id="62">62</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">marker::PhantomData</span>, <span class="ident">net::SocketAddr</span>};
 
 <span class="kw">use</span> <span class="ident">structopt::StructOpt</span>;
@@ -74,12 +76,12 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
     <span class="doccomment">/// The bind port and address for HTTP traffic. Defaults to 80.</span>
     <span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;http&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">http_port</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">http_port</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">std::net::SocketAddr</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
     <span class="doccomment">/// The bind port and address for HTTPS traffic. Defaults to 443.</span>
     <span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;https&quot;</span>)]</span>
-    <span class="kw">pub</span> <span class="ident">https_port</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">https_port</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">std::net::SocketAddr</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">skip</span>)]</span>
     <span class="ident">_backend</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
@@ -98,19 +100,21 @@
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
         {
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">http_port</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">http_port</span> {
-                <span class="kw">let</span> <span class="ident">task_server</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">clone</span>();
-                <span class="ident">tokio::task::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                    <span class="ident">task_server</span>.<span class="ident">listen_for_websockets_on</span>(<span class="ident">http_port</span>, <span class="bool-val">false</span>).<span class="kw">await</span>
-                });
-            }
+            <span class="kw">let</span> <span class="ident">listen_address</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">http_port</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;:::80&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>());
+            <span class="kw">let</span> <span class="ident">task_server</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">clone</span>();
+            <span class="ident">tokio::task::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
+                <span class="ident">task_server</span>
+                    .<span class="ident">listen_for_websockets_on</span>(<span class="ident">listen_address</span>, <span class="bool-val">false</span>)
+                    .<span class="kw">await</span>
+            });
 
-            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">https_port</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">https_port</span> {
-                <span class="kw">let</span> <span class="ident">task_server</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">clone</span>();
-                <span class="ident">tokio::task::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
-                    <span class="ident">task_server</span>.<span class="ident">listen_for_websockets_on</span>(<span class="ident">https_port</span>, <span class="bool-val">true</span>).<span class="kw">await</span>
-                });
-            }
+            <span class="kw">let</span> <span class="ident">listen_address</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">https_port</span>.<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="string">&quot;:::443&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>());
+            <span class="kw">let</span> <span class="ident">task_server</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">clone</span>();
+            <span class="ident">tokio::task::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
+                <span class="ident">task_server</span>
+                    .<span class="ident">listen_for_websockets_on</span>(<span class="ident">listen_address</span>, <span class="bool-val">true</span>)
+                    .<span class="kw">await</span>
+            });
         }
 
         <span class="ident">server</span>.<span class="ident">listen_for_shutdown</span>().<span class="kw">await</span><span class="question-mark">?</span>;
