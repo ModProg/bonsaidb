@@ -139,6 +139,10 @@
 <span id="139">139</span>
 <span id="140">140</span>
 <span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">sync::Arc</span>, <span class="ident">time::Duration</span>};
 
 <span class="kw">use</span> <span class="ident">async_acme::cache::AcmeCache</span>;
@@ -258,6 +262,10 @@
                 }
             }
 
+            <span class="macro">log::info!</span>(
+                <span class="string">&quot;requesting new tls certificate for {}&quot;</span>,
+                <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">primary_domain</span>
+            );
             <span class="kw">let</span> <span class="ident">domains</span> <span class="op">=</span> <span class="macro">vec!</span>[<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">primary_domain</span>.<span class="ident">clone</span>()];
             <span class="ident">async_acme::rustls_helper::order</span>(
                 <span class="op">|</span><span class="ident">domain</span>, <span class="ident">key</span><span class="op">|</span> {

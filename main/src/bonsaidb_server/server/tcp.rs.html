@@ -288,6 +288,12 @@
 <span id="288">288</span>
 <span id="289">289</span>
 <span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
@@ -438,6 +444,7 @@
         <span class="comment">// For ACME, don&#39;t send any traffic over the connection.</span>
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>)]</span>
         <span class="kw">if</span> <span class="ident">peer</span>.<span class="ident">protocol</span>.<span class="ident">alpn_name</span>() <span class="op">=</span><span class="op">=</span> <span class="ident">async_acme::acme::ACME_TLS_ALPN_NAME</span> {
+            <span class="macro">log::info!</span>(<span class="string">&quot;received acme challenge connection&quot;</span>);
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
         }
 
@@ -474,9 +481,14 @@
             <span class="kw">let</span> <span class="ident">server_name</span> <span class="op">=</span> <span class="ident">client_hello</span>.<span class="ident">server_name</span>()<span class="question-mark">?</span>.<span class="ident">to_owned</span>();
             <span class="kw">let</span> <span class="ident">keys</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">alpn_keys</span>.<span class="ident">lock</span>().<span class="ident">unwrap</span>();
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>) <span class="op">=</span> <span class="ident">keys</span>.<span class="ident">get</span>(<span class="ident">AsRef</span>::<span class="op">&lt;</span><span class="ident">str</span><span class="op">&gt;</span><span class="ident">::as_ref</span>(<span class="kw-2">&amp;</span><span class="ident">server_name</span>)) {
+                <span class="macro">log::info!</span>(<span class="string">&quot;returning acme challenge&quot;</span>);
                 <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>.<span class="ident">clone</span>());
             }
 
+            <span class="macro">log::error!</span>(
+                <span class="string">&quot;acme alpn challenge received with no key for {}&quot;</span>,
+                <span class="ident">server_name</span>
+            );
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
