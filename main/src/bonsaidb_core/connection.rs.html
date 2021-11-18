@@ -1272,8 +1272,8 @@
 
     <span class="doccomment">/// Filters for entries in the view with `keys`.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_keys</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">keys</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
-        <span class="self">self</span>.<span class="ident">key</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">QueryKey::Multiple</span>(<span class="ident">keys</span>));
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_keys</span><span class="op">&lt;</span><span class="ident">IntoIter</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">keys</span>: <span class="ident">IntoIter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">key</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">QueryKey::Multiple</span>(<span class="ident">keys</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>()));
         <span class="self">self</span>
     }
 
