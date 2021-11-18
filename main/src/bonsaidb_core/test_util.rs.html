@@ -2004,6 +2004,17 @@
 <span id="2004">2004</span>
 <span id="2005">2005</span>
 <span id="2006">2006</span>
+<span id="2007">2007</span>
+<span id="2008">2008</span>
+<span id="2009">2009</span>
+<span id="2010">2010</span>
+<span id="2011">2011</span>
+<span id="2012">2012</span>
+<span id="2013">2013</span>
+<span id="2014">2014</span>
+<span id="2015">2015</span>
+<span id="2016">2016</span>
+<span id="2017">2017</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::missing_panics_doc</span>)]</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -2698,7 +2709,7 @@
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::List</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::get_multiple_tests</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::list_tests</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="ident">harness</span>.<span class="ident">shutdown</span>().<span class="kw">await</span>
         }
 
@@ -2986,6 +2997,9 @@
     <span class="kw">let</span> <span class="ident">both_docs</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">get_multiple</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span>[<span class="ident">doc1</span>.<span class="ident">id</span>, <span class="ident">doc2</span>.<span class="ident">id</span>]).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="macro">assert_eq!</span>(<span class="ident">both_docs</span>.<span class="ident">len</span>(), <span class="number">2</span>);
 
+    <span class="kw">let</span> <span class="ident">out_of_order</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">get_multiple</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span>[<span class="ident">doc2</span>.<span class="ident">id</span>, <span class="ident">doc1</span>.<span class="ident">id</span>]).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="macro">assert_eq!</span>(<span class="ident">out_of_order</span>.<span class="ident">len</span>(), <span class="number">2</span>);
+
     <span class="comment">// The order of get_multiple isn&#39;t guaranteed, so these two checks are done</span>
     <span class="comment">// with iterators instead of direct indexing</span>
     <span class="kw">let</span> <span class="ident">doc1</span> <span class="op">=</span> <span class="ident">both_docs</span>
@@ -3124,6 +3138,14 @@
     <span class="kw">let</span> <span class="ident">a_and_b_children</span> <span class="op">=</span> <span class="ident">db</span>
         .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">BasicByParentId</span><span class="op">&gt;</span>()
         .<span class="ident">with_keys</span>(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="ident">a</span>.<span class="ident">id</span>), <span class="prelude-val">Some</span>(<span class="ident">b</span>.<span class="ident">id</span>)])
+        .<span class="ident">query</span>()
+        .<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="macro">assert_eq!</span>(<span class="ident">a_and_b_children</span>.<span class="ident">len</span>(), <span class="number">3</span>);
+
+    <span class="comment">// Test out of order keys</span>
+    <span class="kw">let</span> <span class="ident">a_and_b_children</span> <span class="op">=</span> <span class="ident">db</span>
+        .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">BasicByParentId</span><span class="op">&gt;</span>()
+        .<span class="ident">with_keys</span>(<span class="macro">vec!</span>[<span class="prelude-val">Some</span>(<span class="ident">b</span>.<span class="ident">id</span>), <span class="prelude-val">Some</span>(<span class="ident">a</span>.<span class="ident">id</span>)])
         .<span class="ident">query</span>()
         .<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="macro">assert_eq!</span>(<span class="ident">a_and_b_children</span>.<span class="ident">len</span>(), <span class="number">3</span>);
