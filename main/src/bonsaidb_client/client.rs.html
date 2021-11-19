@@ -1029,7 +1029,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_websocket_client</span>(
         <span class="ident">url</span>: <span class="ident">Url</span>,
         <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">request_sender</span>, <span class="ident">request_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
 
         <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="ident">SubscriberMap::default</span>();
