@@ -157,6 +157,11 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
+<span id="162">162</span>
+<span id="163">163</span>
+<span id="164">164</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">env</span>::{<span class="ident">current_dir</span>, <span class="ident">set_current_dir</span>},
     <span class="ident">io</span>::{<span class="ident">stdout</span>, <span class="ident">Write</span>},
@@ -164,6 +169,7 @@
 
 <span class="kw">use</span> <span class="ident">khonsu_tools</span>::{
     <span class="ident">anyhow</span>,
+    <span class="ident">audit</span>::{<span class="self">self</span>, <span class="ident">Audit</span>},
     <span class="ident">code_coverage</span>::{<span class="self">self</span>, <span class="ident">CodeCoverage</span>},
     <span class="ident">devx_cmd::Cmd</span>,
 };
@@ -181,6 +187,9 @@
         <span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">long</span>)]</span>
         <span class="ident">fail_on_warnings</span>: <span class="ident">bool</span>,
     },
+    <span class="ident">Audit</span> {
+        <span class="ident">command</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    },
 }
 
 <span class="kw">fn</span> <span class="ident">main</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -191,6 +200,7 @@
         } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CodeCoverage</span>::<span class="op">&lt;</span><span class="ident">CoverageConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">install_dependencies</span>),
         <span class="ident">Commands::TestMatrix</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">generate_test_matrix_output</span>(),
         <span class="ident">Commands::Test</span> { <span class="ident">fail_on_warnings</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">run_all_tests</span>(<span class="ident">fail_on_warnings</span>),
+        <span class="ident">Commands::Audit</span> { <span class="ident">command</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Audit</span>::<span class="op">&lt;</span><span class="ident">audit::DefaultConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">command</span>),
     }
 }
 
