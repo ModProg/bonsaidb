@@ -1,3 +1,0 @@
-(function() {var implementors = {};
-implementors["bonsaidb_local"] = [{"text":"impl <a class=\"trait\" href=\"bonsaidb_local/core/connection/trait.ServerConnection.html\" title=\"trait bonsaidb_local::core::connection::ServerConnection\">ServerConnection</a> for <a class=\"struct\" href=\"bonsaidb_local/struct.Storage.html\" title=\"struct bonsaidb_local::Storage\">Storage</a>","synthetic":false,"types":["bonsaidb_local::storage::Storage"]}];
-if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

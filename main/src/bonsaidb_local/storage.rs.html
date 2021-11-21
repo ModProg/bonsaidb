@@ -908,7 +908,7 @@
         <span class="ident">user::User</span>,
         <span class="ident">Admin</span>, <span class="ident">PermissionGroup</span>, <span class="ident">Role</span>, <span class="ident">ADMIN_DATABASE_NAME</span>,
     },
-    <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>, <span class="ident">ServerConnection</span>, <span class="ident">Sort</span>},
+    <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>, <span class="ident">Sort</span>, <span class="ident">StorageConnection</span>},
     <span class="ident">custodian_password</span>::{<span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>, <span class="ident">ServerRegistration</span>},
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">KeyId</span>},
     <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>},
@@ -1453,7 +1453,7 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span> <span class="ident">ServerConnection</span> <span class="kw">for</span> <span class="ident">Storage</span> {
+<span class="kw">impl</span> <span class="ident">StorageConnection</span> <span class="kw">for</span> <span class="ident">Storage</span> {
     <span class="kw">type</span> <span class="ident">Database</span> <span class="op">=</span> <span class="ident">Database</span>;
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(

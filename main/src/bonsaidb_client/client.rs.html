@@ -801,7 +801,7 @@
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">admin::Database</span>,
-    <span class="ident">connection</span>::{<span class="ident">PasswordResult</span>, <span class="ident">ServerConnection</span>},
+    <span class="ident">connection</span>::{<span class="ident">PasswordResult</span>, <span class="ident">StorageConnection</span>},
     <span class="ident">custodian_password</span>::{
         <span class="ident">ClientConfig</span>, <span class="ident">ClientFile</span>, <span class="ident">ClientLogin</span>, <span class="ident">LoginFinalization</span>, <span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>,
     },
@@ -1196,7 +1196,7 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> <span class="ident">ServerConnection</span> <span class="kw">for</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span> <span class="ident">StorageConnection</span> <span class="kw">for</span> <span class="ident">Client</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Database</span> <span class="op">=</span> <span class="ident">RemoteDatabase</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_database_with_schema</span>(
