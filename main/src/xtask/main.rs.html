@@ -179,6 +179,15 @@
 <span id="179">179</span>
 <span id="180">180</span>
 <span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">env</span>::{<span class="ident">current_dir</span>, <span class="ident">set_current_dir</span>},
     <span class="ident">io</span>::{<span class="ident">stdout</span>, <span class="ident">Write</span>},
@@ -188,7 +197,7 @@
     <span class="ident">anyhow</span>,
     <span class="ident">audit</span>::{<span class="self">self</span>, <span class="ident">Audit</span>},
     <span class="ident">code_coverage</span>::{<span class="self">self</span>, <span class="ident">CodeCoverage</span>},
-    <span class="ident">devx_cmd::Cmd</span>,
+    <span class="ident">devx_cmd</span>::{<span class="ident">run</span>, <span class="ident">Cmd</span>},
 };
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
 <span class="kw">use</span> <span class="ident">structopt::StructOpt</span>;
@@ -207,17 +216,23 @@
     <span class="ident">Audit</span> {
         <span class="ident">command</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     },
+    <span class="ident">InstallPreCommitHook</span>,
 }
 
 <span class="kw">fn</span> <span class="ident">main</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">Commands::from_args</span>();
-    <span class="kw">match</span> <span class="ident">command</span> {
-        <span class="ident">Commands::GenerateCodeCoverageReport</span> {
-            <span class="ident">install_dependencies</span>,
-        } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CodeCoverage</span>::<span class="op">&lt;</span><span class="ident">CoverageConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">install_dependencies</span>),
-        <span class="ident">Commands::TestMatrix</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">generate_test_matrix_output</span>(),
-        <span class="ident">Commands::Test</span> { <span class="ident">fail_on_warnings</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">run_all_tests</span>(<span class="ident">fail_on_warnings</span>),
-        <span class="ident">Commands::Audit</span> { <span class="ident">command</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Audit</span>::<span class="op">&lt;</span><span class="ident">AuditConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">command</span>),
+    <span class="kw">if</span> <span class="ident">std::env::args</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> {
+        <span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">Commands::from_args</span>();
+        <span class="kw">match</span> <span class="ident">command</span> {
+            <span class="ident">Commands::GenerateCodeCoverageReport</span> {
+                <span class="ident">install_dependencies</span>,
+            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CodeCoverage</span>::<span class="op">&lt;</span><span class="ident">CoverageConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">install_dependencies</span>),
+            <span class="ident">Commands::TestMatrix</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">generate_test_matrix_output</span>(),
+            <span class="ident">Commands::Test</span> { <span class="ident">fail_on_warnings</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">run_all_tests</span>(<span class="ident">fail_on_warnings</span>),
+            <span class="ident">Commands::Audit</span> { <span class="ident">command</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Audit</span>::<span class="op">&lt;</span><span class="ident">AuditConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">command</span>),
+            <span class="ident">Commands::InstallPreCommitHook</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">khonsu_tools::pre_commit::install</span>(),
+        }
+    } <span class="kw">else</span> {
+        <span class="ident">run_all_tests</span>(<span class="bool-val">true</span>)
     }
 }
 
@@ -341,6 +356,9 @@
     }
 
     <span class="ident">clippy</span>.<span class="ident">run</span>()<span class="question-mark">?</span>;
+
+    <span class="macro">println!</span>(<span class="string">&quot;Generating docs&quot;</span>);
+    <span class="macro">run!</span>(<span class="string">&quot;cargo&quot;</span>, <span class="string">&quot;doc&quot;</span>, <span class="string">&quot;--all-features&quot;</span>, <span class="string">&quot;--no-deps&quot;</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(())
 }
 
