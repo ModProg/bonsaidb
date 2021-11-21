@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Commands",""]],"fn":[["all_tests",""],["generate_test_matrix_output",""],["main",""],["run_all_tests",""]],"struct":[["CoverageConfig",""],["TestMatrix",""],["TestSuite",""]]});
+initSidebarItems({"enum":[["Commands",""]],"fn":[["all_tests",""],["generate_test_matrix_output",""],["main",""],["run_all_tests",""]],"struct":[["AuditConfig",""],["CoverageConfig",""],["TestMatrix",""],["TestSuite",""]]});
