@@ -42,7 +42,7 @@
 <span id="42">42</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt::Display</span>;
 
-<span class="kw">use</span> <span class="ident">bonsaidb_core::schema::CollectionName</span>;
+<span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{<span class="ident">document::Header</span>, <span class="ident">schema::CollectionName</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
@@ -55,7 +55,7 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EntryMapping</span> {
-    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">u64</span>,
+    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Header</span>,
     <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 }
 

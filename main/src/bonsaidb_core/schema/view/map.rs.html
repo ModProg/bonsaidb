@@ -379,6 +379,10 @@
 <span id="379">379</span>
 <span id="380">380</span>
 <span id="381">381</span>
+<span id="382">382</span>
+<span id="383">383</span>
+<span id="384">384</span>
+<span id="385">385</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
     <span class="ident">convert</span>::{<span class="ident">Infallible</span>, <span class="ident">TryInto</span>},
@@ -388,13 +392,17 @@
 <span class="kw">use</span> <span class="ident">num_traits</span>::{<span class="ident">FromPrimitive</span>, <span class="ident">ToPrimitive</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de::DeserializeOwned</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">document::Document</span>, <span class="ident">schema::view</span>, <span class="ident">AnyError</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{
+    <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">Header</span>},
+    <span class="ident">schema::view</span>,
+    <span class="ident">AnyError</span>,
+};
 
 <span class="doccomment">/// A document&#39;s entry in a View&#39;s mappings.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">PartialEq</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span> <span class="op">=</span> (), <span class="ident">V</span>: <span class="ident">Serialize</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
     <span class="doccomment">/// The id of the document that emitted this entry.</span>
-    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">u64</span>,
+    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Header</span>,
 
     <span class="doccomment">/// The key used to index the View.</span>
     <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">K</span>,
@@ -407,7 +415,7 @@
     <span class="doccomment">/// Serializes this map.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Serialized</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Serialized</span> {
-            <span class="ident">source</span>: <span class="self">self</span>.<span class="ident">source</span>,
+            <span class="ident">source</span>: <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">clone</span>(),
             <span class="ident">key</span>: <span class="self">self</span>
                 .<span class="ident">key</span>
                 .<span class="ident">as_big_endian_bytes</span>()
@@ -433,7 +441,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span>, <span class="ident">V</span>: <span class="ident">Serialize</span><span class="op">&gt;</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Creates a new Map entry for the document with id `source`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source</span>: <span class="ident">u64</span>, <span class="ident">key</span>: <span class="ident">K</span>, <span class="ident">value</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source</span>: <span class="ident">Header</span>, <span class="ident">key</span>: <span class="ident">K</span>, <span class="ident">value</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> { <span class="ident">source</span>, <span class="ident">key</span>, <span class="ident">value</span> }
     }
 }
@@ -441,8 +449,8 @@
 <span class="doccomment">/// Represents a document&#39;s entry in a View&#39;s mappings, serialized and ready to store.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Serialized</span> {
-    <span class="doccomment">/// The id of the document that emitted this entry.</span>
-    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">u64</span>,
+    <span class="doccomment">/// The header of the document that emitted this entry.</span>
+    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Header</span>,
 
     <span class="doccomment">/// The key used to index the View.</span>
     <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
@@ -457,7 +465,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Map</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Map</span> {
-            <span class="ident">source</span>: <span class="self">self</span>.<span class="ident">source</span>,
+            <span class="ident">source</span>: <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">clone</span>(),
             <span class="ident">key</span>: <span class="ident">K::from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>).<span class="ident">map_err</span>(<span class="ident">view::Error::key_serialization</span>)<span class="question-mark">?</span>,
             <span class="ident">value</span>: <span class="ident">pot::from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">value</span>)<span class="question-mark">?</span>,
         })

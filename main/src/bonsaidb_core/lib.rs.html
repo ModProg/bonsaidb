@@ -320,7 +320,7 @@
 <span class="kw">use</span> <span class="ident">schema</span>::{<span class="ident">view</span>, <span class="ident">CollectionName</span>, <span class="ident">SchemaName</span>, <span class="ident">ViewName</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::schema::InsertError</span>;
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">document::Header</span>, <span class="ident">schema::InsertError</span>};
 
 <span class="doccomment">/// an enumeration of errors that this crate can produce</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">thiserror::Error</span>, <span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
@@ -418,14 +418,14 @@
     <span class="ident">DocumentConflict</span>(<span class="ident">CollectionName</span>, <span class="ident">u64</span>),
 
     <span class="doccomment">/// When saving a document in a collection with unique views, a document emits a key that is already emitted by an existing ocument, this error is returned.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;a unique key violation occurred: document `{existing_document_id}` already has the same key as `{conflicting_document_id}` for {view}&quot;</span>)]</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;a unique key violation occurred: document `{existing_document}` already has the same key as `{conflicting_document}` for {view}&quot;</span>)]</span>
     <span class="ident">UniqueKeyViolation</span> {
         <span class="doccomment">/// The name of the view that the unique key violation occurred.</span>
         <span class="ident">view</span>: <span class="ident">ViewName</span>,
         <span class="doccomment">/// The document that caused the violation.</span>
-        <span class="ident">conflicting_document_id</span>: <span class="ident">u64</span>,
+        <span class="ident">conflicting_document</span>: <span class="ident">Header</span>,
         <span class="doccomment">/// The document that already uses the same key.</span>
-        <span class="ident">existing_document_id</span>: <span class="ident">u64</span>,
+        <span class="ident">existing_document</span>: <span class="ident">Header</span>,
     },
 
     <span class="doccomment">/// An invalid name was specified during schema creation.</span>

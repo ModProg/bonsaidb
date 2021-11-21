@@ -389,6 +389,18 @@
 <span id="389">389</span>
 <span id="390">390</span>
 <span id="391">391</span>
+<span id="392">392</span>
+<span id="393">393</span>
+<span id="394">394</span>
+<span id="395">395</span>
+<span id="396">396</span>
+<span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
+<span id="401">401</span>
+<span id="402">402</span>
+<span id="403">403</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">actionable::Permissions</span>;
 <span class="kw">use</span> <span class="ident">custodian_password</span>::{
     <span class="ident">LoginFinalization</span>, <span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>, <span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>,
@@ -599,6 +611,16 @@
         <span class="doccomment">/// If false, [`DatabaseResponse::ViewReduction`] is returned.</span>
         <span class="ident">grouped</span>: <span class="ident">bool</span>,
     },
+    <span class="doccomment">/// Deletes the associated documents resulting from the view query.</span>
+    <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;simple&quot;</span>))]</span>
+    <span class="ident">DeleteDocs</span> {
+        <span class="doccomment">/// The name of the view.</span>
+        <span class="ident">view</span>: <span class="ident">ViewName</span>,
+        <span class="doccomment">/// The filter for the view.</span>
+        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="doccomment">/// The access policy for the query.</span>
+        <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
+    },
     <span class="doccomment">/// Applies a transaction.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;custom&quot;</span>))]</span>
     <span class="ident">ApplyTransaction</span> {
@@ -736,6 +758,8 @@
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DatabaseResponse</span> {
     <span class="doccomment">/// One or more documents.</span>
     <span class="ident">Documents</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>),
+    <span class="doccomment">/// A number of documents were deleted.</span>
+    <span class="ident">DocumentsDeleted</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Results of [`DatabaseRequest::ApplyTransaction`].</span>
     <span class="ident">TransactionResults</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Results of [`DatabaseRequest::Query`] when `with_docs` is false.</span>
