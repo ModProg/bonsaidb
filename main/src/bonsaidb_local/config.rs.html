@@ -77,8 +77,16 @@
 <span id="77">77</span>
 <span id="78">78</span>
 <span id="79">79</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">bonsaidb_core::document::KeyId</span>;
+<span id="80">80</span>
+<span id="81">81</span>
+<span id="82">82</span>
+<span id="83">83</span>
+<span id="84">84</span>
+<span id="85">85</span>
+</pre><pre class="rust"><code><span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">bonsaidb_core::document::KeyId</span>;
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::vault::AnyVaultKeyStorage</span>;
 
 <span class="doccomment">/// Configuration options for [`Storage`](crate::storage::Storage).</span>
@@ -93,12 +101,14 @@
     <span class="doccomment">/// The vault key storage to use. If not specified and running in debug</span>
     <span class="doccomment">/// mode, [`LocalVaultKeyStorage`](crate::vault::LocalVaultKeyStorage) will</span>
     <span class="doccomment">/// be used with the server&#39;s data folder as the path.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">vault_key_storage</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">AnyVaultKeyStorage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// The default encryption key for the database. If specified, all documents</span>
     <span class="doccomment">/// will be stored encrypted at-rest using the key specified. Having this</span>
     <span class="doccomment">/// key specified will also encrypt views. Without this, views will be</span>
     <span class="doccomment">/// stored unencrypted.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">default_encryption_key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span>,
 
     <span class="doccomment">/// Configuration options related to background tasks.</span>
@@ -111,9 +121,11 @@
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Configuration</span> {
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="self">Self</span> {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
             <span class="ident">default_encryption_key</span>: <span class="prelude-val">None</span>,
-            <span class="ident">unique_id</span>: <span class="prelude-val">None</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
             <span class="ident">vault_key_storage</span>: <span class="prelude-val">None</span>,
+            <span class="ident">unique_id</span>: <span class="prelude-val">None</span>,
             <span class="ident">workers</span>: <span class="ident">Tasks::default</span>(),
             <span class="ident">views</span>: <span class="ident">Views::default</span>(),
         }

@@ -188,6 +188,18 @@
 <span id="188">188</span>
 <span id="189">189</span>
 <span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">env</span>::{<span class="ident">current_dir</span>, <span class="ident">set_current_dir</span>},
     <span class="ident">io</span>::{<span class="ident">stdout</span>, <span class="ident">Write</span>},
@@ -269,8 +281,20 @@
             <span class="ident">cargo_args</span>: <span class="string">&quot;--no-default-features&quot;</span>,
         },
         <span class="ident">TestSuite</span> {
+            <span class="ident">folder</span>: <span class="string">&quot;crates/bonsaidb-local&quot;</span>,
+            <span class="ident">cargo_args</span>: <span class="string">&quot;--no-default-features --features encryption&quot;</span>,
+        },
+        <span class="ident">TestSuite</span> {
+            <span class="ident">folder</span>: <span class="string">&quot;crates/bonsaidb-local&quot;</span>,
+            <span class="ident">cargo_args</span>: <span class="string">&quot;--no-default-features --features multiuser&quot;</span>,
+        },
+        <span class="ident">TestSuite</span> {
             <span class="ident">folder</span>: <span class="string">&quot;crates/bonsaidb-server&quot;</span>,
             <span class="ident">cargo_args</span>: <span class="string">&quot;--no-default-features&quot;</span>,
+        },
+        <span class="ident">TestSuite</span> {
+            <span class="ident">folder</span>: <span class="string">&quot;crates/bonsaidb-server&quot;</span>,
+            <span class="ident">cargo_args</span>: <span class="string">&quot;--no-default-features --features encryption&quot;</span>,
         },
         <span class="ident">TestSuite</span> {
             <span class="ident">folder</span>: <span class="string">&quot;crates/bonsaidb-server&quot;</span>,
@@ -318,7 +342,7 @@
         );
         <span class="ident">set_current_dir</span>(<span class="ident">executing_dir</span>.<span class="ident">join</span>(<span class="ident">test</span>.<span class="ident">folder</span>))<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">Cmd::new</span>(<span class="string">&quot;cargo&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">clippy</span>.<span class="ident">arg</span>(<span class="string">&quot;clippy&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">clippy</span>.<span class="ident">arg</span>(<span class="string">&quot;clippy&quot;</span>).<span class="ident">arg</span>(<span class="string">&quot;--tests&quot;</span>);
         <span class="kw">for</span> <span class="ident">arg</span> <span class="kw">in</span> <span class="ident">test</span>.<span class="ident">cargo_args</span>.<span class="ident">split</span>(<span class="string">&#39; &#39;</span>) {
             <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">clippy</span>.<span class="ident">arg</span>(<span class="ident">arg</span>);
         }
@@ -331,12 +355,12 @@
             <span class="string">&quot;Running tests for folder {} and arguments {}&quot;</span>,
             <span class="ident">test</span>.<span class="ident">folder</span>, <span class="ident">test</span>.<span class="ident">cargo_args</span>
         );
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">Cmd::new</span>(<span class="string">&quot;cargo&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">clippy</span>.<span class="ident">arg</span>(<span class="string">&quot;test&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cargo</span> <span class="op">=</span> <span class="ident">Cmd::new</span>(<span class="string">&quot;cargo&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cargo</span> <span class="op">=</span> <span class="ident">cargo</span>.<span class="ident">arg</span>(<span class="string">&quot;test&quot;</span>);
         <span class="kw">for</span> <span class="ident">arg</span> <span class="kw">in</span> <span class="ident">test</span>.<span class="ident">cargo_args</span>.<span class="ident">split</span>(<span class="string">&#39; &#39;</span>) {
-            <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">clippy</span>.<span class="ident">arg</span>(<span class="ident">arg</span>);
+            <span class="ident">cargo</span> <span class="op">=</span> <span class="ident">cargo</span>.<span class="ident">arg</span>(<span class="ident">arg</span>);
         }
-        <span class="ident">clippy</span>.<span class="ident">run</span>()<span class="question-mark">?</span>;
+        <span class="ident">cargo</span>.<span class="ident">run</span>()<span class="question-mark">?</span>;
     }
 
     <span class="macro">println!</span>(<span class="string">&quot;Running clippy for wasm32 client&quot;</span>);

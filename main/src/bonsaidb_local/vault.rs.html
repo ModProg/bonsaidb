@@ -769,6 +769,11 @@
 <span id="769">769</span>
 <span id="770">770</span>
 <span id="771">771</span>
+<span id="772">772</span>
+<span id="773">773</span>
+<span id="774">774</span>
+<span id="775">775</span>
+<span id="776">776</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Encryption and secret management.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! `BonsaiDb`&#39;s vault is the core of encryption and secret management. To offer</span>
@@ -1148,10 +1153,15 @@
         <span class="ident">payload</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
         <span class="ident">permissions</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
     ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="ident">VaultPayload::from_slice</span>(<span class="ident">payload</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">payload</span>) <span class="op">=</span> <span class="ident">VaultPayload::from_slice</span>(<span class="ident">payload</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
             <span class="ident">Error::Encryption</span>(<span class="macro">format!</span>(<span class="string">&quot;error deserializing encrypted payload: {:?}&quot;</span>, <span class="ident">err</span>))
-        })<span class="question-mark">?</span>;
-        <span class="self">self</span>.<span class="ident">decrypt</span>(<span class="kw-2">&amp;</span><span class="ident">payload</span>, <span class="ident">permissions</span>)
+        }) {
+            <span class="self">self</span>.<span class="ident">decrypt</span>(<span class="kw-2">&amp;</span><span class="ident">payload</span>, <span class="ident">permissions</span>)
+        } <span class="kw">else</span> {
+            <span class="comment">// If we can&#39;t parse it as a VaultPayload, it might have been stored</span>
+            <span class="comment">// decrypted originally.</span>
+            <span class="prelude-val">Ok</span>(<span class="ident">payload</span>.<span class="ident">to_vec</span>())
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">decrypt</span>(

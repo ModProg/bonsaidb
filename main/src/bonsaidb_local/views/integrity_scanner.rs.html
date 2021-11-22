@@ -248,12 +248,12 @@
                 .<span class="ident">tree</span>(<span class="self">self</span>.<span class="ident">database</span>.<span class="ident">collection_tree</span>::<span class="op">&lt;</span><span class="ident">Versioned</span>, <span class="kw">_</span><span class="op">&gt;</span>(
                     <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
                     <span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>),
-                ))<span class="question-mark">?</span>;
+                )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">view_versions_tree</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">collection_tree</span>::<span class="op">&lt;</span><span class="ident">Unversioned</span>, <span class="kw">_</span><span class="op">&gt;</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
             <span class="ident">view_versions_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>),
-        );
+        )<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">view_versions</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">roots</span>().<span class="ident">tree</span>(<span class="ident">view_versions_tree</span>.<span class="ident">clone</span>())<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">document_map</span> <span class="op">=</span>
@@ -262,12 +262,12 @@
                 .<span class="ident">tree</span>(<span class="self">self</span>.<span class="ident">database</span>.<span class="ident">collection_tree</span>::<span class="op">&lt;</span><span class="ident">Unversioned</span>, <span class="kw">_</span><span class="op">&gt;</span>(
                     <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
                     <span class="ident">view_document_map_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>),
-                ))<span class="question-mark">?</span>;
+                )<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">invalidated_entries_tree</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">collection_tree</span>::<span class="op">&lt;</span><span class="ident">Unversioned</span>, <span class="kw">_</span><span class="op">&gt;</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">collection</span>,
             <span class="ident">view_invalidated_docs_tree_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>),
-        );
+        )<span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="ident">view_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_name</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">view_version</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">scan</span>.<span class="ident">view_version</span>;

@@ -143,6 +143,11 @@
 <span id="143">143</span>
 <span id="144">144</span>
 <span id="145">145</span>
+<span id="146">146</span>
+<span id="147">147</span>
+<span id="148">148</span>
+<span id="149">149</span>
+<span id="150">150</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">sync::Arc</span>, <span class="ident">time::Duration</span>};
 
 <span class="kw">use</span> <span class="ident">async_acme::cache::AcmeCache</span>;
@@ -152,6 +157,7 @@
     <span class="ident">define_basic_unique_mapped_view</span>,
     <span class="ident">document::KeyId</span>,
     <span class="ident">schema</span>::{<span class="ident">Collection</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">Schematic</span>},
+    <span class="ident">ENCRYPTION_ENABLED</span>,
 };
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -165,7 +171,11 @@
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">AcmeAccount</span> {
     <span class="kw">fn</span> <span class="ident">encryption_key</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">KeyId::Master</span>)
+        <span class="kw">if</span> <span class="ident">ENCRYPTION_ENABLED</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">KeyId::Master</span>)
+        } <span class="kw">else</span> {
+            <span class="prelude-val">None</span>
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
