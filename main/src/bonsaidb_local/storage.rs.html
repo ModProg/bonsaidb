@@ -912,6 +912,15 @@
 <span id="912">912</span>
 <span id="913">913</span>
 <span id="914">914</span>
+<span id="915">915</span>
+<span id="916">916</span>
+<span id="917">917</span>
+<span id="918">918</span>
+<span id="919">919</span>
+<span id="920">920</span>
+<span id="921">921</span>
+<span id="922">922</span>
+<span id="923">923</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>,
     <span class="ident">collections::HashMap</span>,
@@ -929,19 +938,13 @@
     <span class="ident">admin</span>::{
         <span class="self">self</span>,
         <span class="ident">database</span>::{<span class="self">self</span>, <span class="ident">ByName</span>, <span class="ident">Database</span> <span class="kw">as</span> <span class="ident">DatabaseRecord</span>},
-        <span class="ident">password_config::PasswordConfig</span>,
-        <span class="ident">user::User</span>,
-        <span class="ident">Admin</span>, <span class="ident">PermissionGroup</span>, <span class="ident">Role</span>, <span class="ident">ADMIN_DATABASE_NAME</span>,
+        <span class="ident">Admin</span>, <span class="ident">ADMIN_DATABASE_NAME</span>,
     },
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>, <span class="ident">Sort</span>, <span class="ident">StorageConnection</span>},
-    <span class="ident">custodian_password</span>::{<span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>, <span class="ident">ServerRegistration</span>},
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">KeyId</span>},
     <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>},
     <span class="ident">permissions::Permissions</span>,
-    <span class="ident">schema</span>::{
-        <span class="ident">view::map</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">MappedValue</span>, <span class="ident">NamedCollection</span>,
-        <span class="ident">NamedReference</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>, <span class="ident">ViewName</span>,
-    },
+    <span class="ident">schema</span>::{<span class="ident">view::map</span>, <span class="ident">CollectionName</span>, <span class="ident">MappedValue</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>, <span class="ident">ViewName</span>},
     <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
 };
 <span class="kw">use</span> <span class="ident">futures::TryFutureExt</span>;
@@ -958,6 +961,13 @@
     <span class="ident">fs</span>::{<span class="self">self</span>, <span class="ident">File</span>},
     <span class="ident">io</span>::{<span class="ident">AsyncReadExt</span>, <span class="ident">AsyncWriteExt</span>},
     <span class="ident">sync</span>::{<span class="ident">Mutex</span>, <span class="ident">RwLock</span>},
+};
+
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
+    <span class="ident">admin</span>::{<span class="ident">password_config::PasswordConfig</span>, <span class="ident">user::User</span>, <span class="ident">PermissionGroup</span>, <span class="ident">Role</span>},
+    <span class="ident">custodian_password</span>::{<span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>, <span class="ident">ServerRegistration</span>},
+    <span class="ident">schema</span>::{<span class="ident">CollectionDocument</span>, <span class="ident">NamedCollection</span>, <span class="ident">NamedReference</span>},
 };
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -1334,6 +1344,7 @@
         <span class="prelude-val">Ok</span>((<span class="ident">user_id</span>, <span class="ident">login</span>, <span class="ident">response</span>))
     }
 
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">update_user_with_named_id</span><span class="op">&lt;</span>
         <span class="lifetime">&#39;user</span>,
         <span class="lifetime">&#39;other</span>,
@@ -1633,6 +1644,7 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">username</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_user</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">admin</span>()
@@ -1644,6 +1656,7 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">user</span>, <span class="ident">password_request</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_user_password</span><span class="op">&lt;</span><span class="lifetime">&#39;user</span>, <span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;user</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">user</span>: <span class="ident">U</span>,
@@ -1669,6 +1682,7 @@
         <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>,
         <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">user</span>, <span class="ident">password_finalization</span>))
     )]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">finish_set_user_password</span><span class="op">&lt;</span><span class="lifetime">&#39;user</span>, <span class="ident">U</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;user</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">user</span>: <span class="ident">U</span>,
@@ -1695,6 +1709,7 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">user</span>, <span class="ident">permission_group</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">add_permission_group_to_user</span><span class="op">&lt;</span>
         <span class="lifetime">&#39;user</span>,
         <span class="lifetime">&#39;group</span>,
@@ -1721,6 +1736,7 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">user</span>, <span class="ident">permission_group</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">remove_permission_group_from_user</span><span class="op">&lt;</span>
         <span class="lifetime">&#39;user</span>,
         <span class="lifetime">&#39;group</span>,
@@ -1744,6 +1760,7 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">user</span>, <span class="ident">role</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">add_role_to_user</span><span class="op">&lt;</span>
         <span class="lifetime">&#39;user</span>,
         <span class="lifetime">&#39;group</span>,
@@ -1766,6 +1783,7 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">user</span>, <span class="ident">role</span>)))]</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">remove_role_from_user</span><span class="op">&lt;</span>
         <span class="lifetime">&#39;user</span>,
         <span class="lifetime">&#39;group</span>,
