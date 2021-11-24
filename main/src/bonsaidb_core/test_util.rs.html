@@ -2043,6 +2043,55 @@
 <span id="2043">2043</span>
 <span id="2044">2044</span>
 <span id="2045">2045</span>
+<span id="2046">2046</span>
+<span id="2047">2047</span>
+<span id="2048">2048</span>
+<span id="2049">2049</span>
+<span id="2050">2050</span>
+<span id="2051">2051</span>
+<span id="2052">2052</span>
+<span id="2053">2053</span>
+<span id="2054">2054</span>
+<span id="2055">2055</span>
+<span id="2056">2056</span>
+<span id="2057">2057</span>
+<span id="2058">2058</span>
+<span id="2059">2059</span>
+<span id="2060">2060</span>
+<span id="2061">2061</span>
+<span id="2062">2062</span>
+<span id="2063">2063</span>
+<span id="2064">2064</span>
+<span id="2065">2065</span>
+<span id="2066">2066</span>
+<span id="2067">2067</span>
+<span id="2068">2068</span>
+<span id="2069">2069</span>
+<span id="2070">2070</span>
+<span id="2071">2071</span>
+<span id="2072">2072</span>
+<span id="2073">2073</span>
+<span id="2074">2074</span>
+<span id="2075">2075</span>
+<span id="2076">2076</span>
+<span id="2077">2077</span>
+<span id="2078">2078</span>
+<span id="2079">2079</span>
+<span id="2080">2080</span>
+<span id="2081">2081</span>
+<span id="2082">2082</span>
+<span id="2083">2083</span>
+<span id="2084">2084</span>
+<span id="2085">2085</span>
+<span id="2086">2086</span>
+<span id="2087">2087</span>
+<span id="2088">2088</span>
+<span id="2089">2089</span>
+<span id="2090">2090</span>
+<span id="2091">2091</span>
+<span id="2092">2092</span>
+<span id="2093">2093</span>
+<span id="2094">2094</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::missing_panics_doc</span>)]</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -2056,6 +2105,8 @@
 <span class="kw">use</span> <span class="ident">itertools::Itertools</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::admin</span>::{<span class="ident">PermissionGroup</span>, <span class="ident">Role</span>, <span class="ident">User</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">admin::Database</span>,
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">StorageConnection</span>},
@@ -2063,16 +2114,10 @@
     <span class="ident">kv::Kv</span>,
     <span class="ident">limits</span>::{<span class="ident">LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT</span>, <span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span>},
     <span class="ident">schema</span>::{
-        <span class="ident">view</span>, <span class="ident">Collection</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">MapResult</span>, <span class="ident">MappedValue</span>, <span class="ident">Name</span>, <span class="ident">Schema</span>,
-        <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>,
+        <span class="ident">view</span>, <span class="ident">Collection</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">MapResult</span>, <span class="ident">MappedValue</span>, <span class="ident">Name</span>,
+        <span class="ident">NamedCollection</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>, <span class="ident">View</span>,
     },
     <span class="ident">Error</span>, <span class="ident">ENCRYPTION_ENABLED</span>,
-};
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
-<span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">admin</span>::{<span class="ident">PermissionGroup</span>, <span class="ident">Role</span>, <span class="ident">User</span>},
-    <span class="ident">schema::NamedCollection</span>,
 };
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>)]</span>
@@ -2499,7 +2544,15 @@
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Default</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Unique</span> {
-    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">u32</span>,
+    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">String</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Unique</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Display</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="self">Self</span> {
+            <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">to_string</span>(),
+        }
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">Unique</span> {
@@ -2517,7 +2570,7 @@
 
 <span class="kw">impl</span> <span class="ident">View</span> <span class="kw">for</span> <span class="ident">UniqueValue</span> {
     <span class="kw">type</span> <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">Unique</span>;
-    <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="ident">u32</span>;
+    <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="ident">String</span>;
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> ();
 
     <span class="kw">fn</span> <span class="ident">unique</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
@@ -2536,6 +2589,10 @@
         <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">document</span>.<span class="ident">emit_key</span>(<span class="ident">entry</span>.<span class="ident">value</span>)])
     }
+}
+
+<span class="kw">impl</span> <span class="ident">NamedCollection</span> <span class="kw">for</span> <span class="ident">Unique</span> {
+    <span class="kw">type</span> <span class="ident">ByNameView</span> <span class="op">=</span> <span class="ident">UniqueValue</span>;
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TestDirectory</span>(<span class="kw">pub</span> <span class="ident">PathBuf</span>);
@@ -2632,6 +2689,7 @@
     <span class="ident">ViewAccessPolicies</span>,
     <span class="ident">Encryption</span>,
     <span class="ident">UniqueViews</span>,
+    <span class="ident">NamedCollection</span>,
     <span class="ident">PubSubSimple</span>,
     <span class="ident">UserManagement</span>,
     <span class="ident">PubSubMultipleSubscribers</span>,
@@ -2812,6 +2870,15 @@
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::unique_view_tests</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="ident">harness</span>.<span class="ident">shutdown</span>().<span class="kw">await</span>
+        }
+
+        <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">named_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+            <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::NamedCollection</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::named_collection_tests</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="ident">harness</span>.<span class="ident">shutdown</span>().<span class="kw">await</span>
         }
 
@@ -3498,13 +3565,13 @@
 }
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unique_view_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">let</span> <span class="ident">first_doc</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>().<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Unique</span> { <span class="ident">value</span>: <span class="number">1</span> }).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">first_doc</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>().<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Unique::new</span>(<span class="string">&quot;1&quot;</span>)).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">Error::UniqueKeyViolation</span> {
         <span class="ident">view</span>,
         <span class="ident">existing_document</span>,
         <span class="ident">conflicting_document</span>,
-    }) <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>().<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Unique</span> { <span class="ident">value</span>: <span class="number">1</span> }).<span class="kw">await</span>
+    }) <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>().<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Unique::new</span>(<span class="string">&quot;1&quot;</span>)).<span class="kw">await</span>
     {
         <span class="macro">assert_eq!</span>(<span class="ident">view</span>, <span class="ident">UniqueValue</span>.<span class="ident">view_name</span>()<span class="question-mark">?</span>);
         <span class="macro">assert_eq!</span>(<span class="ident">existing_document</span>.<span class="ident">id</span>, <span class="ident">first_doc</span>.<span class="ident">id</span>);
@@ -3516,10 +3583,10 @@
         <span class="macro">unreachable!</span>(<span class="string">&quot;unique key violation not triggered&quot;</span>);
     }
 
-    <span class="kw">let</span> <span class="ident">second_doc</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>().<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Unique</span> { <span class="ident">value</span>: <span class="number">2</span> }).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">second_doc</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>().<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Unique::new</span>(<span class="string">&quot;2&quot;</span>)).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">second_doc</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>().<span class="ident">get</span>(<span class="ident">second_doc</span>.<span class="ident">id</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">unwrap</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">second_doc</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
-    <span class="ident">contents</span>.<span class="ident">value</span> <span class="op">=</span> <span class="number">1</span>;
+    <span class="ident">contents</span>.<span class="ident">value</span> <span class="op">=</span> <span class="ident">String::from</span>(<span class="string">&quot;1&quot;</span>);
     <span class="ident">second_doc</span>.<span class="ident">set_contents</span>(<span class="kw-2">&amp;</span><span class="ident">contents</span>)<span class="question-mark">?</span>;
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">Error::UniqueKeyViolation</span> {
         <span class="ident">view</span>,
@@ -3533,6 +3600,37 @@
     } <span class="kw">else</span> {
         <span class="macro">unreachable!</span>(<span class="string">&quot;unique key violation not triggered&quot;</span>);
     }
+
+    <span class="prelude-val">Ok</span>(())
+}
+
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">named_collection_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="ident">Unique::new</span>(<span class="string">&quot;0&quot;</span>).<span class="ident">insert_into</span>(<span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">original_entry</span> <span class="op">=</span> <span class="ident">Unique::entry</span>(<span class="string">&quot;1&quot;</span>, <span class="ident">db</span>)
+        .<span class="ident">update_with</span>(<span class="op">|</span><span class="ident">_existing</span><span class="op">|</span> <span class="macro">unreachable!</span>())
+        .<span class="ident">or_insert_with</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Unique::new</span>(<span class="string">&quot;1&quot;</span>))
+        .<span class="kw">await</span><span class="question-mark">?</span>
+        .<span class="ident">expect</span>(<span class="string">&quot;Document not inserted&quot;</span>);
+
+    <span class="kw">let</span> <span class="ident">updated</span> <span class="op">=</span> <span class="ident">Unique::entry</span>(<span class="string">&quot;1&quot;</span>, <span class="ident">db</span>)
+        .<span class="ident">update_with</span>(<span class="op">|</span><span class="ident">existing</span><span class="op">|</span> {
+            <span class="ident">existing</span>.<span class="ident">value</span> <span class="op">=</span> <span class="ident">String::from</span>(<span class="string">&quot;2&quot;</span>);
+        })
+        .<span class="ident">or_insert_with</span>(<span class="op">|</span><span class="op">|</span> <span class="macro">unreachable!</span>())
+        .<span class="kw">await</span><span class="question-mark">?</span>
+        .<span class="ident">unwrap</span>();
+    <span class="macro">assert_eq!</span>(<span class="ident">original_entry</span>.<span class="ident">id</span>, <span class="ident">updated</span>.<span class="ident">id</span>);
+    <span class="macro">assert_ne!</span>(<span class="ident">original_entry</span>.<span class="ident">contents</span>.<span class="ident">value</span>, <span class="ident">updated</span>.<span class="ident">contents</span>.<span class="ident">value</span>);
+
+    <span class="kw">let</span> <span class="ident">retrieved</span> <span class="op">=</span> <span class="ident">Unique::entry</span>(<span class="string">&quot;2&quot;</span>, <span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">unwrap</span>();
+    <span class="macro">assert_eq!</span>(<span class="ident">retrieved</span>.<span class="ident">contents</span>.<span class="ident">value</span>, <span class="ident">updated</span>.<span class="ident">contents</span>.<span class="ident">value</span>);
+
+    <span class="kw">let</span> <span class="ident">conflict</span> <span class="op">=</span> <span class="ident">Unique::entry</span>(<span class="string">&quot;2&quot;</span>, <span class="ident">db</span>)
+        .<span class="ident">update_with</span>(<span class="op">|</span><span class="ident">existing</span><span class="op">|</span> {
+            <span class="ident">existing</span>.<span class="ident">value</span> <span class="op">=</span> <span class="ident">String::from</span>(<span class="string">&quot;0&quot;</span>);
+        })
+        .<span class="kw">await</span>;
+    <span class="macro">assert!</span>(<span class="macro">matches!</span>(<span class="ident">conflict</span>, <span class="prelude-val">Err</span>(<span class="ident">Error::UniqueKeyViolation</span> { .. })));
 
     <span class="prelude-val">Ok</span>(())
 }

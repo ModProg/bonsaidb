@@ -110,9 +110,9 @@
 <span id="110">110</span>
 <span id="111">111</span>
 <span id="112">112</span>
-<span id="113">113</span>
-<span id="114">114</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::collections::HashMap</span>;
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
 
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">document::KeyId</span>,
@@ -123,6 +123,8 @@
     <span class="ident">tree</span>::{<span class="ident">AnyTreeRoot</span>, <span class="ident">Root</span>, <span class="ident">Unversioned</span>, <span class="ident">Versioned</span>},
 };
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::vault</span>::{<span class="ident">TreeVault</span>, <span class="ident">Vault</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">database::document_tree_name</span>,
     <span class="ident">views</span>::{
@@ -131,12 +133,6 @@
     },
     <span class="ident">Error</span>,
 };
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::vault</span>::{<span class="ident">TreeVault</span>, <span class="ident">Vault</span>};
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">OpenTrees</span> {

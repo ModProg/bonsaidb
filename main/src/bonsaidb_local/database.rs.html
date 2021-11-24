@@ -1423,7 +1423,6 @@
 <span id="1423">1423</span>
 <span id="1424">1424</span>
 <span id="1425">1425</span>
-<span id="1426">1426</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>, <span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">convert::Infallible</span>, <span class="ident">path::Path</span>, <span class="ident">sync::Arc</span>, <span class="ident">u8</span>,
 };
@@ -1453,6 +1452,8 @@
     <span class="ident">AbortError</span>, <span class="ident">Buffer</span>, <span class="ident">ExecutingTransaction</span>, <span class="ident">Roots</span>, <span class="ident">Tree</span>,
 };
 
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
+<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::vault::TreeVault</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">config::Configuration</span>,
     <span class="ident">error::Error</span>,
@@ -1465,9 +1466,6 @@
     },
     <span class="ident">Storage</span>,
 };
-
-<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
-<span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::vault::TreeVault</span>;
 
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">kv</span>;
 
