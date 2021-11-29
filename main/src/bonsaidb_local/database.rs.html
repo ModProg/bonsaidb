@@ -1423,6 +1423,19 @@
 <span id="1423">1423</span>
 <span id="1424">1424</span>
 <span id="1425">1425</span>
+<span id="1426">1426</span>
+<span id="1427">1427</span>
+<span id="1428">1428</span>
+<span id="1429">1429</span>
+<span id="1430">1430</span>
+<span id="1431">1431</span>
+<span id="1432">1432</span>
+<span id="1433">1433</span>
+<span id="1434">1434</span>
+<span id="1435">1435</span>
+<span id="1436">1436</span>
+<span id="1437">1437</span>
+<span id="1438">1438</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>, <span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">convert::Infallible</span>, <span class="ident">path::Path</span>, <span class="ident">sync::Arc</span>, <span class="ident">u8</span>,
 };
@@ -1431,7 +1444,7 @@
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>, <span class="ident">Sort</span>, <span class="ident">StorageConnection</span>},
     <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">Header</span>, <span class="ident">KeyId</span>},
-    <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Kv</span>, <span class="ident">Output</span>},
+    <span class="ident">kv</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Kv</span>, <span class="ident">Output</span>, <span class="ident">Timestamp</span>},
     <span class="ident">limits</span>::{<span class="ident">LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT</span>, <span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span>},
     <span class="ident">permissions::Permissions</span>,
     <span class="ident">schema</span>::{
@@ -2186,8 +2199,10 @@
         <span class="prelude-val">Ok</span>(<span class="ident">tree</span>)
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">update_key_expiration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">update</span>: <span class="ident">kv::ExpirationUpdate</span>) {
-        <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">context</span>.<span class="ident">update_key_expiration</span>(<span class="ident">update</span>);
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">update_key_expiration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tree_key</span>: <span class="ident">String</span>, <span class="ident">expiration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>) {
+        <span class="self">self</span>.<span class="ident">data</span>
+            .<span class="ident">context</span>
+            .<span class="ident">update_key_expiration</span>(<span class="ident">tree_key</span>, <span class="ident">expiration</span>);
     }
 }
 
@@ -2625,28 +2640,39 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">update_key_expiration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">update</span>: <span class="ident">kv::ExpirationUpdate</span>) {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">update_key_expiration</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">tree_key</span>: <span class="ident">String</span>, <span class="ident">expiration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>) {
+        <span class="kw">let</span> (<span class="ident">update</span>, <span class="ident">completion_receiver</span>) <span class="op">=</span> <span class="ident">kv::ExpirationUpdate::new</span>(<span class="ident">tree_key</span>, <span class="ident">expiration</span>);
+
+        <span class="comment">// Assume that the expiration thread is initialized, as it is generally the positive-flow.</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">update</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">update</span>);
         {
             <span class="kw">let</span> <span class="ident">sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">kv_expirer</span>.<span class="ident">read</span>().<span class="ident">unwrap</span>();
             <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sender</span>) <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">as_ref</span>() {
-                <span class="ident">drop</span>(<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">update</span>));
+                <span class="ident">drop</span>(<span class="ident">sender</span>.<span class="ident">send</span>(<span class="ident">update</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()));
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">expiration</span>.<span class="ident">is_none</span>() {
+                <span class="comment">// If there is no thread, this key can&#39;t be waiting to be</span>
+                <span class="comment">// deleted.</span>
                 <span class="kw">return</span>;
             }
         }
 
         <span class="comment">// If we fall through, we need to initialize the expirer task</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">kv_expirer</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">kv_sender</span>) <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">as_ref</span>() {
-            <span class="ident">drop</span>(<span class="ident">kv_sender</span>.<span class="ident">send</span>(<span class="ident">update</span>));
-        } <span class="kw">else</span> {
-            <span class="kw">let</span> (<span class="ident">kv_sender</span>, <span class="ident">kv_expirer_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
-            <span class="ident">kv_sender</span>.<span class="ident">send</span>(<span class="ident">update</span>).<span class="ident">unwrap</span>();
-            <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
-            <span class="ident">tokio::task::spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
-                <span class="ident">kv::expiration_thread</span>(<span class="ident">context</span>, <span class="ident">kv_expirer_receiver</span>)
-            });
-            <span class="kw-2">*</span><span class="ident">sender</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">kv_sender</span>);
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">update</span>) <span class="op">=</span> <span class="ident">update</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sender</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">kv_expirer</span>.<span class="ident">write</span>().<span class="ident">unwrap</span>();
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">kv_sender</span>) <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">as_ref</span>() {
+                <span class="ident">drop</span>(<span class="ident">kv_sender</span>.<span class="ident">send</span>(<span class="ident">update</span>));
+            } <span class="kw">else</span> {
+                <span class="kw">let</span> (<span class="ident">kv_sender</span>, <span class="ident">kv_expirer_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
+                <span class="ident">kv_sender</span>.<span class="ident">send</span>(<span class="ident">update</span>).<span class="ident">unwrap</span>();
+                <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
+                <span class="ident">tokio::task::spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
+                    <span class="ident">kv::expiration_thread</span>(<span class="ident">context</span>, <span class="ident">kv_expirer_receiver</span>)
+                });
+                <span class="kw-2">*</span><span class="ident">sender</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">kv_sender</span>);
+            }
         }
+
+        <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">completion_receiver</span>.<span class="ident">recv</span>();
     }
 }
 
