@@ -426,6 +426,9 @@
 <span id="426">426</span>
 <span id="427">427</span>
 <span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -438,7 +441,10 @@
 
 <span class="doccomment">/// Types for defining a `Map` within a `View`.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">map</span>;
-<span class="kw">use</span> <span class="ident">map</span>::{<span class="ident">Key</span>, <span class="ident">Map</span>, <span class="ident">MappedValue</span>};
+<span class="kw">use</span> <span class="ident">map</span>::{<span class="ident">Map</span>, <span class="ident">MappedValue</span>};
+
+<span class="kw">mod</span> <span class="ident">key</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::key</span>::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Errors that arise when interacting with views.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">thiserror::Error</span>, <span class="ident">Debug</span>)]</span>
