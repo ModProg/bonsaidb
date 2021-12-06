@@ -159,40 +159,40 @@
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">bonsaidb_core::Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Error</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">err</span> {
-            <span class="ident">Error::Core</span>(<span class="ident">core</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">core</span>,
-            <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Database</span>(<span class="ident">other</span>.<span class="ident">to_string</span>()),
+            <span class="ident">Error::Core</span>(<span class="ident">core</span>) =&gt; <span class="ident">core</span>,
+            <span class="ident">other</span> =&gt; <span class="ident"><span class="self">Self</span>::Database</span>(<span class="ident">other</span>.<span class="ident">to_string</span>()),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">Arc::try_unwrap</span>(<span class="ident">err</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">err</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">still_wrapped</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Error::Job</span>(<span class="ident">still_wrapped</span>),
+            <span class="prelude-val">Ok</span>(<span class="ident">err</span>) =&gt; <span class="ident">err</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">still_wrapped</span>) =&gt; <span class="ident">Error::Job</span>(<span class="ident">still_wrapped</span>),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">FromUtf8Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">FromUtf8Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">FromUtf8Error</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident">bonsaidb_core::Error::InvalidUnicode</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()))
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">InvalidNameError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">InvalidNameError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">InvalidNameError</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident">bonsaidb_core::Error::from</span>(<span class="ident">err</span>))
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">AbortError</span><span class="op">&lt;</span><span class="ident">Infallible</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">AbortError</span><span class="op">&lt;</span><span class="ident">Infallible</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">AbortError</span><span class="op">&lt;</span><span class="ident">Infallible</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">err</span> {
-            <span class="ident">AbortError::Nebari</span>(<span class="ident">error</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Nebari</span>(<span class="ident">error</span>),
-            <span class="ident">AbortError::Other</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+            <span class="ident">AbortError::Nebari</span>(<span class="ident">error</span>) =&gt; <span class="ident"><span class="self">Self</span>::Nebari</span>(<span class="ident">error</span>),
+            <span class="ident">AbortError::Other</span>(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
         }
     }
 }
@@ -202,10 +202,10 @@
     <span class="kw">use</span> <span class="ident">serde::ser::Error</span> <span class="kw">as</span> <span class="kw">_</span>;
     <span class="kw">let</span> <span class="ident">err</span>: <span class="ident">bonsaidb_core::Error</span> <span class="op">=</span> <span class="ident">Error::Serialization</span>(<span class="ident">pot::Error::custom</span>(<span class="string">&quot;mymessage&quot;</span>)).<span class="ident">into</span>();
     <span class="kw">match</span> <span class="ident">err</span> {
-        <span class="ident">bonsaidb_core::Error::Database</span>(<span class="ident">storage_error</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">bonsaidb_core::Error::Database</span>(<span class="ident">storage_error</span>) =&gt; {
             <span class="macro">assert!</span>(<span class="ident">storage_error</span>.<span class="ident">contains</span>(<span class="string">&quot;mymessage&quot;</span>));
         }
-        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+        <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
     }
 }
 </code></pre></div>

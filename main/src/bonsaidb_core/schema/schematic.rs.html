@@ -194,7 +194,7 @@
 
 <span class="kw">impl</span> <span class="ident">Schematic</span> {
     <span class="doccomment">/// Adds the collection `C` and its views.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">define_collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">define_collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">C::collection_name</span>()<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">contained_collections</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>) {
             <span class="prelude-val">Err</span>(<span class="ident">Error::CollectionAlreadyDefined</span>)
@@ -210,7 +210,7 @@
     }
 
     <span class="doccomment">/// Adds the view `V`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">define_view</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">View</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">view</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">define_view</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">View</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">view</span>: <span class="ident">V</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">view</span>.<span class="ident">view_name</span>()<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">view</span>.<span class="ident">collection</span>()<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">unique</span> <span class="op">=</span> <span class="ident">view</span>.<span class="ident">unique</span>();
@@ -235,19 +235,19 @@
 
     <span class="doccomment">/// Returns `true` if this schema contains the collection `C`.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">collections_by_type_id</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>())
     }
 
     <span class="doccomment">/// Returns `true` if this schema contains the collection `C`.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains_collection_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">contains_collection_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">contained_collections</span>.<span class="ident">contains</span>(<span class="ident">collection</span>)
     }
 
     <span class="doccomment">/// Looks up a [`view::Serialized`] by name.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view_by_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view_by_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">views_by_name</span>
             .<span class="ident">get</span>(<span class="ident">name</span>)
             .<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">type_id</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">views</span>.<span class="ident">get</span>(<span class="ident">type_id</span>))
@@ -256,12 +256,12 @@
 
     <span class="doccomment">/// Looks up a [`view::Serialized`] through the the type `V`.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">View</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">view</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">View</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">views</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>()).<span class="ident">map</span>(<span class="ident">AsRef::as_ref</span>)
     }
 
     <span class="doccomment">/// Iterates over all registered views.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">views</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">views</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl</span> <span class="ident">Iterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">views</span>.<span class="ident">values</span>().<span class="ident">map</span>(<span class="ident">AsRef::as_ref</span>)
     }
 
@@ -270,7 +270,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">views_in_collection</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">views_by_collection</span>.<span class="ident">get</span>(<span class="ident">collection</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">view_ids</span><span class="op">|</span> {
             <span class="ident">view_ids</span>
                 .<span class="ident">iter</span>()
@@ -284,7 +284,7 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unique_views_in_collection</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">view::Serialized</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">unique_views_by_collection</span>
             .<span class="ident">get</span>(<span class="ident">collection</span>)
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">view_ids</span><span class="op">|</span> {
@@ -297,19 +297,19 @@
 
     <span class="doccomment">/// Returns a collection&#39;s default encryption key, if one was defined.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encryption_key_for_collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">encryption_key_for_collection</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">collection_encryption_keys</span>.<span class="ident">get</span>(<span class="ident">collection</span>)
     }
 
     <span class="doccomment">/// Returns a list of all collections contained in this schematic.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">collections</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CollectionName</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">collections</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">CollectionName</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">contained_collections</span>.<span class="ident">iter</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>()
     }
 }
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
-<span class="kw">fn</span> <span class="ident">schema_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">schema_tests</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">use</span> <span class="kw">crate</span>::{
         <span class="ident">schema::Schema</span>,
         <span class="ident">test_util</span>::{<span class="ident">Basic</span>, <span class="ident">BasicCount</span>},

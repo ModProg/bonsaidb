@@ -2146,7 +2146,7 @@
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">Server</span> <span class="op">=</span> <span class="ident">CustomServer</span><span class="op">&lt;</span>()<span class="op">&gt;</span>;
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">data</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>(),
         }
@@ -2179,7 +2179,7 @@
 <span class="kw">struct</span> <span class="ident">CachedCertifiedKey</span>(<span class="ident">parking_lot::Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">CertifiedKey</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">CachedCertifiedKey</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;CachedCertifiedKey&quot;</span>).<span class="ident">finish</span>()
     }
 }
@@ -2187,14 +2187,14 @@
 <span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">CachedCertifiedKey</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">parking_lot::Mutex</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">CertifiedKey</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Opens a server using `directory` for storage.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">directory</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">configuration</span>: <span class="ident">Configuration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">directory</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">configuration</span>: <span class="ident">Configuration</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">request_processor</span> <span class="op">=</span> <span class="ident">Manager::default</span>();
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">configuration</span>.<span class="ident">request_workers</span> {
             <span class="ident">request_processor</span>.<span class="ident">spawn_worker</span>();
@@ -2236,18 +2236,18 @@
 
     <span class="doccomment">/// Returns the path to the directory that stores this server&#39;s data.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">directory</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">PathBuf</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">directory</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">PathBuf</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">directory</span>
     }
 
     <span class="doccomment">/// Returns the primary domain configured for this server.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">primary_domain</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">primary_domain</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">primary_domain</span>
     }
 
     <span class="doccomment">/// Returns the administration database.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">admin</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ServerDatabase</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">admin</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ServerDatabase</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">admin</span>().<span class="kw">await</span>;
         <span class="ident">ServerDatabase</span> {
             <span class="ident">server</span>: <span class="self">self</span>.<span class="ident">clone</span>(),
@@ -2255,7 +2255,7 @@
         }
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">hosted</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ServerDatabase</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">hosted</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ServerDatabase</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">data</span>
             .<span class="ident">storage</span>
@@ -2271,13 +2271,13 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database_without_schema</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">database_without_schema</span>(<span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">db</span>)
     }
 
     <span class="doccomment">/// Installs an X.509 certificate used for general purpose connections.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">install_self_signed_certificate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">overwrite</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">install_self_signed_certificate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">overwrite</span>: <span class="ident">bool</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">keypair</span> <span class="op">=</span> <span class="ident">KeyPair::new_self_signed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">primary_domain</span>);
 
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">certificate_chain</span>().<span class="kw">await</span>.<span class="ident">is_ok</span>() <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">overwrite</span> {
@@ -2296,12 +2296,12 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">certificate_chain</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
         <span class="ident">private_key</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">use</span> <span class="ident">fabruic::Certificate</span>;
 
         <span class="kw">let</span> <span class="ident">private_key</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">pem::parse</span>(<span class="ident">private_key</span>) {
-            <span class="prelude-val">Ok</span>(<span class="ident">pem</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">PrivateKey::unchecked_from_der</span>(<span class="ident">pem</span>.<span class="ident">contents</span>),
-            <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">PrivateKey::from_der</span>(<span class="ident">private_key</span>)<span class="question-mark">?</span>,
+            <span class="prelude-val">Ok</span>(<span class="ident">pem</span>) =&gt; <span class="ident">PrivateKey::unchecked_from_der</span>(<span class="ident">pem</span>.<span class="ident">contents</span>),
+            <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="ident">PrivateKey::from_der</span>(<span class="ident">private_key</span>)<span class="question-mark">?</span>,
         };
         <span class="kw">let</span> <span class="ident">certificates</span> <span class="op">=</span> <span class="ident">pem::parse_many</span>(<span class="kw-2">&amp;</span><span class="ident">certificate_chain</span>)<span class="question-mark">?</span>
             .<span class="ident">into_iter</span>()
@@ -2320,7 +2320,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">certificate_chain</span>: <span class="kw-2">&amp;</span><span class="ident">CertificateChain</span>,
         <span class="ident">private_key</span>: <span class="kw-2">&amp;</span><span class="ident">PrivateKey</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">hosted</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">existing_record</span>) <span class="op">=</span>
             <span class="ident">TlsCertificate::load</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">primary_domain</span>, <span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>
@@ -2343,7 +2343,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">refresh_certified_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">refresh_certified_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">certificate</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tls_certificate</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cached_key</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">primary_tls_key</span>.<span class="ident">lock</span>();
@@ -2363,7 +2363,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">tls_certificate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">tls_certificate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TlsCertificate</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">hosted</span>().<span class="kw">await</span>;
         <span class="kw">let</span> <span class="ident">certificate</span> <span class="op">=</span> <span class="ident">db</span>
             .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">TlsCertificatesByDomain</span><span class="op">&gt;</span>()
@@ -2382,7 +2382,7 @@
     }
 
     <span class="doccomment">/// Returns the current certificate chain.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">certificate_chain</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CertificateChain</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">certificate_chain</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CertificateChain</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">hosted</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">mapping</span>) <span class="op">=</span> <span class="ident">db</span>
             .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">TlsCertificatesByDomain</span><span class="op">&gt;</span>()
@@ -2403,7 +2403,7 @@
 
     <span class="doccomment">/// Listens for incoming client connections. Does not return until the</span>
     <span class="doccomment">/// server shuts down.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">listen_on</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">port</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">listen_on</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">port</span>: <span class="ident">u16</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">certificate</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tls_certificate</span>().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">keypair</span> <span class="op">=</span>
             <span class="ident">KeyPair::from_parts</span>(<span class="ident">certificate</span>.<span class="ident">certificate_chain</span>, <span class="ident">certificate</span>.<span class="ident">private_key</span>.<span class="number">0</span>)<span class="question-mark">?</span>;
@@ -2429,7 +2429,7 @@
     }
 
     <span class="doccomment">/// Returns all of the currently connected clients.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">connected_clients</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">connected_clients</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">clients</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clients</span>.<span class="ident">read</span>().<span class="kw">await</span>;
         <span class="ident">clients</span>.<span class="ident">values</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>()
     }
@@ -2447,7 +2447,7 @@
         <span class="ident">transport</span>: <span class="ident">Transport</span>,
         <span class="ident">address</span>: <span class="ident">SocketAddr</span>,
         <span class="ident">sender</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">OwnedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">OwnedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">default_permissions</span>.<span class="ident">allowed_to</span>(
             <span class="kw-2">&amp;</span><span class="ident">bonsaidb_resource_name</span>(),
             <span class="kw-2">&amp;</span><span class="ident">BonsaiAction::Server</span>(<span class="ident">ServerAction::Connect</span>),
@@ -2487,11 +2487,11 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_bonsai_connection</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="kw-2">mut</span> <span class="ident">connection</span>: <span class="ident">fabruic::Connection</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">incoming</span>) <span class="op">=</span> <span class="ident">connection</span>.<span class="ident">next</span>().<span class="kw">await</span> {
             <span class="kw">let</span> <span class="ident">incoming</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">incoming</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">incoming</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">incoming</span>,
-                <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Ok</span>(<span class="ident">incoming</span>) =&gt; <span class="ident">incoming</span>,
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
                     <span class="macro">log::error!</span>(<span class="string">&quot;[server] Error establishing a stream: {:?}&quot;</span>, <span class="ident">err</span>);
                     <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
                 }
@@ -2501,7 +2501,7 @@
                 .<span class="ident">accept</span>::<span class="op">&lt;</span><span class="ident">networking::Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">networking::Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Request</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>()
                 .<span class="kw">await</span>
             {
-                <span class="prelude-val">Ok</span>((<span class="ident">sender</span>, <span class="ident">receiver</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Ok</span>((<span class="ident">sender</span>, <span class="ident">receiver</span>)) =&gt; {
                     <span class="kw">let</span> (<span class="ident">api_response_sender</span>, <span class="ident">api_response_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
                     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">disconnector</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">initialize_client</span>(<span class="ident">Transport::Bonsai</span>, <span class="ident">connection</span>.<span class="ident">remote_address</span>(), <span class="ident">api_response_sender</span>).<span class="kw">await</span> {
                         <span class="kw">let</span> <span class="ident">task_sender</span> <span class="op">=</span> <span class="ident">sender</span>.<span class="ident">clone</span>();
@@ -2527,7 +2527,7 @@
                         <span class="kw">return</span> <span class="prelude-val">Ok</span>(())
                     }
                 }
-                <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
                     <span class="macro">log::error!</span>(<span class="string">&quot;[server] Error accepting incoming stream: {:?}&quot;</span>, <span class="ident">err</span>);
                     <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
                 }
@@ -2546,7 +2546,7 @@
         <span class="kw">let</span> <span class="ident">requests_in_queue</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">AtomicUsize::new</span>(<span class="number">0</span>));
         <span class="kw">loop</span> {
             <span class="kw">let</span> <span class="ident">current_requests</span> <span class="op">=</span> <span class="ident">requests_in_queue</span>.<span class="ident">load</span>(<span class="ident">Ordering::SeqCst</span>);
-            <span class="kw">if</span> <span class="ident">current_requests</span> <span class="op">=</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_simultaneous_request_limit</span> {
+            <span class="kw">if</span> <span class="ident">current_requests</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_simultaneous_request_limit</span> {
                 <span class="comment">// Wait for requests to finish.</span>
                 <span class="kw">let</span> <span class="kw">_</span> <span class="op">=</span> <span class="ident">request_completion_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span>;
                 <span class="comment">// Clear the queue</span>
@@ -2561,8 +2561,8 @@
                 .<span class="ident">is_ok</span>()
             {
                 <span class="kw">let</span> <span class="ident">payload</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">request_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
-                    <span class="prelude-val">Ok</span>(<span class="ident">payload</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">payload</span>,
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
+                    <span class="prelude-val">Ok</span>(<span class="ident">payload</span>) =&gt; <span class="ident">payload</span>,
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) =&gt; <span class="kw">break</span>,
                 };
                 <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">payload</span>.<span class="ident">id</span>;
                 <span class="kw">let</span> <span class="ident">task_sender</span> <span class="op">=</span> <span class="ident">response_sender</span>.<span class="ident">clone</span>();
@@ -2594,7 +2594,7 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_request_through_worker</span><span class="op">&lt;</span>
-        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">R</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="ident">F</span>: <span class="ident">FnOnce</span>(<span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>) -&gt; <span class="ident">R</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
         <span class="ident">R</span>: <span class="ident">Future</span><span class="op">&lt;</span><span class="ident">Output</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span>,
     <span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -2603,7 +2603,7 @@
         <span class="ident">client</span>: <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
         <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">response_sender</span>: <span class="ident">flume::Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">job</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">data</span>
             .<span class="ident">request_processor</span>
@@ -2636,7 +2636,7 @@
         <span class="ident">client</span>: <span class="ident">OwnedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
         <span class="ident">sender</span>: <span class="ident">fabruic::Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="kw-2">mut</span> <span class="ident">receiver</span>: <span class="ident">fabruic::Receiver</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span> <span class="kw">as</span> <span class="ident">CustomApi</span><span class="op">&gt;</span><span class="ident">::Request</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">payload_sender</span>, <span class="ident">payload_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
         <span class="ident">tokio::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
             <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">payload</span>) <span class="op">=</span> <span class="ident">payload_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
@@ -2691,7 +2691,7 @@
     <span class="doccomment">/// accepting new connections and attempt to respond to any outstanding</span>
     <span class="doccomment">/// requests already being processed. After the `timeout` has elapsed or if</span>
     <span class="doccomment">/// no `timeout` was provided, the server is forcefully shut down.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">timeout</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">endpoint</span> <span class="op">=</span> {
             <span class="kw">let</span> <span class="ident">endpoint</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">endpoint</span>.<span class="ident">read</span>().<span class="kw">await</span>;
             <span class="ident">endpoint</span>.<span class="ident">clone</span>()
@@ -2717,17 +2717,17 @@
 
     <span class="doccomment">/// Listens for signals from the operating system that the server should</span>
     <span class="doccomment">/// shut down and attempts to gracefully shut down.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">listen_for_shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">listen_for_shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">shutdown_state</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">ShutdownState::Running</span>));
         <span class="kw">match</span> <span class="ident">Signals::new</span>(<span class="kw-2">&amp;</span>[<span class="ident">SIGINT</span>, <span class="ident">SIGQUIT</span>]) {
-            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">signals</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">signals</span>) =&gt; {
                 <span class="lifetime">&#39;outer</span>: <span class="kw">loop</span> {
                     <span class="kw">for</span> <span class="ident">signal</span> <span class="kw">in</span> <span class="ident">signals</span>.<span class="ident">pending</span>() {
                         <span class="kw">match</span> <span class="ident">signal</span> {
-                            <span class="ident">SIGINT</span> <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="ident">SIGINT</span> =&gt; {
                                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">shutdown_state</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
                                 <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">state</span> {
-                                    <span class="ident">ShutdownState::Running</span> <span class="op">=</span><span class="op">&gt;</span> {
+                                    <span class="ident">ShutdownState::Running</span> =&gt; {
                                         <span class="macro">log::error!</span>(
                                             <span class="string">&quot;Interrupt signal received. Shutting down gracefully.&quot;</span>
                                         );
@@ -2743,17 +2743,17 @@
                                         });
                                         <span class="kw-2">*</span><span class="ident">state</span> <span class="op">=</span> <span class="ident">ShutdownState::ShuttingDown</span>(<span class="ident">shutdown_receiver</span>);
                                     }
-                                    <span class="ident">ShutdownState::ShuttingDown</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                                    <span class="ident">ShutdownState::ShuttingDown</span>(<span class="kw">_</span>) =&gt; {
                                         <span class="comment">// Two interrupts, go ahead and force the shutdown</span>
                                         <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                                     }
                                 }
                             }
-                            <span class="ident">SIGQUIT</span> <span class="op">=</span><span class="op">&gt;</span> {
+                            <span class="ident">SIGQUIT</span> =&gt; {
                                 <span class="macro">log::error!</span>(<span class="string">&quot;Quit signal received. Shutting down.&quot;</span>);
                                 <span class="kw">break</span> <span class="lifetime">&#39;outer</span>;
                             }
-                            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(),
+                            <span class="kw">_</span> =&gt; <span class="macro">unreachable!</span>(),
                         }
                     }
 
@@ -2769,7 +2769,7 @@
                 }
                 <span class="self">self</span>.<span class="ident">shutdown</span>(<span class="prelude-val">None</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             }
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; {
                 <span class="macro">log::error!</span>(<span class="string">&quot;Error installing signals for graceful shutdown: {:?}&quot;</span>, <span class="ident">err</span>);
                 <span class="ident">tokio::time::sleep</span>(<span class="ident">Duration::MAX</span>).<span class="kw">await</span>;
             }
@@ -2801,7 +2801,7 @@
             .<span class="kw">await</span>;
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_subscriber</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ServerSubscriber</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_subscriber</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">database</span>: <span class="ident">String</span>) -&gt; <span class="ident">ServerSubscriber</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">subscriber</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">relay</span>.<span class="ident">create_subscriber</span>().<span class="kw">await</span>;
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">write</span>().<span class="kw">await</span>;
@@ -2822,7 +2822,7 @@
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
         <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">topic</span>: <span class="ident">S</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">subscriber</span>) <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>) {
             <span class="ident">subscriber</span>
@@ -2841,7 +2841,7 @@
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
         <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">read</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">subscriber</span>) <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>) {
             <span class="ident">subscriber</span>
@@ -2859,7 +2859,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">Storage</span>;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>
     }
 }
@@ -2880,7 +2880,7 @@
         <span class="ident">client</span>: <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
         <span class="ident">subscribers</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">Subscriber</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">sender</span>: <span class="ident">flume::Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">request</span>: <span class="prelude-val">Some</span>(<span class="ident">request</span>),
             <span class="ident">server</span>,
@@ -2897,7 +2897,7 @@
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Output</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Output</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">request</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>();
         <span class="ident">ServerDispatcher</span> {
             <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">server</span>,
@@ -2919,7 +2919,7 @@
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">schema</span>: <span class="ident">SchemaName</span>,
         <span class="ident">only_if_needed</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>
             .<span class="ident">storage</span>
             .<span class="ident">create_database_with_schema</span>(<span class="ident">name</span>, <span class="ident">schema</span>, <span class="ident">only_if_needed</span>)
@@ -2929,7 +2929,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Database</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Database</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">database</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>(<span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">ServerDatabase</span> {
             <span class="ident">server</span>: <span class="self">self</span>.<span class="ident">clone</span>(),
@@ -2937,19 +2937,19 @@
         })
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">delete_database</span>(<span class="ident">name</span>).<span class="kw">await</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">admin::Database</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">admin::Database</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">list_databases</span>().<span class="kw">await</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaName</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaName</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">list_available_schemas</span>().<span class="kw">await</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_user</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">create_user</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">create_user</span>(<span class="ident">username</span>).<span class="kw">await</span>
     }
 
@@ -2957,7 +2957,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">user</span>: <span class="ident">U</span>,
         <span class="ident">password_request</span>: <span class="ident">RegistrationRequest</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bonsaidb_core::custodian_password::RegistrationResponse</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bonsaidb_core::custodian_password::RegistrationResponse</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>
             .<span class="ident">storage</span>
             .<span class="ident">set_user_password</span>(<span class="ident">user</span>, <span class="ident">password_request</span>)
@@ -2968,7 +2968,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">user</span>: <span class="ident">U</span>,
         <span class="ident">password_finalization</span>: <span class="ident">RegistrationFinalization</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>
             .<span class="ident">storage</span>
             .<span class="ident">finish_set_user_password</span>(<span class="ident">user</span>, <span class="ident">password_finalization</span>)
@@ -2984,7 +2984,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">user</span>: <span class="ident">U</span>,
         <span class="ident">permission_group</span>: <span class="ident">G</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>
             .<span class="ident">storage</span>
             .<span class="ident">add_permission_group_to_user</span>(<span class="ident">user</span>, <span class="ident">permission_group</span>)
@@ -3000,7 +3000,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">user</span>: <span class="ident">U</span>,
         <span class="ident">permission_group</span>: <span class="ident">G</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>
             .<span class="ident">storage</span>
             .<span class="ident">remove_permission_group_from_user</span>(<span class="ident">user</span>, <span class="ident">permission_group</span>)
@@ -3016,7 +3016,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">user</span>: <span class="ident">U</span>,
         <span class="ident">role</span>: <span class="ident">G</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">add_role_to_user</span>(<span class="ident">user</span>, <span class="ident">role</span>).<span class="kw">await</span>
     }
 
@@ -3029,7 +3029,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">user</span>: <span class="ident">U</span>,
         <span class="ident">role</span>: <span class="ident">G</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>.<span class="ident">remove_role_from_user</span>(<span class="ident">user</span>, <span class="ident">role</span>).<span class="kw">await</span>
     }
 }
@@ -3053,14 +3053,14 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">subaction</span>: <span class="ident"><span class="self">Self</span>::Subaction</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">dispatcher</span> <span class="op">=</span>
             <span class="op">&lt;</span><span class="ident">B::CustomApiDispatcher</span> <span class="kw">as</span> <span class="ident">CustomApiDispatcher</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="ident">::new</span>(<span class="self">self</span>.<span class="ident">server</span>, <span class="self">self</span>.<span class="ident">client</span>);
         <span class="kw">match</span> <span class="ident">dispatcher</span>.<span class="ident">dispatch</span>(<span class="ident">permissions</span>, <span class="ident">subaction</span>).<span class="kw">await</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">response</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Response::Api</span>(<span class="prelude-val">Ok</span>(<span class="ident">response</span>))),
-            <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">err</span> {
-                <span class="ident">BackendError::Backend</span>(<span class="ident">backend</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">Response::Api</span>(<span class="prelude-val">Err</span>(<span class="ident">backend</span>))),
-                <span class="ident">BackendError::Server</span>(<span class="ident">server</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Err</span>(<span class="ident">server</span>),
+            <span class="prelude-val">Ok</span>(<span class="ident">response</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Response::Api</span>(<span class="prelude-val">Ok</span>(<span class="ident">response</span>))),
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="kw">match</span> <span class="ident">err</span> {
+                <span class="ident">BackendError::Backend</span>(<span class="ident">backend</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Response::Api</span>(<span class="prelude-val">Err</span>(<span class="ident">backend</span>))),
+                <span class="ident">BackendError::Server</span>(<span class="ident">server</span>) =&gt; <span class="prelude-val">Err</span>(<span class="ident">server</span>),
             },
         }
     }
@@ -3072,7 +3072,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">request</span>: <span class="ident">ServerRequest</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">ServerRequestDispatcher::dispatch_to_handlers</span>(<span class="self">self</span>, <span class="ident">permissions</span>, <span class="ident">request</span>).<span class="kw">await</span>
     }
 }
@@ -3084,7 +3084,7 @@
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">database_name</span>: <span class="ident">String</span>,
         <span class="ident">request</span>: <span class="ident">DatabaseRequest</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">database</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">database_without_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database_name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="ident">DatabaseDispatcher</span> {
             <span class="ident">name</span>: <span class="ident">database_name</span>,
@@ -3109,11 +3109,11 @@
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bonsaidb_core::admin::Database</span>,
         <span class="ident">_only_if_needed</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>.<span class="ident">name</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Server</span>(<span class="ident">ServerAction::CreateDatabase</span>)
     }
 
@@ -3122,7 +3122,7 @@
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">database</span>: <span class="ident">bonsaidb_core::admin::Database</span>,
         <span class="ident">only_if_needed</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">server</span>
             .<span class="ident">create_database_with_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>.<span class="ident">name</span>, <span class="ident">database</span>.<span class="ident">schema</span>, <span class="ident">only_if_needed</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3136,11 +3136,11 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">DeleteDatabaseHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">BonsaiAction</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">database_resource_name</span>(<span class="ident">database</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Server</span>(<span class="ident">ServerAction::DeleteDatabase</span>)
     }
 
@@ -3148,7 +3148,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">name</span>: <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">delete_database</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Server</span>(<span class="ident">ServerResponse::DatabaseDeleted</span> { <span class="ident">name</span> }))
     }
@@ -3158,18 +3158,18 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">bonsaidb_core::networking::ListDatabasesHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">BonsaiAction</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">bonsaidb_resource_name</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Server</span>(<span class="ident">ServerAction::ListDatabases</span>)
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Server</span>(<span class="ident">ServerResponse::Databases</span>(
             <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">list_databases</span>().<span class="kw">await</span><span class="question-mark">?</span>,
         )))
@@ -3182,18 +3182,18 @@
 {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">BonsaiAction</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">bonsaidb_resource_name</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Server</span>(<span class="ident">ServerAction::ListAvailableSchemas</span>)
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Server</span>(<span class="ident">ServerResponse::AvailableSchemas</span>(
             <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">list_available_schemas</span>().<span class="kw">await</span><span class="question-mark">?</span>,
         )))
@@ -3204,11 +3204,11 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">bonsaidb_core::networking::CreateUserHandler</span> <span class="kw">for</span> <span class="ident">ServerDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">BonsaiAction</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">_username</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">_username</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">bonsaidb_resource_name</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Server</span>(<span class="ident">ServerAction::CreateUser</span>)
     }
 
@@ -3216,7 +3216,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">username</span>: <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Server</span>(<span class="ident">ServerResponse::UserCreated</span> {
             <span class="ident">id</span>: <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">create_user</span>(<span class="kw-2">&amp;</span><span class="ident">username</span>).<span class="kw">await</span><span class="question-mark">?</span>,
         }))
@@ -3232,7 +3232,7 @@
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>,
         <span class="ident">_password_request</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">LoginRequest</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">NamedReference::from</span>(<span class="ident">username</span>.<span class="ident">as_str</span>())
             .<span class="ident">id</span>::<span class="op">&lt;</span><span class="ident">User</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">server</span>.<span class="ident">admin</span>().<span class="kw">await</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>
@@ -3241,7 +3241,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">user_resource_name</span>(<span class="ident">id</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Server</span>(<span class="ident">ServerAction::LoginWithPassword</span>)
     }
 
@@ -3250,7 +3250,7 @@
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">username</span>: <span class="ident">String</span>,
         <span class="ident">password_request</span>: <span class="ident">LoginRequest</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">response</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">client</span>
             .<span class="ident">initiate_login</span>(<span class="kw-2">&amp;</span><span class="ident">username</span>, <span class="ident">password_request</span>, <span class="self">self</span>.<span class="ident">server</span>)
@@ -3269,7 +3269,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">password_request</span>: <span class="ident">LoginFinalization</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">user_id</span>, <span class="ident">login</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">take_pending_password_login</span>().<span class="kw">await</span> {
             <span class="ident">login</span>.<span class="ident">finish</span>(<span class="ident">password_request</span>)<span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">user_id</span>.<span class="ident">expect</span>(<span class="string">&quot;logged in without a user_id&quot;</span>);
@@ -3301,13 +3301,13 @@
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">user</span>: <span class="kw-2">&amp;</span><span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">_password_request</span>: <span class="kw-2">&amp;</span><span class="ident">RegistrationRequest</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">user</span>
             .<span class="ident">id</span>::<span class="op">&lt;</span><span class="ident">User</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">server</span>.<span class="ident">admin</span>().<span class="kw">await</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>
             .<span class="ident">ok_or</span>(<span class="ident">bonsaidb_core::Error::UserNotFound</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">user_id</span>().<span class="kw">await</span> <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">user_id</span>().<span class="kw">await</span> <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) {
             <span class="comment">// Users can always set their own password</span>
             <span class="prelude-val">Ok</span>(())
         } <span class="kw">else</span> {
@@ -3331,7 +3331,7 @@
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">user</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">password_request</span>: <span class="ident">RegistrationRequest</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Server</span>(<span class="ident">ServerResponse::FinishSetPassword</span> {
             <span class="ident">password_reponse</span>: <span class="ident">Box::new</span>(
                 <span class="self">self</span>.<span class="ident">server</span>
@@ -3351,7 +3351,7 @@
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">user</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">password_request</span>: <span class="ident">RegistrationFinalization</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">server</span>
             .<span class="ident">finish_set_user_password</span>(<span class="ident">user</span>, <span class="ident">password_request</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3370,7 +3370,7 @@
         <span class="ident">user</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">_group</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">_should_be_member</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">user</span>
             .<span class="ident">id</span>::<span class="op">&lt;</span><span class="ident">User</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">server</span>.<span class="ident">admin</span>().<span class="kw">await</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>
@@ -3379,7 +3379,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">user_resource_name</span>(<span class="ident">id</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Server</span>(<span class="ident">ServerAction::ModifyUserPermissionGroups</span>)
     }
 
@@ -3389,7 +3389,7 @@
         <span class="ident">user</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">group</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">should_be_member</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">should_be_member</span> {
             <span class="self">self</span>.<span class="ident">server</span>
                 .<span class="ident">add_permission_group_to_user</span>(<span class="ident">user</span>, <span class="ident">group</span>)
@@ -3415,7 +3415,7 @@
         <span class="ident">user</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">_role</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">_should_be_member</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="ident">user</span>
             .<span class="ident">id</span>::<span class="op">&lt;</span><span class="ident">User</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">server</span>.<span class="ident">admin</span>().<span class="kw">await</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>
@@ -3424,7 +3424,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">user_resource_name</span>(<span class="ident">id</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Server</span>(<span class="ident">ServerAction::ModifyUserRoles</span>)
     }
 
@@ -3434,7 +3434,7 @@
         <span class="ident">user</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">role</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">should_be_member</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">should_be_member</span> {
             <span class="self">self</span>.<span class="ident">server</span>.<span class="ident">add_role_to_user</span>(<span class="ident">user</span>, <span class="ident">role</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         } <span class="kw">else</span> {
@@ -3469,11 +3469,11 @@
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">CollectionName</span>,
         <span class="ident">id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u64</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">collection</span>, <span class="kw-2">*</span><span class="ident">id</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Document</span>(<span class="ident">DocumentAction::Get</span>))
     }
 
@@ -3482,7 +3482,7 @@
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
         <span class="ident">id</span>: <span class="ident">u64</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">document</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">database</span>
             .<span class="ident">get_from_collection_id</span>(<span class="ident">id</span>, <span class="kw-2">&amp;</span><span class="ident">collection</span>, <span class="ident">permissions</span>)
@@ -3503,7 +3503,7 @@
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">for</span> <span class="kw-2">&amp;</span><span class="ident">id</span> <span class="kw">in</span> <span class="ident">ids</span> {
             <span class="kw">let</span> <span class="ident">document_name</span> <span class="op">=</span> <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">collection</span>, <span class="ident">id</span>);
             <span class="kw">let</span> <span class="ident">action</span> <span class="op">=</span> <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Document</span>(<span class="ident">DocumentAction::Get</span>));
@@ -3523,7 +3523,7 @@
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
         <span class="ident">ids</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">database</span>
             .<span class="ident">get_multiple_from_collection_id</span>(<span class="kw-2">&amp;</span><span class="ident">ids</span>, <span class="kw-2">&amp;</span><span class="ident">collection</span>, <span class="ident">permissions</span>)
@@ -3542,11 +3542,11 @@
         <span class="ident">_ids</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">_order</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Sort</span>,
         <span class="ident">_limit</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">collection_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">collection</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Document</span>(<span class="ident">DocumentAction::List</span>))
     }
 
@@ -3557,7 +3557,7 @@
         <span class="ident">ids</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">order</span>: <span class="ident">Sort</span>,
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">database</span>
             .<span class="ident">list_from_collection</span>(<span class="ident">ids</span>, <span class="ident">order</span>, <span class="ident">limit</span>, <span class="kw-2">&amp;</span><span class="ident">collection</span>, <span class="ident">permissions</span>)
@@ -3578,11 +3578,11 @@
         <span class="ident">_limit</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">_access_policy</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AccessPolicy</span>,
         <span class="ident">_with_docs</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">view_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">view</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::View</span>(<span class="ident">ViewAction::Query</span>))
     }
 
@@ -3595,7 +3595,7 @@
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="ident">with_docs</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">with_docs</span> {
             <span class="kw">let</span> <span class="ident">mappings</span> <span class="op">=</span> <span class="self">self</span>
                 .<span class="ident">database</span>
@@ -3624,11 +3624,11 @@
         <span class="ident">_key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">_access_policy</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AccessPolicy</span>,
         <span class="ident">_grouped</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">view_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">view</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::View</span>(<span class="ident">ViewAction::Reduce</span>))
     }
 
@@ -3639,7 +3639,7 @@
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="ident">grouped</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">grouped</span> {
             <span class="kw">let</span> <span class="ident">values</span> <span class="op">=</span> <span class="self">self</span>
                 .<span class="ident">database</span>
@@ -3663,18 +3663,18 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">transaction</span>: <span class="kw-2">&amp;</span><span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">for</span> <span class="ident">op</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">transaction</span>.<span class="ident">operations</span> {
             <span class="kw">let</span> (<span class="ident">resource</span>, <span class="ident">action</span>) <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">command</span> {
-                <span class="ident">Command::Insert</span> { .. } <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">Command::Insert</span> { .. } =&gt; (
                     <span class="ident">collection_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>),
                     <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Document</span>(<span class="ident">DocumentAction::Insert</span>)),
                 ),
-                <span class="ident">Command::Update</span> { <span class="ident">header</span>, .. } <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">Command::Update</span> { <span class="ident">header</span>, .. } =&gt; (
                     <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>, <span class="ident">header</span>.<span class="ident">id</span>),
                     <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Document</span>(<span class="ident">DocumentAction::Update</span>)),
                 ),
-                <span class="ident">Command::Delete</span> { <span class="ident">header</span> } <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">Command::Delete</span> { <span class="ident">header</span> } =&gt; (
                     <span class="ident">document_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>, <span class="ident">header</span>.<span class="ident">id</span>),
                     <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Document</span>(<span class="ident">DocumentAction::Delete</span>)),
                 ),
@@ -3694,7 +3694,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">transaction</span>: <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">database</span>
             .<span class="ident">apply_transaction</span>(<span class="ident">transaction</span>, <span class="ident">permissions</span>)
@@ -3714,11 +3714,11 @@
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ViewName</span>,
         <span class="ident">_key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">_access_policy</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">view_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">view</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::View</span>(<span class="ident">ViewAction::DeleteDocs</span>))
     }
 
@@ -3728,7 +3728,7 @@
         <span class="ident">view</span>: <span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">count</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">delete_docs</span>(<span class="kw-2">&amp;</span><span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Database</span>(<span class="ident">DatabaseResponse::DocumentsDeleted</span>(
             <span class="ident">count</span>,
@@ -3746,11 +3746,11 @@
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">_starting_id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">_result_limit</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Transaction</span>(<span class="ident">TransactionAction::ListExecuted</span>))
     }
 
@@ -3759,7 +3759,7 @@
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">starting_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">result_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Database</span>(<span class="ident">DatabaseResponse::ExecutedTransactions</span>(
             <span class="self">self</span>.<span class="ident">database</span>
                 .<span class="ident">list_executed_transactions</span>(<span class="ident">starting_id</span>, <span class="ident">result_limit</span>)
@@ -3774,18 +3774,18 @@
 {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">BonsaiAction</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Transaction</span>(<span class="ident">TransactionAction::GetLastId</span>))
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Database</span>(<span class="ident">DatabaseResponse::LastTransactionId</span>(
             <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">last_transaction_id</span>().<span class="kw">await</span><span class="question-mark">?</span>,
         )))
@@ -3798,18 +3798,18 @@
 {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">BonsaiAction</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::PubSub</span>(<span class="ident">PubSubAction::CreateSuscriber</span>))
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">server</span>;
         <span class="kw">let</span> <span class="ident">subscriber</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">create_subscriber</span>(<span class="self">self</span>.<span class="ident">name</span>.<span class="ident">clone</span>()).<span class="kw">await</span>;
         <span class="kw">let</span> <span class="ident">subscriber_id</span> <span class="op">=</span> <span class="ident">subscriber</span>.<span class="ident">id</span>;
@@ -3839,11 +3839,11 @@
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>,
         <span class="ident">_payload</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::PubSub</span>(<span class="ident">PubSubAction::Publish</span>))
     }
 
@@ -3852,7 +3852,7 @@
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">topic</span>: <span class="ident">String</span>,
         <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">server_dispatcher</span>
             .<span class="ident">server</span>
             .<span class="ident">publish_message</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">topic</span>, <span class="ident">payload</span>)
@@ -3868,7 +3868,7 @@
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">topics</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">_payload</span>: <span class="kw-2">&amp;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">for</span> <span class="ident">topic</span> <span class="kw">in</span> <span class="ident">topics</span> {
             <span class="kw">let</span> <span class="ident">topic_name</span> <span class="op">=</span> <span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>);
             <span class="kw">let</span> <span class="ident">action</span> <span class="op">=</span> <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::PubSub</span>(<span class="ident">PubSubAction::Publish</span>));
@@ -3888,7 +3888,7 @@
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">topics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">server_dispatcher</span>
             .<span class="ident">server</span>
             .<span class="ident">publish_serialized_to_all</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">topics</span>, <span class="ident">payload</span>)
@@ -3905,11 +3905,11 @@
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">_subscriber_id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u64</span>,
         <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::PubSub</span>(<span class="ident">PubSubAction::SubscribeTo</span>))
     }
 
@@ -3918,7 +3918,7 @@
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
         <span class="ident">topic</span>: <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">server_dispatcher</span>
             .<span class="ident">server</span>
             .<span class="ident">subscribe_to</span>(<span class="ident">subscriber_id</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>)
@@ -3938,11 +3938,11 @@
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">_subscriber_id</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">u64</span>,
         <span class="ident">topic</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">pubsub_topic_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">topic</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::PubSub</span>(<span class="ident">PubSubAction::UnsubscribeFrom</span>))
     }
 
@@ -3951,7 +3951,7 @@
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
         <span class="ident">topic</span>: <span class="ident">String</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">server_dispatcher</span>
             .<span class="ident">server</span>
             .<span class="ident">unsubscribe_from</span>(<span class="ident">subscriber_id</span>, <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="kw-2">&amp;</span><span class="ident">topic</span>)
@@ -3969,7 +3969,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">subscriber_id</span>: <span class="ident">u64</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">server_dispatcher</span>.<span class="ident">subscribers</span>.<span class="ident">write</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="ident">subscribers</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>).<span class="ident">is_none</span>() {
             <span class="prelude-val">Ok</span>(<span class="ident">Response::Error</span>(<span class="ident">bonsaidb_core::Error::Server</span>(<span class="ident">String::from</span>(
@@ -3987,7 +3987,7 @@
 {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">BonsaiAction</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">KeyOperation</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>, <span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">KeyOperation</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">kv_key_resource_name</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>,
             <span class="ident">op</span>.<span class="ident">namespace</span>.<span class="ident">as_deref</span>(),
@@ -3995,7 +3995,7 @@
         ))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Kv</span>(<span class="ident">KvAction::ExecuteOperation</span>))
     }
 
@@ -4003,7 +4003,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">op</span>: <span class="ident">KeyOperation</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">execute_key_operation</span>(<span class="ident">op</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Database</span>(<span class="ident">DatabaseResponse::KvOutput</span>(<span class="ident">result</span>)))
     }
@@ -4018,11 +4018,11 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">collection_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>, <span class="ident">collection</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Compact</span>)
     }
 
@@ -4030,7 +4030,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">compact_collection</span>(<span class="ident">collection</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Ok</span>)
@@ -4043,18 +4043,18 @@
 {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">BonsaiAction</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">kv_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Compact</span>)
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">compact_key_value_store</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Ok</span>)
@@ -4065,18 +4065,18 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">bonsaidb_core::networking::CompactHandler</span> <span class="kw">for</span> <span class="ident">DatabaseDispatcher</span><span class="op">&lt;</span><span class="lifetime">&#39;s</span>, <span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Action</span> <span class="op">=</span> <span class="ident">BonsaiAction</span>;
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">database_resource_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>))
     }
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span> {
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span> {
         <span class="ident">BonsaiAction::Database</span>(<span class="ident">DatabaseAction::Compact</span>)
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">_permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Response</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">database</span>.<span class="ident">compact</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">Response::Ok</span>)
@@ -4087,7 +4087,7 @@
 <span class="kw">struct</span> <span class="ident">AlpnKeys</span>(<span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">std::sync::Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">rustls::sign::CertifiedKey</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>);
 
 <span class="kw">impl</span> <span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">AlpnKeys</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">f</span>.<span class="ident">debug_tuple</span>(<span class="string">&quot;AlpnKeys&quot;</span>).<span class="ident">finish</span>()
     }
 }
@@ -4095,7 +4095,7 @@
 <span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">AlpnKeys</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">std::sync::Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">rustls::sign::CertifiedKey</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 }

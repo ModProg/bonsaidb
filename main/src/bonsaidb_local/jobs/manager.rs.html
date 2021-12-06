@@ -117,7 +117,7 @@
 <span class="kw">where</span>
     <span class="ident">Key</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">jobs</span>: <span class="ident">Arc::new</span>(<span class="ident">RwLock::new</span>(<span class="ident">jobs::Jobs::new</span>())),
         }
@@ -125,7 +125,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Manager</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">jobs</span>: <span class="self">self</span>.<span class="ident">jobs</span>.<span class="ident">clone</span>(),
         }
@@ -138,7 +138,7 @@
 {
     <span class="doccomment">/// Pushes a `job` into the queue. Pushing the same job definition twice</span>
     <span class="doccomment">/// will yield two tasks in the queue.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">enqueue</span><span class="op">&lt;</span><span class="ident">J</span>: <span class="ident">Job</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">job</span>: <span class="ident">J</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="ident">J::Output</span>, <span class="ident">J::Error</span>, <span class="ident">Key</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">enqueue</span><span class="op">&lt;</span><span class="ident">J</span>: <span class="ident">Job</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">job</span>: <span class="ident">J</span>) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="ident">J::Output</span>, <span class="ident">J::Error</span>, <span class="ident">Key</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">jobs</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">jobs</span>.<span class="ident">write</span>().<span class="kw">await</span>;
         <span class="ident">jobs</span>.<span class="ident">enqueue</span>(<span class="ident">job</span>, <span class="prelude-val">None</span>, <span class="self">self</span>.<span class="ident">clone</span>())
     }
@@ -150,7 +150,7 @@
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">lookup_or_enqueue</span><span class="op">&lt;</span><span class="ident">J</span>: <span class="ident">Keyed</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">job</span>: <span class="ident">J</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Handle</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">J</span> <span class="kw">as</span> <span class="ident">Job</span><span class="op">&gt;</span><span class="ident">::Output</span>, <span class="op">&lt;</span><span class="ident">J</span> <span class="kw">as</span> <span class="ident">Job</span><span class="op">&gt;</span><span class="ident">::Error</span>, <span class="ident">Key</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">Handle</span><span class="op">&lt;</span><span class="op">&lt;</span><span class="ident">J</span> <span class="kw">as</span> <span class="ident">Job</span><span class="op">&gt;</span><span class="ident">::Output</span>, <span class="op">&lt;</span><span class="ident">J</span> <span class="kw">as</span> <span class="ident">Job</span><span class="op">&gt;</span><span class="ident">::Error</span>, <span class="ident">Key</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">jobs</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">jobs</span>.<span class="ident">write</span>().<span class="kw">await</span>;
         <span class="ident">jobs</span>.<span class="ident">lookup_or_enqueue</span>(<span class="ident">job</span>, <span class="self">self</span>.<span class="ident">clone</span>())
     }

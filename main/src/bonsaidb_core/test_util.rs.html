@@ -2129,7 +2129,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Basic</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">into</span>(),
             <span class="ident">tags</span>: <span class="ident">Vec::default</span>(),
@@ -2138,29 +2138,29 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_category</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">category</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_category</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">category</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">category</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">category</span>.<span class="ident">into</span>());
         <span class="self">self</span>
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_tag</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tag</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_tag</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">tag</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">tags</span>.<span class="ident">push</span>(<span class="ident">tag</span>.<span class="ident">into</span>());
         <span class="self">self</span>
     }
 
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">with_parent_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">parent_id</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">with_parent_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">parent_id</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">parent_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">parent_id</span>);
         <span class="self">self</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">Basic</span> {
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">CollectionName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;basic&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicCount</span>)<span class="question-mark">?</span>;
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicByParentId</span>)<span class="question-mark">?</span>;
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicByTag</span>)<span class="question-mark">?</span>;
@@ -2176,15 +2176,15 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">JsonBasic</span> {
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">CollectionName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;json-basic&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">serializer</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">crate</span>::schema::CollectionSerializer</span> {
+    <span class="kw">fn</span> <span class="ident">serializer</span>() -&gt; <span class="ident"><span class="kw">crate</span>::schema::CollectionSerializer</span> {
         <span class="ident"><span class="kw">crate</span>::schema::CollectionSerializer::Json</span>
     }
 }
@@ -2197,15 +2197,15 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cbor&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">CborBasic</span> {
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">CollectionName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;cbor-basic&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">serializer</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">crate</span>::schema::CollectionSerializer</span> {
+    <span class="kw">fn</span> <span class="ident">serializer</span>() -&gt; <span class="ident"><span class="kw">crate</span>::schema::CollectionSerializer</span> {
         <span class="ident"><span class="kw">crate</span>::schema::CollectionSerializer::Cbor</span>
     }
 }
@@ -2218,15 +2218,15 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;bincode&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">BincodeBasic</span> {
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">CollectionName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;bincode-basic&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">fn</span> <span class="ident">serializer</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="kw">crate</span>::schema::CollectionSerializer</span> {
+    <span class="kw">fn</span> <span class="ident">serializer</span>() -&gt; <span class="ident"><span class="kw">crate</span>::schema::CollectionSerializer</span> {
         <span class="ident"><span class="kw">crate</span>::schema::CollectionSerializer::Bincode</span>
     }
 }
@@ -2239,15 +2239,15 @@
     <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> ();
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
-    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Name::new</span>(<span class="string">&quot;count&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">document</span>.<span class="ident">emit_key_and_value</span>((), <span class="number">1</span>)])
     }
 
@@ -2255,7 +2255,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -2268,15 +2268,15 @@
     <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>;
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
-    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="number">1</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Name::new</span>(<span class="string">&quot;by-parent-id&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">document</span>.<span class="ident">emit_key_and_value</span>(<span class="ident">contents</span>.<span class="ident">parent_id</span>, <span class="number">1</span>)])
     }
@@ -2285,7 +2285,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -2298,15 +2298,15 @@
     <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="ident">String</span>;
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
-    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Name::new</span>(<span class="string">&quot;by-category&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">category</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">contents</span>.<span class="ident">category</span> {
             <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">document</span>.<span class="ident">emit_key_and_value</span>(<span class="ident">category</span>.<span class="ident">to_lowercase</span>(), <span class="number">1</span>)])
@@ -2319,7 +2319,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -2332,15 +2332,15 @@
     <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="ident">String</span>;
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
-    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Name::new</span>(<span class="string">&quot;by-tag&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(<span class="ident">contents</span>
@@ -2354,7 +2354,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -2367,15 +2367,15 @@
     <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> ();
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> ();
 
-    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Name::new</span>(<span class="string">&quot;by-parent-id&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">document</span>.<span class="ident">emit</span>()])
     }
 }
@@ -2388,7 +2388,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">EncryptedBasic</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">into</span>(),
             <span class="ident">category</span>: <span class="prelude-val">None</span>,
@@ -2396,20 +2396,20 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_category</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">category</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_category</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">category</span>: <span class="kw">impl</span> <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">category</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">category</span>.<span class="ident">into</span>());
         <span class="self">self</span>
     }
 
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">with_parent_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">parent_id</span>: <span class="ident">u64</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">with_parent_id</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">parent_id</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">parent_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">parent_id</span>);
         <span class="self">self</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">EncryptedBasic</span> {
-    <span class="kw">fn</span> <span class="ident">encryption_key</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">encryption_key</span>() -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="ident">ENCRYPTION_ENABLED</span> {
             <span class="prelude-val">Some</span>(<span class="ident">KeyId::Master</span>)
         } <span class="kw">else</span> {
@@ -2417,11 +2417,11 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">CollectionName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;encrypted-basic&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">EncryptedBasicCount</span>)<span class="question-mark">?</span>;
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">EncryptedBasicByParentId</span>)<span class="question-mark">?</span>;
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">EncryptedBasicByCategory</span>)
@@ -2436,15 +2436,15 @@
     <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> ();
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
-    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Name::new</span>(<span class="string">&quot;count&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">document</span>.<span class="ident">emit_key_and_value</span>((), <span class="number">1</span>)])
     }
 
@@ -2452,7 +2452,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -2465,15 +2465,15 @@
     <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>;
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
-    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="number">1</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Name::new</span>(<span class="string">&quot;by-parent-id&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">EncryptedBasic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">document</span>.<span class="ident">emit_key_and_value</span>(<span class="ident">contents</span>.<span class="ident">parent_id</span>, <span class="number">1</span>)])
     }
@@ -2482,7 +2482,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -2495,15 +2495,15 @@
     <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="ident">String</span>;
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
 
-    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="number">0</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Name::new</span>(<span class="string">&quot;by-category&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">EncryptedBasic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">category</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">contents</span>.<span class="ident">category</span> {
             <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">document</span>.<span class="ident">emit_key_and_value</span>(<span class="ident">category</span>.<span class="ident">to_lowercase</span>(), <span class="number">1</span>)])
@@ -2516,7 +2516,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span>],
         <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
@@ -2525,11 +2525,11 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicSchema</span>;
 
 <span class="kw">impl</span> <span class="ident">Schema</span> <span class="kw">for</span> <span class="ident">BasicSchema</span> {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">SchemaName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;basic&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">schema</span>.<span class="ident">define_collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>)]</span>
         <span class="ident">schema</span>.<span class="ident">define_collection</span>::<span class="op">&lt;</span><span class="ident">JsonBasic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
@@ -2548,7 +2548,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Unique</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Display</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="kw">impl</span> <span class="ident">Display</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">value</span>: <span class="ident">value</span>.<span class="ident">to_string</span>(),
         }
@@ -2556,11 +2556,11 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">Unique</span> {
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">CollectionName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;unique&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">UniqueValue</span>)
     }
 }
@@ -2573,19 +2573,19 @@
     <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="ident">String</span>;
     <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> ();
 
-    <span class="kw">fn</span> <span class="ident">unique</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">unique</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">bool</span> {
         <span class="bool-val">true</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u64</span> {
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
         <span class="number">1</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Name::new</span>(<span class="string">&quot;unique-value&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">entry</span> <span class="op">=</span> <span class="ident">document</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="macro">vec!</span>[<span class="ident">document</span>.<span class="ident">emit_key</span>(<span class="ident">entry</span>.<span class="ident">value</span>)])
     }
@@ -2598,7 +2598,7 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">TestDirectory</span>(<span class="kw">pub</span> <span class="ident">PathBuf</span>);
 
 <span class="kw">impl</span> <span class="ident">TestDirectory</span> {
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="ident">S</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="ident">path</span> <span class="op">=</span> <span class="ident">std::env::temp_dir</span>().<span class="ident">join</span>(<span class="ident">name</span>);
         <span class="kw">if</span> <span class="ident">path</span>.<span class="ident">exists</span>() {
             <span class="ident">std::fs::remove_dir_all</span>(<span class="kw-2">&amp;</span><span class="ident">path</span>).<span class="ident">expect</span>(<span class="string">&quot;error clearing temporary directory&quot;</span>);
@@ -2618,7 +2618,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">TestDirectory</span> {
-    <span class="kw">fn</span> <span class="ident">as_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Path</span> {
+    <span class="kw">fn</span> <span class="ident">as_ref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Path</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 }
@@ -2626,7 +2626,7 @@
 <span class="kw">impl</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">TestDirectory</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">PathBuf</span>;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 }
@@ -2635,11 +2635,11 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicCollectionWithNoViews</span>;
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">BasicCollectionWithNoViews</span> {
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Basic::collection_name</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -2648,11 +2648,11 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicCollectionWithOnlyBrokenParentId</span>;
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">BasicCollectionWithOnlyBrokenParentId</span> {
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">Basic::collection_name</span>()
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">BasicByBrokenParentId</span>)
     }
 }
@@ -2661,11 +2661,11 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">UnassociatedCollection</span>;
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">UnassociatedCollection</span> {
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">CollectionName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;unassociated&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -2706,13 +2706,13 @@
 
 <span class="kw">impl</span> <span class="ident">HarnessTest</span> {
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">port</span>(<span class="self">self</span>, <span class="ident">base</span>: <span class="ident">u16</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">u16</span> {
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">port</span>(<span class="self">self</span>, <span class="ident">base</span>: <span class="ident">u16</span>) -&gt; <span class="ident">u16</span> {
         <span class="ident">base</span> <span class="op">+</span> <span class="self">self</span> <span class="kw">as</span> <span class="ident">u16</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">HarnessTest</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">Debug::fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>)
     }
 }
@@ -2720,7 +2720,7 @@
 <span class="doccomment">/// Compares two f64&#39;s accounting for the epsilon.</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules!</span> <span class="ident">assert_f64_eq</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">expr</span>) <span class="op">=</span><span class="op">&gt;</span> {{
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>:<span class="ident">expr</span>) =&gt; {{
         <span class="kw">let</span> <span class="ident">a</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">a</span>;
         <span class="kw">let</span> <span class="ident">b</span>: <span class="ident">f64</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">b</span>;
         <span class="kw">if</span> (<span class="ident">a</span> <span class="op">-</span> <span class="ident">b</span>).<span class="ident">abs</span>() <span class="op">&gt;</span> <span class="ident">f64::EPSILON</span> {
@@ -2732,9 +2732,9 @@
 <span class="doccomment">/// Creates a test suite that tests methods available on [`Connection`]</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules!</span> <span class="ident">define_connection_test_suite</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness</span>:<span class="ident">ident</span>) =&gt; {
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">server_connection_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">server_connection_tests</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span>
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::ServerConnectionTests</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">server</span>();
@@ -2747,7 +2747,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">store_retrieve_update_delete</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">store_retrieve_update_delete</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span>
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::StoreRetrieveUpdate</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
@@ -2756,7 +2756,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">not_found</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">not_found</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::NotFound</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2765,7 +2765,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">conflict</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">conflict</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::Conflict</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2774,7 +2774,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">bad_update</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">bad_update</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::BadUpdate</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2783,7 +2783,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">no_update</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">no_update</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::NoUpdate</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2792,7 +2792,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::GetMultiple</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2801,7 +2801,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::List</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2810,7 +2810,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_transactions</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_transactions</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::ListTransactions</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2819,7 +2819,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_query</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_query</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::ViewQuery</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2828,7 +2828,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unassociated_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unassociated_collection</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span>
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::UnassociatedCollection</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
@@ -2838,7 +2838,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_update</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_update</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::ViewUpdate</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2847,7 +2847,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_multi_emit</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_multi_emit</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::ViewMultiEmit</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2856,7 +2856,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_access_policies</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_access_policies</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::ViewAccessPolicies</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2865,7 +2865,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unique_views</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unique_views</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::UniqueViews</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2874,7 +2874,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">named_collection</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">named_collection</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::NamedCollection</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2884,7 +2884,7 @@
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;local-multiuser&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;server&quot;</span>))]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">user_management</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">user_management</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::UserManagement</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">_db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">server</span>();
@@ -2902,7 +2902,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compaction</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compaction</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::Compact</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -2912,7 +2912,7 @@
     };
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">store_retrieve_update_delete_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">store_retrieve_update_delete_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">original_value</span> <span class="op">=</span> <span class="ident">Basic::new</span>(<span class="string">&quot;initial_value&quot;</span>);
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
     <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">original_value</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3024,7 +3024,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">not_found_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">not_found_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="macro">assert!</span>(<span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>().<span class="ident">get</span>(<span class="number">1</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">is_none</span>());
 
     <span class="macro">assert!</span>(<span class="ident">db</span>.<span class="ident">last_transaction_id</span>().<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">is_none</span>());
@@ -3032,7 +3032,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">conflict_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">conflict_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">original_value</span> <span class="op">=</span> <span class="ident">Basic::new</span>(<span class="string">&quot;initial_value&quot;</span>);
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
     <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">original_value</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3054,29 +3054,29 @@
         .<span class="kw">await</span>
         .<span class="ident">expect_err</span>(<span class="string">&quot;conflict should have generated an error&quot;</span>)
     {
-        <span class="ident">Error::DocumentConflict</span>(<span class="ident">collection</span>, <span class="ident">id</span>) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="ident">Error::DocumentConflict</span>(<span class="ident">collection</span>, <span class="ident">id</span>) =&gt; {
             <span class="macro">assert_eq!</span>(<span class="ident">collection</span>, <span class="ident">Basic::collection_name</span>()<span class="question-mark">?</span>);
             <span class="macro">assert_eq!</span>(<span class="ident">id</span>, <span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span>);
         }
-        <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">anyhow::Error::from</span>(<span class="ident">other</span>)),
+        <span class="ident">other</span> =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">anyhow::Error::from</span>(<span class="ident">other</span>)),
     }
 
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">bad_update_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">bad_update_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">Document::with_contents</span>(<span class="number">1</span>, <span class="kw-2">&amp;</span><span class="ident">Basic::default</span>())<span class="question-mark">?</span>;
     <span class="kw">match</span> <span class="ident">db</span>.<span class="ident">update</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">doc</span>).<span class="kw">await</span> {
-        <span class="prelude-val">Err</span>(<span class="ident">Error::DocumentNotFound</span>(<span class="ident">collection</span>, <span class="ident">id</span>)) <span class="op">=</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Err</span>(<span class="ident">Error::DocumentNotFound</span>(<span class="ident">collection</span>, <span class="ident">id</span>)) =&gt; {
             <span class="macro">assert_eq!</span>(<span class="ident">collection</span>, <span class="ident">Basic::collection_name</span>()<span class="question-mark">?</span>);
             <span class="macro">assert_eq!</span>(<span class="ident">id</span>, <span class="number">1</span>);
             <span class="prelude-val">Ok</span>(())
         }
-        <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic!</span>(<span class="string">&quot;expected DocumentNotFound from update but got: {:?}&quot;</span>, <span class="ident">other</span>),
+        <span class="ident">other</span> =&gt; <span class="macro">panic!</span>(<span class="string">&quot;expected DocumentNotFound from update but got: {:?}&quot;</span>, <span class="ident">other</span>),
     }
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">no_update_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">no_update_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">original_value</span> <span class="op">=</span> <span class="ident">Basic::new</span>(<span class="string">&quot;initial_value&quot;</span>);
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
     <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">original_value</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3092,7 +3092,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
     <span class="kw">let</span> <span class="ident">doc1_value</span> <span class="op">=</span> <span class="ident">Basic::new</span>(<span class="string">&quot;initial_value&quot;</span>);
     <span class="kw">let</span> <span class="ident">doc1</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">doc1_value</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3110,13 +3110,13 @@
     <span class="comment">// with iterators instead of direct indexing</span>
     <span class="kw">let</span> <span class="ident">doc1</span> <span class="op">=</span> <span class="ident">both_docs</span>
         .<span class="ident">iter</span>()
-        .<span class="ident">find</span>(<span class="op">|</span><span class="ident">doc</span><span class="op">|</span> <span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="ident">doc1</span>.<span class="ident">id</span>)
+        .<span class="ident">find</span>(<span class="op">|</span><span class="ident">doc</span><span class="op">|</span> <span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span> <span class="op">==</span> <span class="ident">doc1</span>.<span class="ident">id</span>)
         .<span class="ident">expect</span>(<span class="string">&quot;Couldn&#39;t find doc1&quot;</span>);
     <span class="kw">let</span> <span class="ident">doc1</span> <span class="op">=</span> <span class="ident">doc1</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
     <span class="macro">assert_eq!</span>(<span class="ident">doc1</span>.<span class="ident">value</span>, <span class="ident">doc1_value</span>.<span class="ident">value</span>);
     <span class="kw">let</span> <span class="ident">doc2</span> <span class="op">=</span> <span class="ident">both_docs</span>
         .<span class="ident">iter</span>()
-        .<span class="ident">find</span>(<span class="op">|</span><span class="ident">doc</span><span class="op">|</span> <span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span> <span class="op">=</span><span class="op">=</span> <span class="ident">doc2</span>.<span class="ident">id</span>)
+        .<span class="ident">find</span>(<span class="op">|</span><span class="ident">doc</span><span class="op">|</span> <span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span> <span class="op">==</span> <span class="ident">doc2</span>.<span class="ident">id</span>)
         .<span class="ident">expect</span>(<span class="string">&quot;Couldn&#39;t find doc2&quot;</span>);
     <span class="kw">let</span> <span class="ident">doc2</span> <span class="op">=</span> <span class="ident">doc2</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
     <span class="macro">assert_eq!</span>(<span class="ident">doc2</span>.<span class="ident">value</span>, <span class="ident">doc2_value</span>.<span class="ident">value</span>);
@@ -3124,7 +3124,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
     <span class="kw">let</span> <span class="ident">doc1_value</span> <span class="op">=</span> <span class="ident">Basic::new</span>(<span class="string">&quot;initial_value&quot;</span>);
     <span class="kw">let</span> <span class="ident">doc1</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">doc1_value</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3155,7 +3155,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_transactions_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_transactions_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
 
     <span class="comment">// create LIST_TRANSACTIONS_MAX_RESULTS + 1 items, giving us just enough</span>
@@ -3201,7 +3201,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_query_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_query_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
     <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::new</span>(<span class="string">&quot;A&quot;</span>)).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">b</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::new</span>(<span class="string">&quot;B&quot;</span>)).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3300,20 +3300,20 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unassociated_collection_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unassociated_collection_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="ident">db</span>
         .<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">UnassociatedCollection</span><span class="op">&gt;</span>()
         .<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::default</span>())
         .<span class="kw">await</span>;
     <span class="kw">match</span> <span class="ident">result</span> {
-        <span class="prelude-val">Err</span>(<span class="ident">Error::CollectionNotFound</span>) <span class="op">=</span><span class="op">&gt;</span> {}
-        <span class="ident">other</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(<span class="string">&quot;unexpected result: {:?}&quot;</span>, <span class="ident">other</span>),
+        <span class="prelude-val">Err</span>(<span class="ident">Error::CollectionNotFound</span>) =&gt; {}
+        <span class="ident">other</span> =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;unexpected result: {:?}&quot;</span>, <span class="ident">other</span>),
     }
 
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_update_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_update_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
     <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::new</span>(<span class="string">&quot;A&quot;</span>)).<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -3410,7 +3410,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_multi_emit_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_multi_emit_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">Basic::new</span>(<span class="string">&quot;A&quot;</span>)
         .<span class="ident">with_tag</span>(<span class="string">&quot;red&quot;</span>)
         .<span class="ident">with_tag</span>(<span class="string">&quot;green&quot;</span>)
@@ -3512,7 +3512,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_access_policy_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">view_access_policy_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
     <span class="kw">let</span> <span class="ident">a</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::new</span>(<span class="string">&quot;A&quot;</span>)).<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -3557,14 +3557,14 @@
             .<span class="ident">with_access_policy</span>(<span class="ident">AccessPolicy::NoUpdate</span>)
             .<span class="ident">query</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="ident">a_children</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">1</span> {
+        <span class="kw">if</span> <span class="ident">a_children</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
             <span class="kw">return</span> <span class="prelude-val">Ok</span>(());
         }
     }
     <span class="macro">panic!</span>(<span class="string">&quot;view never updated&quot;</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unique_view_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">unique_view_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">first_doc</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Unique</span><span class="op">&gt;</span>().<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Unique::new</span>(<span class="string">&quot;1&quot;</span>)).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">Error::UniqueKeyViolation</span> {
@@ -3604,7 +3604,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">named_collection_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">named_collection_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="ident">Unique::new</span>(<span class="string">&quot;0&quot;</span>).<span class="ident">insert_into</span>(<span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="kw">let</span> <span class="ident">original_entry</span> <span class="op">=</span> <span class="ident">Unique::entry</span>(<span class="string">&quot;1&quot;</span>, <span class="ident">db</span>)
         .<span class="ident">update_with</span>(<span class="op">|</span><span class="ident">_existing</span><span class="op">|</span> <span class="macro">unreachable!</span>())
@@ -3635,7 +3635,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compaction_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span> <span class="op">+</span> <span class="ident">Kv</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compaction_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span> <span class="op">+</span> <span class="ident">Kv</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">original_value</span> <span class="op">=</span> <span class="ident">Basic::new</span>(<span class="string">&quot;initial_value&quot;</span>);
     <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">db</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>();
     <span class="ident">collection</span>.<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">original_value</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3658,7 +3658,7 @@
     <span class="ident">admin</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>,
     <span class="ident">server</span>: <span class="ident">S</span>,
     <span class="ident">server_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">username</span> <span class="op">=</span> <span class="macro">format!</span>(<span class="string">&quot;user-management-tests-{}&quot;</span>, <span class="ident">server_name</span>);
     <span class="kw">let</span> <span class="ident">user_id</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">create_user</span>(<span class="kw-2">&amp;</span><span class="ident">username</span>).<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="comment">// Test the default created user state.</span>
@@ -3734,9 +3734,9 @@
 <span class="doccomment">/// Defines the Kv test suite</span>
 <span class="attribute">#[<span class="ident">macro_export</span>]</span>
 <span class="macro">macro_rules!</span> <span class="ident">define_kv_test_suite</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness</span>:<span class="ident">ident</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness</span>:<span class="ident">ident</span>) =&gt; {
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">basic_kv_test</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">basic_kv_test</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::kv</span>::{<span class="ident">KeyStatus</span>, <span class="ident">Kv</span>};
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::KvBasic</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3778,7 +3778,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">kv_set_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">kv_set_tests</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::kv</span>::{<span class="ident">KeyStatus</span>, <span class="ident">Kv</span>};
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::KvSet</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3811,7 +3811,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">kv_increment_decrement_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">kv_increment_decrement_tests</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::kv</span>::{<span class="ident">KeyStatus</span>, <span class="ident">Kv</span>};
             <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span>
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::KvIncrementDecrement</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -3978,7 +3978,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">kv_expiration_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">kv_expiration_tests</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">use</span> <span class="ident">std::time::Duration</span>;
 
             <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::kv</span>::{<span class="ident">KeyStatus</span>, <span class="ident">Kv</span>};
@@ -4052,7 +4052,7 @@
         }
 
         <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
-        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_expire_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_expire_tests</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
             <span class="kw">use</span> <span class="ident">std::time::Duration</span>;
 
             <span class="kw">use</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::kv</span>::{<span class="ident">KeyStatus</span>, <span class="ident">Kv</span>};
@@ -4110,14 +4110,14 @@
 
 <span class="kw">impl</span> <span class="ident">TimingTest</span> {
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">tolerance</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">tolerance</span>: <span class="ident">Duration</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">tolerance</span>,
             <span class="ident">start</span>: <span class="ident">Instant::now</span>(),
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">wait_until</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">absolute_duration</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">wait_until</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">absolute_duration</span>: <span class="ident">Duration</span>) -&gt; <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">target</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">start</span> <span class="op">+</span> <span class="ident">absolute_duration</span>;
         <span class="kw">let</span> <span class="ident">now</span> <span class="op">=</span> <span class="ident">Instant::now</span>();
         <span class="kw">if</span> <span class="ident">now</span> <span class="op">&gt;</span> <span class="ident">target</span> {
@@ -4132,7 +4132,7 @@
     }
 
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">elapsed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Duration</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">elapsed</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Duration</span> {
         <span class="ident">Instant::now</span>()
             .<span class="ident">checked_duration_since</span>(<span class="self">self</span>.<span class="ident">start</span>)
             .<span class="ident">unwrap_or_default</span>()
@@ -4142,7 +4142,7 @@
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">basic_server_connection_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">StorageConnection</span><span class="op">&gt;</span>(
     <span class="ident">server</span>: <span class="ident">C</span>,
     <span class="ident">newdb_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="ident">server</span>.<span class="ident">list_available_schemas</span>().<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="ident">schemas</span>.<span class="ident">sort</span>();
     <span class="macro">assert!</span>(<span class="ident">schemas</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::schema_name</span>()<span class="question-mark">?</span>));

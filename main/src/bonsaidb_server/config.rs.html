@@ -110,7 +110,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Configuration</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">server_name</span>: <span class="ident">String::from</span>(<span class="string">&quot;bonsaidb&quot;</span>),
             <span class="ident">client_simultaneous_request_limit</span>: <span class="number">16</span>,
@@ -139,7 +139,7 @@
     }
 
     <span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">AcmeConfiguration</span> {
-        <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+        <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
             <span class="self">Self</span> {
                 <span class="ident">contact_email</span>: <span class="prelude-val">None</span>,
                 <span class="ident">directory</span>: <span class="ident">LETS_ENCRYPT_PRODUCTION_DIRECTORY</span>.<span class="ident">to_string</span>(),
@@ -163,10 +163,10 @@
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">DefaultPermissions</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Permissions</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">permissions</span>: <span class="ident">DefaultPermissions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">permissions</span>: <span class="ident">DefaultPermissions</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">match</span> <span class="ident">permissions</span> {
-            <span class="ident">DefaultPermissions::Permissions</span>(<span class="ident">permissions</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">permissions</span>,
-            <span class="ident">DefaultPermissions::AllowAll</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::allow_all</span>(),
+            <span class="ident">DefaultPermissions::Permissions</span>(<span class="ident">permissions</span>) =&gt; <span class="ident">permissions</span>,
+            <span class="ident">DefaultPermissions::AllowAll</span> =&gt; <span class="ident"><span class="self">Self</span>::allow_all</span>(),
         }
     }
 }

@@ -11,7 +11,7 @@ server implementation.</li>
 <li><a href="https://docs.rs/bonsaidb-client"><code>bonsaidb-client</code></a>: Client to access a
 <code>BonsaiDb</code> server.</li>
 </ul>
-<h2 id="feature-flags" class="section-header"><a href="#feature-flags">Feature Flags</a></h2>
+<h3 id="feature-flags" class="section-header"><a href="#feature-flags">Feature Flags</a></h3>
 <p>No feature flags are enabled by default in the <code>bonsaidb</code> crate. This is
 because in most Rust executables, you will only need a subset of the
 functionality. If you’d prefer to enable everything, you can use the <code>full</code>
@@ -22,7 +22,7 @@ bonsaidb = { version = &quot;*&quot;, default-features = false, features = &quot
 <li><code>full</code>: Enables <code>local-full</code>, <code>server-full</code>, and <code>client-full</code>.</li>
 <li><code>cli</code>: Enables the <code>bonsaidb</code> executable.</li>
 </ul>
-<h3 id="local-databases-only" class="section-header"><a href="#local-databases-only">Local databases only</a></h3><div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+<h4 id="local-databases-only" class="section-header"><a href="#local-databases-only">Local databases only</a></h4><div class="example-wrap"><pre class="language-toml"><code>[dependencies]
 bonsaidb = { version = &quot;*&quot;, default-features = false, features = &quot;local-full&quot; }</code></pre></div>
 <ul>
 <li><code>local-full</code>: Enables <code>local</code>, <code>local-encryption</code>, <code>local-instrument</code>,
@@ -35,7 +35,7 @@ management commands into your own command-line interface.</li>
 <li><code>local-instrument</code>: Enables <code>tracing</code> instrumentation.</li>
 <li><code>local-multiuser</code>: Enables multi-user support.</li>
 </ul>
-<h3 id="bonsaidb-server" class="section-header"><a href="#bonsaidb-server"><code>BonsaiDb</code> server</a></h3><div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+<h4 id="bonsaidb-server" class="section-header"><a href="#bonsaidb-server"><code>BonsaiDb</code> server</a></h4><div class="example-wrap"><pre class="language-toml"><code>[dependencies]
 bonsaidb = { version = &quot;*&quot;, default-features = false, features = &quot;server-full&quot; }</code></pre></div>
 <ul>
 <li><code>server-full</code>: Enables <code>server</code>, <code>server-acme</code>, <code>server-encryption</code>,
@@ -47,7 +47,7 @@ bonsaidb = { version = &quot;*&quot;, default-features = false, features = &quot
 <li><code>server-instrument</code>: Enables <code>tracing</code> instrumentation.</li>
 <li><code>server-websockets</code>: Enables <code>WebSocket</code> support for <code>bonsaidb-server</code>.</li>
 </ul>
-<h3 id="client-for-accessing-a-bonsaidb-server" class="section-header"><a href="#client-for-accessing-a-bonsaidb-server">Client for accessing a <code>BonsaiDb</code> server.</a></h3><div class="example-wrap"><pre class="language-toml"><code>[dependencies]
+<h4 id="client-for-accessing-a-bonsaidb-server" class="section-header"><a href="#client-for-accessing-a-bonsaidb-server">Client for accessing a <code>BonsaiDb</code> server.</a></h4><div class="example-wrap"><pre class="language-toml"><code>[dependencies]
 bonsaidb = { version = &quot;*&quot;, default-features = false, features = &quot;client-full&quot; }</code></pre></div>
 <ul>
 <li><code>client-full</code>: Enables <code>client</code>, <code>client-trusted-dns</code>, and
@@ -58,17 +58,17 @@ bonsaidb = { version = &quot;*&quot;, default-features = false, features = &quot
 enabled, all DNS resolution is done with the OS’s default name resolver.</li>
 <li><code>client-websockets</code>: Enables <code>WebSocket</code> support for <code>bonsaidb-client</code>.</li>
 </ul>
-<h3 id="vaultkeystorage-options" class="section-header"><a href="#vaultkeystorage-options"><code>VaultKeyStorage</code> options</a></h3>
+<h4 id="vaultkeystorage-options" class="section-header"><a href="#vaultkeystorage-options"><code>VaultKeyStorage</code> options</a></h4>
 <ul>
 <li><code>keystorage-s3</code>: Enables S3-compatible key storage.</li>
 </ul>
 </div></details><h2 id="modules" class="section-header"><a href="#modules">Modules</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="mod" href="cli/index.html" title="bonsaidb::cli mod">cli</a></div><div class="item-right docblock-short"><p><code>BonsaiDb</code> command line tools.</p>
-</div><div class="item-left module-item"><a class="mod" href="client/index.html" title="bonsaidb::client mod">client</a></div><div class="item-right docblock-short"><p>Client for <code>bonsaidb-server</code>.</p>
-</div><div class="item-left module-item"><a class="mod" href="core/index.html" title="bonsaidb::core mod">core</a></div><div class="item-right docblock-short"><p>Core functionality and types for <code>BonsaiDb</code>.</p>
-</div><div class="item-left module-item"><a class="mod" href="keystorage/index.html" title="bonsaidb::keystorage mod">keystorage</a></div><div class="item-right docblock-short"><p><code>VaultKeyStorage</code> implementors.</p>
-</div><div class="item-left module-item"><a class="mod" href="local/index.html" title="bonsaidb::local mod">local</a></div><div class="item-right docblock-short"><p>Local storage backend for <code>BonsaiDb</code>.</p>
-</div><div class="item-left module-item"><a class="mod" href="server/index.html" title="bonsaidb::server mod">server</a></div><div class="item-right docblock-short"><p>The <code>BonsaiDb</code> Server.</p>
-</div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../" data-current-crate="bonsaidb" data-search-index-js="../search-index.js" data-search-js="../search.js"></div>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="cli/index.html" title="bonsaidb::cli mod">cli</a></div><div class="item-right docblock-short"><p><code>BonsaiDb</code> command line tools.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="client/index.html" title="bonsaidb::client mod">client</a></div><div class="item-right docblock-short"><p>Client for <code>bonsaidb-server</code>.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="core/index.html" title="bonsaidb::core mod">core</a></div><div class="item-right docblock-short"><p>Core functionality and types for <code>BonsaiDb</code>.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="keystorage/index.html" title="bonsaidb::keystorage mod">keystorage</a></div><div class="item-right docblock-short"><p><code>VaultKeyStorage</code> implementors.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="local/index.html" title="bonsaidb::local mod">local</a></div><div class="item-right docblock-short"><p>Local storage backend for <code>BonsaiDb</code>.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="server/index.html" title="bonsaidb::server mod">server</a></div><div class="item-right docblock-short"><p>The <code>BonsaiDb</code> Server.</p>
+</div></div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../" data-current-crate="bonsaidb" data-search-index-js="../search-index.js" data-search-js="../search.js"></div>
     <script src="../main.js"></script>
 </body></html>

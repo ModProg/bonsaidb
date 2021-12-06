@@ -77,11 +77,11 @@
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Admin</span>;
 
 <span class="kw">impl</span> <span class="ident">Schema</span> <span class="kw">for</span> <span class="ident">Admin</span> {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">SchemaName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;bonsaidb-admin&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">schema</span>.<span class="ident">define_collection</span>::<span class="op">&lt;</span><span class="ident">database::Database</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>

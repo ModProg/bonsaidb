@@ -146,6 +146,7 @@
 <span id="146">146</span>
 <span id="147">147</span>
 <span id="148">148</span>
+<span id="149">149</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
 
 <span class="kw">use</span> <span class="ident">actionable::PermissionDenied</span>;
@@ -213,52 +214,52 @@
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">core::Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">Error</span>) -&gt; <span class="self">Self</span> {
         <span class="comment">// without it, there&#39;s no way to get this to_string() easily.</span>
         <span class="kw">match</span> <span class="ident">other</span> {
-            <span class="ident">Error::Database</span>(<span class="ident">storage</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Database</span>(<span class="ident">storage</span>.<span class="ident">to_string</span>()),
-            <span class="ident">Error::Core</span>(<span class="ident">core</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">core</span>,
-            <span class="ident">Error::Io</span>(<span class="ident">io</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Io</span>(<span class="ident">io</span>.<span class="ident">to_string</span>()),
-            <span class="ident">Error::Transport</span>(<span class="ident">networking</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Transport</span>(<span class="ident">networking</span>),
+            <span class="ident">Error::Database</span>(<span class="ident">storage</span>) =&gt; <span class="ident"><span class="self">Self</span>::Database</span>(<span class="ident">storage</span>.<span class="ident">to_string</span>()),
+            <span class="ident">Error::Core</span>(<span class="ident">core</span>) =&gt; <span class="ident">core</span>,
+            <span class="ident">Error::Io</span>(<span class="ident">io</span>) =&gt; <span class="ident"><span class="self">Self</span>::Io</span>(<span class="ident">io</span>.<span class="ident">to_string</span>()),
+            <span class="ident">Error::Transport</span>(<span class="ident">networking</span>) =&gt; <span class="ident"><span class="self">Self</span>::Transport</span>(<span class="ident">networking</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
-            <span class="ident">Error::Websocket</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Websocket</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()),
-            <span class="ident">err</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Server</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()),
+            <span class="ident">Error::Websocket</span>(<span class="ident">err</span>) =&gt; <span class="ident"><span class="self">Self</span>::Websocket</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()),
+            <span class="ident">err</span> =&gt; <span class="ident"><span class="self">Self</span>::Server</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()),
         }
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">PermissionDenied</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">PermissionDenied</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">PermissionDenied</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident">core::Error::PermissionDenied</span>(<span class="ident">err</span>))
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">InvalidNameError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">InvalidNameError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">InvalidNameError</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident">core::Error::InvalidName</span>(<span class="ident">err</span>))
     }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">rustls::sign::SignError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">rustls::sign::SignError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">rustls::sign::SignError</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::TlsSigningError</span>
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">InsertError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">error</span>: <span class="ident">InsertError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">error</span>: <span class="ident">InsertError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">error</span>.<span class="ident">error</span>)
     }
 }
 
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">ResultExt</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">map_err_to_core</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">core::Error</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">map_err_to_core</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">core::Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="ident">ResultExt</span><span class="op">&lt;</span><span class="ident">R</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">map_err_to_core</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">core::Error</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">map_err_to_core</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">core::Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -268,7 +269,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">bincode::Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">bincode::Error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">bincode::Error</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident">core::Error::Websocket</span>(<span class="macro">format!</span>(
             <span class="string">&quot;error deserializing message: {:?}&quot;</span>,
             <span class="ident">other</span>
@@ -277,9 +278,9 @@
 }
 
 <span class="macro">macro_rules!</span> <span class="ident">impl_from_fabruic</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span>:<span class="ident">ty</span>) <span class="op">=</span><span class="op">&gt;</span> {
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span>:<span class="ident">ty</span>) =&gt; {
         <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
-            <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+            <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">error</span>) -&gt; <span class="self">Self</span> {
                 <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident">bonsaidb_core::Error::Transport</span>(<span class="ident">other</span>.<span class="ident">to_string</span>()))
             }
         }
@@ -294,6 +295,7 @@
 <span class="macro">impl_from_fabruic!</span>(<span class="ident">fabruic::error::Connection</span>);
 <span class="macro">impl_from_fabruic!</span>(<span class="ident">fabruic::error::Incoming</span>);
 <span class="macro">impl_from_fabruic!</span>(<span class="ident">fabruic::error::AlreadyClosed</span>);
+<span class="macro">impl_from_fabruic!</span>(<span class="ident">fabruic::error::Config</span>);
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bonsaidb_server" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
     <script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script>

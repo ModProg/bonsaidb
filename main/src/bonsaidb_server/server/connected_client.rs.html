@@ -260,7 +260,7 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">data</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>(),
         }
@@ -270,26 +270,26 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Returns the address of the connected client.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">address</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">SocketAddr</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">address</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">SocketAddr</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">address</span>
     }
 
     <span class="doccomment">/// Returns the transport method the client is connected via.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transport</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">Transport</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transport</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">Transport</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">transport</span>
     }
 
     <span class="doccomment">/// Returns the current permissions for this client. Will reflect the</span>
     <span class="doccomment">/// current state of authentication.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">permissions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Permissions</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">permissions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Permissions</span> {
         <span class="kw">let</span> <span class="ident">auth_state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">auth_state</span>.<span class="ident">read</span>().<span class="kw">await</span>;
         <span class="ident">auth_state</span>.<span class="ident">permissions</span>.<span class="ident">clone</span>()
     }
 
     <span class="doccomment">/// Returns the unique id of the user this client is connected as. Returns</span>
     <span class="doccomment">/// None if the connection isn&#39;t authenticated.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">user_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">user_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">auth_state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">auth_state</span>.<span class="ident">read</span>().<span class="kw">await</span>;
         <span class="ident">auth_state</span>.<span class="ident">user_id</span>
     }
@@ -300,7 +300,7 @@
         <span class="ident">username</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
         <span class="ident">password_request</span>: <span class="ident">LoginRequest</span>,
         <span class="ident">server</span>: <span class="kw-2">&amp;</span><span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">LoginResponse</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">LoginResponse</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">user_id</span>, <span class="ident">login</span>, <span class="ident">response</span>) <span class="op">=</span> <span class="ident">server</span>
             .<span class="ident">internal_login_with_password</span>(<span class="ident">username</span>, <span class="ident">password_request</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
@@ -323,7 +323,7 @@
         <span class="kw-2">*</span><span class="ident">pending_password_login</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">user_id</span>, <span class="ident">new_state</span>));
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">take_pending_password_login</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">ServerLogin</span>)<span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">take_pending_password_login</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">ServerLogin</span>)<span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pending_password_login</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">pending_password_login</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
         <span class="ident">pending_password_login</span>.<span class="ident">take</span>()
     }
@@ -332,12 +332,12 @@
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">send</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">response</span>: <span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">flume::SendError</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">flume::SendError</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">response_sender</span>.<span class="ident">send</span>(<span class="ident">response</span>)
     }
 
     <span class="doccomment">/// Returns a locked reference to the stored client data.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">client_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">LockedClientDataGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">B::ClientData</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">client_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">LockedClientDataGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">B::ClientData</span><span class="op">&gt;</span> {
         <span class="ident">LockedClientDataGuard</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_data</span>.<span class="ident">lock</span>().<span class="kw">await</span>)
     }
 
@@ -354,13 +354,13 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;client</span>, <span class="ident">ClientData</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">LockedClientDataGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;client</span>, <span class="ident">ClientData</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">ClientData</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;client</span>, <span class="ident">ClientData</span><span class="op">&gt;</span> <span class="ident">DerefMut</span> <span class="kw">for</span> <span class="ident">LockedClientDataGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;client</span>, <span class="ident">ClientData</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident"><span class="self">Self</span>::Target</span> {
+    <span class="kw">fn</span> <span class="ident">deref_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident"><span class="self">Self</span>::Target</span> {
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="number">0</span>
     }
 }
@@ -379,7 +379,7 @@
         <span class="ident">transport</span>: <span class="ident">Transport</span>,
         <span class="ident">response_sender</span>: <span class="ident">Sender</span><span class="op">&lt;</span><span class="ident">CustomApiResult</span><span class="op">&lt;</span><span class="ident">B::CustomApi</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">server</span>: <span class="ident">CustomServer</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">client</span>: <span class="ident">ConnectedClient</span> {
                 <span class="ident">data</span>: <span class="ident">Arc::new</span>(<span class="ident">Data</span> {
@@ -400,7 +400,7 @@
         }
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">client</span>.<span class="ident">clone</span>()
     }
 }
@@ -418,7 +418,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">OwnedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
+    <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">client</span>
     }
 }

@@ -85,13 +85,13 @@
 <span class="doccomment">/// Defines a group of collections that are stored into a single database.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">Schema</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
     <span class="doccomment">/// Returns the unique [`SchemaName`] for this schema.</span>
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Defines the `Collection`s into `schema`.</span>
-    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
+    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Retrieves the [`Schematic`] for this schema.</span>
-    <span class="kw">fn</span> <span class="ident">schematic</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Schematic</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">schematic</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Schematic</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schematic</span> <span class="op">=</span> <span class="ident">Schematic::default</span>();
         <span class="ident"><span class="self">Self</span>::define_collections</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schematic</span>)<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">schematic</span>)
@@ -102,11 +102,11 @@
 <span class="doccomment">/// collections isn&#39;t required. For example, accessing only the key-value store</span>
 <span class="doccomment">/// or pubsub.</span>
 <span class="kw">impl</span> <span class="ident">Schema</span> <span class="kw">for</span> () {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">SchemaName::new</span>(<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">_schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(())
     }
 }
@@ -115,12 +115,12 @@
 <span class="kw">where</span>
     <span class="ident">T</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
 {
-    <span class="kw">fn</span> <span class="ident">schema_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">schema_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">CollectionName</span> { <span class="ident">authority</span>, <span class="ident">name</span> } <span class="op">=</span> <span class="ident"><span class="self">Self</span>::collection_name</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">SchemaName</span> { <span class="ident">authority</span>, <span class="ident">name</span> })
     }
 
-    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_collections</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">schema</span>.<span class="ident">define_collection</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>()
     }
 }

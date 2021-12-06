@@ -140,7 +140,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span>, <span class="ident">V</span>: <span class="ident">Serialize</span><span class="op">&gt;</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Serializes this map.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Serialized</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Serialized</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Serialized</span> {
             <span class="ident">source</span>: <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">clone</span>(),
             <span class="ident">key</span>: <span class="self">self</span>
@@ -168,7 +168,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span>, <span class="ident">V</span>: <span class="ident">Serialize</span><span class="op">&gt;</span> <span class="ident">Map</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Creates a new Map entry for the document with id `source`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source</span>: <span class="ident">Header</span>, <span class="ident">key</span>: <span class="ident">K</span>, <span class="ident">value</span>: <span class="ident">V</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">source</span>: <span class="ident">Header</span>, <span class="ident">key</span>: <span class="ident">K</span>, <span class="ident">value</span>: <span class="ident">V</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> { <span class="ident">source</span>, <span class="ident">key</span>, <span class="ident">value</span> }
     }
 }
@@ -190,7 +190,7 @@
     <span class="doccomment">/// Deserializes this map.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deserialized</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span>, <span class="ident">V</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="ident">DeserializeOwned</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Map</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Map</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Map</span> {
             <span class="ident">source</span>: <span class="self">self</span>.<span class="ident">source</span>.<span class="ident">clone</span>(),
             <span class="ident">key</span>: <span class="ident">K::from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>).<span class="ident">map_err</span>(<span class="ident">view::Error::key_serialization</span>)<span class="question-mark">?</span>,
@@ -214,7 +214,7 @@
     <span class="doccomment">/// Deserialize into a [`MappedDocument`](MappedDocument).</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deserialized</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span>, <span class="ident">V</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="ident">DeserializeOwned</span><span class="op">&gt;</span>(
         <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MappedDocument</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">MappedDocument</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">Key::from_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">key</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span>: <span class="ident">K::Error</span><span class="op">|</span> {
             <span class="ident"><span class="kw">crate</span>::Error::Database</span>(<span class="ident">view::Error::key_serialization</span>(<span class="ident">err</span>).<span class="ident">to_string</span>())
         })<span class="question-mark">?</span>;

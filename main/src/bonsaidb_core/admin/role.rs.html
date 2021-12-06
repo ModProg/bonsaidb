@@ -78,7 +78,7 @@
 
 <span class="kw">impl</span> <span class="ident">Role</span> {
     <span class="doccomment">/// Returns a new role with no groups and the name provided.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">named</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">named</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="ident">S</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">into</span>(),
             <span class="ident">groups</span>: <span class="ident">Vec::new</span>(),
@@ -86,18 +86,18 @@
     }
 
     <span class="doccomment">/// Builder-style method. Returns self after replacing the current groups with `ids`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_group_ids</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ids</span>: <span class="ident">I</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_group_ids</span><span class="op">&lt;</span><span class="ident">I</span>: <span class="ident">IntoIterator</span><span class="op">&lt;</span><span class="ident">Item</span> <span class="op">=</span> <span class="ident">u64</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">ids</span>: <span class="ident">I</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">groups</span> <span class="op">=</span> <span class="ident">ids</span>.<span class="ident">into_iter</span>().<span class="ident">collect</span>();
         <span class="self">self</span>
     }
 }
 
 <span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">Role</span> {
-    <span class="kw">fn</span> <span class="ident">collection_name</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
         <span class="ident">CollectionName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;role&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">ByName</span>)
     }
 }

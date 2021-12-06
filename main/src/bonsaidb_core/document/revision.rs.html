@@ -134,13 +134,13 @@
 <span class="kw">impl</span> <span class="ident">Revision</span> {
     <span class="doccomment">/// Creates the first revision for a document with the SHA256 digest of the passed bytes.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">contents</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">contents</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::with_id</span>(<span class="number">0</span>, <span class="ident">contents</span>)
     }
 
     <span class="doccomment">/// Creates a revision with `id` for a document with the SHA256 digest of the passed bytes.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_id</span>(<span class="ident">id</span>: <span class="ident">u32</span>, <span class="ident">contents</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_id</span>(<span class="ident">id</span>: <span class="ident">u32</span>, <span class="ident">contents</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">id</span>,
             <span class="ident">sha256</span>: <span class="ident">digest</span>(<span class="ident">contents</span>),
@@ -153,9 +153,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Panics if `id` overflows.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_revision</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">new_contents</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">next_revision</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">new_contents</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">sha256</span> <span class="op">=</span> <span class="ident">digest</span>(<span class="ident">new_contents</span>);
-        <span class="kw">if</span> <span class="ident">sha256</span> <span class="op">=</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">sha256</span> {
+        <span class="kw">if</span> <span class="ident">sha256</span> <span class="op">==</span> <span class="self">self</span>.<span class="ident">sha256</span> {
             <span class="prelude-val">None</span>
         } <span class="kw">else</span> {
             <span class="prelude-val">Some</span>(<span class="self">Self</span> {
@@ -170,7 +170,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Display</span> <span class="kw">for</span> <span class="ident">Revision</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::fmt::Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="self">self</span>.<span class="ident">id</span>.<span class="ident">fmt</span>(<span class="ident">f</span>)<span class="question-mark">?</span>;
         <span class="ident">f</span>.<span class="ident">write_char</span>(<span class="string">&#39;-&#39;</span>)<span class="question-mark">?</span>;
         <span class="kw">for</span> <span class="ident">byte</span> <span class="kw">in</span> <span class="self">self</span>.<span class="ident">sha256</span> {
@@ -180,7 +180,7 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">digest</span>(<span class="ident">payload</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> [<span class="ident">u8</span>; <span class="number">32</span>] {
+<span class="kw">fn</span> <span class="ident">digest</span>(<span class="ident">payload</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; [<span class="ident">u8</span>; <span class="number">32</span>] {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hasher</span> <span class="op">=</span> <span class="ident">Sha256::default</span>();
     <span class="ident">hasher</span>.<span class="ident">update</span>(<span class="ident">payload</span>);
     <span class="ident">hasher</span>.<span class="ident">finalize</span>().<span class="ident">into</span>()

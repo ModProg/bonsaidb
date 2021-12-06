@@ -1436,6 +1436,7 @@
 <span id="1436">1436</span>
 <span id="1437">1437</span>
 <span id="1438">1438</span>
+<span id="1439">1439</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>, <span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">convert::Infallible</span>, <span class="ident">path::Path</span>, <span class="ident">sync::Arc</span>, <span class="ident">u8</span>,
 };
@@ -1496,10 +1497,11 @@
     <span class="ident">context</span>: <span class="ident">Context</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">storage</span>: <span class="ident">Storage</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">schema</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Schematic</span><span class="op">&gt;</span>,
+    <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">dead_code</span>)]</span> <span class="comment">// This code was previously used, it works, but is currently unused.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">effective_permissions</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span>,
 }
 <span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">Database</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">data</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">clone</span>(),
         }
@@ -1512,7 +1514,7 @@
         <span class="ident">name</span>: <span class="ident">S</span>,
         <span class="ident">context</span>: <span class="ident">Context</span>,
         <span class="ident">storage</span>: <span class="ident">Storage</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">name</span>.<span class="ident">into</span>();
         <span class="kw">let</span> <span class="ident">schema</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">DB::schematic</span>()<span class="question-mark">?</span>);
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">Self</span> {
@@ -1547,7 +1549,7 @@
     <span class="doccomment">/// See [this issue](https://github.com/khonsulabs/bonsaidb/issues/68).</span>
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_effective_permissions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">effective_permissions</span>: <span class="ident">Permissions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with_effective_permissions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">effective_permissions</span>: <span class="ident">Permissions</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">data</span>: <span class="ident">Arc::new</span>(<span class="ident">Data</span> {
                 <span class="ident">name</span>: <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">clone</span>(),
@@ -1561,7 +1563,7 @@
 
     <span class="doccomment">/// Returns the name of the database.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">as_ref</span>()
     }
 
@@ -1569,7 +1571,7 @@
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open_local</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(
         <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>,
         <span class="ident">configuration</span>: <span class="ident">Configuration</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">Storage::open_local</span>(<span class="ident">path</span>, <span class="ident">configuration</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="ident">storage</span>.<span class="ident">register_schema</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>().<span class="kw">await</span><span class="question-mark">?</span>;
 
@@ -1580,22 +1582,22 @@
 
     <span class="doccomment">/// Returns the [`Storage`] that this database belongs to.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">storage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">Storage</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">storage</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">Storage</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">storage</span>
     }
 
     <span class="doccomment">/// Returns the [`Schematic`] for the schema for this database.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">schematic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">Schematic</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">schematic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">Schematic</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schema</span>
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">roots</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">nebari::Roots</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">roots</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">nebari::Roots</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span> {
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>.<span class="ident">context</span>.<span class="ident">roots</span>
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">for_each_in_view</span><span class="op">&lt;</span>
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">ViewEntryCollection</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">ViewEntryCollection</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
     <span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">view::Serialized</span>,
@@ -1604,7 +1606,7 @@
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="kw-2">mut</span> <span class="ident">callback</span>: <span class="ident">F</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">access_policy</span>, <span class="ident">AccessPolicy::UpdateBefore</span>) {
             <span class="self">self</span>.<span class="ident">data</span>
                 .<span class="ident">storage</span>
@@ -1649,7 +1651,7 @@
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">for_each_view_entry</span><span class="op">&lt;</span>
         <span class="ident">V</span>: <span class="ident">schema::View</span>,
-        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">ViewEntryCollection</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
+        <span class="ident">F</span>: <span class="ident">FnMut</span>(<span class="ident">ViewEntryCollection</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>,
     <span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -1657,7 +1659,7 @@
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="ident">callback</span>: <span class="ident">F</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">data</span>
             .<span class="ident">schema</span>
@@ -1679,7 +1681,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">id</span>: <span class="ident">u64</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">clone</span>();
         <span class="ident">tokio::task::spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
@@ -1712,7 +1714,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">u64</span>],
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">ids</span> <span class="op">=</span> <span class="ident">ids</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">id</span><span class="op">|</span> <span class="ident">id</span>.<span class="ident">to_be_bytes</span>()).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">clone</span>();
@@ -1745,7 +1747,7 @@
         <span class="ident">sort</span>: <span class="ident">Sort</span>,
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
         <span class="kw">let</span> <span class="ident">collection</span> <span class="op">=</span> <span class="ident">collection</span>.<span class="ident">clone</span>();
         <span class="ident">tokio::task::spawn_blocking</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
@@ -1767,8 +1769,8 @@
             <span class="ident">tree</span>.<span class="ident">scan</span>(
                 <span class="ident">ids</span>,
                 <span class="kw">match</span> <span class="ident">sort</span> {
-                    <span class="ident">Sort::Ascending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
-                    <span class="ident">Sort::Descending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+                    <span class="ident">Sort::Ascending</span> =&gt; <span class="bool-val">true</span>,
+                    <span class="ident">Sort::Descending</span> =&gt; <span class="bool-val">false</span>,
                 },
                 <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> <span class="bool-val">true</span>,
                 <span class="op">|</span><span class="kw">_</span>, <span class="kw">_</span><span class="op">|</span> {
@@ -1791,8 +1793,8 @@
                 },
             )
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">err</span> {
-                <span class="ident">AbortError::Other</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">err</span>,
-                <span class="ident">AbortError::Nebari</span>(<span class="ident">err</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">bonsaidb_core::Error::from</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>(<span class="ident">err</span>)),
+                <span class="ident">AbortError::Other</span>(<span class="ident">err</span>) =&gt; <span class="ident">err</span>,
+                <span class="ident">AbortError::Nebari</span>(<span class="ident">err</span>) =&gt; <span class="ident">bonsaidb_core::Error::from</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>(<span class="ident">err</span>)),
             })<span class="question-mark">?</span>;
 
             <span class="prelude-val">Ok</span>(<span class="ident">found_docs</span>)
@@ -1806,7 +1808,7 @@
         <span class="ident">view_name</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">data</span>
             .<span class="ident">schema</span>
@@ -1816,7 +1818,7 @@
             .<span class="ident">grouped_reduce_in_view</span>(<span class="ident">view_name</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>)
             .<span class="kw">await</span><span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">mappings</span>.<span class="ident">len</span>() <span class="op">=</span><span class="op">=</span> <span class="number">1</span> {
+        <span class="kw">let</span> <span class="ident">result</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">mappings</span>.<span class="ident">len</span>() <span class="op">==</span> <span class="number">1</span> {
             <span class="ident">mappings</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>().<span class="ident">value</span>
         } <span class="kw">else</span> {
             <span class="ident">view</span>.<span class="ident">reduce</span>(
@@ -1837,7 +1839,7 @@
         <span class="ident">view_name</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">data</span>
             .<span class="ident">schema</span>
@@ -1862,7 +1864,7 @@
         <span class="ident">view_name</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">data</span>
             .<span class="ident">schema</span>
@@ -1891,19 +1893,19 @@
         <span class="ident">operation</span>: <span class="kw-2">&amp;</span><span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">transaction</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ExecutingTransaction</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>,
         <span class="ident">tree_index_map</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">operation</span>.<span class="ident">command</span> {
-            <span class="ident">Command::Insert</span> { <span class="ident">contents</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Command::Insert</span> { <span class="ident">contents</span> } =&gt; {
                 <span class="self">self</span>.<span class="ident">execute_insert</span>(<span class="ident">operation</span>, <span class="ident">transaction</span>, <span class="ident">tree_index_map</span>, <span class="ident">contents</span>.<span class="ident">clone</span>())
             }
-            <span class="ident">Command::Update</span> { <span class="ident">header</span>, <span class="ident">contents</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">execute_update</span>(
+            <span class="ident">Command::Update</span> { <span class="ident">header</span>, <span class="ident">contents</span> } =&gt; <span class="self">self</span>.<span class="ident">execute_update</span>(
                 <span class="ident">operation</span>,
                 <span class="ident">transaction</span>,
                 <span class="ident">tree_index_map</span>,
                 <span class="ident">header</span>,
                 <span class="ident">contents</span>.<span class="ident">clone</span>(),
             ),
-            <span class="ident">Command::Delete</span> { <span class="ident">header</span> } <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">Command::Delete</span> { <span class="ident">header</span> } =&gt; {
                 <span class="self">self</span>.<span class="ident">execute_delete</span>(<span class="ident">operation</span>, <span class="ident">transaction</span>, <span class="ident">tree_index_map</span>, <span class="ident">header</span>)
             }
         }
@@ -1916,7 +1918,7 @@
         <span class="ident">tree_index_map</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">header</span>: <span class="kw-2">&amp;</span><span class="ident">Header</span>,
         <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="ident">transaction</span>
             .<span class="ident">tree</span>::<span class="op">&lt;</span><span class="ident">Versioned</span><span class="op">&gt;</span>(<span class="ident">tree_index_map</span>[<span class="kw-2">&amp;</span><span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="ident">operation</span>.<span class="ident">collection</span>)])
             .<span class="ident">unwrap</span>();
@@ -1925,7 +1927,7 @@
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">vec</span>) <span class="op">=</span> <span class="ident">documents</span>.<span class="ident">get</span>(<span class="ident">document_id</span>.<span class="ident">as_ref</span>())<span class="question-mark">?</span> {
             <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">deserialize_document</span>(<span class="kw-2">&amp;</span><span class="ident">vec</span>)<span class="question-mark">?</span>;
-            <span class="kw">if</span> <span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">revision</span> <span class="op">=</span><span class="op">=</span> <span class="ident">header</span>.<span class="ident">revision</span> {
+            <span class="kw">if</span> <span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">revision</span> <span class="op">==</span> <span class="ident">header</span>.<span class="ident">revision</span> {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">updated_doc</span>) <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">create_new_revision</span>(<span class="ident">contents</span>) {
                     <span class="ident">documents</span>.<span class="ident">set</span>(
                         <span class="ident">updated_doc</span>
@@ -1974,7 +1976,7 @@
         <span class="ident">transaction</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ExecutingTransaction</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>,
         <span class="ident">tree_index_map</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="ident">transaction</span>
             .<span class="ident">tree</span>::<span class="op">&lt;</span><span class="ident">Versioned</span><span class="op">&gt;</span>(<span class="ident">tree_index_map</span>[<span class="kw-2">&amp;</span><span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="ident">operation</span>.<span class="ident">collection</span>)])
             .<span class="ident">unwrap</span>();
@@ -2001,14 +2003,14 @@
         <span class="ident">transaction</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ExecutingTransaction</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>,
         <span class="ident">tree_index_map</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">header</span>: <span class="kw-2">&amp;</span><span class="ident">Header</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="ident">transaction</span>
             .<span class="ident">tree</span>::<span class="op">&lt;</span><span class="ident">Versioned</span><span class="op">&gt;</span>(<span class="ident">tree_index_map</span>[<span class="kw-2">&amp;</span><span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="ident">operation</span>.<span class="ident">collection</span>)])
             .<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">document_id</span> <span class="op">=</span> <span class="ident">header</span>.<span class="ident">id</span>.<span class="ident">as_big_endian_bytes</span>().<span class="ident">unwrap</span>();
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">vec</span>) <span class="op">=</span> <span class="ident">documents</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">document_id</span>)<span class="question-mark">?</span> {
             <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">deserialize_document</span>(<span class="kw-2">&amp;</span><span class="ident">vec</span>)<span class="question-mark">?</span>;
-            <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="ident">doc</span>.<span class="ident">header</span> <span class="op">=</span><span class="op">=</span> <span class="ident">header</span> {
+            <span class="kw">if</span> <span class="kw-2">&amp;</span><span class="ident">doc</span>.<span class="ident">header</span> <span class="op">==</span> <span class="ident">header</span> {
                 <span class="self">self</span>.<span class="ident">update_unique_views</span>(
                     <span class="ident">document_id</span>.<span class="ident">as_ref</span>(),
                     <span class="ident">operation</span>,
@@ -2040,7 +2042,7 @@
         <span class="ident">operation</span>: <span class="kw-2">&amp;</span><span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">transaction</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ExecutingTransaction</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>,
         <span class="ident">tree_index_map</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">unique_views</span>) <span class="op">=</span> <span class="self">self</span>
             .<span class="ident">data</span>
             .<span class="ident">schema</span>
@@ -2075,16 +2077,16 @@
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">order</span>: <span class="ident">Sort</span>,
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ViewEntryCollection</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ViewEntryCollection</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">values</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
         <span class="kw">let</span> <span class="ident">forwards</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">order</span> {
-            <span class="ident">Sort::Ascending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
-            <span class="ident">Sort::Descending</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+            <span class="ident">Sort::Ascending</span> =&gt; <span class="bool-val">true</span>,
+            <span class="ident">Sort::Descending</span> =&gt; <span class="bool-val">false</span>,
         };
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">values_read</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>) <span class="op">=</span> <span class="ident">key</span> {
             <span class="kw">match</span> <span class="ident">key</span> {
-                <span class="ident">QueryKey::Range</span>(<span class="ident">range</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">QueryKey::Range</span>(<span class="ident">range</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">range</span> <span class="op">=</span> <span class="ident">range</span>
                         .<span class="ident">as_big_endian_bytes</span>()
                         .<span class="ident">map_err</span>(<span class="ident">view::Error::key_serialization</span>)<span class="question-mark">?</span>
@@ -2108,7 +2110,7 @@
                         },
                     )<span class="question-mark">?</span>;
                 }
-                <span class="ident">QueryKey::Matches</span>(<span class="ident">key</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">QueryKey::Matches</span>(<span class="ident">key</span>) =&gt; {
                     <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="ident">key</span>
                         .<span class="ident">as_big_endian_bytes</span>()
                         .<span class="ident">map_err</span>(<span class="ident">view::Error::key_serialization</span>)<span class="question-mark">?</span>
@@ -2116,7 +2118,7 @@
 
                     <span class="ident">values</span>.<span class="ident">extend</span>(<span class="ident">view_entries</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">key</span>)<span class="question-mark">?</span>);
                 }
-                <span class="ident">QueryKey::Multiple</span>(<span class="ident">list</span>) <span class="op">=</span><span class="op">&gt;</span> {
+                <span class="ident">QueryKey::Multiple</span>(<span class="ident">list</span>) =&gt; {
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">list</span> <span class="op">=</span> <span class="ident">list</span>
                         .<span class="ident">into_iter</span>()
                         .<span class="ident">map</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> {
@@ -2163,7 +2165,7 @@
             .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>()
     }
 
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">collection_encryption_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">collection_encryption_key</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">schematic</span>()
             .<span class="ident">encryption_key_for_collection</span>(<span class="ident">collection</span>)
             .<span class="ident">or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">storage</span>().<span class="ident">default_encryption_key</span>())
@@ -2178,7 +2180,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
         <span class="ident">name</span>: <span class="ident">S</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TreeRoot</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">StdFile</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">TreeRoot</span><span class="op">&lt;</span><span class="ident">R</span>, <span class="ident">StdFile</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tree</span> <span class="op">=</span> <span class="ident">R::tree</span>(<span class="ident">name</span>);
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">collection_encryption_key</span>(<span class="ident">collection</span>) {
@@ -2208,12 +2210,12 @@
 
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">deserialize_document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
     <span class="ident">bytes</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> [<span class="ident">u8</span>],
-) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">document</span> <span class="op">=</span> <span class="ident">bincode::deserialize</span>::<span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="ident">bytes</span>).<span class="ident">map_err</span>(<span class="ident">Error::from</span>)<span class="question-mark">?</span>;
     <span class="prelude-val">Ok</span>(<span class="ident">document</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">serialize_document</span>(<span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">serialize_document</span>(<span class="ident">document</span>: <span class="kw-2">&amp;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
     <span class="ident">bincode::serialize</span>(<span class="ident">document</span>)
         .<span class="ident">map_err</span>(<span class="ident">Error::from</span>)
         .<span class="ident">map_err</span>(<span class="ident">bonsaidb_core::Error::from</span>)
@@ -2225,7 +2227,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">apply_transaction</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">transaction</span>: <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">task_self</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">clone</span>();
         <span class="ident">tokio::task::spawn_blocking</span>::<span class="op">&lt;</span><span class="kw">_</span>, <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span><span class="op">&gt;</span>(<span class="kw">move</span> <span class="op">|</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">open_trees</span> <span class="op">=</span> <span class="ident">OpenTrees::default</span>();
@@ -2235,7 +2237,7 @@
                 }
 
                 <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">command</span> {
-                    <span class="ident">Command::Update</span> { .. } <span class="op">|</span> <span class="ident">Command::Insert</span> { .. } <span class="op">|</span> <span class="ident">Command::Delete</span> { .. } <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">Command::Update</span> { .. } <span class="op">|</span> <span class="ident">Command::Insert</span> { .. } <span class="op">|</span> <span class="ident">Command::Delete</span> { .. } =&gt; {
                         <span class="ident">open_trees</span>.<span class="ident">open_trees_for_document_change</span>(
                             <span class="kw-2">&amp;</span><span class="ident">op</span>.<span class="ident">collection</span>,
                             <span class="kw-2">&amp;</span><span class="ident">task_self</span>.<span class="ident">data</span>.<span class="ident">schema</span>,
@@ -2263,21 +2265,21 @@
                 )<span class="question-mark">?</span>;
 
                 <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">result</span> {
-                    <span class="ident">OperationResult::DocumentUpdated</span> { <span class="ident">header</span>, <span class="ident">collection</span> } <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">OperationResult::DocumentUpdated</span> { <span class="ident">header</span>, <span class="ident">collection</span> } =&gt; {
                         <span class="ident">changed_documents</span>.<span class="ident">push</span>(<span class="ident">ChangedDocument</span> {
                             <span class="ident">collection</span>: <span class="ident">collection</span>.<span class="ident">clone</span>(),
                             <span class="ident">id</span>: <span class="ident">header</span>.<span class="ident">id</span>,
                             <span class="ident">deleted</span>: <span class="bool-val">false</span>,
                         });
                     }
-                    <span class="ident">OperationResult::DocumentDeleted</span> { <span class="ident">id</span>, <span class="ident">collection</span> } <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="ident">OperationResult::DocumentDeleted</span> { <span class="ident">id</span>, <span class="ident">collection</span> } =&gt; {
                         <span class="ident">changed_documents</span>.<span class="ident">push</span>(<span class="ident">ChangedDocument</span> {
                             <span class="ident">collection</span>: <span class="ident">collection</span>.<span class="ident">clone</span>(),
                             <span class="ident">id</span>: <span class="kw-2">*</span><span class="ident">id</span>,
                             <span class="ident">deleted</span>: <span class="bool-val">true</span>,
                         });
                     }
-                    <span class="ident">OperationResult::Success</span> <span class="op">=</span><span class="op">&gt;</span> {}
+                    <span class="ident">OperationResult::Success</span> =&gt; {}
                 }
                 <span class="ident">results</span>.<span class="ident">push</span>(<span class="ident">result</span>);
             }
@@ -2326,7 +2328,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">id</span>: <span class="ident">u64</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">get_from_collection_id</span>(<span class="ident">id</span>, <span class="kw-2">&amp;</span><span class="ident">C::collection_name</span>()<span class="question-mark">?</span>)
             .<span class="kw">await</span>
     }
@@ -2335,7 +2337,7 @@
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">u64</span>],
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">get_multiple_from_collection_id</span>(<span class="ident">ids</span>, <span class="kw-2">&amp;</span><span class="ident">C::collection_name</span>()<span class="question-mark">?</span>)
             .<span class="kw">await</span>
     }
@@ -2346,7 +2348,7 @@
         <span class="ident">ids</span>: <span class="ident">R</span>,
         <span class="ident">order</span>: <span class="ident">Sort</span>,
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">list</span>(<span class="ident">ids</span>.<span class="ident">into</span>(), <span class="ident">order</span>, <span class="ident">limit</span>, <span class="kw-2">&amp;</span><span class="ident">C::collection_name</span>()<span class="question-mark">?</span>)
             .<span class="kw">await</span>
     }
@@ -2359,7 +2361,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">starting_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">result_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">transaction::Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">transaction::Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">result_limit</span> <span class="op">=</span> <span class="ident">result_limit</span>
             .<span class="ident">unwrap_or</span>(<span class="ident">LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT</span>)
             .<span class="ident">min</span>(<span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span>);
@@ -2412,7 +2414,7 @@
         <span class="ident">order</span>: <span class="ident">Sort</span>,
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Map</span><span class="op">&lt;</span><span class="ident">V::Key</span>, <span class="ident">V::Value</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Map</span><span class="op">&lt;</span><span class="ident">V::Key</span>, <span class="ident">V::Value</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -2446,7 +2448,7 @@
         <span class="ident">order</span>: <span class="ident">Sort</span>,
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedDocument</span><span class="op">&lt;</span><span class="ident">V::Key</span>, <span class="ident">V::Value</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedDocument</span><span class="op">&lt;</span><span class="ident">V::Key</span>, <span class="ident">V::Value</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -2480,7 +2482,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">V::Value</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">V::Value</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -2507,7 +2509,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident">V::Key</span>, <span class="ident">V::Value</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident">V::Key</span>, <span class="ident">V::Value</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -2540,7 +2542,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -2569,12 +2571,12 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">roots</span>().<span class="ident">transactions</span>().<span class="ident">current_transaction_id</span>())
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
             .<span class="ident">compact_collection</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">C::collection_name</span>()<span class="question-mark">?</span>)
@@ -2583,7 +2585,7 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
             .<span class="ident">compact_database</span>(<span class="self">self</span>.<span class="ident">clone</span>())
@@ -2592,7 +2594,7 @@
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
             .<span class="ident">compact_key_value_store</span>(<span class="self">self</span>.<span class="ident">clone</span>())
@@ -2611,7 +2613,7 @@
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">ViewEntryCollectionIterator</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ViewEntryCollection</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">next</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Item</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">iterator</span>.<span class="ident">next</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">item</span><span class="op">|</span> {
             <span class="ident">item</span>.<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>)
                 .<span class="ident">and_then</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">value</span>)<span class="op">|</span> <span class="ident">bincode::deserialize</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>).<span class="ident">map_err</span>(<span class="ident">Error::from</span>))
@@ -2626,7 +2628,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Context</span> {
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">roots</span>: <span class="ident">Roots</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">roots</span>: <span class="ident">Roots</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">roots</span>,
             <span class="ident">kv_expirer</span>: <span class="ident">Arc::default</span>(),
@@ -2676,13 +2678,13 @@
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">document_tree_name</span>(<span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">String</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">document_tree_name</span>(<span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>) -&gt; <span class="ident">String</span> {
     <span class="macro">format!</span>(<span class="string">&quot;collection.{}&quot;</span>, <span class="ident">collection</span>)
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">impl</span> <span class="ident">OpenDatabase</span> <span class="kw">for</span> <span class="ident">Database</span> {
-    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">Any</span> {
+    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">Any</span> {
         <span class="self">self</span>
     }
 
@@ -2691,7 +2693,7 @@
         <span class="ident">id</span>: <span class="ident">u64</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">with_effective_permissions</span>(<span class="ident">permissions</span>.<span class="ident">clone</span>())
             .<span class="ident">get_from_collection_id</span>(<span class="ident">id</span>, <span class="ident">collection</span>)
             .<span class="kw">await</span>
@@ -2702,7 +2704,7 @@
         <span class="ident">ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">u64</span>],
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">with_effective_permissions</span>(<span class="ident">permissions</span>.<span class="ident">clone</span>())
             .<span class="ident">get_multiple_from_collection_id</span>(<span class="ident">ids</span>, <span class="ident">collection</span>)
             .<span class="kw">await</span>
@@ -2715,7 +2717,7 @@
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">with_effective_permissions</span>(<span class="ident">permissions</span>.<span class="ident">clone</span>())
             .<span class="ident">list</span>(<span class="ident">ids</span>, <span class="ident">order</span>, <span class="ident">limit</span>, <span class="ident">collection</span>)
             .<span class="kw">await</span>
@@ -2725,7 +2727,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">transaction</span>: <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="op">&lt;</span><span class="self">Self</span> <span class="kw">as</span> <span class="ident">Connection</span><span class="op">&gt;</span><span class="ident">::apply_transaction</span>(
             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">with_effective_permissions</span>(<span class="ident">permissions</span>.<span class="ident">clone</span>()),
             <span class="ident">transaction</span>,
@@ -2740,7 +2742,7 @@
         <span class="ident">order</span>: <span class="ident">Sort</span>,
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::Serialized</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::Serialized</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">view</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">schematic</span>().<span class="ident">view_by_name</span>(<span class="ident">view</span>) {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
             <span class="self">self</span>.<span class="ident">for_each_in_view</span>(<span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">order</span>, <span class="ident">limit</span>, <span class="ident">access_policy</span>, <span class="op">|</span><span class="ident">collection</span><span class="op">|</span> {
@@ -2770,7 +2772,7 @@
         <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::MappedSerialized</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::MappedSerialized</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="ident">OpenDatabase::query</span>(<span class="self">self</span>, <span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">order</span>, <span class="ident">limit</span>, <span class="ident">access_policy</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">view</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">schematic</span>().<span class="ident">view_by_name</span>(<span class="ident">view</span>).<span class="ident">unwrap</span>(); <span class="comment">// query() will fail if it&#39;s not present</span>
 
@@ -2806,7 +2808,7 @@
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">reduce_in_view</span>(<span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>).<span class="kw">await</span>
     }
 
@@ -2815,7 +2817,7 @@
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">grouped_reduce_in_view</span>(<span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>).<span class="kw">await</span>
     }
 
@@ -2824,7 +2826,7 @@
         <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">delete_from_view</span>(<span class="ident">view</span>, <span class="ident">key</span>, <span class="ident">access_policy</span>).<span class="kw">await</span>
     }
 
@@ -2832,25 +2834,25 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">starting_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">result_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Executed</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="ident">Connection::list_executed_transactions</span>(<span class="self">self</span>, <span class="ident">starting_id</span>, <span class="ident">result_limit</span>).<span class="kw">await</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="ident">Connection::last_transaction_id</span>(<span class="self">self</span>).<span class="kw">await</span>
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_key_operation</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">op</span>: <span class="ident">KeyOperation</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="ident">Kv::execute_key_operation</span>(<span class="self">self</span>, <span class="ident">op</span>).<span class="kw">await</span>
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_collection</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
             .<span class="ident">compact_collection</span>(<span class="self">self</span>.<span class="ident">clone</span>(), <span class="ident">collection</span>)
@@ -2858,7 +2860,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
             .<span class="ident">compact_key_value_store</span>(<span class="self">self</span>.<span class="ident">clone</span>())
@@ -2866,7 +2868,7 @@
         <span class="prelude-val">Ok</span>(())
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">storage</span>()
             .<span class="ident">tasks</span>()
             .<span class="ident">compact_database</span>(<span class="self">self</span>.<span class="ident">clone</span>())

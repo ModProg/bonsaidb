@@ -11,7 +11,7 @@ attribute at the enum level:</p>
 find yourself needing to import <code>actionable</code> as another name, this setting
 will replace all mentions of <code>actionable</code> with the identifier specified.</li>
 </ul>
-<h2 id="the-dispatcher-trait" class="section-header"><a href="#the-dispatcher-trait">The Dispatcher Trait</a></h2>
+<h3 id="the-dispatcher-trait" class="section-header"><a href="#the-dispatcher-trait">The Dispatcher Trait</a></h3>
 <p>The first trait that is generated is named <code>&lt;EnumName&gt;Dispatcher</code>. For
 example, if the enum’s name is <code>Request</code>, the generated trait name will be
 <code>RequestDispatcher</code>. This trait has no methods for you to implement. It
@@ -27,7 +27,7 @@ implementing <code>&lt;EnumName&gt;Dispatcher</code>.</li>
 </ul>
 <p>The dispatcher trait has a method available for you to use to dispatch
 requests: <code>async fn dispatch(&amp;self, permissions: &amp;Permissions, request: &lt;EnumName&gt;) -&gt; Result&lt;Self::Output, Self::Error&gt;</code>.</p>
-<h2 id="the-handler-traits" class="section-header"><a href="#the-handler-traits">The Handler Traits</a></h2>
+<h3 id="the-handler-traits" class="section-header"><a href="#the-handler-traits">The Handler Traits</a></h3>
 <p>For each variant in the enum, a trait will be generated named
 <code>&lt;VariantName&gt;Handler</code>. Using the same example above, the enum variant
 <code>Request::AddUser</code> would generate the trait <code>AddUserHandler</code>. These traits
@@ -35,7 +35,7 @@ are implemented using the
 <a href="https://crates.io/crate/async-trait"><code>async-trait</code></a> trait.</p>
 <p>Each variant must have a protection method assigned using the
 <code>#[actionable]</code> attribute. There are three protection methods:</p>
-<h3 id="no-protection-actionableprotection--none" class="section-header"><a href="#no-protection-actionableprotection--none">No Protection: <code>#[actionable(protection = &quot;none&quot;)]</code></a></h3>
+<h4 id="no-protection-actionableprotection--none" class="section-header"><a href="#no-protection-actionableprotection--none">No Protection: <code>#[actionable(protection = &quot;none&quot;)]</code></a></h4>
 <p>A handler with no protection has one method:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[<span class="ident">async_trait</span>]</span>
@@ -46,10 +46,10 @@ are implemented using the
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="comment">/* each field on this variant is passed
         as a parameter to this method */</span>
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 }</code></pre></div>
 <p>Actionable does not do any checks before invoking this handler.</p>
-<h3 id="simple-protection-actionableprotection--simple" class="section-header"><a href="#simple-protection-actionableprotection--simple">Simple Protection: <code>#[actionable(protection = &quot;simple&quot;)]</code></a></h3>
+<h4 id="simple-protection-actionableprotection--simple" class="section-header"><a href="#simple-protection-actionableprotection--simple">Simple Protection: <code>#[actionable(protection = &quot;simple&quot;)]</code></a></h4>
 <p>A handler with simple protection exposes methods and types to allow
 specifying an <code>actionable::ResourceName</code> and an <code>Action</code> for this handler:</p>
 
@@ -62,22 +62,22 @@ specifying an <code>actionable::ResourceName</code> and an <code>Action</code> f
         <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Dispatcher</span>,
         <span class="comment">/* each field on this variant is passed
         by reference as a parameter to this method */</span>
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
+    ) -&gt; <span class="ident">ResourceName</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
 
-    <span class="kw">fn</span> <span class="ident">action</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident"><span class="self">Self</span>::Action</span>;
+    <span class="kw">fn</span> <span class="ident">action</span>() -&gt; <span class="ident"><span class="self">Self</span>::Action</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
         <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Dispatcher</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="comment">/* each field on this variant is passed
         as a parameter to this method */</span>
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 }</code></pre></div>
 <p>When the handler is invoked, it first checks <code>permissions</code> to ensure that
 <code>action()</code> is allowed to be performed on <code>resource_name()</code>. If it is not
 allowed, an <code>actionable::PermissionDenied</code> error will be returned. If it is
 allowed, <code>handle_protected()</code> will be executed.</p>
-<h3 id="custom-protection-actionableprotection--custom" class="section-header"><a href="#custom-protection-actionableprotection--custom">Custom Protection: <code>#[actionable(protection = &quot;custom&quot;)]</code></a></h3>
+<h4 id="custom-protection-actionableprotection--custom" class="section-header"><a href="#custom-protection-actionableprotection--custom">Custom Protection: <code>#[actionable(protection = &quot;custom&quot;)]</code></a></h4>
 <p>A handler with custom protection has two methods, one to verify permissions
 and one to execute the protected code:</p>
 
@@ -89,18 +89,18 @@ and one to execute the protected code:</p>
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="comment">/* each field on this variant is passed
         by refrence as a parameter to this method */</span>
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">handle_protected</span>(
         <span class="ident">dispatcher</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Dispatcher</span>,
         <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
         <span class="comment">/* each field on this variant is passed as a parameter
         to this method */</span>
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 }</code></pre></div>
 <p>Actionable will first call <code>verify_permissions()</code>. If you return <code>Ok(())</code>,
 your <code>handle_protected()</code> method is invoked.</p>
-<h2 id="why-should-you-use-the-built-in-protection-modes" class="section-header"><a href="#why-should-you-use-the-built-in-protection-modes">Why should you use the built-in protection modes?</a></h2>
+<h3 id="why-should-you-use-the-built-in-protection-modes" class="section-header"><a href="#why-should-you-use-the-built-in-protection-modes">Why should you use the built-in protection modes?</a></h3>
 <p>Actionable attempts to make permission handling easy to understand and
 implement while making it difficult to forget implementing permission
 handling. This is only effective if you use the protection levels.</p>
@@ -117,7 +117,7 @@ used, this is critical.</p>
 repeatable patern, you’re helping anyone who is reading the code separate
 what logic is related to permission handling and what logic is related to
 the API implementation.</p>
-<h2 id="what-protection-mode-should-you-use" class="section-header"><a href="#what-protection-mode-should-you-use">What protection mode should you use?</a></h2>
+<h3 id="what-protection-mode-should-you-use" class="section-header"><a href="#what-protection-mode-should-you-use">What protection mode should you use?</a></h3>
 <ul>
 <li>If your handler is operating on a single resource and performing a single
 action, use the <code>simple</code> protection mode.</li>

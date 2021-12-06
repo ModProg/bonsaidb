@@ -218,17 +218,17 @@
     <span class="ident">InstallPreCommitHook</span>,
 }
 
-<span class="kw">fn</span> <span class="ident">main</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">main</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">std::env::args</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> {
         <span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">Commands::from_args</span>();
         <span class="kw">match</span> <span class="ident">command</span> {
             <span class="ident">Commands::GenerateCodeCoverageReport</span> {
                 <span class="ident">install_dependencies</span>,
-            } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">CodeCoverage</span>::<span class="op">&lt;</span><span class="ident">CoverageConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">install_dependencies</span>),
-            <span class="ident">Commands::TestMatrix</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">generate_test_matrix_output</span>(),
-            <span class="ident">Commands::Test</span> { <span class="ident">fail_on_warnings</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">run_all_tests</span>(<span class="ident">fail_on_warnings</span>),
-            <span class="ident">Commands::Audit</span> { <span class="ident">command</span> } <span class="op">=</span><span class="op">&gt;</span> <span class="ident">Audit</span>::<span class="op">&lt;</span><span class="ident">AuditConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">command</span>),
-            <span class="ident">Commands::InstallPreCommitHook</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">khonsu_tools::pre_commit::install</span>(),
+            } =&gt; <span class="ident">CodeCoverage</span>::<span class="op">&lt;</span><span class="ident">CoverageConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">install_dependencies</span>),
+            <span class="ident">Commands::TestMatrix</span> =&gt; <span class="ident">generate_test_matrix_output</span>(),
+            <span class="ident">Commands::Test</span> { <span class="ident">fail_on_warnings</span> } =&gt; <span class="ident">run_all_tests</span>(<span class="ident">fail_on_warnings</span>),
+            <span class="ident">Commands::Audit</span> { <span class="ident">command</span> } =&gt; <span class="ident">Audit</span>::<span class="op">&lt;</span><span class="ident">AuditConfig</span><span class="op">&gt;</span><span class="ident">::execute</span>(<span class="ident">command</span>),
+            <span class="ident">Commands::InstallPreCommitHook</span> =&gt; <span class="ident">khonsu_tools::pre_commit::install</span>(),
         }
     } <span class="kw">else</span> {
         <span class="ident">run_all_tests</span>(<span class="bool-val">true</span>)
@@ -238,7 +238,7 @@
 <span class="kw">struct</span> <span class="ident">CoverageConfig</span>;
 
 <span class="kw">impl</span> <span class="ident">code_coverage::Config</span> <span class="kw">for</span> <span class="ident">CoverageConfig</span> {
-    <span class="kw">fn</span> <span class="ident">ignore_paths</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">ignore_paths</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="macro">vec!</span>[
             <span class="ident">String::from</span>(<span class="string">&quot;crates/circulate/examples/*&quot;</span>),
             <span class="ident">String::from</span>(<span class="string">&quot;examples/*&quot;</span>),
@@ -256,7 +256,7 @@
     <span class="ident">include</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">TestSuite</span>],
 }
 
-<span class="kw">fn</span> <span class="ident">all_tests</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">TestSuite</span>] {
+<span class="kw">fn</span> <span class="ident">all_tests</span>() -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">TestSuite</span>] {
     <span class="kw-2">&amp;</span>[
         <span class="ident">TestSuite</span> {
             <span class="ident">cargo_args</span>: <span class="string">&quot;--package bonsaidb-core --no-default-features&quot;</span>,
@@ -301,7 +301,7 @@
     ]
 }
 
-<span class="kw">fn</span> <span class="ident">generate_test_matrix_output</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">generate_test_matrix_output</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">stdout</span> <span class="op">=</span> <span class="ident">stdout</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">stdout</span> <span class="op">=</span> <span class="ident">stdout</span>.<span class="ident">lock</span>();
     <span class="ident">stdout</span>.<span class="ident">write_all</span>(<span class="string">b&quot;::set-output name=test-matrix::&quot;</span>)<span class="question-mark">?</span>;
@@ -310,7 +310,7 @@
     <span class="prelude-val">Ok</span>(())
 }
 
-<span class="kw">fn</span> <span class="ident">run_all_tests</span>(<span class="ident">fail_on_warnings</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">run_all_tests</span>(<span class="ident">fail_on_warnings</span>: <span class="ident">bool</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">executing_dir</span> <span class="op">=</span> <span class="ident">current_dir</span>()<span class="question-mark">?</span>;
     <span class="kw">for</span> <span class="ident">test</span> <span class="kw">in</span> <span class="ident">all_tests</span>() {
         <span class="macro">println!</span>(<span class="string">&quot;Running clippy for {}&quot;</span>, <span class="ident">test</span>.<span class="ident">cargo_args</span>);
@@ -363,7 +363,7 @@
 <span class="kw">struct</span> <span class="ident">AuditConfig</span>;
 
 <span class="kw">impl</span> <span class="ident">audit::Config</span> <span class="kw">for</span> <span class="ident">AuditConfig</span> {
-    <span class="kw">fn</span> <span class="ident">args</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">args</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="macro">vec!</span>[
             <span class="ident">String::from</span>(<span class="string">&quot;--all-features&quot;</span>),
             <span class="ident">String::from</span>(<span class="string">&quot;--exclude=xtask&quot;</span>),

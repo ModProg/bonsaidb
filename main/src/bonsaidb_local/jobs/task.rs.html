@@ -81,7 +81,7 @@
 {
     <span class="doccomment">/// Returns a copy of this handle. When the job is completed, both handles</span>
     <span class="doccomment">/// will be able to `receive()` the results.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">jobs</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">manager</span>.<span class="ident">jobs</span>.<span class="ident">write</span>().<span class="kw">await</span>;
         <span class="ident">jobs</span>.<span class="ident">create_new_task_handle</span>(<span class="self">self</span>.<span class="ident">id</span>, <span class="self">self</span>.<span class="ident">manager</span>.<span class="ident">clone</span>())
     }
@@ -91,7 +91,7 @@
     <span class="doccomment">/// # Errors</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Returns an error if the job is cancelled.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">flume::RecvError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">flume::RecvError</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span>
     }
 
@@ -104,7 +104,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// * [`TryRecvError::Disconnected`](flume::TryRecvError::Disconnected): The job has been cancelled.</span>
     <span class="doccomment">/// * [`TryRecvError::Empty`](flume::TryRecvError::Empty): The job has not completed yet.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">flume::TryRecvError</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">try_receive</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">E</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">flume::TryRecvError</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">receiver</span>.<span class="ident">try_recv</span>()
     }
 }

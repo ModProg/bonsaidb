@@ -6,14 +6,14 @@ decrypted, the vault is able to function without <a href="../../server/local/vau
 design ensures that if a copy of a database was stolen, the data that is
 stored at-rest cannot be decrypted without gaining access to
 <a href="../../server/local/vault/trait.VaultKeyStorage.html" title="VaultKeyStorage"><code>VaultKeyStorage</code></a>.</p>
-<h2 id="at-rest-encryption" class="section-header"><a href="#at-rest-encryption">At-Rest Encryption</a></h2>
+<h3 id="at-rest-encryption" class="section-header"><a href="#at-rest-encryption">At-Rest Encryption</a></h3>
 <p>At-rest encryption only ensures that if the database files are stolen that
 an attacker cannot access the data without the encryption key. <code>BonsaiDb</code>
 will regularly decrypt data to process it, and while the data is in-memory,
 it is subject to the security of the machine running it. If using <code>BonsaiDb</code>
 over a network, the network transport layer’s encryption is what ensures
 your data’s safety.</p>
-<h2 id="security-best-practices" class="section-header"><a href="#security-best-practices">Security Best Practices</a></h2><h3 id="vault-key-storage" class="section-header"><a href="#vault-key-storage">Vault Key Storage</a></h3>
+<h3 id="security-best-practices" class="section-header"><a href="#security-best-practices">Security Best Practices</a></h3><h4 id="vault-key-storage" class="section-header"><a href="#vault-key-storage">Vault Key Storage</a></h4>
 <p>In most situations, do not use <a href="../../server/local/vault/struct.LocalVaultKeyStorage.html" title="LocalVaultKeyStorage"><code>LocalVaultKeyStorage</code></a> in a production
 environment. If you store the vault keys on the same disk as the database,
 it’s similar to hiding a key to your house under your doormat. It might stop
@@ -25,7 +25,7 @@ Amazon S3-compatible storage service and use
 <a href="https://dev.bonsaidb.io/main/bonsaidb_keystorage_s3/struct.S3VaultKeyStorage.html"><code>S3VaultKeyStorage</code></a>.
 Eventually, other <code>BonsaiDb</code> servers will be able to operate as key storage
 for each other.</p>
-<h2 id="encryption-algorithms-used" class="section-header"><a href="#encryption-algorithms-used">Encryption Algorithms Used</a></h2>
+<h3 id="encryption-algorithms-used" class="section-header"><a href="#encryption-algorithms-used">Encryption Algorithms Used</a></h3>
 <p><code>BonsaiDb</code> uses the <a href="https://github.com/rozbb/rust-hpke"><code>hpke</code></a> crate to
 provide Hybrid Public Key Encryption (HPKE) when public key encryption is
 being used. This is currently only utilized for encrypting the master keys
@@ -37,18 +37,18 @@ choices.</p>
 used directly. This variant of <code>ChaCha20Poly1305</code> extends the nonce from 12
 bytes to 24 bytes, which allows for random nonces to be used.</p>
 </div></details><h2 id="structs" class="section-header"><a href="#structs">Structs</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="struct" href="struct.LocalVaultKeyStorage.html" title="bonsaidb::local::vault::LocalVaultKeyStorage struct">LocalVaultKeyStorage</a></div><div class="item-right docblock-short"><p>Stores vault key locally on disk. This is in general considered insecure,
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.LocalVaultKeyStorage.html" title="bonsaidb::local::vault::LocalVaultKeyStorage struct">LocalVaultKeyStorage</a></div><div class="item-right docblock-short"><p>Stores vault key locally on disk. This is in general considered insecure,
 and shouldn’t be used without careful consideration.</p>
-</div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="enum" href="enum.Error.html" title="bonsaidb::local::vault::Error enum">Error</a></div><div class="item-right docblock-short"><p>Errors relating to encryption and/or secret storage.</p>
-</div><div class="item-left module-item"><a class="enum" href="enum.LocalVaultKeyStorageError.html" title="bonsaidb::local::vault::LocalVaultKeyStorageError enum">LocalVaultKeyStorageError</a></div><div class="item-right docblock-short"><p>Errors from local vault key storage.</p>
-</div><div class="item-left module-item"><a class="enum" href="enum.PrivateKey.html" title="bonsaidb::local::vault::PrivateKey enum">PrivateKey</a></div><div class="item-right docblock-short"><p>A private encryption key.</p>
-</div><div class="item-left module-item"><a class="enum" href="enum.PublicKey.html" title="bonsaidb::local::vault::PublicKey enum">PublicKey</a></div><div class="item-right docblock-short"><p>A public key corresponding to a <a href="../../server/local/vault/enum.PrivateKey.html" title="PrivateKey"><code>PrivateKey</code></a>.</p>
-</div></div><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
-<div class="item-table"><div class="item-left module-item"><a class="trait" href="trait.AnyVaultKeyStorage.html" title="bonsaidb::local::vault::AnyVaultKeyStorage trait">AnyVaultKeyStorage</a></div><div class="item-right docblock-short"><p>A <a href="../../server/local/vault/trait.VaultKeyStorage.html" title="VaultKeyStorage"><code>VaultKeyStorage</code></a> trait that wraps the Error type before returning. This
+</div></div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Error.html" title="bonsaidb::local::vault::Error enum">Error</a></div><div class="item-right docblock-short"><p>Errors relating to encryption and/or secret storage.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.LocalVaultKeyStorageError.html" title="bonsaidb::local::vault::LocalVaultKeyStorageError enum">LocalVaultKeyStorageError</a></div><div class="item-right docblock-short"><p>Errors from local vault key storage.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.PrivateKey.html" title="bonsaidb::local::vault::PrivateKey enum">PrivateKey</a></div><div class="item-right docblock-short"><p>A private encryption key.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.PublicKey.html" title="bonsaidb::local::vault::PublicKey enum">PublicKey</a></div><div class="item-right docblock-short"><p>A public key corresponding to a <a href="../../server/local/vault/enum.PrivateKey.html" title="PrivateKey"><code>PrivateKey</code></a>.</p>
+</div></div></div><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.AnyVaultKeyStorage.html" title="bonsaidb::local::vault::AnyVaultKeyStorage trait">AnyVaultKeyStorage</a></div><div class="item-right docblock-short"><p>A <a href="../../server/local/vault/trait.VaultKeyStorage.html" title="VaultKeyStorage"><code>VaultKeyStorage</code></a> trait that wraps the Error type before returning. This
 type is used to allow the Vault to operate without any generic parameters.
 This trait is auto-implemented for all <a href="../../server/local/vault/trait.VaultKeyStorage.html" title="VaultKeyStorage"><code>VaultKeyStorage</code></a> implementors.</p>
-</div><div class="item-left module-item"><a class="trait" href="trait.VaultKeyStorage.html" title="bonsaidb::local::vault::VaultKeyStorage trait">VaultKeyStorage</a></div><div class="item-right docblock-short"><p>Stores encrypted keys for a vault.</p>
-</div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="bonsaidb" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.VaultKeyStorage.html" title="bonsaidb::local::vault::VaultKeyStorage trait">VaultKeyStorage</a></div><div class="item-right docblock-short"><p>Stores encrypted keys for a vault.</p>
+</div></div></div></section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../../" data-current-crate="bonsaidb" data-search-index-js="../../../search-index.js" data-search-js="../../../search.js"></div>
     <script src="../../../main.js"></script>
 </body></html>

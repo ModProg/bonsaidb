@@ -234,7 +234,7 @@
         <span class="ident">namespace</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="ident">key</span>: <span class="ident">String</span>,
         <span class="ident">value</span>: <span class="ident">PendingValue</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">V</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    ) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">state</span>: <span class="ident">BuilderState::Pending</span>(<span class="prelude-val">Some</span>(<span class="ident">Options</span> {
                 <span class="ident">key</span>,
@@ -248,7 +248,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">options</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">options</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Options</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">BuilderState::Pending</span>(<span class="prelude-val">Some</span>(<span class="ident">options</span>)) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">state</span> {
             <span class="ident">options</span>
         } <span class="kw">else</span> {
@@ -257,33 +257,33 @@
     }
 
     <span class="doccomment">/// Set this key to expire after `duration` from now.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expire_in</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">duration</span>: <span class="ident">Duration</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expire_in</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">duration</span>: <span class="ident">Duration</span>) -&gt; <span class="self">Self</span> {
         <span class="comment">// TODO consider using checked_add here and making it return an error.</span>
         <span class="self">self</span>.<span class="ident">options</span>().<span class="ident">expiration</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Timestamp::from</span>(<span class="ident">SystemTime::now</span>().<span class="ident">add</span>(<span class="ident">duration</span>)));
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Set this key to expire at the provided `time`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expire_at</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">time</span>: <span class="ident">SystemTime</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">expire_at</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">time</span>: <span class="ident">SystemTime</span>) -&gt; <span class="self">Self</span> {
         <span class="comment">// TODO consider using checked_add here and making it return an error.</span>
         <span class="self">self</span>.<span class="ident">options</span>().<span class="ident">expiration</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">Timestamp::from</span>(<span class="ident">time</span>));
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// If the key already exists, do not update the currently set expiration.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keep_existing_expiration</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keep_existing_expiration</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">options</span>().<span class="ident">keep_existing_expiration</span> <span class="op">=</span> <span class="bool-val">true</span>;
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Only set the value if this key already exists.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">only_if_exists</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">only_if_exists</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">options</span>().<span class="ident">check</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">KeyCheck::OnlyIfPresent</span>);
         <span class="self">self</span>
     }
 
     <span class="doccomment">/// Only set the value if this key isn&#39;t present.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">only_if_vacant</span>(<span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">only_if_vacant</span>(<span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">options</span>().<span class="ident">check</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">KeyCheck::OnlyIfVacant</span>);
         <span class="self">self</span>
     }
@@ -291,7 +291,7 @@
     <span class="doccomment">/// Executes the Set operation, requesting the previous value be returned.</span>
     <span class="doccomment">/// If no change is made, None will be returned.</span>
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_panics_doc</span>)]</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">returning_previous</span>(<span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">returning_previous</span>(<span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Value</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">BuilderState::Pending</span>(<span class="prelude-val">Some</span>(<span class="ident">builder</span>)) <span class="op">=</span> <span class="self">self</span>.<span class="ident">state</span> {
             <span class="kw">let</span> <span class="ident">Options</span> {
                 <span class="ident">kv</span>,
@@ -317,9 +317,9 @@
                 })
                 .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">match</span> <span class="ident">result</span> {
-                <span class="ident">Output::Value</span>(<span class="ident">value</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">value</span>),
-                <span class="ident">Output::Status</span>(<span class="ident">KeyStatus::NotChanged</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
-                <span class="ident">Output::Status</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable!</span>(<span class="string">&quot;Unexpected output from Set&quot;</span>),
+                <span class="ident">Output::Value</span>(<span class="ident">value</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">value</span>),
+                <span class="ident">Output::Status</span>(<span class="ident">KeyStatus::NotChanged</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
+                <span class="ident">Output::Status</span>(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(<span class="string">&quot;Unexpected output from Set&quot;</span>),
             }
         } <span class="kw">else</span> {
             <span class="macro">panic!</span>(<span class="string">&quot;Using future after it&#39;s been executed&quot;</span>)
@@ -331,7 +331,7 @@
     <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::missing_panics_doc</span>)]</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">returning_previous_as</span><span class="op">&lt;</span><span class="ident">OtherV</span>: <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span>(
         <span class="self">self</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">OtherV</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">OtherV</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">returning_previous</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">value</span><span class="op">|</span> <span class="ident">value</span>.<span class="ident">deserialize</span>())
@@ -349,10 +349,10 @@
     <span class="kw">fn</span> <span class="ident">poll</span>(
         <span class="kw-2">mut</span> <span class="self">self</span>: <span class="ident">std::pin::Pin</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span><span class="op">&gt;</span>,
         <span class="ident">cx</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::task::Context</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
-    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std::task::Poll</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Output</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">std::task::Poll</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Output</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">state</span> {
-            <span class="ident">BuilderState::Executing</span>(<span class="ident">future</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">future</span>.<span class="ident">as_mut</span>().<span class="ident">poll</span>(<span class="ident">cx</span>),
-            <span class="ident">BuilderState::Pending</span>(<span class="ident">builder</span>) <span class="op">=</span><span class="op">&gt;</span> {
+            <span class="ident">BuilderState::Executing</span>(<span class="ident">future</span>) =&gt; <span class="ident">future</span>.<span class="ident">as_mut</span>().<span class="ident">poll</span>(<span class="ident">cx</span>),
+            <span class="ident">BuilderState::Pending</span>(<span class="ident">builder</span>) =&gt; {
                 <span class="kw">let</span> <span class="ident">Options</span> {
                     <span class="ident">kv</span>,
                     <span class="ident">namespace</span>,
