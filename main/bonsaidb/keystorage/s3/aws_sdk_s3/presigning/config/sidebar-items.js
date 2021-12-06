@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["Error","`PresigningConfig` build errors."]],"struct":[["Builder","Builder used to create `PresigningConfig`."],["PresigningConfig","Presigning config values required for creating a presigned request."]]});

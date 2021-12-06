@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["fluent_builders","Utilities to ergonomically construct a request to the service."]],"struct":[["Builder","A builder that provides more customization options when constructing a [`Client`]."],["Client","Client for Amazon Simple Storage Service"]]});

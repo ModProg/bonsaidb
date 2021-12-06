@@ -1,1 +1,1 @@
-initSidebarItems({"mod":[["s3","Simple access to Amazon Web Service’s (AWS) Simple Storage Service (S3)"]],"struct":[["S3VaultKeyStorage","S3-compatible [`VaultKeyStorage`] implementor."]]});
+initSidebarItems({"mod":[["aws_sdk_s3","Crate Organization"],["http","A general purpose library of common HTTP types"]],"struct":[["S3VaultKeyStorage","S3-compatible [`VaultKeyStorage`] implementor."]]});
