@@ -379,11 +379,16 @@ impl EnumKey for Category {}
 pub enum Request {
     #[actionable(protection = &quot;none&quot;)]
     Ping,
+    #[actionable(protection = &quot;simple&quot;)]
+    DoSomethingSimple { some_argument: u32 },
+    #[actionable(protection = &quot;custom&quot;)]
+    DoSomethingCustom { some_argument: u32 },
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Response {
     Pong,
+    DidSomething,
 }
 
 impl CustomApi for ExampleApi {
@@ -400,10 +405,16 @@ impl CustomApi for ExampleApi {
     type ClientData = ();
 }
 
+/// Dispatches Requests and returns Responses.
 #[derive(Debug, Dispatcher)]
 #[dispatcher(input = Request, actionable = bonsaidb::core::actionable)]
 pub struct ExampleDispatcher {
-    server: CustomServer&lt;ExampleBackend&gt;,
+    // While this example doesn't use the server reference, this is how a custom
+    // API can gain access to the running server to perform database operations
+    // within the handlers. The `ConnectedClient` can also be cloned and stored
+    // in the dispatcher if handlers need to interact with clients outside of a
+    // simple Request/Response exchange.
+    _server: CustomServer&lt;ExampleBackend&gt;,
 }
 
 impl CustomApiDispatcher&lt;ExampleBackend&gt; for ExampleDispatcher {
@@ -412,7 +423,7 @@ impl CustomApiDispatcher&lt;ExampleBackend&gt; for ExampleDispatcher {
         _client: &amp;ConnectedClient&lt;ExampleBackend&gt;,
     ) -&gt; Self {
         Self {
-            server: server.clone(),
+            _server: server.clone(),
         }
     }
 }
@@ -423,6 +434,9 @@ impl RequestDispatcher for ExampleDispatcher {
     type Error = BackendError&lt;Infallible&gt;;
 }
 
+/// The Request::Ping variant has `#[actionable(protection = &quot;none&quot;)]`, which
+/// causes `PingHandler` to be generated with a single method and no implicit
+/// permission handling.
 #[async_trait]
 impl PingHandler for ExampleDispatcher {
     async fn handle(
@@ -435,7 +449,7 @@ impl PingHandler for ExampleDispatcher {
 </code></pre>
 <p>Finally, the client can issue the API call and receive the response, without needing any extra steps to serialize. This works regardless of whether the client is connected via QUIC or WebSockets.</p>
 <pre><code class="language-rust noplayground no_run">async fn ping_the_server(
-    client: Client&lt;ExampleApi&gt;,
+    client: &amp;Client&lt;ExampleApi&gt;,
     client_name: &amp;str,
 ) -&gt; Result&lt;(), bonsaidb::core::Error&gt; {
     match client.send_api_request(Request::Ping).await {
@@ -451,6 +465,108 @@ impl PingHandler for ExampleDispatcher {
     Ok(())
 }
 </code></pre>
+<h2 id="permissions"><a class="header" href="#permissions">Permissions</a></h2>
+<p>One of the strengths of using BonsaiDb's custom api functionality is the ability to tap into the permissions handling that BonsaiDb uses. The Ping request was defined with <code>protection = &quot;none&quot;</code> which skips all permission validation. However, <code>DoSomethingSimple</code> uses the &quot;simple&quot; protection model, and <code>DoSomethingCustom</code> uses the &quot;custom&quot; protection model. The comments in the example below should help explain the rationale:</p>
+<pre><code class="language-rust noplayground no_run">/// The permissible actions that can be granted for this example api.
+#[derive(Debug, Action)]
+#[action(actionable = bonsaidb::core::actionable)]
+pub enum ExampleActions {
+    DoSomethingSimple,
+    DoSomethingCustom,
+}
+
+/// With `protection = &quot;simple&quot;`, `actionable` will generate a trait that allows
+/// you to return a `ResourceName` and an `Action`, and the handler will
+/// automatically confirm that the connected user has been granted the ability
+/// to perform `Action` against `ResourceName`.
+#[async_trait]
+impl DoSomethingSimpleHandler for ExampleDispatcher {
+    type Action = ExampleActions;
+
+    async fn resource_name&lt;'a&gt;(
+        &amp;'a self,
+        _some_argument: &amp;'a u32,
+    ) -&gt; Result&lt;ResourceName&lt;'a&gt;, BackendError&lt;Infallible&gt;&gt; {
+        Ok(ResourceName::named(&quot;example&quot;))
+    }
+
+    fn action() -&gt; Self::Action {
+        ExampleActions::DoSomethingSimple
+    }
+
+    async fn handle_protected(
+        &amp;self,
+        _permissions: &amp;Permissions,
+        _some_argument: u32,
+    ) -&gt; Result&lt;Response, BackendError&lt;Infallible&gt;&gt; {
+        // The permissions have already been checked.
+        Ok(Response::DidSomething)
+    }
+}
+
+/// With `protection = &quot;custom&quot;`, `actionable` will generate a trait with two
+/// functions: one to verify the permissions are valid, and one to do the
+/// protected action. This is useful if there are multiple actions or resource
+/// names that need to be checked, or if permissions change based on the
+/// arguments passed.
+#[async_trait]
+impl DoSomethingCustomHandler for ExampleDispatcher {
+    async fn verify_permissions(
+        &amp;self,
+        permissions: &amp;Permissions,
+        some_argument: &amp;u32,
+    ) -&gt; Result&lt;(), BackendError&lt;Infallible&gt;&gt; {
+        if *some_argument == 42 {
+            Ok(())
+        } else {
+            permissions.check(
+                ResourceName::named(&quot;example&quot;),
+                &amp;ExampleActions::DoSomethingCustom,
+            )?;
+
+            Ok(())
+        }
+    }
+
+    async fn handle_protected(
+        &amp;self,
+        _permissions: &amp;Permissions,
+        _some_argument: u32,
+    ) -&gt; Result&lt;Response, BackendError&lt;Infallible&gt;&gt; {
+        // `verify_permissions` has already been executed, so no permissions
+        // logic needs to live here.
+        Ok(Response::DidSomething)
+    }
+}
+</code></pre>
+<p>This example uses <code>authenticated_permissions</code> to grant access to <code>ExampleAction::DoSomethingSimple</code> and <code>ExampleAction::DoSomethingCustom</code> to all users who have logged in:</p>
+<pre><code class="language-rust noplayground no_run">    let server = CustomServer::&lt;ExampleBackend&gt;::open(
+        Path::new(&quot;server-data.bonsaidb&quot;),
+        Configuration {
+            default_permissions: DefaultPermissions::Permissions(Permissions::from(vec![
+                Statement {
+                    resources: vec![ResourceName::any()],
+                    actions: ActionNameList::List(vec![
+                        BonsaiAction::Server(ServerAction::Connect).name(),
+                        BonsaiAction::Server(ServerAction::LoginWithPassword).name(),
+                    ]),
+                },
+            ])),
+            authenticated_permissions: DefaultPermissions::Permissions(Permissions::from(vec![
+                Statement {
+                    resources: vec![ResourceName::any()],
+                    actions: ActionNameList::List(vec![
+                        ExampleActions::DoSomethingSimple.name(),
+                        ExampleActions::DoSomethingCustom.name(),
+                    ]),
+                },
+            ])),
+            ..Default::default()
+        },
+    )
+    .await?;
+</code></pre>
+<p>For more information on managing permissions, <a href="about/access-models/../../administration/permissions.html">see Administration/Permissions</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="overview"><a class="header" href="#overview">Overview</a></h1>
 <p><code>BonsaiDb</code> aims to offer the majority of its functionality in <a href="integration/./local.html">local operation</a>. The <a href="integration/./server.html">networked server</a> adds some functionality on top of the local version, but its main function is to add the ability to use networking to talk to the database.</p>
 <p>Because of this model, it makes it easy to transition a local database to a networked database server. Start with whatever model fits your needs today, and when your neeeds change, <code>BonsaiDb</code> will adapt.</p>
@@ -591,7 +707,7 @@ tokio::spawn(async move {
 <div style="break-before: page; page-break-before: always;"></div><h1 id="key-value-store"><a class="header" href="#key-value-store">Key-Value Store</a></h1>
 <p><em>Coming soon.</em></p>
 <p>This is an <a href="https://lib.rs/crates/async-trait">async trait</a>, which unfortunately yields <a href="https://dev.bonsaidb.io/main/bonsaidb/core/kv/trait.Kv.html">messy documentation</a>.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="permissions"><a class="header" href="#permissions">Permissions</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="permissions-1"><a class="header" href="#permissions-1">Permissions</a></h1>
 <p><code>BonsaiDb</code> uses <a href="https://en.wikipedia.org/wiki/Role-based_access_control">role-based access control (RBAC)</a>. In short, permissions are granted through statements within permission groups. Users are able to <a href="https://dev.bonsaidb.io/main/bonsaidb/client/struct.Client.html#method.login_with_password_str">log in</a> and receive permissions that were granted via permission groups or roles.</p>
 <p>This section has two subsections:</p>
 <ul>
