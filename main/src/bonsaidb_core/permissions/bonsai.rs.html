@@ -317,7 +317,7 @@
 
 <span class="doccomment">/// Creates a resource name for `key` within `namespace` within the key-value store of `database`.</span>
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">kv_key_resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">keyvalue_key_resource_name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
     <span class="ident">database</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
     <span class="ident">namespace</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span><span class="op">&gt;</span>,
     <span class="ident">key</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">str</span>,
@@ -398,7 +398,7 @@
     <span class="doccomment">/// Actions that operate on the `PubSub` system.</span>
     <span class="ident">PubSub</span>(<span class="ident">PubSubAction</span>),
     <span class="doccomment">/// Actions that operate on the key-value store.</span>
-    <span class="ident">Kv</span>(<span class="ident">KvAction</span>),
+    <span class="ident">KeyValue</span>(<span class="ident">KeyValueAction</span>),
 }
 
 <span class="doccomment">/// Actions that operate on a document.</span>
@@ -491,10 +491,10 @@
 
 <span class="doccomment">/// Actions that operate on the key-value store.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Action</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">KvAction</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">KeyValueAction</span> {
     <span class="doccomment">/// Allows executing a key-value store operation with</span>
-    <span class="doccomment">/// [`Kv::execute_key_operation()`](crate::kv::Kv::execute_key_operation).</span>
-    <span class="doccomment">/// See [`kv_key_resource_name()`] for the format of key resource names.</span>
+    <span class="doccomment">/// [`KeyValue::execute_key_operation()`](crate::keyvalue::KeyValue::execute_key_operation).</span>
+    <span class="doccomment">/// See [`keyvalue_key_resource_name()`] for the format of key resource names.</span>
     <span class="ident">ExecuteOperation</span>,
 }
 

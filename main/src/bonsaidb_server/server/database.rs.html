@@ -232,7 +232,7 @@
     <span class="ident">circulate::Message</span>,
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>, <span class="ident">Sort</span>},
     <span class="ident">document::Document</span>,
-    <span class="ident">kv::Kv</span>,
+    <span class="ident">keyvalue::KeyValue</span>,
     <span class="ident">pubsub</span>::{<span class="ident">PubSub</span>, <span class="ident">Subscriber</span>},
     <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">Collection</span>, <span class="ident">Map</span>, <span class="ident">MappedValue</span>, <span class="ident">View</span>},
     <span class="ident">transaction::Transaction</span>,
@@ -444,11 +444,11 @@
 
 <span class="doccomment">/// Pass-through implementation</span>
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">Kv</span> <span class="kw">for</span> <span class="ident">ServerDatabase</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> <span class="ident">KeyValue</span> <span class="kw">for</span> <span class="ident">ServerDatabase</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span> {
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_key_operation</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">op</span>: <span class="ident">bonsaidb_core::kv::KeyOperation</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bonsaidb_core::kv::Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
+        <span class="ident">op</span>: <span class="ident">bonsaidb_core::keyvalue::KeyOperation</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bonsaidb_core::keyvalue::Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">db</span>.<span class="ident">execute_key_operation</span>(<span class="ident">op</span>).<span class="kw">await</span>
     }
 }
