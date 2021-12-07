@@ -103,9 +103,21 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">convert::Infallible</span>, <span class="ident">string::FromUtf8Error</span>, <span class="ident">sync::Arc</span>};
 
-<span class="kw">use</span> <span class="ident">bonsaidb_core::schema</span>::{<span class="ident">view</span>, <span class="ident">InvalidNameError</span>};
+<span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
+    <span class="ident">permissions::PermissionDenied</span>,
+    <span class="ident">schema</span>::{<span class="ident">view</span>, <span class="ident">InvalidNameError</span>},
+};
 <span class="kw">use</span> <span class="ident">nebari::AbortError</span>;
 
 <span class="doccomment">/// Errors that can occur from interacting with storage.</span>
@@ -194,6 +206,12 @@
             <span class="ident">AbortError::Nebari</span>(<span class="ident">error</span>) =&gt; <span class="ident"><span class="self">Self</span>::Nebari</span>(<span class="ident">error</span>),
             <span class="ident">AbortError::Other</span>(<span class="kw">_</span>) =&gt; <span class="macro">unreachable!</span>(),
         }
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">PermissionDenied</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">PermissionDenied</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::Core</span>(<span class="ident">bonsaidb_core::Error::from</span>(<span class="ident">err</span>))
     }
 }
 
