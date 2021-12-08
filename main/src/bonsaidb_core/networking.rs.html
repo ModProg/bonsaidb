@@ -401,11 +401,17 @@
 <span id="401">401</span>
 <span id="402">402</span>
 <span id="403">403</span>
+<span id="404">404</span>
+<span id="405">405</span>
+<span id="406">406</span>
+<span id="407">407</span>
+<span id="408">408</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">actionable::Permissions</span>;
 <span class="kw">use</span> <span class="ident">custodian_password</span>::{
     <span class="ident">LoginFinalization</span>, <span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>, <span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>,
     <span class="ident">RegistrationResponse</span>,
 };
+<span class="kw">use</span> <span class="ident">derive_where::DeriveWhere</span>;
 <span class="kw">use</span> <span class="ident">schema::SchemaName</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -428,7 +434,8 @@
 }
 
 <span class="doccomment">/// A request made to a server.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>, <span class="ident">DeriveWhere</span>)]</span>
+<span class="attribute">#[<span class="ident">derive_where</span>(<span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">derive</span>(<span class="ident">actionable::Actionable</span>))]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Request</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// A server-related request.</span>
@@ -449,6 +456,7 @@
         <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>,
         <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;none&quot;</span>, <span class="ident">subaction</span>)
     )]</span>
+    <span class="attribute">#[<span class="ident">derive_where</span>(<span class="ident">skip_inner</span>)]</span>
     <span class="ident">Api</span>(<span class="ident">T</span>),
 }
 
@@ -697,7 +705,8 @@
 }
 
 <span class="doccomment">/// A response from a server.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">DeriveWhere</span>)]</span>
+<span class="attribute">#[<span class="ident">derive_where</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Response</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// A request succeded but provided no output.</span>
     <span class="prelude-val">Ok</span>,
@@ -706,6 +715,7 @@
     <span class="doccomment">/// A response to a [`DatabaseRequest`].</span>
     <span class="ident">Database</span>(<span class="ident">DatabaseResponse</span>),
     <span class="doccomment">/// A response to an Api request.</span>
+    <span class="attribute">#[<span class="ident">derive_where</span>(<span class="ident">skip_inner</span>)]</span>
     <span class="ident">Api</span>(<span class="ident">T</span>),
     <span class="doccomment">/// An error occurred processing a request.</span>
     <span class="ident">Error</span>(<span class="ident"><span class="kw">crate</span>::Error</span>),

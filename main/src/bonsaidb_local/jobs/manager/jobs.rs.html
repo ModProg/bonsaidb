@@ -130,6 +130,8 @@
 <span id="130">130</span>
 <span id="131">131</span>
 <span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">any::Any</span>, <span class="ident">collections::HashMap</span>, <span class="ident">fmt::Debug</span>, <span class="ident">sync::Arc</span>};
 
 <span class="kw">use</span> <span class="ident">flume</span>::{<span class="ident">Receiver</span>, <span class="ident">Sender</span>};
@@ -150,11 +152,8 @@
     <span class="ident">queue</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Executable</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span> <span class="ident">Jobs</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span>
-<span class="kw">where</span>
-    <span class="ident">Key</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
-{
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Jobs</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
         <span class="kw">let</span> (<span class="ident">queuer</span>, <span class="ident">queue</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
 
         <span class="self">Self</span> {
@@ -165,7 +164,12 @@
             <span class="ident">queue</span>,
         }
     }
+}
 
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span> <span class="ident">Jobs</span><span class="op">&lt;</span><span class="ident">Key</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">Key</span>: <span class="ident">Clone</span> <span class="op">+</span> <span class="ident">std::hash::Hash</span> <span class="op">+</span> <span class="ident">Eq</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+{
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">queue</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">Executable</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">queue</span>.<span class="ident">clone</span>()
     }
