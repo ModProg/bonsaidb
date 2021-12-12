@@ -2033,6 +2033,13 @@
 <span id="2033">2033</span>
 <span id="2034">2034</span>
 <span id="2035">2035</span>
+<span id="2036">2036</span>
+<span id="2037">2037</span>
+<span id="2038">2038</span>
+<span id="2039">2039</span>
+<span id="2040">2040</span>
+<span id="2041">2041</span>
+<span id="2042">2042</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">hash_map</span>, <span class="ident">HashMap</span>},
     <span class="ident">fmt::Debug</span>,
@@ -2383,8 +2390,15 @@
         <span class="kw">let</span> <span class="ident">certificate</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">tls_certificate</span>().<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">keypair</span> <span class="op">=</span>
             <span class="ident">KeyPair::from_parts</span>(<span class="ident">certificate</span>.<span class="ident">certificate_chain</span>, <span class="ident">certificate</span>.<span class="ident">private_key</span>.<span class="number">0</span>)<span class="question-mark">?</span>;
-
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">server</span> <span class="op">=</span> <span class="ident">Endpoint::new_server</span>(<span class="ident">port</span>, <span class="ident">keypair</span>)<span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">builder</span> <span class="op">=</span> <span class="ident">Endpoint::builder</span>();
+        <span class="ident">builder</span>.<span class="ident">set_address</span>(([<span class="number">0</span>; <span class="number">8</span>], <span class="ident">port</span>).<span class="ident">into</span>());
+        <span class="ident">builder</span>
+            .<span class="ident">set_max_idle_timeout</span>(<span class="prelude-val">None</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::Transport</span>(<span class="ident">err</span>.<span class="ident">to_string</span>())))<span class="question-mark">?</span>;
+        <span class="ident">builder</span>.<span class="ident">set_server_key_pair</span>(<span class="prelude-val">Some</span>(<span class="ident">keypair</span>));
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">server</span> <span class="op">=</span> <span class="ident">builder</span>
+            .<span class="ident">build</span>()
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::Transport</span>(<span class="ident">err</span>.<span class="ident">to_string</span>())))<span class="question-mark">?</span>;
         {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">endpoint</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">endpoint</span>.<span class="ident">write</span>().<span class="kw">await</span>;
             <span class="kw-2">*</span><span class="ident">endpoint</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">server</span>.<span class="ident">clone</span>());
