@@ -2040,6 +2040,11 @@
 <span id="2040">2040</span>
 <span id="2041">2041</span>
 <span id="2042">2042</span>
+<span id="2043">2043</span>
+<span id="2044">2044</span>
+<span id="2045">2045</span>
+<span id="2046">2046</span>
+<span id="2047">2047</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections</span>::{<span class="ident">hash_map</span>, <span class="ident">HashMap</span>},
     <span class="ident">fmt::Debug</span>,
@@ -2093,10 +2098,10 @@
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">Future</span>, <span class="ident">StreamExt</span>};
 <span class="kw">use</span> <span class="ident">rustls::sign::CertifiedKey</span>;
 <span class="kw">use</span> <span class="ident">schema::SchemaName</span>;
-<span class="kw">use</span> <span class="ident">signal_hook</span>::{
-    <span class="ident">consts</span>::{<span class="ident">SIGINT</span>, <span class="ident">SIGQUIT</span>},
-    <span class="ident">iterator::Signals</span>,
-};
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
+<span class="kw">use</span> <span class="ident">signal_hook::consts::signal::SIGQUIT</span>;
+<span class="kw">use</span> <span class="ident">signal_hook::consts::signal</span>::{<span class="ident">SIGINT</span>, <span class="ident">SIGTERM</span>};
+<span class="kw">use</span> <span class="ident">signal_hook_tokio::Signals</span>;
 <span class="kw">use</span> <span class="ident">tokio::sync</span>::{<span class="ident">Mutex</span>, <span class="ident">RwLock</span>};
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>)]</span>
@@ -2709,10 +2714,15 @@
     <span class="doccomment">/// shut down and attempts to gracefully shut down.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">listen_for_shutdown</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">shutdown_state</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">ShutdownState::Running</span>));
-        <span class="kw">match</span> <span class="ident">Signals::new</span>(<span class="kw-2">&amp;</span>[<span class="ident">SIGINT</span>, <span class="ident">SIGQUIT</span>]) {
+        <span class="kw">match</span> <span class="ident">Signals::new</span>(<span class="kw-2">&amp;</span>[
+            <span class="ident">SIGINT</span>,
+            <span class="ident">SIGTERM</span>,
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">windows</span>))]</span>
+            <span class="ident">SIGQUIT</span>,
+        ]) {
             <span class="prelude-val">Ok</span>(<span class="kw-2">mut</span> <span class="ident">signals</span>) =&gt; {
                 <span class="lifetime">&#39;outer</span>: <span class="kw">loop</span> {
-                    <span class="kw">for</span> <span class="ident">signal</span> <span class="kw">in</span> <span class="ident">signals</span>.<span class="ident">pending</span>() {
+                    <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">signal</span>) <span class="op">=</span> <span class="ident">signals</span>.<span class="ident">next</span>().<span class="kw">await</span> {
                         <span class="kw">match</span> <span class="ident">signal</span> {
                             <span class="ident">SIGINT</span> =&gt; {
                                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="ident">shutdown_state</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
