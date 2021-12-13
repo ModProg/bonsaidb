@@ -429,19 +429,23 @@
 <span id="429">429</span>
 <span id="430">430</span>
 <span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::fmt::Debug</span>;
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">document::Document</span>,
-    <span class="ident">schema</span>::{<span class="ident">Collection</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">Name</span>, <span class="ident">ViewName</span>},
+    <span class="ident">schema</span>::{
+        <span class="ident">view::map</span>::{<span class="ident">MappedValue</span>, <span class="ident">Mappings</span>},
+        <span class="ident">Collection</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">Name</span>, <span class="ident">ViewName</span>,
+    },
     <span class="ident">AnyError</span>,
 };
 
 <span class="doccomment">/// Types for defining a `Map` within a `View`.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">map</span>;
-<span class="kw">use</span> <span class="ident">map</span>::{<span class="ident">Map</span>, <span class="ident">MappedValue</span>};
 
 <span class="kw">mod</span> <span class="ident">key</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident"><span class="self">self</span>::key</span>::<span class="kw-2">*</span>;
@@ -502,7 +506,7 @@
 }
 
 <span class="doccomment">/// A type alias for the result of `View::map()`.</span>
-<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident">K</span> <span class="op">=</span> (), <span class="ident">V</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Map</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+<span class="kw">pub</span> <span class="kw">type</span> <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident">K</span> <span class="op">=</span> (), <span class="ident">V</span> <span class="op">=</span> ()<span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Mappings</span><span class="op">&lt;</span><span class="ident">K</span>, <span class="ident">V</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 
 <span class="doccomment">/// A map/reduce powered indexing and aggregation schema.</span>
 <span class="doccomment">///</span>
