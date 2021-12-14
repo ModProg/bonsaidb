@@ -512,6 +512,44 @@
 <span id="512">512</span>
 <span id="513">513</span>
 <span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
     <span class="ident">convert</span>::{<span class="ident">TryFrom</span>, <span class="ident">TryInto</span>},
@@ -775,6 +813,44 @@
         <span class="self">self</span>.<span class="ident">header</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">header</span>;
 
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Modifies `self`, automatically retrying the modification if the document</span>
+    <span class="doccomment">/// has been updated on the server.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ## Data loss warning</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If you&#39;ve modified `self` before calling this function and a conflict</span>
+    <span class="doccomment">/// occurs, all changes to self will be lost when the current document is</span>
+    <span class="doccomment">/// fetched before retrying the process again. When you use this function,</span>
+    <span class="doccomment">/// you should limit the edits to the value to within the `modifier`</span>
+    <span class="doccomment">/// callback.</span>
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">modify</span><span class="op">&lt;</span><span class="ident">Cn</span>: <span class="ident">Connection</span>, <span class="ident">Modifier</span>: <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">Self</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
+        <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="ident">Cn</span>,
+        <span class="kw-2">mut</span> <span class="ident">modifier</span>: <span class="ident">Modifier</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">is_first_loop</span> <span class="op">=</span> <span class="bool-val">true</span>;
+        <span class="comment">// TODO this should have a retry-limit.</span>
+        <span class="kw">loop</span> {
+            <span class="comment">// On the first attempt, we want to try sending the update to the</span>
+            <span class="comment">// database without fetching new contents. If we receive a conflict,</span>
+            <span class="comment">// on future iterations we will first re-load the data.</span>
+            <span class="kw">if</span> <span class="ident">is_first_loop</span> {
+                <span class="ident">is_first_loop</span> <span class="op">=</span> <span class="bool-val">false</span>;
+            } <span class="kw">else</span> {
+                <span class="kw-2">*</span><span class="self">self</span> <span class="op">=</span> <span class="ident">C::get</span>(<span class="self">self</span>.<span class="ident">header</span>.<span class="ident">id</span>, <span class="ident">connection</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+                    <span class="ident">C::collection_name</span>().<span class="ident">map_or_else</span>(<span class="ident">Error::from</span>, <span class="op">|</span><span class="ident">collection</span><span class="op">|</span> {
+                        <span class="ident">Error::DocumentNotFound</span>(<span class="ident">collection</span>, <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">id</span>)
+                    })
+                })<span class="question-mark">?</span>;
+            }
+            <span class="ident">modifier</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="self">self</span>);
+            <span class="kw">match</span> <span class="macro">dbg!</span>(<span class="self">self</span>.<span class="ident">update</span>(<span class="ident">connection</span>).<span class="kw">await</span>) {
+                <span class="prelude-val">Err</span>(<span class="ident">Error::DocumentConflict</span>(..)) =&gt; {}
+                <span class="ident">other</span> =&gt; <span class="kw">return</span> <span class="ident">other</span>,
+            }
+        }
     }
 
     <span class="doccomment">/// Removes the document from the collection.</span>
