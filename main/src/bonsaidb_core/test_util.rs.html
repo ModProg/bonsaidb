@@ -2093,6 +2093,33 @@
 <span id="2093">2093</span>
 <span id="2094">2094</span>
 <span id="2095">2095</span>
+<span id="2096">2096</span>
+<span id="2097">2097</span>
+<span id="2098">2098</span>
+<span id="2099">2099</span>
+<span id="2100">2100</span>
+<span id="2101">2101</span>
+<span id="2102">2102</span>
+<span id="2103">2103</span>
+<span id="2104">2104</span>
+<span id="2105">2105</span>
+<span id="2106">2106</span>
+<span id="2107">2107</span>
+<span id="2108">2108</span>
+<span id="2109">2109</span>
+<span id="2110">2110</span>
+<span id="2111">2111</span>
+<span id="2112">2112</span>
+<span id="2113">2113</span>
+<span id="2114">2114</span>
+<span id="2115">2115</span>
+<span id="2116">2116</span>
+<span id="2117">2117</span>
+<span id="2118">2118</span>
+<span id="2119">2119</span>
+<span id="2120">2120</span>
+<span id="2121">2121</span>
+<span id="2122">2122</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::missing_panics_doc</span>)]</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -2676,6 +2703,7 @@
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">HarnessTest</span> {
     <span class="ident">ServerConnectionTests</span> <span class="op">=</span> <span class="number">1</span>,
     <span class="ident">StoreRetrieveUpdate</span>,
+    <span class="ident">CollectionSerialization</span>,
     <span class="ident">NotFound</span>,
     <span class="ident">Conflict</span>,
     <span class="ident">BadUpdate</span>,
@@ -2754,6 +2782,15 @@
                 <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::StoreRetrieveUpdate</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::store_retrieve_update_delete_tests</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="ident">harness</span>.<span class="ident">shutdown</span>().<span class="kw">await</span>
+        }
+
+        <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
+        <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">collection_serialization</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+            <span class="kw">let</span> <span class="ident">harness</span> <span class="op">=</span>
+                <span class="macro-nonterminal">$</span><span class="macro-nonterminal">harness::new</span>(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::HarnessTest::CollectionSerialization</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">harness</span>.<span class="ident">connect</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">crate::test_util::collection_serialization_tests</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="ident">harness</span>.<span class="ident">shutdown</span>().<span class="kw">await</span>
         }
 
@@ -2978,8 +3015,10 @@
     <span class="kw">let</span> <span class="ident">reloaded</span> <span class="op">=</span> <span class="ident">Basic::get</span>(<span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span>, <span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>.<span class="ident">unwrap</span>();
     <span class="macro">assert_eq!</span>(<span class="ident">doc</span>.<span class="ident">contents</span>, <span class="ident">reloaded</span>.<span class="ident">contents</span>);
 
-    <span class="comment">// Test alternative serialization strategies</span>
+    <span class="prelude-val">Ok</span>(())
+}
 
+<span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">collection_serialization_tests</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="ident">db</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>)]</span>
     {
         <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="ident">db</span>
@@ -2993,6 +3032,11 @@
         <span class="macro">assert!</span>(<span class="ident">serde_json::from_slice</span>::<span class="op">&lt;</span><span class="ident">JsonBasic</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">doc</span>.<span class="ident">contents</span>).<span class="ident">is_ok</span>());
         <span class="kw">let</span> <span class="ident">deserialized</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">JsonBasic</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="ident">deserialized</span>.<span class="ident">value</span>, <span class="number">1</span>);
+
+        <span class="comment">// Use the CollectionDocument interface</span>
+        <span class="kw">let</span> <span class="ident">inserted</span> <span class="op">=</span> <span class="ident">JsonBasic</span> { <span class="ident">value</span>: <span class="number">2</span> }.<span class="ident">insert_into</span>(<span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">retrieved</span> <span class="op">=</span> <span class="ident">JsonBasic::get</span>(<span class="ident">inserted</span>.<span class="ident">id</span>, <span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">inserted</span>), <span class="ident">retrieved</span>);
     }
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cbor&quot;</span>)]</span>
     {
@@ -3007,6 +3051,11 @@
         <span class="macro">assert!</span>(<span class="ident">serde_cbor::from_slice</span>::<span class="op">&lt;</span><span class="ident">CborBasic</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">doc</span>.<span class="ident">contents</span>).<span class="ident">is_ok</span>());
         <span class="kw">let</span> <span class="ident">deserialized</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">CborBasic</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="ident">deserialized</span>.<span class="ident">value</span>, <span class="number">1</span>);
+
+        <span class="comment">// Use the CollectionDocument interface</span>
+        <span class="kw">let</span> <span class="ident">inserted</span> <span class="op">=</span> <span class="ident">CborBasic</span> { <span class="ident">value</span>: <span class="number">2</span> }.<span class="ident">insert_into</span>(<span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">retrieved</span> <span class="op">=</span> <span class="ident">CborBasic::get</span>(<span class="ident">inserted</span>.<span class="ident">id</span>, <span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">inserted</span>), <span class="ident">retrieved</span>);
     }
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;bincode&quot;</span>)]</span>
     {
@@ -3021,6 +3070,11 @@
         <span class="macro">assert!</span>(<span class="ident">bincode::deserialize</span>::<span class="op">&lt;</span><span class="ident">BincodeBasic</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="ident">doc</span>.<span class="ident">contents</span>).<span class="ident">is_ok</span>());
         <span class="kw">let</span> <span class="ident">deserialized</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">BincodeBasic</span><span class="op">&gt;</span>().<span class="ident">unwrap</span>();
         <span class="macro">assert_eq!</span>(<span class="ident">deserialized</span>.<span class="ident">value</span>, <span class="number">1</span>);
+
+        <span class="comment">// Use the CollectionDocument interface</span>
+        <span class="kw">let</span> <span class="ident">inserted</span> <span class="op">=</span> <span class="ident">BincodeBasic</span> { <span class="ident">value</span>: <span class="number">2</span> }.<span class="ident">insert_into</span>(<span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">let</span> <span class="ident">retrieved</span> <span class="op">=</span> <span class="ident">BincodeBasic::get</span>(<span class="ident">inserted</span>.<span class="ident">id</span>, <span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="macro">assert_eq!</span>(<span class="prelude-val">Some</span>(<span class="ident">inserted</span>), <span class="ident">retrieved</span>);
     }
 
     <span class="prelude-val">Ok</span>(())
