@@ -17,13 +17,67 @@
 <h3 id="example" class="section-header"><a href="#example">Example</a></h3>
 <p>Check out <a href="https://github.com/khonsulabs/bonsaidb/tree/main/examples">./examples</a> for examples. To get an idea of how it works, this is a simple schema:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code>$..<span class="op">/</span><span class="ident">examples</span><span class="op">/</span><span class="ident">basic</span><span class="op">-</span><span class="ident">local</span><span class="op">/</span><span class="ident">examples</span><span class="op">/</span><span class="ident">view</span><span class="op">-</span><span class="ident">examples</span>.<span class="ident">rs</span>:<span class="ident">snippet</span><span class="op">-</span><span class="ident">a</span>$</code></pre></div>
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
+<span class="kw">struct</span> <span class="ident">Shape</span> {
+    <span class="kw">pub</span> <span class="ident">sides</span>: <span class="ident">u32</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Collection</span> <span class="kw">for</span> <span class="ident">Shape</span> {
+    <span class="kw">fn</span> <span class="ident">collection_name</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">CollectionName::new</span>(<span class="string">&quot;khonsulabs&quot;</span>, <span class="string">&quot;shapes&quot;</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">define_views</span>(<span class="ident">schema</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Schematic</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">ShapesByNumberOfSides</span>)
+    }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">struct</span> <span class="ident">ShapesByNumberOfSides</span>;
+
+<span class="kw">impl</span> <span class="ident">CollectionView</span> <span class="kw">for</span> <span class="ident">ShapesByNumberOfSides</span> {
+    <span class="kw">type</span> <span class="ident">Collection</span> <span class="op">=</span> <span class="ident">Shape</span>;
+
+    <span class="kw">type</span> <span class="ident">Key</span> <span class="op">=</span> <span class="ident">u32</span>;
+
+    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">usize</span>;
+
+    <span class="kw">fn</span> <span class="ident">version</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">u64</span> {
+        <span class="number">1</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Name</span>, <span class="ident">InvalidNameError</span><span class="op">&gt;</span> {
+        <span class="ident">Name::new</span>(<span class="string">&quot;by-number-of-sides&quot;</span>)
+    }
+
+    <span class="kw">fn</span> <span class="ident">map</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">document</span>: <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">Shape</span><span class="op">&gt;</span>) -&gt; <span class="ident">MapResult</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">document</span>.<span class="ident">emit_key_and_value</span>(<span class="ident">document</span>.<span class="ident">contents</span>.<span class="ident">sides</span>, <span class="number">1</span>))
+    }
+
+    <span class="kw">fn</span> <span class="ident">reduce</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">mappings</span>: <span class="kw-2">&amp;</span>[<span class="ident">MappedValue</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Key</span>, <span class="ident"><span class="self">Self</span>::Value</span><span class="op">&gt;</span>],
+        <span class="ident">_rereduce</span>: <span class="ident">bool</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Value</span>, <span class="ident">view::Error</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">m</span><span class="op">|</span> <span class="ident">m</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
+    }
+}</code></pre></div>
 <p>After you have your collection(s) defined, you can open up a database and insert documents:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code>$..<span class="op">/</span><span class="ident">examples</span><span class="op">/</span><span class="ident">basic</span><span class="op">-</span><span class="ident">local</span><span class="op">/</span><span class="ident">examples</span><span class="op">/</span><span class="ident">view</span><span class="op">-</span><span class="ident">examples</span>.<span class="ident">rs</span>:<span class="ident">snippet</span><span class="op">-</span><span class="ident">b</span>$</code></pre></div>
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code>    <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span>
+        <span class="ident">Database::open_local</span>::<span class="op">&lt;</span><span class="ident">Shape</span><span class="op">&gt;</span>(<span class="string">&quot;view-examples.bonsaidb&quot;</span>.<span class="ident">as_ref</span>(), <span class="ident">Configuration::default</span>())
+            .<span class="kw">await</span><span class="question-mark">?</span>;
+
+    <span class="comment">// Insert a new document into the Shape collection.</span>
+    <span class="ident">Shape::new</span>(<span class="number">3</span>).<span class="ident">insert_into</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div>
 <p>And query data using the Map-Reduce-powered view:</p>
 
-<div class="example-wrap"><pre class="rust rust-example-rendered"><code>$..<span class="op">/</span><span class="ident">examples</span><span class="op">/</span><span class="ident">basic</span><span class="op">-</span><span class="ident">local</span><span class="op">/</span><span class="ident">examples</span><span class="op">/</span><span class="ident">view</span><span class="op">-</span><span class="ident">examples</span>.<span class="ident">rs</span>:<span class="ident">snippet</span><span class="op">-</span><span class="ident">c</span>$</code></pre></div>
+<div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">let</span> <span class="ident">triangles</span> <span class="op">=</span> <span class="ident">db</span>
+    .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">ShapesByNumberOfSides</span><span class="op">&gt;</span>()
+    .<span class="ident">with_key</span>(<span class="number">3</span>)
+    .<span class="ident">query</span>()
+    .<span class="kw">await</span><span class="question-mark">?</span>;
+<span class="macro">println!</span>(<span class="string">&quot;Number of triangles: {}&quot;</span>, <span class="ident">triangles</span>.<span class="ident">len</span>());</code></pre></div>
 <p>See the <a href="https://github.com/khonsulabs/bonsaidb/blob/main/examples/README.md">examples README</a> for a list of all available examples.</p>
 <h3 id="why-write-another-database" class="section-header"><a href="#why-write-another-database">Why write another database?</a></h3>
 <ul>
@@ -78,6 +132,15 @@ bonsaidb = { version = &quot;*&quot;, default-features = false, features = &quot
 enabled, all DNS resolution is done with the OS’s default name resolver.</li>
 <li><code>client-websockets</code>: Enables <code>WebSocket</code> support for <code>bonsaidb-client</code>.</li>
 </ul>
+<h3 id="developing-bonsaidb" class="section-header"><a href="#developing-bonsaidb">Developing BonsaiDb</a></h3><h4 id="pre-commit-hook" class="section-header"><a href="#pre-commit-hook">Pre-commit hook</a></h4>
+<p>Our CI processes require that some commands succeed without warnings or errors. These checks can be performed manually by running:</p>
+<div class="example-wrap"><pre class="language-bash"><code>cargo xtask test --fail-on-warnings</code></pre></div>
+<p>Or, if you would like to run all these checks before each commit, you can install the check as a pre-commit hook:</p>
+<div class="example-wrap"><pre class="language-bash"><code>cargo xtask install-pre-commit-hook</code></pre></div><h3 id="open-source-licenses" class="section-header"><a href="#open-source-licenses">Open-source Licenses</a></h3>
+<p>This project, like all projects from <a href="https://khonsulabs.com/">Khonsu Labs</a>, are
+open-source. This repository is available under the <a href="./LICENSE-MIT">MIT License</a>
+or the <a href="./LICENSE-APACHE">Apache License 2.0</a>.</p>
+<p>To learn more about contributing, please see <a href="./CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
 </div></details><h2 id="modules" class="section-header"><a href="#modules">Modules</a></h2>
 <div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="mod" href="cli/index.html" title="bonsaidb::cli mod">cli</a></div><div class="item-right docblock-short"><p><code>BonsaiDb</code> command line tools.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="mod" href="client/index.html" title="bonsaidb::client mod">client</a></div><div class="item-right docblock-short"><p>Client for <code>bonsaidb-server</code>.</p>
