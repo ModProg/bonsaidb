@@ -1437,6 +1437,33 @@
 <span id="1437">1437</span>
 <span id="1438">1438</span>
 <span id="1439">1439</span>
+<span id="1440">1440</span>
+<span id="1441">1441</span>
+<span id="1442">1442</span>
+<span id="1443">1443</span>
+<span id="1444">1444</span>
+<span id="1445">1445</span>
+<span id="1446">1446</span>
+<span id="1447">1447</span>
+<span id="1448">1448</span>
+<span id="1449">1449</span>
+<span id="1450">1450</span>
+<span id="1451">1451</span>
+<span id="1452">1452</span>
+<span id="1453">1453</span>
+<span id="1454">1454</span>
+<span id="1455">1455</span>
+<span id="1456">1456</span>
+<span id="1457">1457</span>
+<span id="1458">1458</span>
+<span id="1459">1459</span>
+<span id="1460">1460</span>
+<span id="1461">1461</span>
+<span id="1462">1462</span>
+<span id="1463">1463</span>
+<span id="1464">1464</span>
+<span id="1465">1465</span>
+<span id="1466">1466</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>, <span class="ident">borrow::Cow</span>, <span class="ident">collections::HashMap</span>, <span class="ident">convert::Infallible</span>, <span class="ident">path::Path</span>, <span class="ident">sync::Arc</span>, <span class="ident">u8</span>,
 };
@@ -1472,7 +1499,7 @@
     <span class="ident">config::Configuration</span>,
     <span class="ident">error::Error</span>,
     <span class="ident">open_trees::OpenTrees</span>,
-    <span class="ident">storage::OpenDatabase</span>,
+    <span class="ident">storage</span>::{<span class="ident">AnyBackupLocation</span>, <span class="ident">OpenDatabase</span>},
     <span class="ident">views</span>::{
         <span class="ident">mapper</span>::{<span class="self">self</span>, <span class="ident">ViewEntryCollection</span>},
         <span class="ident">view_document_map_tree_name</span>, <span class="ident">view_entries_tree_name</span>, <span class="ident">view_invalidated_docs_tree_name</span>,
@@ -1741,7 +1768,7 @@
         .<span class="ident">unwrap</span>()
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list</span>(
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">ids</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">sort</span>: <span class="ident">Sort</span>,
@@ -1895,9 +1922,13 @@
         <span class="ident">tree_index_map</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="ident">operation</span>.<span class="ident">command</span> {
-            <span class="ident">Command::Insert</span> { <span class="ident">contents</span> } =&gt; {
-                <span class="self">self</span>.<span class="ident">execute_insert</span>(<span class="ident">operation</span>, <span class="ident">transaction</span>, <span class="ident">tree_index_map</span>, <span class="ident">contents</span>.<span class="ident">clone</span>())
-            }
+            <span class="ident">Command::Insert</span> { <span class="ident">id</span>, <span class="ident">contents</span> } =&gt; <span class="self">self</span>.<span class="ident">execute_insert</span>(
+                <span class="ident">operation</span>,
+                <span class="ident">transaction</span>,
+                <span class="ident">tree_index_map</span>,
+                <span class="kw-2">*</span><span class="ident">id</span>,
+                <span class="ident">contents</span>.<span class="ident">clone</span>(),
+            ),
             <span class="ident">Command::Update</span> { <span class="ident">header</span>, <span class="ident">contents</span> } =&gt; <span class="self">self</span>.<span class="ident">execute_update</span>(
                 <span class="ident">operation</span>,
                 <span class="ident">transaction</span>,
@@ -1975,26 +2006,41 @@
         <span class="ident">operation</span>: <span class="kw-2">&amp;</span><span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>,
         <span class="ident">transaction</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ExecutingTransaction</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>,
         <span class="ident">tree_index_map</span>: <span class="kw-2">&amp;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">usize</span><span class="op">&gt;</span>,
+        <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">OperationResult</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">documents</span> <span class="op">=</span> <span class="ident">transaction</span>
             .<span class="ident">tree</span>::<span class="op">&lt;</span><span class="ident">Versioned</span><span class="op">&gt;</span>(<span class="ident">tree_index_map</span>[<span class="kw-2">&amp;</span><span class="ident">document_tree_name</span>(<span class="kw-2">&amp;</span><span class="ident">operation</span>.<span class="ident">collection</span>)])
             .<span class="ident">unwrap</span>();
-        <span class="kw">let</span> <span class="ident">last_key</span> <span class="op">=</span> <span class="ident">documents</span>
-            .<span class="ident">last_key</span>()<span class="question-mark">?</span>
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">bytes</span><span class="op">|</span> <span class="ident">BigEndian::read_u64</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>))
-            .<span class="ident">unwrap_or_default</span>();
-        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">Document::new</span>(<span class="ident">last_key</span> <span class="op">+</span> <span class="number">1</span>, <span class="ident">contents</span>);
+        <span class="kw">let</span> <span class="ident">id</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">id</span> {
+            <span class="ident">id</span>
+        } <span class="kw">else</span> {
+            <span class="kw">let</span> <span class="ident">last_key</span> <span class="op">=</span> <span class="ident">documents</span>
+                .<span class="ident">last_key</span>()<span class="question-mark">?</span>
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">bytes</span><span class="op">|</span> <span class="ident">BigEndian::read_u64</span>(<span class="kw-2">&amp;</span><span class="ident">bytes</span>))
+                .<span class="ident">unwrap_or_default</span>();
+            <span class="ident">last_key</span> <span class="op">+</span> <span class="number">1</span>
+        };
+
+        <span class="kw">let</span> <span class="ident">doc</span> <span class="op">=</span> <span class="ident">Document::new</span>(<span class="ident">id</span>, <span class="ident">contents</span>);
         <span class="kw">let</span> <span class="ident">serialized</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">serialize_document</span>(<span class="kw-2">&amp;</span><span class="ident">doc</span>)<span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">document_id</span> <span class="op">=</span> <span class="ident">Buffer::from</span>(<span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span>.<span class="ident">as_big_endian_bytes</span>().<span class="ident">unwrap</span>().<span class="ident">to_vec</span>());
-        <span class="ident">documents</span>.<span class="ident">set</span>(<span class="ident">document_id</span>.<span class="ident">clone</span>(), <span class="ident">serialized</span>)<span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="ident">documents</span>
+            .<span class="ident">replace</span>(<span class="ident">document_id</span>.<span class="ident">clone</span>(), <span class="ident">serialized</span>)<span class="question-mark">?</span>
+            .<span class="ident">is_some</span>()
+        {
+            <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::DocumentConflict</span>(
+                <span class="ident">operation</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(),
+                <span class="ident">id</span>,
+            )))
+        } <span class="kw">else</span> {
+            <span class="self">self</span>.<span class="ident">update_unique_views</span>(<span class="kw-2">&amp;</span><span class="ident">document_id</span>, <span class="ident">operation</span>, <span class="ident">transaction</span>, <span class="ident">tree_index_map</span>)<span class="question-mark">?</span>;
 
-        <span class="self">self</span>.<span class="ident">update_unique_views</span>(<span class="kw-2">&amp;</span><span class="ident">document_id</span>, <span class="ident">operation</span>, <span class="ident">transaction</span>, <span class="ident">tree_index_map</span>)<span class="question-mark">?</span>;
-
-        <span class="prelude-val">Ok</span>(<span class="ident">OperationResult::DocumentUpdated</span> {
-            <span class="ident">collection</span>: <span class="ident">operation</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(),
-            <span class="ident">header</span>: <span class="ident">doc</span>.<span class="ident">header</span>,
-        })
+            <span class="prelude-val">Ok</span>(<span class="ident">OperationResult::DocumentUpdated</span> {
+                <span class="ident">collection</span>: <span class="ident">operation</span>.<span class="ident">collection</span>.<span class="ident">clone</span>(),
+                <span class="ident">header</span>: <span class="ident">doc</span>.<span class="ident">header</span>,
+            })
+        }
     }
 
     <span class="kw">fn</span> <span class="ident">execute_delete</span>(
@@ -2874,6 +2920,14 @@
             .<span class="ident">compact_database</span>(<span class="self">self</span>.<span class="ident">clone</span>())
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">backup</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">location</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">AnyBackupLocation</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">storage</span>().<span class="ident">backup_database</span>(<span class="self">self</span>, <span class="ident">location</span>).<span class="kw">await</span>
+    }
+
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">restore</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">location</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">AnyBackupLocation</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="self">self</span>.<span class="ident">storage</span>().<span class="ident">restore_database</span>(<span class="self">self</span>, <span class="ident">location</span>).<span class="kw">await</span>
     }
 }
 </code></pre></div>

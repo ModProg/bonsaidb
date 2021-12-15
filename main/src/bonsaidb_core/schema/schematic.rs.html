@@ -164,6 +164,20 @@
 <span id="164">164</span>
 <span id="165">165</span>
 <span id="166">166</span>
+<span id="167">167</span>
+<span id="168">168</span>
+<span id="169">169</span>
+<span id="170">170</span>
+<span id="171">171</span>
+<span id="172">172</span>
+<span id="173">173</span>
+<span id="174">174</span>
+<span id="175">175</span>
+<span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::TypeId</span>,
     <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>},
@@ -175,14 +189,16 @@
     <span class="ident">schema</span>::{
         <span class="ident">collection::Collection</span>,
         <span class="ident">view</span>::{<span class="self">self</span>, <span class="ident">Serialized</span>},
-        <span class="ident">CollectionName</span>, <span class="ident">View</span>, <span class="ident">ViewName</span>,
+        <span class="ident">CollectionName</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">View</span>, <span class="ident">ViewName</span>,
     },
     <span class="ident">Error</span>,
 };
 
 <span class="doccomment">/// A collection of defined collections and views.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Schematic</span> {
+    <span class="doccomment">/// The name of the schema this was built from.</span>
+    <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">SchemaName</span>,
     <span class="ident">contained_collections</span>: <span class="ident">HashSet</span><span class="op">&lt;</span><span class="ident">CollectionName</span><span class="op">&gt;</span>,
     <span class="ident">collections_by_type_id</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">TypeId</span>, <span class="ident">CollectionName</span><span class="op">&gt;</span>,
     <span class="ident">collection_encryption_keys</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">CollectionName</span>, <span class="ident">KeyId</span><span class="op">&gt;</span>,
@@ -193,6 +209,22 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Schematic</span> {
+    <span class="doccomment">/// Returns an initialized version from `S`.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_schema</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Schema</span> <span class="op">+</span> <span class="question-mark">?</span><span class="ident">Sized</span><span class="op">&gt;</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schematic</span> <span class="op">=</span> <span class="self">Self</span> {
+            <span class="ident">name</span>: <span class="ident">S::schema_name</span>()<span class="question-mark">?</span>,
+            <span class="ident">contained_collections</span>: <span class="ident">HashSet::new</span>(),
+            <span class="ident">collections_by_type_id</span>: <span class="ident">HashMap::new</span>(),
+            <span class="ident">collection_encryption_keys</span>: <span class="ident">HashMap::new</span>(),
+            <span class="ident">views</span>: <span class="ident">HashMap::new</span>(),
+            <span class="ident">views_by_name</span>: <span class="ident">HashMap::new</span>(),
+            <span class="ident">views_by_collection</span>: <span class="ident">HashMap::new</span>(),
+            <span class="ident">unique_views_by_collection</span>: <span class="ident">HashMap::new</span>(),
+        };
+        <span class="ident">S::define_collections</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schematic</span>)<span class="question-mark">?</span>;
+        <span class="prelude-val">Ok</span>(<span class="ident">schematic</span>)
+    }
+
     <span class="doccomment">/// Adds the collection `C` and its views.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">define_collection</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">C::collection_name</span>()<span class="question-mark">?</span>;
@@ -310,12 +342,8 @@
 
 <span class="attribute">#[<span class="ident">test</span>]</span>
 <span class="kw">fn</span> <span class="ident">schema_tests</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
-    <span class="kw">use</span> <span class="kw">crate</span>::{
-        <span class="ident">schema::Schema</span>,
-        <span class="ident">test_util</span>::{<span class="ident">Basic</span>, <span class="ident">BasicCount</span>},
-    };
-    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schema</span> <span class="op">=</span> <span class="ident">Schematic::default</span>();
-    <span class="ident">Basic::define_collections</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">schema</span>)<span class="question-mark">?</span>;
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::test_util</span>::{<span class="ident">Basic</span>, <span class="ident">BasicCount</span>};
+    <span class="kw">let</span> <span class="ident">schema</span> <span class="op">=</span> <span class="ident">Schematic::from_schema</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
 
     <span class="macro">assert_eq!</span>(<span class="ident">schema</span>.<span class="ident">collections_by_type_id</span>.<span class="ident">len</span>(), <span class="number">1</span>);
     <span class="macro">assert_eq!</span>(

@@ -189,6 +189,15 @@
 <span id="189">189</span>
 <span id="190">190</span>
 <span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
 
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
@@ -232,9 +241,11 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Inserts a new document with `contents` into `collection`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="ident">collection</span>: <span class="ident">CollectionName</span>, <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">Operation::insert</span>(<span class="ident">collection</span>, <span class="ident">contents</span>))
+    <span class="doccomment">/// Inserts a new document with `contents` into `collection`.  If `id` is</span>
+    <span class="doccomment">/// `None` a unique id will be generated. If an id is provided and a</span>
+    <span class="doccomment">/// document already exists with that id, a conflict error will be returned.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="ident">collection</span>: <span class="ident">CollectionName</span>, <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::from</span>(<span class="ident">Operation::insert</span>(<span class="ident">collection</span>, <span class="ident">id</span>, <span class="ident">contents</span>))
     }
 
     <span class="doccomment">/// Updates a document in `collection`.</span>
@@ -260,11 +271,14 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// Inserts a new document with `contents` into `collection`.</span>
-    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="ident">collection</span>: <span class="ident">CollectionName</span>, <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="doccomment">/// Inserts a new document with `contents` into `collection`.  If `id` is</span>
+    <span class="doccomment">/// `None` a unique id will be generated. If an id is provided and a</span>
+    <span class="doccomment">/// document already exists with that id, a conflict error will be returned.</span>
+    <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="ident">collection</span>: <span class="ident">CollectionName</span>, <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">collection</span>,
             <span class="ident">command</span>: <span class="ident">Command::Insert</span> {
+                <span class="ident">id</span>,
                 <span class="ident">contents</span>: <span class="ident">Cow::Owned</span>(<span class="ident">contents</span>),
             },
         }
@@ -297,6 +311,10 @@
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Inserts a new document containing `contents`.</span>
     <span class="ident">Insert</span> {
+        <span class="doccomment">/// An optional id for the document. If this is `None`, a unique id will</span>
+        <span class="doccomment">/// be generated. If this is `Some()` and a document already exists with</span>
+        <span class="doccomment">/// that id, a conflict error will be returned.</span>
+        <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The initial contents of the document.</span>
         <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
     },

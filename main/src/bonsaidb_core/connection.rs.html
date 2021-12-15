@@ -901,6 +901,13 @@
 <span id="901">901</span>
 <span id="902">902</span>
 <span id="903">903</span>
+<span id="904">904</span>
+<span id="905">905</span>
+<span id="906">906</span>
+<span id="907">907</span>
+<span id="908">908</span>
+<span id="909">909</span>
+<span id="910">910</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
@@ -932,10 +939,17 @@
         <span class="ident">Collection::new</span>(<span class="self">self</span>)
     }
 
-    <span class="doccomment">/// Inserts a newly created document into the connected [`schema::Schema`] for the [`Collection`] `C`.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">insert</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Header</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Inserts a newly created document into the connected [`schema::Schema`]</span>
+    <span class="doccomment">/// for the [`Collection`] `C`. If `id` is `None` a unique id will be</span>
+    <span class="doccomment">/// generated. If an id is provided and a document already exists with that</span>
+    <span class="doccomment">/// id, a conflict error will be returned.</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">insert</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">schema::Collection</span><span class="op">&gt;</span>(
+        <span class="kw-2">&amp;</span><span class="self">self</span>,
+        <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
+        <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Header</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">results</span> <span class="op">=</span> <span class="self">self</span>
-            .<span class="ident">apply_transaction</span>(<span class="ident">Transaction::insert</span>(<span class="ident">C::collection_name</span>()<span class="question-mark">?</span>, <span class="ident">contents</span>))
+            .<span class="ident">apply_transaction</span>(<span class="ident">Transaction::insert</span>(<span class="ident">C::collection_name</span>()<span class="question-mark">?</span>, <span class="ident">id</span>, <span class="ident">contents</span>))
             .<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">OperationResult::DocumentUpdated</span> { <span class="ident">header</span>, .. } <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">results</span>[<span class="number">0</span>] {
             <span class="prelude-val">Ok</span>(<span class="ident">header</span>.<span class="ident">clone</span>())
@@ -1150,7 +1164,7 @@
     <span class="doccomment">/// Adds a new `Document&lt;Cl&gt;` with the contents `item`.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">push</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="ident">Sync</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">item</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Header</span>, <span class="ident"><span class="kw">crate</span>::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">Cl::serializer</span>().<span class="ident">serialize</span>(<span class="ident">item</span>)<span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">insert</span>::<span class="op">&lt;</span><span class="ident">Cl</span><span class="op">&gt;</span>(<span class="ident">contents</span>).<span class="kw">await</span><span class="question-mark">?</span>)
+        <span class="prelude-val">Ok</span>(<span class="self">self</span>.<span class="ident">connection</span>.<span class="ident">insert</span>::<span class="op">&lt;</span><span class="ident">Cl</span><span class="op">&gt;</span>(<span class="prelude-val">None</span>, <span class="ident">contents</span>).<span class="kw">await</span><span class="question-mark">?</span>)
     }
 
     <span class="doccomment">/// Retrieves a `Document&lt;Cl&gt;` with `id` from the connection.</span>
