@@ -541,28 +541,21 @@ impl DoSomethingCustomHandler for ExampleDispatcher {
 </code></pre>
 <p>This example uses <code>authenticated_permissions</code> to grant access to <code>ExampleAction::DoSomethingSimple</code> and <code>ExampleAction::DoSomethingCustom</code> to all users who have logged in:</p>
 <pre><code class="language-rust noplayground no_run">    let server = CustomServer::&lt;ExampleBackend&gt;::open(
-        Path::new(&quot;server-data.bonsaidb&quot;),
-        Configuration {
-            default_permissions: DefaultPermissions::Permissions(Permissions::from(vec![
-                Statement {
-                    resources: vec![ResourceName::any()],
-                    actions: ActionNameList::List(vec![
-                        BonsaiAction::Server(ServerAction::Connect).name(),
-                        BonsaiAction::Server(ServerAction::LoginWithPassword).name(),
-                    ]),
-                },
-            ])),
-            authenticated_permissions: DefaultPermissions::Permissions(Permissions::from(vec![
-                Statement {
-                    resources: vec![ResourceName::any()],
-                    actions: ActionNameList::List(vec![
-                        ExampleActions::DoSomethingSimple.name(),
-                        ExampleActions::DoSomethingCustom.name(),
-                    ]),
-                },
-            ])),
-            ..Default::default()
-        },
+        ServerConfiguration::new(&quot;server-data.bonsaidb&quot;)
+            .default_permissions(Permissions::from(vec![Statement {
+                resources: vec![ResourceName::any()],
+                actions: ActionNameList::List(vec![
+                    BonsaiAction::Server(ServerAction::Connect).name(),
+                    BonsaiAction::Server(ServerAction::LoginWithPassword).name(),
+                ]),
+            }]))
+            .authenticated_permissions(Permissions::from(vec![Statement {
+                resources: vec![ResourceName::any()],
+                actions: ActionNameList::List(vec![
+                    ExampleActions::DoSomethingSimple.name(),
+                    ExampleActions::DoSomethingCustom.name(),
+                ]),
+            }])),
     )
     .await?;
 </code></pre>
@@ -590,17 +583,15 @@ impl DoSomethingCustomHandler for ExampleDispatcher {
 <div style="break-before: page; page-break-before: always;"></div><h1 id="integrating-bonsaidb-locally"><a class="header" href="#integrating-bonsaidb-locally">Integrating BonsaiDb Locally</a></h1>
 <p><code>BonsaiDb</code> supports multiple <a href="integration/../about/concepts/database.html">databases</a> and multiple <a href="integration/../about/concepts/schema.html">schemas</a>. However, for many applications, you only need a single database.</p>
 <p>If you're only wanting a single database, the setup is straightforward: (from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/examples/basic-local/examples/basic-local.rs"><code>examples/basic-local/examples/basic-local.rs</code></a>)</p>
-<pre><code class="language-rust noplayground no_run">let db = Database::&lt;Message&gt;::open_local(
-    &quot;basic.bonsaidb&quot;, 
-    &amp;Configuration::default()
+<pre><code class="language-rust noplayground no_run">let db = Database::&lt;Message&gt;::open(
+    StorageConfiguration::new(&quot;basic.bonsaidb&quot;)
 ).await?;
 </code></pre>
 <p>Under the hood, <code>BonsaiDb</code> is creating a multi-database <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> with a local <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Database.html"><code>Database</code></a> named <code>default</code> for you. If you need to switch to a multi-database model, you can open the storage and access the <code>default</code> database: (adapted from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/examples/basic-local/examples/basic-local-multidb.rs"><code>examples/basic-local/examples/basic-local.rs</code></a>)</p>
-<pre><code class="language-rust noplayground no_run">let storage = Storage::open_local(
-    &quot;basic.bonsaidb&quot;,
-    &amp;Configuration::default()
+<pre><code class="language-rust noplayground no_run">let storage = Storage::open(
+    Configuration::new(&quot;basic.bonsaidb&quot;)
+        .with_schema::&lt;Message&gt;()?
 ).await?;
-storage.register_schema::&lt;Message&gt;().await?;
 let db = storage.database::&lt;Message&gt;(&quot;default&quot;).await?;
 </code></pre>
 <p>You can register multiple schemas so that databases can be purpose-built.</p>
@@ -629,11 +620,9 @@ let db = storage.database::&lt;Message&gt;(&quot;default&quot;).await?;
 <h2 id="your-bonsaidb-server"><a class="header" href="#your-bonsaidb-server">Your BonsaiDb Server</a></h2>
 <p>The first step is to create a <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Server</code></a>, which uses local <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> under the hood. This means that if you're already using <code>BonsaiDb</code> in local mode, you can swap your usage of <a href="https://dev.bonsaidb.io/main/bonsaidb/local/struct.Storage.html"><code>Storage</code></a> with <a href="https://dev.bonsaidb.io/main/bonsaidb/server/type.Server.html"><code>Server</code></a> in your server code without running your database through any tools. Here's the setup code from <a href="https://github.com/khonsulabs/bonsaidb/blob/main/examples/basic-server/examples/basic-server.rs"><code>basic-server/examples/basic-server.rs</code></a></p>
 <pre><code class="language-rust noplayground no_run">    let server = Server::open(
-        Path::new(&quot;server-data.bonsaidb&quot;),
-        Configuration {
-            default_permissions: DefaultPermissions::AllowAll,
-            ..Default::default()
-        },
+        ServerConfiguration::new(&quot;server-data.bonsaidb&quot;)
+            .default_permissions(DefaultPermissions::AllowAll)
+            .with_schema::&lt;Shape&gt;()?,
     )
     .await?;
     if server.certificate_chain().await.is_err() {
@@ -643,7 +632,6 @@ let db = storage.database::&lt;Message&gt;(&quot;default&quot;).await?;
         .certificate_chain()
         .await?
         .into_end_entity_certificate();
-    server.register_schema::&lt;Shape&gt;().await?;
     server.create_database::&lt;Shape&gt;(&quot;my-database&quot;, true).await?;
 </code></pre>
 <p>Once you have a server initialized, calling <a href="https://dev.bonsaidb.io/main/bonsaidb/server/struct.CustomServer.html#method.listen_on"><code>listen_on</code></a> will begin listening for connections on the port specified. This uses the preferred native protocol which uses UDP. If you find that UDP is not working for your setup or want to put <code>BonsaiDb</code> behind a load balancer that doesn't support UDP, you can enable WebSocket support and call <a href="https://dev.bonsaidb.io/main/bonsaidb/server/struct.CustomServer.html#method.listen_for_websockets_on"><code>listen_for_websockets_on</code></a>.</p>
