@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["bonsaidb"] = [{"text":"impl&lt;Cli:&nbsp;<a class=\"trait\" href=\"bonsaidb/cli/trait.CommandLine.html\" title=\"trait bonsaidb::cli::CommandLine\">CommandLine</a>&gt; Parser for <a class=\"struct\" href=\"bonsaidb/cli/struct.Args.html\" title=\"struct bonsaidb::cli::Args\">Args</a>&lt;Cli&gt;","synthetic":false,"types":["bonsaidb::cli::Args"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()

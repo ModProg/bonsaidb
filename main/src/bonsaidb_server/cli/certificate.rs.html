@@ -65,13 +65,13 @@
 <span id="65">65</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::path::PathBuf</span>;
 
-<span class="kw">use</span> <span class="ident">structopt::StructOpt</span>;
+<span class="kw">use</span> <span class="ident">clap::Subcommand</span>;
 <span class="kw">use</span> <span class="ident">tokio::io::AsyncReadExt</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Backend</span>, <span class="ident">CustomServer</span>, <span class="ident">Error</span>};
 
 <span class="doccomment">/// Command to manage the server&#39;s certificates.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">StructOpt</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Subcommand</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Command</span> {
     <span class="doccomment">/// Installs a self-signed certificate into the server. The server can only</span>
     <span class="doccomment">/// have one global self-signed certificate. If `overwrite` is true, any</span>
@@ -82,7 +82,7 @@
     <span class="ident">InstallSelfSigned</span> {
         <span class="doccomment">/// If an existing certificate exists, an error will be returned unless</span>
         <span class="doccomment">/// `overwrite` is true.</span>
-        <span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">short</span>, <span class="ident">long</span>)]</span>
+        <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span>, <span class="ident">long</span>)]</span>
         <span class="ident">overwrite</span>: <span class="ident">bool</span>,
     },
     <span class="doccomment">/// Installs a X.509 certificate and associated private key in PEM format.</span>
