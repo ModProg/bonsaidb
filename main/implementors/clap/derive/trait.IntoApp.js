@@ -1,3 +1,4 @@
 (function() {var implementors = {};
 implementors["bonsaidb"] = [{"text":"impl&lt;Cli:&nbsp;<a class=\"trait\" href=\"bonsaidb/cli/trait.CommandLine.html\" title=\"trait bonsaidb::cli::CommandLine\">CommandLine</a>&gt; IntoApp for <a class=\"struct\" href=\"bonsaidb/cli/struct.Args.html\" title=\"struct bonsaidb::cli::Args\">Args</a>&lt;Cli&gt;","synthetic":false,"types":["bonsaidb::cli::Args"]}];
+implementors["bonsaidb_server"] = [{"text":"impl&lt;B:&nbsp;<a class=\"trait\" href=\"bonsaidb_server/trait.Backend.html\" title=\"trait bonsaidb_server::Backend\">Backend</a>&gt; IntoApp for <a class=\"enum\" href=\"bonsaidb_server/cli/enum.Command.html\" title=\"enum bonsaidb_server::cli::Command\">Command</a>&lt;B&gt;","synthetic":false,"types":["bonsaidb_server::cli::Command"]}];
 if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
