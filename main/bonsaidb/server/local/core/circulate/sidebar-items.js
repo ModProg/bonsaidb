@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Message","A `PubSub` message."],["Relay","Manages subscriptions and notifications for `PubSub`."],["Subscriber","A subscriber for [`Message`]s published to subscribed topics."]]});

@@ -776,6 +776,20 @@
 <span id="776">776</span>
 <span id="777">777</span>
 <span id="778">778</span>
+<span id="779">779</span>
+<span id="780">780</span>
+<span id="781">781</span>
+<span id="782">782</span>
+<span id="783">783</span>
+<span id="784">784</span>
+<span id="785">785</span>
+<span id="786">786</span>
+<span id="787">787</span>
+<span id="788">788</span>
+<span id="789">789</span>
+<span id="790">790</span>
+<span id="791">791</span>
+<span id="792">792</span>
 </pre><pre class="rust"><code><span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;test-util&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">std::sync::atomic::AtomicBool</span>;
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -798,11 +812,14 @@
         <span class="ident">ClientConfig</span>, <span class="ident">ClientFile</span>, <span class="ident">ClientLogin</span>, <span class="ident">LoginFinalization</span>, <span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>,
     },
     <span class="ident">custom_api</span>::{<span class="ident">CustomApi</span>, <span class="ident">CustomApiResult</span>},
-    <span class="ident">networking</span>::{<span class="self">self</span>, <span class="ident">Payload</span>, <span class="ident">Request</span>, <span class="ident">Response</span>, <span class="ident">ServerRequest</span>, <span class="ident">ServerResponse</span>},
+    <span class="ident">networking</span>::{
+        <span class="self">self</span>, <span class="ident">Payload</span>, <span class="ident">Request</span>, <span class="ident">Response</span>, <span class="ident">ServerRequest</span>, <span class="ident">ServerResponse</span>, <span class="ident">CURRENT_PROTOCOL_VERSION</span>,
+    },
     <span class="ident">password_config</span>,
     <span class="ident">permissions::Permissions</span>,
     <span class="ident">schema</span>::{<span class="ident">NamedReference</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>},
 };
+<span class="kw">use</span> <span class="ident">bonsaidb_utils::fast_async_lock</span>;
 <span class="kw">use</span> <span class="ident">derive_where::DeriveWhere</span>;
 <span class="kw">use</span> <span class="ident">flume::Sender</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
@@ -825,7 +842,7 @@
 
 <span class="kw">impl</span> <span class="ident">SubscriberMap</span> {
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">clear</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>);
         <span class="ident">data</span>.<span class="ident">clear</span>();
     }
 }
@@ -891,6 +908,7 @@
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">url</span>: <span class="ident">Url</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="ident"><span class="self">Self</span>::new_from_parts</span>(
             <span class="ident">url</span>,
+            <span class="ident">CURRENT_PROTOCOL_VERSION</span>,
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
             <span class="prelude-val">None</span>,
             <span class="prelude-val">None</span>,
@@ -915,6 +933,7 @@
     <span class="doccomment">/// the database is to operation.</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_from_parts</span>(
         <span class="ident">url</span>: <span class="ident">Url</span>,
+        <span class="ident">protocol_version</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span> <span class="ident">certificate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">fabruic::Certificate</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
@@ -922,11 +941,14 @@
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
             <span class="string">&quot;bonsaidb&quot;</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident"><span class="self">Self</span>::new_bonsai_client</span>(
                 <span class="ident">url</span>,
+                <span class="ident">protocol_version</span>,
                 <span class="ident">certificate</span>,
                 <span class="ident">custom_api_callback</span>,
             )),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
-            <span class="string">&quot;wss&quot;</span> <span class="op">|</span> <span class="string">&quot;ws&quot;</span> =&gt; <span class="ident"><span class="self">Self</span>::new_websocket_client</span>(<span class="ident">url</span>, <span class="ident">custom_api_callback</span>).<span class="kw">await</span>,
+            <span class="string">&quot;wss&quot;</span> <span class="op">|</span> <span class="string">&quot;ws&quot;</span> =&gt; {
+                <span class="ident"><span class="self">Self</span>::new_websocket_client</span>(<span class="ident">url</span>, <span class="ident">protocol_version</span>, <span class="ident">custom_api_callback</span>).<span class="kw">await</span>
+            }
             <span class="ident">other</span> =&gt; {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::InvalidUrl</span>(<span class="macro">format!</span>(<span class="string">&quot;unsupported scheme {}&quot;</span>, <span class="ident">other</span>)));
             }
@@ -936,6 +958,7 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
     <span class="kw">fn</span> <span class="ident">new_bonsai_client</span>(
         <span class="ident">url</span>: <span class="ident">Url</span>,
+        <span class="ident">protocol_version</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="ident">certificate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">fabruic::Certificate</span><span class="op">&gt;</span>,
         <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="self">Self</span> {
@@ -944,6 +967,7 @@
         <span class="kw">let</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="ident">SubscriberMap::default</span>();
         <span class="kw">let</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">tokio::task::spawn</span>(<span class="ident">quic_worker::reconnecting_client_loop</span>(
             <span class="ident">url</span>,
+            <span class="ident">protocol_version</span>,
             <span class="ident">certificate</span>,
             <span class="ident">request_receiver</span>,
             <span class="ident">custom_api_callback</span>,
@@ -974,6 +998,7 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>, <span class="ident">not</span>(<span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_websocket_client</span>(
         <span class="ident">url</span>: <span class="ident">Url</span>,
+        <span class="ident">protocol_version</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">request_sender</span>, <span class="ident">request_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
@@ -982,6 +1007,7 @@
 
         <span class="kw">let</span> <span class="ident">worker</span> <span class="op">=</span> <span class="ident">tokio::task::spawn</span>(<span class="ident">tungstenite_worker::reconnecting_client_loop</span>(
             <span class="ident">url</span>,
+            <span class="ident">protocol_version</span>,
             <span class="ident">request_receiver</span>,
             <span class="ident">custom_api_callback</span>,
             <span class="ident">subscribers</span>.<span class="ident">clone</span>(),
@@ -1014,6 +1040,7 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>, <span class="ident">target_arch</span> <span class="op">=</span> <span class="string">&quot;wasm32&quot;</span>))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">new_websocket_client</span>(
         <span class="ident">url</span>: <span class="ident">Url</span>,
+        <span class="ident">protocol_version</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">request_sender</span>, <span class="ident">request_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
@@ -1022,6 +1049,7 @@
 
         <span class="ident">wasm_websocket_worker::spawn_client</span>(
             <span class="ident">Arc::new</span>(<span class="ident">url</span>),
+            <span class="ident">protocol_version</span>,
             <span class="ident">request_receiver</span>,
             <span class="ident">custom_api_callback</span>.<span class="ident">clone</span>(),
             <span class="ident">subscribers</span>.<span class="ident">clone</span>(),
@@ -1085,7 +1113,7 @@
             .<span class="kw">await</span><span class="question-mark">?</span>
         {
             <span class="ident">Response::Server</span>(<span class="ident">ServerResponse::LoggedIn</span> { <span class="ident">permissions</span> }) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">effective_permissions</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">effective_permissions</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">effective_permissions</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">effective_permissions</span>);
                 <span class="kw-2">*</span><span class="ident">effective_permissions</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">permissions</span>);
                 <span class="prelude-val">Ok</span>(())
             }
@@ -1152,7 +1180,7 @@
     <span class="doccomment">/// Returns the current effective permissions for the client. Returns None</span>
     <span class="doccomment">/// if unauthenticated.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">effective_permissions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Permissions</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">effective_permissions</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">effective_permissions</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">effective_permissions</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">effective_permissions</span>);
         <span class="ident">effective_permissions</span>.<span class="ident">clone</span>()
     }
 
@@ -1164,7 +1192,7 @@
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">register_subscriber</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">id</span>: <span class="ident">u64</span>, <span class="ident">sender</span>: <span class="ident">flume::Sender</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Message</span><span class="op">&gt;</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>);
         <span class="ident">subscribers</span>.<span class="ident">insert</span>(<span class="ident">id</span>, <span class="ident">sender</span>);
     }
 
@@ -1176,7 +1204,7 @@
             })
             .<span class="kw">await</span>,
         );
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">subscribers</span>);
         <span class="ident">subscribers</span>.<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">id</span>);
     }
 }
@@ -1213,7 +1241,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Database</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>);
         <span class="kw">let</span> <span class="ident">type_id</span> <span class="op">=</span> <span class="ident">TypeId::of</span>::<span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>();
         <span class="kw">let</span> <span class="ident">schematic</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">schematic</span>) <span class="op">=</span> <span class="ident">schemas</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">type_id</span>) {
             <span class="ident">schematic</span>.<span class="ident">clone</span>()
@@ -1481,7 +1509,7 @@
         }
 
         <span class="kw">let</span> <span class="ident">request</span> <span class="op">=</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outstanding_requests</span> <span class="op">=</span> <span class="ident">outstanding_requests</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outstanding_requests</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="ident">outstanding_requests</span>);
             <span class="ident">outstanding_requests</span>
                 .<span class="ident">remove</span>(<span class="kw-2">&amp;</span><span class="ident">payload_id</span>)
                 .<span class="ident">expect</span>(<span class="string">&quot;missing responder&quot;</span>)
@@ -1499,7 +1527,7 @@
                 <span class="ident">topic</span>,
                 <span class="ident">payload</span>,
             }) =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subscribers</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="ident">subscribers</span>);
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">sender</span>) <span class="op">=</span> <span class="ident">subscribers</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="ident">subscriber_id</span>) {
                     <span class="kw">if</span> <span class="ident">sender</span>
                         .<span class="ident">send</span>(<span class="ident">std::sync::Arc::new</span>(<span class="ident">bonsaidb_core::circulate::Message</span> {

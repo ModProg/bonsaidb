@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Configuration","Configuration options for `Storage`."],["Tasks","Configujration options for background tasks."],["Views","Configuration options for views."]]});
+initSidebarItems({"struct":[["StorageConfiguration","Configuration options for `Storage`."],["Tasks","Configujration options for background tasks."],["Views","Configuration options for views."]],"trait":[["Builder","Storage configuration builder methods."]]});

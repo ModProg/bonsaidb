@@ -4,20 +4,20 @@ API that has a flexible permissions system integrated.</p>
 internally, and as a way for users of <code>PliantDb</code> to extend their database
 servers with their own APIs.</p>
 <h3 id="permissions" class="section-header"><a href="#permissions">Permissions</a></h3>
-<p>The <a href="../../server/local/core/actionable/struct.Permissions.html" title="Permissions"><code>Permissions</code></a> struct is constructed from a list of <code>Statement</code>s. The
+<p>The <a href="struct.Permissions.html" title="Permissions"><code>Permissions</code></a> struct is constructed from a list of <code>Statement</code>s. The
 <code>Statement</code> struct is inspired by <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_statement.html">statements in
 IAM</a>.
 By default, all actions are denied for all resources.</p>
-<p>The <a href="../../server/local/core/actionable/struct.ResourceName.html" title="ResourceName"><code>ResourceName</code></a> struct describes a unique name/id of <em>anything</em> in your
+<p>The <a href="struct.ResourceName.html" title="ResourceName"><code>ResourceName</code></a> struct describes a unique name/id of <em>anything</em> in your
 application. This is meant to be similar to <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html#identifiers-arns">ARNs in
 IAM</a>,
 but instead of being restricted to a format by this library, you are able to
 define your own syntax.</p>
-<p>The <a href="../../server/local/core/actionable/trait.Action.html" title="Action"><code>Action</code></a> trait is derive-able, and will convert any enum to something
-that can be permitted or denied to any <a href="../../server/local/core/actionable/struct.ResourceName.html" title="ResourceName"><code>ResourceName</code></a>. This derive macro
+<p>The <a href="trait.Action.html" title="Action"><code>Action</code></a> trait is derive-able, and will convert any enum to something
+that can be permitted or denied to any <a href="struct.ResourceName.html" title="ResourceName"><code>ResourceName</code></a>. This derive macro
 only supports enums with variants that have no parameters, or only have a
-single name-less parameter that also implements <a href="../../server/local/core/actionable/trait.Action.html" title="Action"><code>Action</code></a>.</p>
-<p>An example <a href="../../server/local/core/actionable/trait.Action.html" title="Action"><code>Action</code></a> enum might look like:</p>
+single name-less parameter that also implements <a href="trait.Action.html" title="Action"><code>Action</code></a>.</p>
+<p>An example <a href="trait.Action.html" title="Action"><code>Action</code></a> enum might look like:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Action</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AllActions</span> {
@@ -50,13 +50,13 @@ boilerplate match statement with a simple derive macro. For a commented example,
 <div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ActionName.html" title="bonsaidb::core::actionable::ActionName struct">ActionName</a></div><div class="item-right docblock-short"><p>A unique name of an action.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.PermissionDenied.html" title="bonsaidb::core::actionable::PermissionDenied struct">PermissionDenied</a></div><div class="item-right docblock-short"><p>An <code>action</code> was denied.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Permissions.html" title="bonsaidb::core::actionable::Permissions struct">Permissions</a></div><div class="item-right docblock-short"><p>A collection of allowed permissions. This is constructed from a
-<code>Vec&lt;</code><a href="../../server/local/core/actionable/struct.Statement.html" title="Statement"><code>Statement</code></a><code>&gt;</code>. By default, no actions are allowed on any resources.</p>
+<code>Vec&lt;</code><a href="struct.Statement.html" title="Statement"><code>Statement</code></a><code>&gt;</code>. By default, no actions are allowed on any resources.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.ResourceName.html" title="bonsaidb::core::actionable::ResourceName struct">ResourceName</a></div><div class="item-right docblock-short"><p>A unique name/identifier of a resource.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="struct" href="struct.Statement.html" title="bonsaidb::core::actionable::Statement struct">Statement</a></div><div class="item-right docblock-short"><p>A statement of permissions. A statement describes whether one or more
 <code>actions</code> should be <code>allowed</code> to be taken against <code>resources</code>.</p>
 </div></div></div><h2 id="enums" class="section-header"><a href="#enums">Enums</a></h2>
-<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ActionNameList.html" title="bonsaidb::core::actionable::ActionNameList enum">ActionNameList</a></div><div class="item-right docblock-short"><p>A list of <a href="../../server/local/core/actionable/struct.ActionName.html" title="ActionName"><code>ActionName</code></a>s.</p>
-</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Identifier.html" title="bonsaidb::core::actionable::Identifier enum">Identifier</a></div><div class="item-right docblock-short"><p>A single element of a <a href="../../server/local/core/actionable/struct.ResourceName.html" title="ResourceName"><code>ResourceName</code></a></p>
+<div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.ActionNameList.html" title="bonsaidb::core::actionable::ActionNameList enum">ActionNameList</a></div><div class="item-right docblock-short"><p>A list of <a href="struct.ActionName.html" title="ActionName"><code>ActionName</code></a>s.</p>
+</div></div><div class="item-row"><div class="item-left module-item"><a class="enum" href="enum.Identifier.html" title="bonsaidb::core::actionable::Identifier enum">Identifier</a></div><div class="item-right docblock-short"><p>A single element of a <a href="struct.ResourceName.html" title="ResourceName"><code>ResourceName</code></a></p>
 </div></div></div><h2 id="traits" class="section-header"><a href="#traits">Traits</a></h2>
 <div class="item-table"><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Action.html" title="bonsaidb::core::actionable::Action trait">Action</a></div><div class="item-right docblock-short"><p>An action that can be allowed or disallowed.</p>
 </div></div><div class="item-row"><div class="item-left module-item"><a class="trait" href="trait.Dispatcher.html" title="bonsaidb::core::actionable::Dispatcher trait">Dispatcher</a></div><div class="item-right docblock-short"><p>Dispatches <code>T</code> to an appropriate handler. This trait is derivable.</p>

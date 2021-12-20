@@ -187,6 +187,9 @@
 <span id="187">187</span>
 <span id="188">188</span>
 <span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">env</span>::{<span class="ident">current_dir</span>, <span class="ident">set_current_dir</span>},
     <span class="ident">io</span>::{<span class="ident">stdout</span>, <span class="ident">Write</span>},
@@ -238,10 +241,13 @@
 <span class="kw">struct</span> <span class="ident">CoverageConfig</span>;
 
 <span class="kw">impl</span> <span class="ident">code_coverage::Config</span> <span class="kw">for</span> <span class="ident">CoverageConfig</span> {
-    <span class="kw">fn</span> <span class="ident">ignore_paths</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">cargo_args</span>() -&gt; <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
         <span class="macro">vec!</span>[
-            <span class="ident">String::from</span>(<span class="string">&quot;crates/circulate/examples/*&quot;</span>),
-            <span class="ident">String::from</span>(<span class="string">&quot;examples/*&quot;</span>),
+            <span class="ident">String::from</span>(<span class="string">&quot;+nightly&quot;</span>),
+            <span class="ident">String::from</span>(<span class="string">&quot;test&quot;</span>),
+            <span class="ident">String::from</span>(<span class="string">&quot;--workspace&quot;</span>),
+            <span class="ident">String::from</span>(<span class="string">&quot;--all-features&quot;</span>),
+            <span class="ident">String::from</span>(<span class="string">&quot;--all-targets&quot;</span>),
         ]
     }
 }

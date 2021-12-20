@@ -204,22 +204,24 @@
 <span id="204">204</span>
 <span id="205">205</span>
 <span id="206">206</span>
+<span id="207">207</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">net::SocketAddr</span>,
     <span class="ident">ops</span>::{<span class="ident">Deref</span>, <span class="ident">DerefMut</span>},
     <span class="ident">sync::Arc</span>,
 };
 
+<span class="kw">use</span> <span class="ident">async_lock</span>::{<span class="ident">Mutex</span>, <span class="ident">MutexGuard</span>, <span class="ident">RwLock</span>};
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">custodian_password</span>::{<span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>, <span class="ident">ServerLogin</span>},
     <span class="ident">custom_api::CustomApiResult</span>,
     <span class="ident">permissions::Permissions</span>,
 };
+<span class="kw">use</span> <span class="ident">bonsaidb_utils</span>::{<span class="ident">fast_async_lock</span>, <span class="ident">fast_async_read</span>, <span class="ident">fast_async_write</span>};
 <span class="kw">use</span> <span class="ident">derive_where::DeriveWhere</span>;
 <span class="kw">use</span> <span class="ident">flume::Sender</span>;
-<span class="kw">use</span> <span class="ident">tokio::sync</span>::{<span class="ident">Mutex</span>, <span class="ident">MutexGuard</span>, <span class="ident">RwLock</span>};
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Backend</span>, <span class="ident">CustomServer</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">Backend</span>, <span class="ident">CustomServer</span>, <span class="ident">NoBackend</span>};
 
 <span class="doccomment">/// The ways a client can be connected to the server.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
@@ -234,12 +236,12 @@
 <span class="doccomment">/// A connected database client.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">DeriveWhere</span>)]</span>
 <span class="attribute">#[<span class="ident">derive_where</span>(<span class="ident">Clone</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ConnectedClient</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span> <span class="op">=</span> <span class="ident">NoBackend</span><span class="op">&gt;</span> {
     <span class="ident">data</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Data</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
+<span class="kw">struct</span> <span class="ident">Data</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span> <span class="op">=</span> <span class="ident">NoBackend</span><span class="op">&gt;</span> {
     <span class="ident">id</span>: <span class="ident">u32</span>,
     <span class="ident">address</span>: <span class="ident">SocketAddr</span>,
     <span class="ident">transport</span>: <span class="ident">Transport</span>,
@@ -271,14 +273,14 @@
     <span class="doccomment">/// Returns the current permissions for this client. Will reflect the</span>
     <span class="doccomment">/// current state of authentication.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">permissions</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">Permissions</span> {
-        <span class="kw">let</span> <span class="ident">auth_state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">auth_state</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">auth_state</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">auth_state</span>);
         <span class="ident">auth_state</span>.<span class="ident">permissions</span>.<span class="ident">clone</span>()
     }
 
     <span class="doccomment">/// Returns the unique id of the user this client is connected as. Returns</span>
     <span class="doccomment">/// None if the connection isn&#39;t authenticated.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">user_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">auth_state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">auth_state</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">auth_state</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">auth_state</span>);
         <span class="ident">auth_state</span>.<span class="ident">user_id</span>
     }
 
@@ -297,7 +299,7 @@
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">logged_in_as</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">user_id</span>: <span class="ident">u64</span>, <span class="ident">new_permissions</span>: <span class="ident">Permissions</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">auth_state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">auth_state</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">auth_state</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">auth_state</span>);
         <span class="ident">auth_state</span>.<span class="ident">user_id</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">user_id</span>);
         <span class="ident">auth_state</span>.<span class="ident">permissions</span> <span class="op">=</span> <span class="ident">new_permissions</span>;
     }
@@ -307,12 +309,12 @@
         <span class="ident">user_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="ident">new_state</span>: <span class="ident">ServerLogin</span>,
     ) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pending_password_login</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">pending_password_login</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pending_password_login</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">pending_password_login</span>);
         <span class="kw-2">*</span><span class="ident">pending_password_login</span> <span class="op">=</span> <span class="prelude-val">Some</span>((<span class="ident">user_id</span>, <span class="ident">new_state</span>));
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">take_pending_password_login</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">ServerLogin</span>)<span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pending_password_login</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">pending_password_login</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pending_password_login</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">pending_password_login</span>);
         <span class="ident">pending_password_login</span>.<span class="ident">take</span>()
     }
 
@@ -326,12 +328,12 @@
 
     <span class="doccomment">/// Returns a locked reference to the stored client data.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">client_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">LockedClientDataGuard</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="ident">B::ClientData</span><span class="op">&gt;</span> {
-        <span class="ident">LockedClientDataGuard</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_data</span>.<span class="ident">lock</span>().<span class="kw">await</span>)
+        <span class="ident">LockedClientDataGuard</span>(<span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_data</span>))
     }
 
     <span class="doccomment">/// Sets the associated data for this client.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">set_client_data</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">data</span>: <span class="ident">B::ClientData</span>) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client_data</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_data</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">client_data</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">client_data</span>);
         <span class="kw-2">*</span><span class="ident">client_data</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">data</span>);
     }
 }

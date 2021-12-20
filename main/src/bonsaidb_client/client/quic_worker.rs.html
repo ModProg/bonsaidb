@@ -174,12 +174,25 @@
 <span id="174">174</span>
 <span id="175">175</span>
 <span id="176">176</span>
+<span id="177">177</span>
+<span id="178">178</span>
+<span id="179">179</span>
+<span id="180">180</span>
+<span id="181">181</span>
+<span id="182">182</span>
+<span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::sync::Arc</span>;
 
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">custom_api</span>::{<span class="ident">CustomApi</span>, <span class="ident">CustomApiResult</span>},
     <span class="ident">networking</span>::{<span class="ident">Payload</span>, <span class="ident">Request</span>, <span class="ident">Response</span>},
 };
+<span class="kw">use</span> <span class="ident">bonsaidb_utils::fast_async_lock</span>;
 <span class="kw">use</span> <span class="ident">fabruic</span>::{<span class="self">self</span>, <span class="ident">Certificate</span>, <span class="ident">Endpoint</span>};
 <span class="kw">use</span> <span class="ident">flume::Receiver</span>;
 <span class="kw">use</span> <span class="ident">futures::StreamExt</span>;
@@ -196,6 +209,7 @@
 <span class="doccomment">/// error replayed to them.</span>
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reconnecting_client_loop</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span>(
     <span class="kw-2">mut</span> <span class="ident">url</span>: <span class="ident">Url</span>,
+    <span class="ident">protocol_version</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
     <span class="ident">certificate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Certificate</span><span class="op">&gt;</span>,
     <span class="ident">request_receiver</span>: <span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
@@ -209,6 +223,7 @@
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">request</span>) <span class="op">=</span> <span class="ident">request_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>((<span class="ident">failed_request</span>, <span class="ident">err</span>)) <span class="op">=</span> <span class="ident">connect_and_process</span>(
             <span class="kw-2">&amp;</span><span class="ident">url</span>,
+            <span class="ident">protocol_version</span>,
             <span class="ident">certificate</span>.<span class="ident">as_ref</span>(),
             <span class="ident">request</span>,
             <span class="kw-2">&amp;</span><span class="ident">request_receiver</span>,
@@ -229,17 +244,18 @@
 
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">connect_and_process</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span>(
     <span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">Url</span>,
+    <span class="ident">protocol_version</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">certificate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Certificate</span><span class="op">&gt;</span>,
     <span class="ident">initial_request</span>: <span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>,
     <span class="ident">request_receiver</span>: <span class="kw-2">&amp;</span><span class="ident">Receiver</span><span class="op">&lt;</span><span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">custom_api_callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Arc</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">CustomApiCallback</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">subscribers</span>: <span class="kw-2">&amp;</span><span class="ident">SubscriberMap</span>,
 ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), (<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">PendingRequest</span><span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-    <span class="kw">let</span> (<span class="ident">_connection</span>, <span class="ident">payload_sender</span>, <span class="ident">payload_receiver</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">connect</span>::<span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>(<span class="ident">url</span>, <span class="ident">certificate</span>).<span class="kw">await</span>
-    {
-        <span class="prelude-val">Ok</span>(<span class="ident">result</span>) =&gt; <span class="ident">result</span>,
-        <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>((<span class="prelude-val">Some</span>(<span class="ident">initial_request</span>), <span class="ident">err</span>)),
-    };
+    <span class="kw">let</span> (<span class="ident">_connection</span>, <span class="ident">payload_sender</span>, <span class="ident">payload_receiver</span>) <span class="op">=</span>
+        <span class="kw">match</span> <span class="ident">connect</span>::<span class="op">&lt;</span><span class="ident">A</span><span class="op">&gt;</span>(<span class="ident">url</span>, <span class="ident">certificate</span>, <span class="ident">protocol_version</span>).<span class="kw">await</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">result</span>) =&gt; <span class="ident">result</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">err</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>((<span class="prelude-val">Some</span>(<span class="ident">initial_request</span>), <span class="ident">err</span>)),
+        };
 
     <span class="kw">let</span> <span class="ident">outstanding_requests</span> <span class="op">=</span> <span class="ident">OutstandingRequestMapHandle::default</span>();
     <span class="kw">let</span> <span class="ident">request_processor</span> <span class="op">=</span> <span class="ident">tokio::spawn</span>(<span class="ident">process</span>(
@@ -254,7 +270,7 @@
     }
 
     {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outstanding_requests</span> <span class="op">=</span> <span class="ident">outstanding_requests</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outstanding_requests</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="ident">outstanding_requests</span>);
         <span class="ident">outstanding_requests</span>.<span class="ident">insert</span>(
             <span class="ident">initial_request</span>
                 .<span class="ident">request</span>
@@ -273,7 +289,7 @@
         <span class="kw">async</span> { <span class="ident">request_processor</span>.<span class="kw">await</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Error::Disconnected</span>)<span class="question-mark">?</span> }
     ) {
         <span class="comment">// Our socket was disconnected, clear the outstanding requests before returning.</span>
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outstanding_requests</span> <span class="op">=</span> <span class="ident">outstanding_requests</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outstanding_requests</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="ident">outstanding_requests</span>);
         <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">pending</span>) <span class="kw">in</span> <span class="ident">outstanding_requests</span>.<span class="ident">drain</span>() {
             <span class="ident">drop</span>(<span class="ident">pending</span>.<span class="ident">responder</span>.<span class="ident">send</span>(<span class="prelude-val">Err</span>(<span class="ident">Error::Disconnected</span>)));
         }
@@ -289,7 +305,7 @@
     <span class="ident">payload_sender</span>: <span class="ident">fabruic::Sender</span><span class="op">&lt;</span><span class="ident">Payload</span><span class="op">&lt;</span><span class="ident">Request</span><span class="op">&lt;</span><span class="ident">A::Request</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&lt;</span><span class="ident">A::Error</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">client_request</span>) <span class="op">=</span> <span class="ident">request_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outstanding_requests</span> <span class="op">=</span> <span class="ident">outstanding_requests</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">outstanding_requests</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="ident">outstanding_requests</span>);
         <span class="ident">payload_sender</span>.<span class="ident">send</span>(<span class="kw-2">&amp;</span><span class="ident">client_request</span>.<span class="ident">request</span>)<span class="question-mark">?</span>;
         <span class="ident">outstanding_requests</span>.<span class="ident">insert</span>(
             <span class="ident">client_request</span>.<span class="ident">request</span>.<span class="ident">id</span>.<span class="ident">expect</span>(<span class="string">&quot;all requests require ids&quot;</span>),
@@ -324,6 +340,7 @@
 <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">connect</span><span class="op">&lt;</span><span class="ident">A</span>: <span class="ident">CustomApi</span><span class="op">&gt;</span>(
     <span class="ident">url</span>: <span class="kw-2">&amp;</span><span class="ident">Url</span>,
     <span class="ident">certificate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">Certificate</span><span class="op">&gt;</span>,
+    <span class="ident">protocol_version</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
 ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>
     (
         <span class="ident">fabruic::Connection</span><span class="op">&lt;</span>()<span class="op">&gt;</span>,
@@ -336,6 +353,7 @@
     <span class="ident">endpoint</span>
         .<span class="ident">set_max_idle_timeout</span>(<span class="prelude-val">None</span>)
         .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::Transport</span>(<span class="ident">err</span>.<span class="ident">to_string</span>())))<span class="question-mark">?</span>;
+    <span class="ident">endpoint</span>.<span class="ident">set_protocols</span>([<span class="ident">protocol_version</span>.<span class="ident">as_bytes</span>().<span class="ident">to_vec</span>()]);
     <span class="kw">let</span> <span class="ident">endpoint</span> <span class="op">=</span> <span class="ident">endpoint</span>
         .<span class="ident">build</span>()
         .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::Transport</span>(<span class="ident">err</span>.<span class="ident">to_string</span>())))<span class="question-mark">?</span>;
@@ -345,7 +363,13 @@
         <span class="ident">endpoint</span>.<span class="ident">connect</span>(<span class="ident">url</span>).<span class="kw">await</span><span class="question-mark">?</span>
     };
 
-    <span class="kw">let</span> <span class="ident">connection</span> <span class="op">=</span> <span class="ident">connecting</span>.<span class="ident">accept</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span>().<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="kw">let</span> <span class="ident">connection</span> <span class="op">=</span> <span class="ident">connecting</span>.<span class="ident">accept</span>::<span class="op">&lt;</span>()<span class="op">&gt;</span>().<span class="kw">await</span>.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
+        <span class="kw">if</span> <span class="macro">matches!</span>(<span class="ident">err</span>, <span class="ident">fabruic::error::Connecting::ProtocolMismatch</span>) {
+            <span class="ident">Error::ProtocolVersionMismatch</span>
+        } <span class="kw">else</span> {
+            <span class="ident">Error::from</span>(<span class="ident">err</span>)
+        }
+    })<span class="question-mark">?</span>;
     <span class="kw">let</span> (<span class="ident">sender</span>, <span class="ident">receiver</span>) <span class="op">=</span> <span class="ident">connection</span>.<span class="ident">open_stream</span>(<span class="kw-2">&amp;</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>((<span class="ident">connection</span>, <span class="ident">sender</span>, <span class="ident">receiver</span>))

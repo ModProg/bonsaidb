@@ -25,29 +25,25 @@
 <span id="25">25</span>
 <span id="26">26</span>
 <span id="27">27</span>
-<span id="28">28</span>
-<span id="29">29</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
 
 <span class="kw">use</span> <span class="ident">std::path::Path</span>;
 
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{<span class="ident">connection::StorageConnection</span>, <span class="ident">test_util::BasicSchema</span>};
+<span class="kw">use</span> <span class="ident">bonsaidb_local::config::Builder</span>;
 
-<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">config::DefaultPermissions</span>, <span class="ident">Configuration</span>, <span class="ident">Error</span>, <span class="ident">Server</span>};
+<span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">config::DefaultPermissions</span>, <span class="ident">Error</span>, <span class="ident">Server</span>, <span class="ident">ServerConfiguration</span>};
 
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">BASIC_SERVER_NAME</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;basic-server&quot;</span>;
 
 <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">initialize_basic_server</span>(<span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Server</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">server</span> <span class="op">=</span> <span class="ident">Server::open</span>(
-        <span class="ident">path</span>,
-        <span class="ident">Configuration</span> {
-            <span class="ident">server_name</span>: <span class="ident">BASIC_SERVER_NAME</span>.<span class="ident">to_string</span>(),
-            <span class="ident">default_permissions</span>: <span class="ident">DefaultPermissions::AllowAll</span>,
-            ..<span class="ident">Configuration::default</span>()
-        },
+        <span class="ident">ServerConfiguration::new</span>(<span class="ident">path</span>)
+            .<span class="ident">server_name</span>(<span class="ident">BASIC_SERVER_NAME</span>)
+            .<span class="ident">default_permissions</span>(<span class="ident">DefaultPermissions::AllowAll</span>)
+            .<span class="ident">with_schema</span>::<span class="op">&lt;</span><span class="ident">BasicSchema</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
-    <span class="ident">server</span>.<span class="ident">register_schema</span>::<span class="op">&lt;</span><span class="ident">BasicSchema</span><span class="op">&gt;</span>().<span class="kw">await</span><span class="question-mark">?</span>;
     <span class="ident">server</span>.<span class="ident">install_self_signed_certificate</span>(<span class="bool-val">false</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="ident">server</span>

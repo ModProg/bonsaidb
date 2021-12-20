@@ -212,17 +212,19 @@
 <span id="212">212</span>
 <span id="213">213</span>
 <span id="214">214</span>
+<span id="215">215</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
     <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>},
     <span class="ident">sync::Arc</span>,
 };
 
+<span class="kw">use</span> <span class="ident">async_lock::RwLock</span>;
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">connection::Connection</span>,
     <span class="ident">schema</span>::{<span class="ident">view</span>, <span class="ident">CollectionName</span>, <span class="ident">ViewName</span>},
 };
-<span class="kw">use</span> <span class="ident">tokio::sync::RwLock</span>;
+<span class="kw">use</span> <span class="ident">bonsaidb_utils</span>::{<span class="ident">fast_async_read</span>, <span class="ident">fast_async_write</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">database::Database</span>,
@@ -278,7 +280,7 @@
                 <span class="comment">// When views finish updating, they store the last transaction_id</span>
                 <span class="comment">// they mapped. If that value is current, we don&#39;t need to go</span>
                 <span class="comment">// through the jobs system at all.</span>
-                <span class="kw">let</span> <span class="ident">statuses</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">statuses</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+                <span class="kw">let</span> <span class="ident">statuses</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">statuses</span>);
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last_transaction_indexed</span>) <span class="op">=</span> <span class="ident">statuses</span>.<span class="ident">view_update_last_status</span>.<span class="ident">get</span>(<span class="kw-2">&amp;</span>(
                     <span class="ident">database</span>.<span class="ident">data</span>.<span class="ident">name</span>.<span class="ident">clone</span>(),
                     <span class="ident">view</span>.<span class="ident">collection</span>()<span class="question-mark">?</span>,
@@ -321,7 +323,7 @@
         <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
         <span class="ident">view_name</span>: <span class="ident">ViewName</span>,
     ) -&gt; <span class="ident">bool</span> {
-        <span class="kw">let</span> <span class="ident">statuses</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">statuses</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">statuses</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">statuses</span>);
         <span class="ident">statuses</span>
             .<span class="ident">completed_integrity_checks</span>
             .<span class="ident">contains</span>(<span class="kw-2">&amp;</span>(<span class="ident">database</span>, <span class="ident">collection</span>.<span class="ident">clone</span>(), <span class="ident">view_name</span>))
@@ -365,7 +367,7 @@
         <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
         <span class="ident">view_name</span>: <span class="ident">ViewName</span>,
     ) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">statuses</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">statuses</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">statuses</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">statuses</span>);
         <span class="ident">statuses</span>
             .<span class="ident">completed_integrity_checks</span>
             .<span class="ident">insert</span>((<span class="ident">database</span>, <span class="ident">collection</span>, <span class="ident">view_name</span>));
@@ -378,7 +380,7 @@
         <span class="ident">view_name</span>: <span class="ident">ViewName</span>,
         <span class="ident">transaction_id</span>: <span class="ident">u64</span>,
     ) {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">statuses</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">statuses</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">statuses</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">statuses</span>);
         <span class="ident">statuses</span>
             .<span class="ident">view_update_last_status</span>
             .<span class="ident">insert</span>((<span class="ident">database</span>, <span class="ident">collection</span>, <span class="ident">view_name</span>), <span class="ident">transaction_id</span>);

@@ -1,1 +1,0 @@
-initSidebarItems({"struct":[["Configuration","Configuration options for `Storage`."],["Tasks","Configujration options for background tasks."],["Views","Configuration options for views."]]});

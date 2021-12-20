@@ -1,1 +1,0 @@
-initSidebarItems({"enum":[["Error","`Error` type for this crate."],["InternalError","Represents an error in the manipulation of internal cryptographic data"],["ProtocolError","Represents an error in protocol handling"]],"type":[["Result","`Result` for this crate."]]});

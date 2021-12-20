@@ -921,20 +921,6 @@
 <span id="921">921</span>
 <span id="922">922</span>
 <span id="923">923</span>
-<span id="924">924</span>
-<span id="925">925</span>
-<span id="926">926</span>
-<span id="927">927</span>
-<span id="928">928</span>
-<span id="929">929</span>
-<span id="930">930</span>
-<span id="931">931</span>
-<span id="932">932</span>
-<span id="933">933</span>
-<span id="934">934</span>
-<span id="935">935</span>
-<span id="936">936</span>
-<span id="937">937</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">any::Any</span>,
     <span class="ident">collections::HashMap</span>,
@@ -944,6 +930,7 @@
     <span class="ident">sync::Arc</span>,
 };
 
+<span class="kw">use</span> <span class="ident">async_lock</span>::{<span class="ident">Mutex</span>, <span class="ident">RwLock</span>};
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">bonsaidb_core::circulate::Relay</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;internal-apis&quot;</span>)]</span>
@@ -967,6 +954,7 @@
     <span class="ident">custodian_password</span>::{<span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>, <span class="ident">ServerRegistration</span>},
     <span class="ident">schema</span>::{<span class="ident">CollectionDocument</span>, <span class="ident">NamedCollection</span>, <span class="ident">NamedReference</span>},
 };
+<span class="kw">use</span> <span class="ident">bonsaidb_utils</span>::{<span class="ident">fast_async_lock</span>, <span class="ident">fast_async_read</span>, <span class="ident">fast_async_write</span>};
 <span class="kw">use</span> <span class="ident">futures::TryFutureExt</span>;
 <span class="kw">use</span> <span class="ident">itertools::Itertools</span>;
 <span class="kw">use</span> <span class="ident">nebari</span>::{
@@ -980,14 +968,13 @@
 <span class="kw">use</span> <span class="ident">tokio</span>::{
     <span class="ident">fs</span>::{<span class="self">self</span>, <span class="ident">File</span>},
     <span class="ident">io</span>::{<span class="ident">AsyncReadExt</span>, <span class="ident">AsyncWriteExt</span>},
-    <span class="ident">sync</span>::{<span class="ident">Mutex</span>, <span class="ident">RwLock</span>},
 };
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::vault</span>::{<span class="self">self</span>, <span class="ident">LocalVaultKeyStorage</span>, <span class="ident">TreeVault</span>, <span class="ident">Vault</span>};
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">config::Configuration</span>, <span class="ident">database::Context</span>, <span class="ident">jobs::manager::Manager</span>, <span class="ident">tasks::TaskManager</span>, <span class="ident">Database</span>,
-    <span class="ident">Error</span>,
+    <span class="ident">config::StorageConfiguration</span>, <span class="ident">database::Context</span>, <span class="ident">jobs::manager::Manager</span>, <span class="ident">tasks::TaskManager</span>,
+    <span class="ident">Database</span>, <span class="ident">Error</span>,
 };
 
 <span class="kw">mod</span> <span class="ident">backup</span>;
@@ -1016,30 +1003,16 @@
     <span class="ident">default_encryption_key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span>,
     <span class="ident">chunk_cache</span>: <span class="ident">ChunkCache</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">check_view_integrity_on_database_open</span>: <span class="ident">bool</span>,
-    <span class="ident">runtime</span>: <span class="ident">tokio::runtime::Handle</span>,
     <span class="ident">relay</span>: <span class="ident">Relay</span>,
-}
-
-<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Data</span> {
-    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
-        <span class="kw">let</span> <span class="ident">open_roots</span> <span class="op">=</span> <span class="ident">std::mem::take</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>.<span class="ident">open_roots</span>);
-
-        <span class="self">self</span>.<span class="ident">runtime</span>.<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">open_roots</span> <span class="op">=</span> <span class="ident">open_roots</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
-            <span class="kw">for</span> (<span class="kw">_</span>, <span class="ident">context</span>) <span class="kw">in</span> <span class="ident">open_roots</span>.<span class="ident">drain</span>() {
-                <span class="ident">context</span>.<span class="ident">shutdown</span>();
-            }
-        });
-    }
 }
 
 <span class="kw">impl</span> <span class="ident">Storage</span> {
     <span class="doccomment">/// Creates or opens a multi-database [`Storage`] with its data stored in `directory`.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open_local</span><span class="op">&lt;</span><span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span><span class="op">&gt;</span>(
-        <span class="ident">path</span>: <span class="ident">P</span>,
-        <span class="ident">configuration</span>: <span class="ident">Configuration</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">owned_path</span> <span class="op">=</span> <span class="ident">path</span>.<span class="ident">as_ref</span>().<span class="ident">to_owned</span>();
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="ident">configuration</span>: <span class="ident">StorageConfiguration</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="kw">let</span> <span class="ident">owned_path</span> <span class="op">=</span> <span class="ident">configuration</span>
+            .<span class="ident">path</span>
+            .<span class="ident">clone</span>()
+            .<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">PathBuf::from</span>(<span class="string">&quot;db.bonsaidb&quot;</span>));
 
         <span class="kw">let</span> <span class="ident">manager</span> <span class="op">=</span> <span class="ident">Manager::default</span>();
         <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">configuration</span>.<span class="ident">workers</span>.<span class="ident">worker_count</span> {
@@ -1081,11 +1054,10 @@
                     <span class="ident">file_manager</span>: <span class="ident">StdFileManager::default</span>(),
                     <span class="ident">chunk_cache</span>: <span class="ident">ChunkCache::new</span>(<span class="number">2000</span>, <span class="number">160_384</span>),
                     <span class="ident">threadpool</span>: <span class="ident">ThreadPool::default</span>(),
-                    <span class="ident">schemas</span>: <span class="ident">RwLock::default</span>(),
+                    <span class="ident">schemas</span>: <span class="ident">RwLock::new</span>(<span class="ident">configuration</span>.<span class="ident">initial_schemas</span>),
                     <span class="ident">available_databases</span>: <span class="ident">RwLock::default</span>(),
                     <span class="ident">open_roots</span>: <span class="ident">Mutex::default</span>(),
                     <span class="ident">check_view_integrity_on_database_open</span>,
-                    <span class="ident">runtime</span>: <span class="ident">tokio::runtime::Handle::current</span>(),
                     <span class="ident">relay</span>: <span class="ident">Relay::default</span>(),
                 }),
             })
@@ -1106,7 +1078,7 @@
     }
 
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">lookup_or_create_id</span>(
-        <span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="ident">Configuration</span>,
+        <span class="ident">configuration</span>: <span class="kw-2">&amp;</span><span class="ident">StorageConfiguration</span>,
         <span class="ident">path</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">StorageId</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">StorageId</span>(<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">id</span>) <span class="op">=</span> <span class="ident">configuration</span>.<span class="ident">unique_id</span> {
@@ -1166,7 +1138,7 @@
             .<span class="ident">into_iter</span>()
             .<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> (<span class="ident">map</span>.<span class="ident">key</span>, <span class="ident">map</span>.<span class="ident">value</span>))
             .<span class="ident">collect</span>();
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage_databases</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
         <span class="kw-2">*</span><span class="ident">storage_databases</span> <span class="op">=</span> <span class="ident">available_databases</span>;
         <span class="prelude-val">Ok</span>(())
     }
@@ -1186,12 +1158,12 @@
 
     <span class="doccomment">/// Returns the unique id of the server.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This value is set from the [`Configuration`] or randomly generated when</span>
-    <span class="doccomment">/// creating a server. It shouldn&#39;t be changed after a server is in use, as</span>
-    <span class="doccomment">/// doing can cause issues. For example, the vault that manages encrypted</span>
-    <span class="doccomment">/// storage uses the server ID to store the vault key. If the server ID</span>
-    <span class="doccomment">/// changes, the vault key storage will need to be updated with the new</span>
-    <span class="doccomment">/// server ID.</span>
+    <span class="doccomment">/// This value is set from the [`StorageConfiguration`] or randomly</span>
+    <span class="doccomment">/// generated when creating a server. It shouldn&#39;t be changed after a server</span>
+    <span class="doccomment">/// is in use, as doing can cause issues. For example, the vault that</span>
+    <span class="doccomment">/// manages encrypted storage uses the server ID to store the vault key. If</span>
+    <span class="doccomment">/// the server ID changes, the vault key storage will need to be updated</span>
+    <span class="doccomment">/// with the new server ID.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unique_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="ident">StorageId</span> {
         <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">id</span>
@@ -1218,7 +1190,7 @@
 
     <span class="doccomment">/// Registers a schema for use within the server.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">register_schema</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>);
         <span class="kw">if</span> <span class="ident">schemas</span>
             .<span class="ident">insert</span>(
                 <span class="ident">DB::schema_name</span>()<span class="question-mark">?</span>,
@@ -1236,7 +1208,7 @@
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>), <span class="ident">allow</span>(<span class="ident">unused_mut</span>))]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open_roots</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Context</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">open_roots</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">open_roots</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">open_roots</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">open_roots</span>);
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">roots</span>) <span class="op">=</span> <span class="ident">open_roots</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
             <span class="prelude-val">Ok</span>(<span class="ident">roots</span>.<span class="ident">clone</span>())
         } <span class="kw">else</span> {
@@ -1326,7 +1298,7 @@
             }
         };
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>);
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">schema</span>) <span class="op">=</span> <span class="ident">schemas</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">schema</span>) {
             <span class="ident">schema</span>.<span class="ident">open</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">clone</span>()).<span class="kw">await</span>
         } <span class="kw">else</span> {
@@ -1401,13 +1373,13 @@
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">trait</span> <span class="ident">DatabaseOpener</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> {
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">DatabaseOpener</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> {
     <span class="kw">fn</span> <span class="ident">schematic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">Schematic</span>;
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">storage</span>: <span class="ident">Storage</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">struct</span> <span class="ident">StorageSchemaOpener</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StorageSchemaOpener</span><span class="op">&lt;</span><span class="ident">DB</span>: <span class="ident">Schema</span><span class="op">&gt;</span> {
     <span class="ident">schematic</span>: <span class="ident">Schematic</span>,
     <span class="ident">_phantom</span>: <span class="ident">PhantomData</span><span class="op">&lt;</span><span class="ident">DB</span><span class="op">&gt;</span>,
 }
@@ -1416,7 +1388,7 @@
 <span class="kw">where</span>
     <span class="ident">DB</span>: <span class="ident">Schema</span>,
 {
-    <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">schematic</span> <span class="op">=</span> <span class="ident">DB::schematic</span>()<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
             <span class="ident">schematic</span>,
@@ -1558,13 +1530,13 @@
         <span class="ident"><span class="self">Self</span>::validate_name</span>(<span class="ident">name</span>)<span class="question-mark">?</span>;
 
         {
-            <span class="kw">let</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+            <span class="kw">let</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>);
             <span class="kw">if</span> <span class="op">!</span><span class="ident">schemas</span>.<span class="ident">contains_key</span>(<span class="kw-2">&amp;</span><span class="ident">schema</span>) {
                 <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::SchemaNotRegistered</span>(<span class="ident">schema</span>));
             }
         }
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
         <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">admin</span>().<span class="kw">await</span>;
         <span class="kw">if</span> <span class="op">!</span><span class="ident">admin</span>
             .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">database::ByName</span><span class="op">&gt;</span>()
@@ -1598,7 +1570,7 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Database</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stored_schema</span>) <span class="op">=</span> <span class="ident">available_databases</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
             <span class="kw">if</span> <span class="ident">stored_schema</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">DB::schema_name</span>()<span class="question-mark">?</span> {
@@ -1623,10 +1595,10 @@
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">name</span>)))]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_database</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">admin</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">admin</span>().<span class="kw">await</span>;
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">write</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
         <span class="ident">available_databases</span>.<span class="ident">remove</span>(<span class="ident">name</span>);
 
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">open_roots</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">open_roots</span>.<span class="ident">lock</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">open_roots</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">open_roots</span>);
         <span class="ident">open_roots</span>.<span class="ident">remove</span>(<span class="ident">name</span>);
 
         <span class="kw">let</span> <span class="ident">database_folder</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">path</span>().<span class="ident">join</span>(<span class="ident">name</span>);
@@ -1655,7 +1627,7 @@
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_databases</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">connection::Database</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">available_databases</span>
             .<span class="ident">iter</span>()
             .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">name</span>, <span class="ident">schema</span>)<span class="op">|</span> <span class="ident">connection::Database</span> {
@@ -1667,7 +1639,7 @@
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaName</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>.<span class="ident">read</span>().<span class="kw">await</span>;
+        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">available_databases</span>.<span class="ident">values</span>().<span class="ident">unique</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>())
     }
 

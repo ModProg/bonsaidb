@@ -41,6 +41,9 @@
 <span id="41">41</span>
 <span id="42">42</span>
 <span id="43">43</span>
+<span id="44">44</span>
+<span id="45">45</span>
+<span id="46">46</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Local storage backend for `BonsaiDb`.</span>
 
 <span class="attribute">#![<span class="ident">forbid</span>(<span class="ident">unsafe_code</span>)]</span>
@@ -59,6 +62,9 @@
     <span class="ident">clippy::module_name_repetitions</span>,
 )]</span>
 
+<span class="doccomment">/// Command-line interface helpers.</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cli&quot;</span>)]</span>
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">cli</span>;
 <span class="doccomment">/// Configuration options.</span>
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">config</span>;
 <span class="kw">mod</span> <span class="ident">database</span>;
@@ -71,7 +77,7 @@
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">vault</span>;
 <span class="kw">mod</span> <span class="ident">views</span>;
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">inline</span>)]</span>
+<span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;included-from-omnibus&quot;</span>))]</span>
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">bonsaidb_core</span> <span class="kw">as</span> <span class="ident">core</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;internal-apis&quot;</span>)]</span>

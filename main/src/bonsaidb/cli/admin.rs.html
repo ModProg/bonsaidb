@@ -29,11 +29,7 @@
 <span id="29">29</span>
 <span id="30">30</span>
 <span id="31">31</span>
-<span id="32">32</span>
-<span id="33">33</span>
-<span id="34">34</span>
-<span id="35">35</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">bonsaidb_core::connection</span>::{<span class="ident">Connection</span>, <span class="ident">StorageConnection</span>};
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">bonsaidb_core::connection::StorageConnection</span>;
 <span class="kw">use</span> <span class="ident">structopt::StructOpt</span>;
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">StructOpt</span>, <span class="ident">Debug</span>)]</span>
@@ -49,11 +45,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">Command</span> {
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Connection</span>, <span class="ident">SC</span>: <span class="ident">StorageConnection</span><span class="op">&gt;</span>(
-        <span class="self">self</span>,
-        <span class="ident">_admin</span>: <span class="ident">C</span>,
-        <span class="ident">server</span>: <span class="ident">SC</span>,
-    ) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute</span><span class="op">&lt;</span><span class="ident">SC</span>: <span class="ident">StorageConnection</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">server</span>: <span class="ident">SC</span>) -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">Command::User</span>(<span class="ident">user</span>) =&gt; <span class="kw">match</span> <span class="ident">user</span> {
                 <span class="ident">UserCommand::Create</span> { <span class="ident">username</span> } =&gt; {

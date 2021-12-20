@@ -1,0 +1,3 @@
+(function() {var implementors = {};
+implementors["bonsaidb"] = [{"text":"impl&lt;B:&nbsp;<a class=\"trait\" href=\"bonsaidb/server/trait.Backend.html\" title=\"trait bonsaidb::server::Backend\">Backend</a>&gt; <a class=\"trait\" href=\"bonsaidb/core/connection/trait.Connection.html\" title=\"trait bonsaidb::core::connection::Connection\">Connection</a> for <a class=\"enum\" href=\"bonsaidb/enum.AnyDatabase.html\" title=\"enum bonsaidb::AnyDatabase\">AnyDatabase</a>&lt;B&gt;","synthetic":false,"types":["bonsaidb::any_connection::AnyDatabase"]}];
+if (window.register_implementors) {window.register_implementors(implementors);} else {window.pending_implementors = implementors;}})()
