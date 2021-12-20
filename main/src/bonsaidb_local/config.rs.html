@@ -157,6 +157,8 @@
 <span id="157">157</span>
 <span id="158">158</span>
 <span id="159">159</span>
+<span id="160">160</span>
+<span id="161">161</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections::HashMap</span>,
     <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
@@ -263,11 +265,13 @@
     <span class="doccomment">/// Sets [`StorageConfiguration::unique_id`](StorageConfiguration#structfield.unique_id) to `unique_id` and returns self.</span>
     <span class="kw">fn</span> <span class="ident">unique_id</span>(<span class="self">self</span>, <span class="ident">unique_id</span>: <span class="ident">u64</span>) -&gt; <span class="self">Self</span>;
     <span class="doccomment">/// Sets [`StorageConfiguration::vault_key_storage`](StorageConfiguration#structfield.vault_key_storage) to `key_storage` and returns self.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
     <span class="kw">fn</span> <span class="ident">vault_key_storage</span><span class="op">&lt;</span><span class="ident">VaultKeyStorage</span>: <span class="ident">AnyVaultKeyStorage</span><span class="op">&gt;</span>(
         <span class="self">self</span>,
         <span class="ident">key_storage</span>: <span class="ident">VaultKeyStorage</span>,
     ) -&gt; <span class="self">Self</span>;
     <span class="doccomment">/// Sets [`StorageConfiguration::default_encryption_key`](StorageConfiguration#structfield.default_encryption_key) to `path` and returns self.</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
     <span class="kw">fn</span> <span class="ident">default_encryption_key</span>(<span class="self">self</span>, <span class="ident">key</span>: <span class="ident">KeyId</span>) -&gt; <span class="self">Self</span>;
     <span class="doccomment">/// Sets [`Tasks::worker_count`] to `worker_count` and returns self.</span>
     <span class="kw">fn</span> <span class="ident">tasks_worker_count</span>(<span class="self">self</span>, <span class="ident">worker_count</span>: <span class="ident">usize</span>) -&gt; <span class="self">Self</span>;
