@@ -599,7 +599,7 @@
                 .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::Backup</span>(<span class="ident">Box::new</span>(<span class="ident">err</span>)))<span class="question-mark">?</span>
             {
                 <span class="comment">// The admin database is already going to be created by the process of creating a database.</span>
-                <span class="self">self</span>.<span class="ident">create_database_with_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>, <span class="ident">schema</span>.<span class="ident">clone</span>(), <span class="ident">database</span> <span class="op">==</span> <span class="string">&quot;_admin&quot;</span>)
+                <span class="self">self</span>.<span class="ident">create_database_with_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>, <span class="ident">schema</span>.<span class="ident">clone</span>(), <span class="bool-val">true</span>)
                     .<span class="kw">await</span><span class="question-mark">?</span>;
 
                 <span class="kw">let</span> <span class="ident">database</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database_without_schema</span>(<span class="kw-2">&amp;</span><span class="ident">database</span>).<span class="kw">await</span><span class="question-mark">?</span>;
