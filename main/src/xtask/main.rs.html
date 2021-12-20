@@ -321,7 +321,7 @@
     <span class="kw">for</span> <span class="ident">test</span> <span class="kw">in</span> <span class="ident">all_tests</span>() {
         <span class="macro">println!</span>(<span class="string">&quot;Running clippy for {}&quot;</span>, <span class="ident">test</span>.<span class="ident">cargo_args</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">Cmd::new</span>(<span class="string">&quot;cargo&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">clippy</span>.<span class="ident">arg</span>(<span class="string">&quot;clippy&quot;</span>).<span class="ident">arg</span>(<span class="string">&quot;--tests&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">clippy</span>.<span class="ident">arg</span>(<span class="string">&quot;clippy&quot;</span>).<span class="ident">arg</span>(<span class="string">&quot;--all-targets&quot;</span>);
 
         <span class="kw">for</span> <span class="ident">arg</span> <span class="kw">in</span> <span class="ident">test</span>.<span class="ident">cargo_args</span>.<span class="ident">split</span>(<span class="string">&#39; &#39;</span>) {
             <span class="ident">clippy</span> <span class="op">=</span> <span class="ident">clippy</span>.<span class="ident">arg</span>(<span class="ident">arg</span>);
@@ -335,7 +335,7 @@
 
         <span class="macro">println!</span>(<span class="string">&quot;Running tests for {}&quot;</span>, <span class="ident">test</span>.<span class="ident">cargo_args</span>);
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cargo</span> <span class="op">=</span> <span class="ident">Cmd::new</span>(<span class="string">&quot;cargo&quot;</span>);
-        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cargo</span> <span class="op">=</span> <span class="ident">cargo</span>.<span class="ident">arg</span>(<span class="string">&quot;test&quot;</span>);
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cargo</span> <span class="op">=</span> <span class="ident">cargo</span>.<span class="ident">arg</span>(<span class="string">&quot;test&quot;</span>).<span class="ident">arg</span>(<span class="string">&quot;--all-targets&quot;</span>);
 
         <span class="kw">for</span> <span class="ident">arg</span> <span class="kw">in</span> <span class="ident">test</span>.<span class="ident">cargo_args</span>.<span class="ident">split</span>(<span class="string">&#39; &#39;</span>) {
             <span class="ident">cargo</span> <span class="op">=</span> <span class="ident">cargo</span>.<span class="ident">arg</span>(<span class="ident">arg</span>);
