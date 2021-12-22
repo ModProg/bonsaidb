@@ -326,7 +326,7 @@
             }
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cbor&quot;</span>)]</span>
             <span class="ident">CollectionSerializer::Cbor</span> =&gt; {
-                <span class="ident">serde_cbor::from_slice</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">contents</span>).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>)
+                <span class="ident">ciborium::de::from_reader</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">contents</span>[..]).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>)
             }
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;bincode&quot;</span>)]</span>
             <span class="ident">CollectionSerializer::Bincode</span> =&gt; {

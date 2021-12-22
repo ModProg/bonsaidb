@@ -636,6 +636,10 @@
 <span id="636">636</span>
 <span id="637">637</span>
 <span id="638">638</span>
+<span id="639">639</span>
+<span id="640">640</span>
+<span id="641">641</span>
+<span id="642">642</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
     <span class="ident">convert</span>::{<span class="ident">TryFrom</span>, <span class="ident">TryInto</span>},
@@ -746,7 +750,11 @@
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>)]</span>
             <span class="ident">CollectionSerializer::Json</span> =&gt; <span class="ident">serde_json::to_vec</span>(<span class="ident">contents</span>).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cbor&quot;</span>)]</span>
-            <span class="ident">CollectionSerializer::Cbor</span> =&gt; <span class="ident">serde_cbor::to_vec</span>(<span class="ident">contents</span>).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>),
+            <span class="ident">CollectionSerializer::Cbor</span> =&gt; {
+                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
+                <span class="ident">ciborium::ser::into_writer</span>(<span class="ident">contents</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bytes</span>).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>)<span class="question-mark">?</span>;
+                <span class="prelude-val">Ok</span>(<span class="ident">bytes</span>)
+            }
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;bincode&quot;</span>)]</span>
             <span class="ident">CollectionSerializer::Bincode</span> =&gt; {
                 <span class="ident">bincode::serialize</span>(<span class="ident">contents</span>).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>)
