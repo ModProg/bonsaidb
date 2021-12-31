@@ -124,6 +124,8 @@
 <span id="124">124</span>
 <span id="125">125</span>
 <span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -135,8 +137,8 @@
     <span class="ident">document::KeyId</span>,
     <span class="ident">permissions::Permissions</span>,
     <span class="ident">schema</span>::{
-        <span class="ident">Collection</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">NamedCollection</span>,
-        <span class="ident">Schematic</span>,
+        <span class="ident">Collection</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">DefaultSerialization</span>, <span class="ident">InvalidNameError</span>,
+        <span class="ident">NamedCollection</span>, <span class="ident">Schematic</span>,
     },
     <span class="ident">Error</span>, <span class="ident">ENCRYPTION_ENABLED</span>,
 };
@@ -237,6 +239,8 @@
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">ByName</span>)
     }
 }
+
+<span class="kw">impl</span> <span class="ident">DefaultSerialization</span> <span class="kw">for</span> <span class="ident">User</span> {}
 
 <span class="kw">impl</span> <span class="ident">NamedCollection</span> <span class="kw">for</span> <span class="ident">User</span> {
     <span class="kw">type</span> <span class="ident">ByNameView</span> <span class="op">=</span> <span class="ident">ByName</span>;

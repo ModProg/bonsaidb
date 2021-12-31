@@ -32,6 +32,8 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">DefaultSerializedCollection</span> <span class="kw">for</span> <span class="ident">Shape</span> {}
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">struct</span> <span class="ident">ShapesByNumberOfSides</span>;
 
@@ -67,7 +69,7 @@
 <div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code>    <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Database::open</span>::<span class="op">&lt;</span><span class="ident">Shape</span><span class="op">&gt;</span>(<span class="ident">StorageConfiguration::new</span>(<span class="string">&quot;view-examples.bonsaidb&quot;</span>)).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="comment">// Insert a new document into the Shape collection.</span>
-    <span class="ident">Shape::new</span>(<span class="number">3</span>).<span class="ident">insert_into</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div>
+    <span class="ident">Shape::new</span>(<span class="number">3</span>).<span class="ident">push_into</span>(<span class="kw-2">&amp;</span><span class="ident">db</span>).<span class="kw">await</span><span class="question-mark">?</span>;</code></pre></div>
 <p>And query data using the Map-Reduce-powered view:</p>
 
 <div class='information'><div class='tooltip ignore'>ⓘ</div></div><div class="example-wrap"><pre class="rust rust-example-rendered ignore"><code><span class="kw">let</span> <span class="ident">triangles</span> <span class="op">=</span> <span class="ident">db</span>

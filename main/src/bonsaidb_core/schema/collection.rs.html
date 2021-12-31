@@ -640,17 +640,27 @@
 <span id="640">640</span>
 <span id="641">641</span>
 <span id="642">642</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">borrow::Cow</span>,
-    <span class="ident">convert</span>::{<span class="ident">TryFrom</span>, <span class="ident">TryInto</span>},
-    <span class="ident">fmt::Debug</span>,
-    <span class="ident">marker::PhantomData</span>,
-    <span class="ident">ops::Deref</span>,
-};
+<span id="643">643</span>
+<span id="644">644</span>
+<span id="645">645</span>
+<span id="646">646</span>
+<span id="647">647</span>
+<span id="648">648</span>
+<span id="649">649</span>
+<span id="650">650</span>
+<span id="651">651</span>
+<span id="652">652</span>
+<span id="653">653</span>
+<span id="654">654</span>
+<span id="655">655</span>
+<span id="656">656</span>
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">borrow::Cow</span>, <span class="ident">fmt::Debug</span>, <span class="ident">marker::PhantomData</span>, <span class="ident">ops::Deref</span>};
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">future::BoxFuture</span>, <span class="ident">Future</span>, <span class="ident">FutureExt</span>};
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">de::DeserializeOwned</span>, <span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">transmog</span>::{<span class="ident">Format</span>, <span class="ident">OwnedDeserializer</span>};
+<span class="kw">use</span> <span class="ident">transmog_pot::Pot</span>;
 
 <span class="kw">use</span> <span class="ident"><span class="kw">super</span>::names::InvalidNameError</span>;
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -675,13 +685,32 @@
     <span class="kw">fn</span> <span class="ident">encryption_key</span>() -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyId</span><span class="op">&gt;</span> {
         <span class="prelude-val">None</span>
     }
+}
 
-    <span class="doccomment">/// Returns the serializer to use when accessing and storing the document&#39;s</span>
-    <span class="doccomment">/// contents. If you only interact with a document&#39;s bytes directly, this</span>
-    <span class="doccomment">/// has no effect.</span>
-    <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">fn</span> <span class="ident">serializer</span>() -&gt; <span class="ident">CollectionSerializer</span> {
-        <span class="ident">CollectionSerializer::default</span>()
+<span class="doccomment">/// A collection that knows how to serialize and deserialize documents to an associated type.</span>
+<span class="attribute">#[<span class="ident">async_trait</span>]</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SerializedCollection</span>: <span class="ident">Collection</span> {
+    <span class="doccomment">/// The type of the contents stored in documents in this collection.</span>
+    <span class="kw">type</span> <span class="ident">Contents</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>;
+    <span class="doccomment">/// The serialization format for this collection.</span>
+    <span class="kw">type</span> <span class="ident">Format</span>: <span class="ident">Format</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident"><span class="self">Self</span>::Contents</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">OwnedDeserializer</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Contents</span><span class="op">&gt;</span>;
+
+    <span class="doccomment">/// Returns the configured instance of [`Self::Format`].</span>
+    <span class="comment">// TODO allow configuration to be passed here, such as max allocation bytes.</span>
+    <span class="kw">fn</span> <span class="ident">format</span>() -&gt; <span class="ident"><span class="self">Self</span>::Format</span>;
+
+    <span class="doccomment">/// Deserialize `data` as `Self::Contents` using this collection&#39;s format.</span>
+    <span class="kw">fn</span> <span class="ident">deserialize</span>(<span class="ident">data</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Contents</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident"><span class="self">Self</span>::format</span>()
+            .<span class="ident">deserialize_owned</span>(<span class="ident">data</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident"><span class="kw">crate</span>::Error::Serialization</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()))
+    }
+
+    <span class="doccomment">/// Serialize `item` using this collection&#39;s format.</span>
+    <span class="kw">fn</span> <span class="ident">serialize</span>(<span class="ident">item</span>: <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Contents</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="ident"><span class="self">Self</span>::format</span>()
+            .<span class="ident">serialize</span>(<span class="ident">item</span>)
+            .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident"><span class="kw">crate</span>::Error::Serialization</span>(<span class="ident">err</span>.<span class="ident">to_string</span>()))
     }
 
     <span class="doccomment">/// Gets a [`CollectionDocument`] with `id` from `connection`.</span>
@@ -690,76 +719,53 @@
         <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
         <span class="kw">let</span> <span class="ident">possible_doc</span> <span class="op">=</span> <span class="ident">connection</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>(<span class="ident">id</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">possible_doc</span>.<span class="ident">map</span>(<span class="ident">Document::try_into</span>).<span class="ident">transpose</span>()<span class="question-mark">?</span>)
     }
 
-    <span class="doccomment">/// Inserts this value into the collection, returning the created document.</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">insert_into</span><span class="op">&lt;</span><span class="ident">Cn</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(
+    <span class="doccomment">/// Pushes this value into the collection, returning the created document.</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">push</span><span class="op">&lt;</span><span class="ident">Cn</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(
+        <span class="ident">contents</span>: <span class="ident"><span class="self">Self</span>::Contents</span>,
+        <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="ident">Cn</span>,
+    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">InsertError</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Contents</span><span class="op">&gt;</span><span class="op">&gt;</span>
+    <span class="kw">where</span>
+        <span class="self">Self</span>: <span class="ident">Sized</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="ident"><span class="self">Self</span>::Contents</span>: <span class="lifetime">&#39;async_trait</span>,
+    {
+        <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">connection</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>().<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">contents</span>).<span class="kw">await</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">header</span>) =&gt; <span class="ident">header</span>,
+            <span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InsertError</span> { <span class="ident">contents</span>, <span class="ident">error</span> }),
+        };
+        <span class="prelude-val">Ok</span>(<span class="ident">CollectionDocument</span> { <span class="ident">header</span>, <span class="ident">contents</span> })
+    }
+
+    <span class="doccomment">/// Pushes this value into the collection, returning the created document.</span>
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">push_into</span><span class="op">&lt;</span><span class="ident">Cn</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(
         <span class="self">self</span>,
         <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="ident">Cn</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>, <span class="ident">InsertError</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+        <span class="self">Self</span>: <span class="ident">SerializedCollection</span><span class="op">&lt;</span><span class="ident">Contents</span> <span class="op">=</span> <span class="self">Self</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Sized</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     {
-        <span class="kw">let</span> <span class="ident">header</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">connection</span>.<span class="ident">collection</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>().<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="self">self</span>).<span class="kw">await</span> {
-            <span class="prelude-val">Ok</span>(<span class="ident">header</span>) =&gt; <span class="ident">header</span>,
-            <span class="prelude-val">Err</span>(<span class="ident">error</span>) =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">InsertError</span> {
-                    <span class="ident">contents</span>: <span class="self">self</span>,
-                    <span class="ident">error</span>,
-                })
-            }
-        };
-        <span class="prelude-val">Ok</span>(<span class="ident">CollectionDocument</span> {
-            <span class="ident">header</span>,
-            <span class="ident">contents</span>: <span class="self">self</span>,
-        })
+        <span class="ident"><span class="self">Self</span>::push</span>(<span class="self">self</span>, <span class="ident">connection</span>).<span class="kw">await</span>
     }
 }
 
-<span class="doccomment">/// Serialization format for storing a collection.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">CollectionSerializer</span> {
-    <span class="doccomment">/// Serialize using the [`Pot`](https://github.com/khonsulabs/pot) format. The default serializer.</span>
-    <span class="ident">Pot</span>,
-    <span class="doccomment">/// Serialize using Json. Requires feature `json`.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>)]</span>
-    <span class="ident">Json</span>,
-    <span class="doccomment">/// Serialize using [Cbor](https://github.com/pyfisch/cbor). Requires feature `cbor`.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cbor&quot;</span>)]</span>
-    <span class="ident">Cbor</span>,
-    <span class="doccomment">/// Serialize using [Bincode](https://github.com/bincode-org/bincode). Requires feature `bincode`.</span>
-    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;bincode&quot;</span>)]</span>
-    <span class="ident">Bincode</span>,
-}
+<span class="doccomment">/// A convenience trait for easily storing Serde-compatible types in documents.</span>
+<span class="attribute">#[<span class="ident">async_trait</span>]</span>
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">DefaultSerialization</span>: <span class="ident">Collection</span> {}
 
-<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">CollectionSerializer</span> {
-    <span class="kw">fn</span> <span class="ident">default</span>() -&gt; <span class="self">Self</span> {
-        <span class="ident"><span class="self">Self</span>::Pot</span>
-    }
-}
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> <span class="ident">SerializedCollection</span> <span class="kw">for</span> <span class="ident">T</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">DefaultSerialization</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="ident">DeserializeOwned</span>,
+{
+    <span class="kw">type</span> <span class="ident">Contents</span> <span class="op">=</span> <span class="self">Self</span>;
+    <span class="kw">type</span> <span class="ident">Format</span> <span class="op">=</span> <span class="ident">Pot</span>;
 
-<span class="kw">impl</span> <span class="ident">CollectionSerializer</span> {
-    <span class="doccomment">/// Serializes `contents`.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Serialize</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">contents</span>: <span class="kw-2">&amp;</span><span class="ident">T</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="self">self</span> {
-            <span class="ident">CollectionSerializer::Pot</span> =&gt; <span class="ident">pot::to_vec</span>(<span class="ident">contents</span>).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>),
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;json&quot;</span>)]</span>
-            <span class="ident">CollectionSerializer::Json</span> =&gt; <span class="ident">serde_json::to_vec</span>(<span class="ident">contents</span>).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>),
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;cbor&quot;</span>)]</span>
-            <span class="ident">CollectionSerializer::Cbor</span> =&gt; {
-                <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">bytes</span> <span class="op">=</span> <span class="ident">Vec::new</span>();
-                <span class="ident">ciborium::ser::into_writer</span>(<span class="ident">contents</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bytes</span>).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>)<span class="question-mark">?</span>;
-                <span class="prelude-val">Ok</span>(<span class="ident">bytes</span>)
-            }
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;bincode&quot;</span>)]</span>
-            <span class="ident">CollectionSerializer::Bincode</span> =&gt; {
-                <span class="ident">bincode::serialize</span>(<span class="ident">contents</span>).<span class="ident">map_err</span>(<span class="ident"><span class="kw">crate</span>::Error::from</span>)
-            }
-        }
+    <span class="kw">fn</span> <span class="ident">format</span>() -&gt; <span class="ident"><span class="self">Self</span>::Format</span> {
+        <span class="ident">Pot::default</span>()
     }
 }
 
@@ -785,10 +791,13 @@
         <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="ident">SerializedCollection</span> <span class="op">+</span> <span class="ident">Sized</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     {
         <span class="kw">let</span> <span class="ident">possible_doc</span> <span class="op">=</span> <span class="ident"><span class="self">Self</span>::load_document</span>(<span class="ident">id</span>, <span class="ident">connection</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">possible_doc</span>.<span class="ident">map</span>(<span class="ident">Document::try_into</span>).<span class="ident">transpose</span>()<span class="question-mark">?</span>)
+        <span class="prelude-val">Ok</span>(<span class="ident">possible_doc</span>
+            .<span class="ident">as_ref</span>()
+            .<span class="ident">map</span>(<span class="ident">CollectionDocument::try_from</span>)
+            .<span class="ident">transpose</span>()<span class="question-mark">?</span>)
     }
 
     <span class="doccomment">/// Gets a [`CollectionDocument`] with `id` from `connection`.</span>
@@ -797,7 +806,7 @@
         <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;connection</span> <span class="ident">C</span>,
     ) -&gt; <span class="ident">Entry</span><span class="op">&lt;</span><span class="lifetime">&#39;connection</span>, <span class="lifetime">&#39;name</span>, <span class="ident">C</span>, <span class="self">Self</span>, (), ()<span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="ident">SerializedCollection</span> <span class="op">+</span> <span class="ident">Sized</span>,
     {
         <span class="kw">let</span> <span class="ident">name</span> <span class="op">=</span> <span class="ident">id</span>.<span class="ident">into</span>();
         <span class="ident">Entry</span> {
@@ -820,7 +829,7 @@
         <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="ident">C</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>
     <span class="kw">where</span>
-        <span class="self">Self</span>: <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+        <span class="self">Self</span>: <span class="ident">SerializedCollection</span> <span class="op">+</span> <span class="ident">Sized</span>,
     {
         <span class="kw">match</span> <span class="ident">name</span>.<span class="ident">into</span>() {
             <span class="ident">NamedReference::Id</span>(<span class="ident">id</span>) =&gt; <span class="ident">connection</span>.<span class="ident">get</span>::<span class="op">&lt;</span><span class="self">Self</span><span class="op">&gt;</span>(<span class="ident">id</span>).<span class="kw">await</span>,
@@ -838,15 +847,21 @@
 
 <span class="doccomment">/// A document with serializable contents.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>, <span class="ident">Eq</span>, <span class="ident">PartialEq</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">C</span>: <span class="ident">SerializedCollection</span>,
+{
     <span class="doccomment">/// The header of the document, which contains the id and `Revision`.</span>
     <span class="kw">pub</span> <span class="ident">header</span>: <span class="ident">Header</span>,
 
     <span class="doccomment">/// The document&#39;s contents.</span>
-    <span class="kw">pub</span> <span class="ident">contents</span>: <span class="ident">C</span>,
+    <span class="kw">pub</span> <span class="ident">contents</span>: <span class="ident">C::Contents</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> <span class="ident">Deref</span> <span class="kw">for</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">C</span>: <span class="ident">SerializedCollection</span>,
+{
     <span class="kw">type</span> <span class="ident">Target</span> <span class="op">=</span> <span class="ident">Header</span>;
 
     <span class="kw">fn</span> <span class="ident">deref</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="ident"><span class="self">Self</span>::Target</span> {
@@ -854,51 +869,51 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;a</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+    <span class="ident">C</span>: <span class="ident">SerializedCollection</span>,
 {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">contents</span>: <span class="ident">value</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
+            <span class="ident">contents</span>: <span class="ident">C::deserialize</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">contents</span>)<span class="question-mark">?</span>,
             <span class="ident">header</span>: <span class="ident">value</span>.<span class="ident">header</span>.<span class="ident">clone</span>(),
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+    <span class="ident">C</span>: <span class="ident">SerializedCollection</span>,
 {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident">Error</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">contents</span>: <span class="ident">value</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
+            <span class="ident">contents</span>: <span class="ident">C::deserialize</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">contents</span>)<span class="question-mark">?</span>,
             <span class="ident">header</span>: <span class="ident">value</span>.<span class="ident">header</span>,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">TryFrom</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+    <span class="ident">C</span>: <span class="ident">SerializedCollection</span>,
 {
     <span class="kw">type</span> <span class="ident">Error</span> <span class="op">=</span> <span class="ident"><span class="kw">crate</span>::Error</span>;
 
-    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">try_from</span>(<span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident"><span class="self">Self</span>::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="self">Self</span> {
-            <span class="ident">contents</span>: <span class="ident">Cow::Owned</span>(<span class="ident">C::serializer</span>().<span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">contents</span>)<span class="question-mark">?</span>),
-            <span class="ident">header</span>: <span class="ident">value</span>.<span class="ident">header</span>,
+            <span class="ident">contents</span>: <span class="ident">Cow::Owned</span>(<span class="ident">C::serialize</span>(<span class="kw-2">&amp;</span><span class="ident">value</span>.<span class="ident">contents</span>)<span class="question-mark">?</span>),
+            <span class="ident">header</span>: <span class="ident">value</span>.<span class="ident">header</span>.<span class="ident">clone</span>(),
         })
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+    <span class="ident">C</span>: <span class="ident">SerializedCollection</span>,
 {
     <span class="doccomment">/// Stores the new value of `contents` in the document.</span>
     <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">update</span><span class="op">&lt;</span><span class="ident">Cn</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="ident">Cn</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
@@ -961,7 +976,7 @@
     <span class="doccomment">/// Converts this value to a serialized `Document`.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">to_document</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Document</span> {
-            <span class="ident">contents</span>: <span class="ident">Cow::Owned</span>(<span class="ident">C::serializer</span>().<span class="ident">serialize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">contents</span>)<span class="question-mark">?</span>),
+            <span class="ident">contents</span>: <span class="ident">Cow::Owned</span>(<span class="ident">C::serialize</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">contents</span>)<span class="question-mark">?</span>),
             <span class="ident">header</span>: <span class="self">self</span>.<span class="ident">header</span>.<span class="ident">clone</span>(),
         })
     }
@@ -995,10 +1010,11 @@
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="ident">C</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span>
-    <span class="kw">for</span> <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;c</span>, <span class="ident">C</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;c</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">C</span>: <span class="ident">SerializedCollection</span>,
 {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;c</span> <span class="ident">CollectionDocument</span><span class="op">&lt;</span><span class="ident">C</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::Id</span>(<span class="ident">doc</span>.<span class="ident">header</span>.<span class="ident">id</span>)
     }
 }
@@ -1051,7 +1067,7 @@
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Entry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;name</span>, <span class="ident">Connection</span>, <span class="ident">Col</span>, <span class="ident">EI</span>, <span class="ident">EU</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span>,
+    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">SerializedCollection</span>,
     <span class="ident">EI</span>: <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span>,
     <span class="ident">EU</span>: <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span>,
 {
@@ -1065,7 +1081,9 @@
     <span class="ident">Col</span>,
     <span class="ident">EI</span>: <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
     <span class="ident">EU</span>: <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
-<span class="op">&gt;</span> {
+<span class="op">&gt;</span> <span class="kw">where</span>
+    <span class="ident">Col</span>: <span class="ident">SerializedCollection</span>,
+{
     <span class="ident">name</span>: <span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;name</span><span class="op">&gt;</span>,
     <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Connection</span>,
     <span class="ident">insert</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">EI</span><span class="op">&gt;</span>,
@@ -1076,7 +1094,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;name</span>, <span class="ident">Connection</span>, <span class="ident">Col</span>, <span class="ident">EI</span>, <span class="ident">EU</span><span class="op">&gt;</span> <span class="ident">Entry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;name</span>, <span class="ident">Connection</span>, <span class="ident">Col</span>, <span class="ident">EI</span>, <span class="ident">EU</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Unpin</span>,
+    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">SerializedCollection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> <span class="op">+</span> <span class="ident">Unpin</span>,
     <span class="ident">Connection</span>: <span class="ident"><span class="kw">crate</span>::connection::Connection</span>,
     <span class="ident">EI</span>: <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Unpin</span>,
     <span class="ident">EU</span>: <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span> <span class="op">+</span> <span class="ident">Unpin</span>,
@@ -1116,7 +1134,7 @@
             }
         } <span class="kw">else</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">insert</span>) <span class="op">=</span> <span class="ident">insert</span> {
             <span class="kw">let</span> <span class="ident">new_document</span> <span class="op">=</span> <span class="ident">insert</span>.<span class="ident">call</span>();
-            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">new_document</span>.<span class="ident">insert_into</span>(<span class="ident">connection</span>).<span class="kw">await</span><span class="question-mark">?</span>))
+            <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="ident">Col::push</span>(<span class="ident">new_document</span>, <span class="ident">connection</span>).<span class="kw">await</span><span class="question-mark">?</span>))
         } <span class="kw">else</span> {
             <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
         }
@@ -1197,48 +1215,58 @@
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Unpin</span> {
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="self">self</span>) -&gt; <span class="ident">Col</span>;
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span>: <span class="ident">SerializedCollection</span><span class="op">&gt;</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Unpin</span> {
+    <span class="kw">fn</span> <span class="ident">call</span>(<span class="self">self</span>) -&gt; <span class="ident">Col::Contents</span>;
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">Col</span><span class="op">&gt;</span> <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">F</span>
 <span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">Col</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Unpin</span>,
+    <span class="ident">F</span>: <span class="ident">FnOnce</span>() -&gt; <span class="ident">Col::Contents</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Unpin</span>,
+    <span class="ident">Col</span>: <span class="ident">SerializedCollection</span>,
 {
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="self">self</span>) -&gt; <span class="ident">Col</span> {
+    <span class="kw">fn</span> <span class="ident">call</span>(<span class="self">self</span>) -&gt; <span class="ident">Col::Contents</span> {
         <span class="self">self</span>()
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="kw">for</span> () {
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="self">self</span>) -&gt; <span class="ident">Col</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="kw">for</span> ()
+<span class="kw">where</span>
+    <span class="ident">Col</span>: <span class="ident">SerializedCollection</span>,
+{
+    <span class="kw">fn</span> <span class="ident">call</span>(<span class="self">self</span>) -&gt; <span class="ident">Col::Contents</span> {
         <span class="macro">unreachable!</span>()
     }
 }
 
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Unpin</span> {
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Col</span>);
+<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Unpin</span>
+<span class="kw">where</span>
+    <span class="ident">Col</span>: <span class="ident">SerializedCollection</span>,
+{
+    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Col::Contents</span>);
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">F</span>, <span class="ident">Col</span><span class="op">&gt;</span> <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">F</span>
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">F</span>, <span class="ident">Col</span><span class="op">&gt;</span> <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">F</span>
 <span class="kw">where</span>
-    <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Col</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Unpin</span>,
-    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
+    <span class="ident">F</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Col::Contents</span>) <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Unpin</span>,
+    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">SerializedCollection</span>,
 {
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Col</span>) {
+    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">doc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Col::Contents</span>) {
         <span class="self">self</span>(<span class="ident">doc</span>);
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="kw">for</span> () {
-    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_doc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Col</span>) {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="kw">for</span> ()
+<span class="kw">where</span>
+    <span class="ident">Col</span>: <span class="ident">SerializedCollection</span>,
+{
+    <span class="kw">fn</span> <span class="ident">call</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_doc</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Col::Contents</span>) {
         <span class="macro">unreachable!</span>();
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;name</span>, <span class="ident">Conn</span>, <span class="ident">Col</span>, <span class="ident">EI</span>, <span class="ident">EU</span><span class="op">&gt;</span> <span class="ident">Future</span> <span class="kw">for</span> <span class="ident">Entry</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;name</span>, <span class="ident">Conn</span>, <span class="ident">Col</span>, <span class="ident">EI</span>, <span class="ident">EU</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
+    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">SerializedCollection</span> <span class="op">+</span> <span class="lifetime">&#39;static</span>,
     <span class="ident">Conn</span>: <span class="ident">Connection</span>,
     <span class="ident">EI</span>: <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
     <span class="ident">EU</span>: <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
@@ -1275,7 +1303,7 @@
 
 <span class="kw">enum</span> <span class="ident">EntryState</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;name</span>, <span class="ident">Connection</span>, <span class="ident">Col</span>, <span class="ident">EI</span>, <span class="ident">EU</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">Serialize</span> <span class="op">+</span> <span class="kw">for</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="op">+</span> <span class="lifetime">&#39;a</span>,
+    <span class="ident">Col</span>: <span class="ident">NamedCollection</span> <span class="op">+</span> <span class="ident">SerializedCollection</span>,
     <span class="ident">EI</span>: <span class="ident">EntryInsert</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span>,
     <span class="ident">EU</span>: <span class="ident">EntryUpdate</span><span class="op">&lt;</span><span class="ident">Col</span><span class="op">&gt;</span>,
 {

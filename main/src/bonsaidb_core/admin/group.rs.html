@@ -61,6 +61,8 @@
 <span id="61">61</span>
 <span id="62">62</span>
 <span id="63">63</span>
+<span id="64">64</span>
+<span id="65">65</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
@@ -68,8 +70,8 @@
     <span class="ident">define_basic_unique_mapped_view</span>,
     <span class="ident">permissions::Statement</span>,
     <span class="ident">schema</span>::{
-        <span class="ident">Collection</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">InvalidNameError</span>, <span class="ident">NamedCollection</span>,
-        <span class="ident">Schematic</span>,
+        <span class="ident">Collection</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">DefaultSerialization</span>, <span class="ident">InvalidNameError</span>,
+        <span class="ident">NamedCollection</span>, <span class="ident">Schematic</span>,
     },
     <span class="ident">Error</span>,
 };
@@ -109,6 +111,8 @@
         <span class="ident">schema</span>.<span class="ident">define_view</span>(<span class="ident">ByName</span>)
     }
 }
+
+<span class="kw">impl</span> <span class="ident">DefaultSerialization</span> <span class="kw">for</span> <span class="ident">PermissionGroup</span> {}
 
 <span class="kw">impl</span> <span class="ident">NamedCollection</span> <span class="kw">for</span> <span class="ident">PermissionGroup</span> {
     <span class="kw">type</span> <span class="ident">ByNameView</span> <span class="op">=</span> <span class="ident">ByName</span>;
