@@ -172,7 +172,7 @@ tokio::spawn(async move {
     task_server.listen_for_websockets_on(&quot;localhost:8080&quot;, false).await
 });
 </code></pre>
-<p>If you're not running any of your own code on the server, and you're only using one listening method, you can just await the listen method of your choice in your server's main.</p>
+<p>If you're not running any of your own code on the server, and you're only using one listening method, you can just await the listen method of your choice in your server's main. This code example configures BonsaiDb on UDP port 5645, but this is not <a href="https://github.com/khonsulabs/bonsaidb/issues/48">an officially registered port</a>.</p>
 <!-- TODO: Certificates -->
 <h2 id="from-the-client"><a class="header" href="#from-the-client">From the Client</a></h2>
 <p>The <a href="https://dev.bonsaidb.io/main/bonsaidb/client/struct.Client.html"><code>Client</code></a> can support both the native protocol and WebSockets. It determines which protocol to use based on the scheme in the URL:</p>
