@@ -91,6 +91,8 @@
 <span id="91">91</span>
 <span id="92">92</span>
 <span id="93">93</span>
+<span id="94">94</span>
+<span id="95">95</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>))]</span>
 <span class="kw">use</span> <span class="ident">std::net</span>::{<span class="ident">Ipv6Addr</span>, <span class="ident">SocketAddr</span>, <span class="ident">SocketAddrV6</span>};
@@ -104,17 +106,19 @@
 <span class="doccomment">/// Execute the server</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Args</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Serve</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
-    <span class="doccomment">/// The port for the BonsaiDb protocol. Defaults to 5645</span>
+    <span class="doccomment">/// The UDP port for the BonsaiDb protocol. Defaults to UDP port 5645 (not</span>
+    <span class="doccomment">/// an [officially registered</span>
+    <span class="doccomment">/// port](https://github.com/khonsulabs/bonsaidb/issues/48)).</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">short</span> <span class="op">=</span> <span class="string">&#39;l&#39;</span>, <span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;listen-on&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">listen_on</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u16</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>))]</span>
-    <span class="doccomment">/// The bind port and address for HTTP traffic. Defaults to 80.</span>
+    <span class="doccomment">/// The bind port and address for HTTP traffic. Defaults to TCP port 80.</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;http&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">http_port</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span>,
 
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">any</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>, <span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;acme&quot;</span>))]</span>
-    <span class="doccomment">/// The bind port and address for HTTPS traffic. Defaults to 443.</span>
+    <span class="doccomment">/// The bind port and address for HTTPS traffic. Defaults to TCP port 443.</span>
     <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span> <span class="op">=</span> <span class="string">&quot;https&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">https_port</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SocketAddr</span><span class="op">&gt;</span>,
 
