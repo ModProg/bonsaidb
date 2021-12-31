@@ -172,7 +172,7 @@ let db = storage.database::&lt;Message&gt;(&quot;default&quot;).await?;
         contents: String::from(value),
         timestamp: SystemTime::now(),
     }
-    .insert_into(connection)
+    .push_into(connection)
     .await?;
     Ok(())
 }
