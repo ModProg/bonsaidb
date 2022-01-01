@@ -2067,6 +2067,23 @@
 <span id="2067">2067</span>
 <span id="2068">2068</span>
 <span id="2069">2069</span>
+<span id="2070">2070</span>
+<span id="2071">2071</span>
+<span id="2072">2072</span>
+<span id="2073">2073</span>
+<span id="2074">2074</span>
+<span id="2075">2075</span>
+<span id="2076">2076</span>
+<span id="2077">2077</span>
+<span id="2078">2078</span>
+<span id="2079">2079</span>
+<span id="2080">2080</span>
+<span id="2081">2081</span>
+<span id="2082">2082</span>
+<span id="2083">2083</span>
+<span id="2084">2084</span>
+<span id="2085">2085</span>
+<span id="2086">2086</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">clippy::missing_panics_doc</span>)]</span>
 
 <span class="kw">use</span> <span class="ident">std</span>::{
@@ -2089,7 +2106,7 @@
     <span class="ident">keyvalue::KeyValue</span>,
     <span class="ident">limits</span>::{<span class="ident">LIST_TRANSACTIONS_DEFAULT_RESULT_COUNT</span>, <span class="ident">LIST_TRANSACTIONS_MAX_RESULTS</span>},
     <span class="ident">schema</span>::{
-        <span class="ident">view</span>::{<span class="self">self</span>, <span class="ident">map::Mappings</span>},
+        <span class="ident">view</span>::{<span class="self">self</span>, <span class="ident">map::Mappings</span>, <span class="ident">DefaultViewSerialization</span>},
         <span class="ident">Collection</span>, <span class="ident">CollectionDocument</span>, <span class="ident">CollectionName</span>, <span class="ident">DefaultSerialization</span>, <span class="ident">InvalidNameError</span>,
         <span class="ident">MapResult</span>, <span class="ident">MappedValue</span>, <span class="ident">Name</span>, <span class="ident">NamedCollection</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>,
         <span class="ident">SerializedCollection</span>, <span class="ident">View</span>,
@@ -2176,6 +2193,8 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">DefaultViewSerialization</span> <span class="kw">for</span> <span class="ident">BasicCount</span> {}
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicByParentId</span>;
 
@@ -2205,6 +2224,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
+<span class="kw">impl</span> <span class="ident">DefaultViewSerialization</span> <span class="kw">for</span> <span class="ident">BasicByParentId</span> {}
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicByCategory</span>;
@@ -2239,6 +2259,8 @@
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
+
+<span class="kw">impl</span> <span class="ident">DefaultViewSerialization</span> <span class="kw">for</span> <span class="ident">BasicByCategory</span> {}
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicByTag</span>;
@@ -2275,6 +2297,8 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">DefaultViewSerialization</span> <span class="kw">for</span> <span class="ident">BasicByTag</span> {}
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicByBrokenParentId</span>;
 
@@ -2295,6 +2319,8 @@
         <span class="prelude-val">Ok</span>(<span class="ident">document</span>.<span class="ident">emit</span>())
     }
 }
+
+<span class="kw">impl</span> <span class="ident">DefaultViewSerialization</span> <span class="kw">for</span> <span class="ident">BasicByBrokenParentId</span> {}
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EncryptedBasic</span> {
@@ -2375,6 +2401,8 @@
     }
 }
 
+<span class="kw">impl</span> <span class="ident">DefaultViewSerialization</span> <span class="kw">for</span> <span class="ident">EncryptedBasicCount</span> {}
+
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EncryptedBasicByParentId</span>;
 
@@ -2404,6 +2432,8 @@
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
+
+<span class="kw">impl</span> <span class="ident">DefaultViewSerialization</span> <span class="kw">for</span> <span class="ident">EncryptedBasicByParentId</span> {}
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">EncryptedBasicByCategory</span>;
@@ -2438,6 +2468,8 @@
         <span class="prelude-val">Ok</span>(<span class="ident">mappings</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> <span class="ident">map</span>.<span class="ident">value</span>).<span class="ident">sum</span>())
     }
 }
+
+<span class="kw">impl</span> <span class="ident">DefaultViewSerialization</span> <span class="kw">for</span> <span class="ident">EncryptedBasicByCategory</span> {}
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BasicSchema</span>;
@@ -2504,6 +2536,8 @@
         <span class="prelude-val">Ok</span>(<span class="ident">document</span>.<span class="ident">emit_key</span>(<span class="ident">entry</span>.<span class="ident">value</span>))
     }
 }
+
+<span class="kw">impl</span> <span class="ident">DefaultViewSerialization</span> <span class="kw">for</span> <span class="ident">UniqueValue</span> {}
 
 <span class="kw">impl</span> <span class="ident">NamedCollection</span> <span class="kw">for</span> <span class="ident">Unique</span> {
     <span class="kw">type</span> <span class="ident">ByNameView</span> <span class="op">=</span> <span class="ident">UniqueValue</span>;

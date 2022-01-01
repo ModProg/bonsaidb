@@ -234,7 +234,7 @@
     <span class="ident">document::Document</span>,
     <span class="ident">keyvalue::KeyValue</span>,
     <span class="ident">pubsub</span>::{<span class="ident">PubSub</span>, <span class="ident">Subscriber</span>},
-    <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">Collection</span>, <span class="ident">Map</span>, <span class="ident">MappedValue</span>, <span class="ident">View</span>},
+    <span class="ident">schema</span>::{<span class="self">self</span>, <span class="ident">Collection</span>, <span class="ident">Map</span>, <span class="ident">MappedValue</span>, <span class="ident">SerializedView</span>},
     <span class="ident">transaction::Transaction</span>,
 };
 <span class="kw">use</span> <span class="ident">bonsaidb_local::Database</span>;
@@ -347,7 +347,7 @@
         <span class="self">self</span>.<span class="ident">db</span>.<span class="ident">list</span>::<span class="op">&lt;</span><span class="ident">C</span>, <span class="ident">R</span><span class="op">&gt;</span>(<span class="ident">ids</span>, <span class="ident">order</span>, <span class="ident">limit</span>).<span class="kw">await</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">order</span>: <span class="ident">Sort</span>,
@@ -360,7 +360,7 @@
         <span class="self">self</span>.<span class="ident">db</span>.<span class="ident">query</span>::<span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>(<span class="ident">key</span>, <span class="ident">order</span>, <span class="ident">limit</span>, <span class="ident">access_policy</span>).<span class="kw">await</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query_with_docs</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query_with_docs</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">order</span>: <span class="ident">Sort</span>,
@@ -375,7 +375,7 @@
             .<span class="kw">await</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
@@ -386,7 +386,7 @@
         <span class="self">self</span>.<span class="ident">db</span>.<span class="ident">reduce</span>::<span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>(<span class="ident">key</span>, <span class="ident">access_policy</span>).<span class="kw">await</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce_grouped</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce_grouped</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
@@ -397,7 +397,7 @@
         <span class="self">self</span>.<span class="ident">db</span>.<span class="ident">reduce_grouped</span>::<span class="op">&lt;</span><span class="ident">V</span><span class="op">&gt;</span>(<span class="ident">key</span>, <span class="ident">access_policy</span>).<span class="kw">await</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_docs</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_docs</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,

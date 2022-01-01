@@ -1,0 +1,1 @@
+initSidebarItems({"mod":[["pot","A concise storage format, written for `BonsaiDb`."]],"struct":[["Pot","Pot implementor of [`Format`]."]]});

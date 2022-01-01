@@ -1032,7 +1032,7 @@
 
     <span class="doccomment">/// Initializes [`View`] for [`schema::View`] `V`.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">fn</span> <span class="ident">view</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>) -&gt; <span class="ident">View</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="self">Self</span>, <span class="ident">V</span><span class="op">&gt;</span>
+    <span class="kw">fn</span> <span class="ident">view</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::SerializedView</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="self">self</span>) -&gt; <span class="ident">View</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span>, <span class="self">Self</span>, <span class="ident">V</span><span class="op">&gt;</span>
     <span class="kw">where</span>
         <span class="self">Self</span>: <span class="ident">Sized</span>,
     {
@@ -1041,7 +1041,7 @@
 
     <span class="doccomment">/// Queries for view entries matching [`View`].</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">order</span>: <span class="ident">Sort</span>,
@@ -1053,7 +1053,7 @@
 
     <span class="doccomment">/// Queries for view entries matching [`View`].</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query_with_docs</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query_with_docs</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">order</span>: <span class="ident">Sort</span>,
@@ -1065,7 +1065,7 @@
 
     <span class="doccomment">/// Reduces the view entries matching [`View`].</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
@@ -1076,7 +1076,7 @@
     <span class="doccomment">/// Reduces the view entries matching [`View`], reducing the values by each</span>
     <span class="doccomment">/// unique key.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce_grouped</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce_grouped</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
@@ -1086,7 +1086,7 @@
 
     <span class="doccomment">/// Deletes all of the documents associated with this view.</span>
     <span class="attribute">#[<span class="ident">must_use</span>]</span>
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_docs</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span>(
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_docs</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">schema::SerializedView</span><span class="op">&gt;</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">V::Key</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
@@ -1291,7 +1291,7 @@
 }
 
 <span class="doccomment">/// Parameters to query a `schema::View`.</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">View</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Cn</span>, <span class="ident">V</span>: <span class="ident">schema::View</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">View</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Cn</span>, <span class="ident">V</span>: <span class="ident">schema::SerializedView</span><span class="op">&gt;</span> {
     <span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Cn</span>,
 
     <span class="doccomment">/// Key filtering criteria.</span>
@@ -1309,7 +1309,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Cn</span>, <span class="ident">V</span><span class="op">&gt;</span> <span class="ident">View</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Cn</span>, <span class="ident">V</span><span class="op">&gt;</span>
 <span class="kw">where</span>
-    <span class="ident">V</span>: <span class="ident">schema::View</span>,
+    <span class="ident">V</span>: <span class="ident">schema::SerializedView</span>,
     <span class="ident">Cn</span>: <span class="ident">Connection</span>,
 {
     <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">connection</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Cn</span>) -&gt; <span class="self">Self</span> {

@@ -783,7 +783,7 @@
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">NamedCollection</span>: <span class="ident">Collection</span> <span class="op">+</span> <span class="ident">Unpin</span> {
     <span class="doccomment">/// The name view defined for the collection.</span>
-    <span class="kw">type</span> <span class="ident">ByNameView</span>: <span class="ident"><span class="kw">crate</span>::schema::View</span><span class="op">&lt;</span><span class="ident">Key</span> <span class="op">=</span> <span class="ident">String</span><span class="op">&gt;</span>;
+    <span class="kw">type</span> <span class="ident">ByNameView</span>: <span class="ident"><span class="kw">crate</span>::schema::SerializedView</span><span class="op">&lt;</span><span class="ident">Key</span> <span class="op">=</span> <span class="ident">String</span><span class="op">&gt;</span>;
 
     <span class="doccomment">/// Gets a [`CollectionDocument`] with `id` from `connection`.</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">load</span><span class="op">&lt;</span><span class="lifetime">&#39;name</span>, <span class="ident">N</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">NamedReference</span><span class="op">&lt;</span><span class="lifetime">&#39;name</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="op">+</span> <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span>, <span class="ident">C</span>: <span class="ident">Connection</span><span class="op">&gt;</span>(
