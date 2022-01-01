@@ -186,33 +186,35 @@
 <span id="186">186</span>
 <span id="187">187</span>
 <span id="188">188</span>
+<span id="189">189</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">env</span>::{<span class="ident">current_dir</span>, <span class="ident">set_current_dir</span>},
     <span class="ident">io</span>::{<span class="ident">stdout</span>, <span class="ident">Write</span>},
 };
 
 <span class="kw">use</span> <span class="ident">khonsu_tools::universal</span>::{
-    <span class="ident">anyhow</span>, <span class="ident">audit</span>, <span class="ident">code_coverage</span>,
+    <span class="ident">anyhow</span>, <span class="ident">audit</span>,
+    <span class="ident">clap</span>::{<span class="self">self</span>, <span class="ident">Parser</span>},
+    <span class="ident">code_coverage</span>,
     <span class="ident">devx_cmd</span>::{<span class="ident">run</span>, <span class="ident">Cmd</span>},
     <span class="ident">DefaultConfig</span>,
 };
 <span class="kw">use</span> <span class="ident">serde::Serialize</span>;
-<span class="kw">use</span> <span class="ident">structopt::StructOpt</span>;
 
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">StructOpt</span>, <span class="ident">Debug</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Parser</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Commands</span> {
     <span class="ident">TestMatrix</span>,
     <span class="ident">Test</span> {
-        <span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">long</span>)]</span>
+        <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">long</span>)]</span>
         <span class="ident">fail_on_warnings</span>: <span class="ident">bool</span>,
     },
-    <span class="attribute">#[<span class="ident">structopt</span>(<span class="ident">flatten</span>)]</span>
+    <span class="attribute">#[<span class="ident">clap</span>(<span class="ident">flatten</span>)]</span>
     <span class="ident">Tools</span>(<span class="ident">khonsu_tools::Commands</span>),
 }
 
 <span class="kw">fn</span> <span class="ident">main</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">std::env::args</span>().<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">1</span> {
-        <span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">Commands::from_args</span>();
+        <span class="kw">let</span> <span class="ident">command</span> <span class="op">=</span> <span class="ident">Commands::parse</span>();
         <span class="kw">match</span> <span class="ident">command</span> {
             <span class="ident">Commands::TestMatrix</span> =&gt; <span class="ident">generate_test_matrix_output</span>(),
             <span class="ident">Commands::Test</span> { <span class="ident">fail_on_warnings</span> } =&gt; <span class="ident">run_all_tests</span>(<span class="ident">fail_on_warnings</span>),
