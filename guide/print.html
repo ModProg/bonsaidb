@@ -204,6 +204,8 @@ pub struct BlogPost {
     }
 }
 </code></pre>
+<h2 id="value-serialization"><a class="header" href="#value-serialization">Value Serialization</a></h2>
+<p>For views to function, the Value type must able to be serialized and deserialized from storage. To accomplish this, all views must implement the <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.SerializedView.html"><code>SerializedView</code></a> trait. For <a href="https://serde.rs/">Serde</a>-compatible data structures, <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.DefaultViewSerialization.html"><code>DefaultSerializedView</code></a> is an empty trait that can be implemented instead to provide the default serialization that BonsaiDb recommends.</p>
 <h2 id="map"><a class="header" href="#map">Map</a></h2>
 <p>The first line of the <code>map</code> function calls <a href="https://dev.bonsaidb.io/main/bonsaidb/core/document/struct.Document.html#method.contents"><code>Document::contents()</code></a> to deserialize the stored <code>BlogPost</code>. The second line returns an emitted Key and Value -- in our case a clone of the post's category and the value <code>1_u32</code>. With the map function, we're able to use <a href="https://dev.bonsaidb.io/main/bonsaidb/core/connection/struct.View.html#method.query"><code>query()</code></a> and <a href="https://dev.bonsaidb.io/main/bonsaidb/core/connection/struct.View.html#method.query_with_docs"><code>query_with_docs()</code></a>:</p>
 <pre><code class="language-rust noplayground no_run">    let rust_posts = db
