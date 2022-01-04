@@ -146,15 +146,16 @@
 <p><code>BonsaiDb</code> offers at-rest encryption. An overview of how it works is available <a href="https://dev.bonsaidb.io/main/bonsaidb/local/vault/index.html">in the <code>bonsaidb::local::vault</code> module</a>.</p>
 <h2 id="enabling-at-rest-encryption-by-default"><a class="header" href="#enabling-at-rest-encryption-by-default">Enabling at-rest encryption by default</a></h2>
 <p>When opening your <code>BonsaiDb</code> instance, there is a configuration option <a href="https://dev.bonsaidb.io/main/bonsaidb/local/config/struct.StorageConfiguration.html#structfield.default_encryption_key"><code>default_encryption_key</code></a>. Once this is set, all new data written that supports being encrypted will be encrypted at-rest.</p>
-<pre><code class="language-rust noplayground no_run">let storage = Storage::open_local(
-    Path::new(&quot;encrypted-at-rest.bonsaidb&quot;),
-    Configuration {
-        default_encryption_key: Some(KeyId::Master),
-        ..Default::default()
-    },
+<pre><code class="language-rust noplayground no_run">let storage = Storage::open(
+    StorageConfiguration::new(&amp;directory)
+        .vault_key_storage(vault_key_storage)
+        .default_encryption_key(KeyId::Master)
 )
 .await?;
 </code></pre>
+<h2 id="enabling-at-rest-encryption-on-a-per-collection-basis"><a class="header" href="#enabling-at-rest-encryption-on-a-per-collection-basis">Enabling at-rest encryption on a per-collection basis</a></h2>
+<p><a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.Collection.html#method.encryption_key"><code>Collection::encryption_key()</code></a> can be overridden on a per-Collection basis. If a collection requests encryption but the feature is disabled, an error will be generated.</p>
+<p>To enable a collection to be encrypted when the feature is enabled, only return a key when <a href="https://dev.bonsaidb.io/main/bonsaidb/core/constant.ENCRYPTION_ENABLED.html">ENCRYPTION_ENABLED</a> is true.</p>
 
                     </main>
 
