@@ -193,12 +193,17 @@
 <span id="193">193</span>
 <span id="194">194</span>
 <span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::path::Path</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">bonsaidb_core::document::KeyId</span>;
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{<span class="ident">permissions::Permissions</span>, <span class="ident">schema::Schema</span>};
-<span class="kw">use</span> <span class="ident">bonsaidb_local::config</span>::{<span class="ident">Builder</span>, <span class="ident">StorageConfiguration</span>};
+<span class="kw">use</span> <span class="ident">bonsaidb_local::config</span>::{<span class="ident">Builder</span>, <span class="ident">KeyValuePersistence</span>, <span class="ident">StorageConfiguration</span>};
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">bonsaidb_local::vault::AnyVaultKeyStorage</span>;
 
@@ -385,6 +390,11 @@
 
     <span class="kw">fn</span> <span class="ident">check_view_integrity_on_open</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">check</span>: <span class="ident">bool</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">storage</span>.<span class="ident">views</span>.<span class="ident">check_integrity_on_open</span> <span class="op">=</span> <span class="ident">check</span>;
+        <span class="self">self</span>
+    }
+
+    <span class="kw">fn</span> <span class="ident">key_value_persistence</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">persistence</span>: <span class="ident">KeyValuePersistence</span>) -&gt; <span class="self">Self</span> {
+        <span class="self">self</span>.<span class="ident">storage</span>.<span class="ident">key_value_persistence</span> <span class="op">=</span> <span class="ident">persistence</span>;
         <span class="self">self</span>
     }
 }

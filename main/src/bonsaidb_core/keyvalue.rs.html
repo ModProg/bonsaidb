@@ -525,6 +525,10 @@
 <span id="525">525</span>
 <span id="526">526</span>
 <span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">mod</span> <span class="ident">timestamp</span>;
@@ -731,20 +735,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Command</span> {
     <span class="doccomment">/// Set a key/value pair.</span>
-    <span class="ident">Set</span> {
-        <span class="doccomment">/// The value.</span>
-        <span class="ident">value</span>: <span class="ident">Value</span>,
-        <span class="doccomment">/// If set, the key will be set to expire automatically.</span>
-        <span class="ident">expiration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
-        <span class="doccomment">/// If true and the key already exists, the expiration will not be</span>
-        <span class="doccomment">/// updated. If false and an expiration is provided, the expiration will</span>
-        <span class="doccomment">/// be set.</span>
-        <span class="ident">keep_existing_expiration</span>: <span class="ident">bool</span>,
-        <span class="doccomment">/// Conditional checks for whether the key is already present or not.</span>
-        <span class="ident">check</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyCheck</span><span class="op">&gt;</span>,
-        <span class="doccomment">/// If true and the key already exists, the existing key will be returned if overwritten.</span>
-        <span class="ident">return_previous_value</span>: <span class="ident">bool</span>,
-    },
+    <span class="ident">Set</span>(<span class="ident">SetCommand</span>),
     <span class="doccomment">/// Get the value from a key.</span>
     <span class="ident">Get</span> {
         <span class="doccomment">/// Remove the key after retrieving the value.</span>
@@ -774,6 +765,23 @@
     },
     <span class="doccomment">/// Delete a key.</span>
     <span class="ident">Delete</span>,
+}
+
+<span class="doccomment">/// Set a key/value pair.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">SetCommand</span> {
+    <span class="doccomment">/// The value.</span>
+    <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">Value</span>,
+    <span class="doccomment">/// If set, the key will be set to expire automatically.</span>
+    <span class="kw">pub</span> <span class="ident">expiration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// If true and the key already exists, the expiration will not be</span>
+    <span class="doccomment">/// updated. If false and an expiration is provided, the expiration will</span>
+    <span class="doccomment">/// be set.</span>
+    <span class="kw">pub</span> <span class="ident">keep_existing_expiration</span>: <span class="ident">bool</span>,
+    <span class="doccomment">/// Conditional checks for whether the key is already present or not.</span>
+    <span class="kw">pub</span> <span class="ident">check</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">KeyCheck</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// If true and the key already exists, the existing key will be returned if overwritten.</span>
+    <span class="kw">pub</span> <span class="ident">return_previous_value</span>: <span class="ident">bool</span>,
 }
 
 <span class="doccomment">/// A value stored in a key.</span>

@@ -132,6 +132,18 @@
 <span id="132">132</span>
 <span id="133">133</span>
 <span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
+<span id="145">145</span>
+<span id="146">146</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">convert::Infallible</span>, <span class="ident">str::Utf8Error</span>, <span class="ident">string::FromUtf8Error</span>, <span class="ident">sync::Arc</span>};
 
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
@@ -156,9 +168,9 @@
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error while serializing: {0}&quot;</span>)]</span>
     <span class="ident">Serialization</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">pot::Error</span>),
 
-    <span class="doccomment">/// An internal error occurred while waiting for a message.</span>
-    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error while waiting for a message: {0}&quot;</span>)]</span>
-    <span class="ident">InternalCommunication</span>(<span class="attribute">#[<span class="ident">from</span>]</span> <span class="ident">flume::RecvError</span>),
+    <span class="doccomment">/// An internal error occurred while waiting for or sending a message.</span>
+    <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error while communicating internally&quot;</span>)]</span>
+    <span class="ident">InternalCommunication</span>,
 
     <span class="doccomment">/// An error occurred while executing a view</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;error from view: {0}&quot;</span>)]</span>
@@ -193,6 +205,18 @@
     <span class="doccomment">/// An error occurred from backing up or restoring.</span>
     <span class="attribute">#[<span class="ident">error</span>(<span class="string">&quot;a backup error: {0}&quot;</span>)]</span>
     <span class="ident">Backup</span>(<span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">AnyError</span><span class="op">&gt;</span>),
+}
+
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">flume::RecvError</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Error</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="kw">_</span>: <span class="ident">flume::RecvError</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::InternalCommunication</span>
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Error</span> {
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">from_send</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="kw">_</span>: <span class="ident">flume::SendError</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+        <span class="ident"><span class="self">Self</span>::InternalCommunication</span>
+    }
 }
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Error</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">bonsaidb_core::Error</span> {
