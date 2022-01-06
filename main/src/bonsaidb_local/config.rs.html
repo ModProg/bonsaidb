@@ -331,6 +331,12 @@
 <span id="331">331</span>
 <span id="332">332</span>
 <span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections::HashMap</span>,
     <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
@@ -361,9 +367,15 @@
     <span class="doccomment">/// one specified here.</span>
     <span class="kw">pub</span> <span class="ident">unique_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
 
-    <span class="doccomment">/// The vault key storage to use. If not specified and running in debug</span>
-    <span class="doccomment">/// mode, [`LocalVaultKeyStorage`](crate::vault::LocalVaultKeyStorage) will</span>
-    <span class="doccomment">/// be used with the server&#39;s data folder as the path.</span>
+    <span class="doccomment">/// The vault key storage to use. If not specified,</span>
+    <span class="doccomment">/// [`LocalVaultKeyStorage`](crate::vault::LocalVaultKeyStorage) will be</span>
+    <span class="doccomment">/// used with the server&#39;s data folder as the path. This is **incredibly</span>
+    <span class="doccomment">/// insecure and should not be used outside of testing**.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// For secure encryption, it is important to store the vault keys in a</span>
+    <span class="doccomment">/// location that is separate from the database. If the keys are on the same</span>
+    <span class="doccomment">/// hardware as the encrypted content, anyone with access to the disk will</span>
+    <span class="doccomment">/// be able to decrypt the stored data.</span>
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">vault_key_storage</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">AnyVaultKeyStorage</span><span class="op">&gt;</span><span class="op">&gt;</span>,
 
@@ -397,7 +409,7 @@
     }
 }
 
-<span class="doccomment">/// Configujration options for background tasks.</span>
+<span class="doccomment">/// Configuration options for background tasks.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Tasks</span> {
     <span class="doccomment">/// Defines how many workers should be spawned to process tasks. Default</span>
