@@ -1418,6 +1418,7 @@
 <span id="1418">1418</span>
 <span id="1419">1419</span>
 <span id="1420">1420</span>
+<span id="1421">1421</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow</span>::{<span class="ident">Borrow</span>, <span class="ident">Cow</span>},
     <span class="ident">collections::HashMap</span>,
@@ -1450,6 +1451,7 @@
     <span class="ident">tree</span>::{<span class="ident">AnyTreeRoot</span>, <span class="ident">KeyEvaluation</span>, <span class="ident">Root</span>, <span class="ident">TreeRoot</span>, <span class="ident">Unversioned</span>, <span class="ident">Versioned</span>},
     <span class="ident">AbortError</span>, <span class="ident">Buffer</span>, <span class="ident">ExecutingTransaction</span>, <span class="ident">Roots</span>, <span class="ident">Tree</span>,
 };
+<span class="kw">use</span> <span class="ident">tokio::sync::oneshot</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::vault::TreeVault</span>;
@@ -2782,7 +2784,7 @@
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">roots</span>: <span class="ident">Roots</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>,
     <span class="ident">kv_operation_sender</span>: <span class="ident">flume::Sender</span><span class="op">&lt;</span>(
         <span class="ident">keyvalue::ManagerOp</span>,
-        <span class="ident">flume::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     )<span class="op">&gt;</span>,
 }
 
@@ -2811,11 +2813,11 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">op</span>: <span class="ident">KeyOperation</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">result_sender</span>, <span class="ident">result_receiver</span>) <span class="op">=</span> <span class="ident">flume::bounded</span>(<span class="number">1</span>);
+        <span class="kw">let</span> (<span class="ident">result_sender</span>, <span class="ident">result_receiver</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
         <span class="self">self</span>.<span class="ident">kv_operation_sender</span>
             .<span class="ident">send</span>((<span class="ident">keyvalue::ManagerOp::Op</span>(<span class="ident">op</span>), <span class="ident">result_sender</span>))
             .<span class="ident">map_err</span>(<span class="ident">Error::from_send</span>)<span class="question-mark">?</span>;
-        <span class="ident">result_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span>.<span class="ident">map_err</span>(<span class="ident">Error::from</span>)<span class="question-mark">?</span>
+        <span class="ident">result_receiver</span>.<span class="kw">await</span>.<span class="ident">map_err</span>(<span class="ident">Error::from</span>)<span class="question-mark">?</span>
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">update_key_expiration_async</span>(
@@ -2824,13 +2826,13 @@
         <span class="ident">expiration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     ) {
         <span class="kw">let</span> <span class="ident">update</span> <span class="op">=</span> <span class="ident">keyvalue::ExpirationUpdate::new</span>(<span class="ident">tree_key</span>, <span class="ident">expiration</span>);
-        <span class="kw">let</span> (<span class="ident">result_sender</span>, <span class="ident">result_receiver</span>) <span class="op">=</span> <span class="ident">flume::bounded</span>(<span class="number">1</span>);
+        <span class="kw">let</span> (<span class="ident">result_sender</span>, <span class="ident">result_receiver</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
         <span class="kw">if</span> <span class="self">self</span>
             .<span class="ident">kv_operation_sender</span>
             .<span class="ident">send</span>((<span class="ident">keyvalue::ManagerOp::SetExpiration</span>(<span class="ident">update</span>), <span class="ident">result_sender</span>))
             .<span class="ident">is_ok</span>()
         {
-            <span class="ident">drop</span>(<span class="ident">result_receiver</span>.<span class="ident">recv_async</span>().<span class="kw">await</span>);
+            <span class="ident">drop</span>(<span class="ident">result_receiver</span>.<span class="kw">await</span>);
         }
     }
 }
