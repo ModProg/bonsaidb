@@ -331,12 +331,6 @@
 <span id="331">331</span>
 <span id="332">332</span>
 <span id="333">333</span>
-<span id="334">334</span>
-<span id="335">335</span>
-<span id="336">336</span>
-<span id="337">337</span>
-<span id="338">338</span>
-<span id="339">339</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">collections::HashMap</span>,
     <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
@@ -527,36 +521,30 @@
         <span class="ident">elapsed_since_last_commit</span>: <span class="ident">Duration</span>,
     ) -&gt; <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">duration_until_next_commit</span>(<span class="ident">number_of_changes</span>, <span class="ident">elapsed_since_last_commit</span>)
-            <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="ident">Duration::ZERO</span>)
+            <span class="op">==</span> <span class="ident">Duration::ZERO</span>
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">duration_until_next_commit</span>(
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">number_of_changes</span>: <span class="ident">usize</span>,
         <span class="ident">elapsed_since_last_commit</span>: <span class="ident">Duration</span>,
-    ) -&gt; <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span> {
+    ) -&gt; <span class="ident">Duration</span> {
         <span class="kw">if</span> <span class="ident">number_of_changes</span> <span class="op">==</span> <span class="number">0</span> {
-            <span class="prelude-val">None</span>
+            <span class="ident">Duration::MAX</span>
         } <span class="kw">else</span> {
             <span class="kw">match</span> <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span> {
-                <span class="ident">KeyValuePersistenceInner::Immediate</span> =&gt; <span class="prelude-val">Some</span>(<span class="ident">Duration::ZERO</span>),
+                <span class="ident">KeyValuePersistenceInner::Immediate</span> =&gt; <span class="ident">Duration::ZERO</span>,
                 <span class="ident">KeyValuePersistenceInner::Lazy</span>(<span class="ident">rules</span>) =&gt; {
-                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">shortest_duration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Duration</span><span class="op">&gt;</span> <span class="op">=</span> <span class="prelude-val">None</span>;
+                    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">shortest_duration</span> <span class="op">=</span> <span class="ident">Duration::MAX</span>;
                     <span class="kw">for</span> <span class="ident">rule</span> <span class="kw">in</span> <span class="ident">rules</span>
                         .<span class="ident">iter</span>()
                         .<span class="ident">take_while</span>(<span class="op">|</span><span class="ident">rule</span><span class="op">|</span> <span class="ident">rule</span>.<span class="ident">number_of_changes</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">number_of_changes</span>)
                     {
                         <span class="kw">let</span> <span class="ident">remaining_time</span> <span class="op">=</span>
                             <span class="ident">rule</span>.<span class="ident">duration</span>.<span class="ident">saturating_sub</span>(<span class="ident">elapsed_since_last_commit</span>);
-                        <span class="kw">let</span> <span class="ident">new_shortest</span> <span class="op">=</span>
-                            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">previously_shortest_duration</span>) <span class="op">=</span> <span class="ident">shortest_duration</span> {
-                                <span class="ident">previously_shortest_duration</span>.<span class="ident">min</span>(<span class="ident">remaining_time</span>)
-                            } <span class="kw">else</span> {
-                                <span class="ident">remaining_time</span>
-                            };
-                        <span class="ident">shortest_duration</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">new_shortest</span>);
+                        <span class="ident">shortest_duration</span> <span class="op">=</span> <span class="ident">shortest_duration</span>.<span class="ident">min</span>(<span class="ident">remaining_time</span>);
 
-                        <span class="kw">if</span> <span class="ident">new_shortest</span> <span class="op">==</span> <span class="ident">Duration::ZERO</span> {
+                        <span class="kw">if</span> <span class="ident">shortest_duration</span> <span class="op">==</span> <span class="ident">Duration::ZERO</span> {
                             <span class="kw">break</span>;
                         }
                     }

@@ -837,101 +837,7 @@
 <span id="837">837</span>
 <span id="838">838</span>
 <span id="839">839</span>
-<span id="840">840</span>
-<span id="841">841</span>
-<span id="842">842</span>
-<span id="843">843</span>
-<span id="844">844</span>
-<span id="845">845</span>
-<span id="846">846</span>
-<span id="847">847</span>
-<span id="848">848</span>
-<span id="849">849</span>
-<span id="850">850</span>
-<span id="851">851</span>
-<span id="852">852</span>
-<span id="853">853</span>
-<span id="854">854</span>
-<span id="855">855</span>
-<span id="856">856</span>
-<span id="857">857</span>
-<span id="858">858</span>
-<span id="859">859</span>
-<span id="860">860</span>
-<span id="861">861</span>
-<span id="862">862</span>
-<span id="863">863</span>
-<span id="864">864</span>
-<span id="865">865</span>
-<span id="866">866</span>
-<span id="867">867</span>
-<span id="868">868</span>
-<span id="869">869</span>
-<span id="870">870</span>
-<span id="871">871</span>
-<span id="872">872</span>
-<span id="873">873</span>
-<span id="874">874</span>
-<span id="875">875</span>
-<span id="876">876</span>
-<span id="877">877</span>
-<span id="878">878</span>
-<span id="879">879</span>
-<span id="880">880</span>
-<span id="881">881</span>
-<span id="882">882</span>
-<span id="883">883</span>
-<span id="884">884</span>
-<span id="885">885</span>
-<span id="886">886</span>
-<span id="887">887</span>
-<span id="888">888</span>
-<span id="889">889</span>
-<span id="890">890</span>
-<span id="891">891</span>
-<span id="892">892</span>
-<span id="893">893</span>
-<span id="894">894</span>
-<span id="895">895</span>
-<span id="896">896</span>
-<span id="897">897</span>
-<span id="898">898</span>
-<span id="899">899</span>
-<span id="900">900</span>
-<span id="901">901</span>
-<span id="902">902</span>
-<span id="903">903</span>
-<span id="904">904</span>
-<span id="905">905</span>
-<span id="906">906</span>
-<span id="907">907</span>
-<span id="908">908</span>
-<span id="909">909</span>
-<span id="910">910</span>
-<span id="911">911</span>
-<span id="912">912</span>
-<span id="913">913</span>
-<span id="914">914</span>
-<span id="915">915</span>
-<span id="916">916</span>
-<span id="917">917</span>
-<span id="918">918</span>
-<span id="919">919</span>
-<span id="920">920</span>
-<span id="921">921</span>
-<span id="922">922</span>
-<span id="923">923</span>
-<span id="924">924</span>
-<span id="925">925</span>
-<span id="926">926</span>
-<span id="927">927</span>
-<span id="928">928</span>
-<span id="929">929</span>
-<span id="930">930</span>
-<span id="931">931</span>
-<span id="932">932</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
-    <span class="ident">any::Any</span>,
     <span class="ident">collections::HashMap</span>,
     <span class="ident">fmt</span>::{<span class="ident">Debug</span>, <span class="ident">Display</span>},
     <span class="ident">marker::PhantomData</span>,
@@ -950,15 +856,9 @@
         <span class="ident">database</span>::{<span class="self">self</span>, <span class="ident">ByName</span>, <span class="ident">Database</span> <span class="kw">as</span> <span class="ident">DatabaseRecord</span>},
         <span class="ident">Admin</span>, <span class="ident">ADMIN_DATABASE_NAME</span>,
     },
-    <span class="ident">connection</span>::{<span class="self">self</span>, <span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>, <span class="ident">Sort</span>, <span class="ident">StorageConnection</span>},
-    <span class="ident">document</span>::{<span class="ident">Document</span>, <span class="ident">KeyId</span>},
-    <span class="ident">keyvalue</span>::{<span class="ident">KeyOperation</span>, <span class="ident">Output</span>},
-    <span class="ident">permissions::Permissions</span>,
-    <span class="ident">schema</span>::{
-        <span class="ident">view::map</span>::{<span class="self">self</span>, <span class="ident">MappedSerializedValue</span>},
-        <span class="ident">CollectionName</span>, <span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>, <span class="ident">ViewName</span>,
-    },
-    <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
+    <span class="ident">connection</span>::{<span class="self">self</span>, <span class="ident">Connection</span>, <span class="ident">StorageConnection</span>},
+    <span class="ident">document::KeyId</span>,
+    <span class="ident">schema</span>::{<span class="ident">Schema</span>, <span class="ident">SchemaName</span>, <span class="ident">Schematic</span>},
 };
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
@@ -993,7 +893,6 @@
 };
 
 <span class="kw">mod</span> <span class="ident">backup</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">use</span> <span class="ident">backup::AnyBackupLocation</span>;
 <span class="kw">pub</span> <span class="kw">use</span> <span class="ident">backup::BackupLocation</span>;
 
 <span class="doccomment">/// A file-based, multi-database, multi-user database engine.</span>
@@ -1010,7 +909,7 @@
     <span class="ident">file_manager</span>: <span class="ident">StdFileManager</span>,
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">tasks</span>: <span class="ident">TaskManager</span>,
     <span class="ident">schemas</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">SchemaName</span>, <span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">DatabaseOpener</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    <span class="ident">available_databases</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">SchemaName</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">available_databases</span>: <span class="ident">RwLock</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">AvailableDatabase</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">open_roots</span>: <span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">Context</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">vault</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Vault</span><span class="op">&gt;</span>,
@@ -1154,7 +1053,15 @@
             .<span class="ident">query</span>()
             .<span class="kw">await</span><span class="question-mark">?</span>
             .<span class="ident">into_iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> (<span class="ident">map</span>.<span class="ident">key</span>, <span class="ident">map</span>.<span class="ident">value</span>))
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">map</span><span class="op">|</span> {
+                (
+                    <span class="ident">map</span>.<span class="ident">key</span>,
+                    <span class="ident">AvailableDatabase</span> {
+                        <span class="ident">schema_name</span>: <span class="ident">map</span>.<span class="ident">value</span>,
+                        <span class="ident">open_database</span>: <span class="prelude-val">None</span>,
+                    },
+                )
+            })
             .<span class="ident">collect</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">storage_databases</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
         <span class="kw-2">*</span><span class="ident">storage_databases</span> <span class="op">=</span> <span class="ident">available_databases</span>;
@@ -1295,30 +1202,33 @@
     }
 
     <span class="doccomment">/// Opens a database through a generic-free trait.</span>
-    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database_without_schema</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">schema</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>
-            .<span class="ident">admin</span>()
-            .<span class="kw">await</span>
-            .<span class="ident">view</span>::<span class="op">&lt;</span><span class="ident">database::ByName</span><span class="op">&gt;</span>()
-            .<span class="ident">with_key</span>(<span class="ident">name</span>.<span class="ident">to_ascii_lowercase</span>())
-            .<span class="ident">query</span>()
-            .<span class="kw">await</span><span class="question-mark">?</span>
-            .<span class="ident">first</span>()
-        {
-            <span class="prelude-val">Some</span>(<span class="ident">entry</span>) =&gt; <span class="ident">entry</span>.<span class="ident">value</span>.<span class="ident">clone</span>(),
-            <span class="prelude-val">None</span> =&gt; {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::DatabaseNotFound</span>(
-                    <span class="ident">name</span>.<span class="ident">to_string</span>(),
-                )))
+    <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database_without_schema</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Database</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="comment">// First, try to optimistically access the database if it&#39;s already been opened.</span>
+        <span class="kw">let</span> <span class="ident">schema</span> <span class="op">=</span> {
+            <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
+            <span class="kw">let</span> <span class="ident">available_database</span> <span class="op">=</span> <span class="ident">available_databases</span>.<span class="ident">get</span>(<span class="ident">name</span>).<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> {
+                <span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::DatabaseNotFound</span>(<span class="ident">name</span>.<span class="ident">to_string</span>()))
+            })<span class="question-mark">?</span>;
+            <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">database</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">available_database</span>.<span class="ident">open_database</span> {
+                <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">database</span>.<span class="ident">clone</span>());
             }
+            <span class="ident">available_database</span>.<span class="ident">schema_name</span>.<span class="ident">clone</span>()
         };
+
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
+        <span class="kw">let</span> <span class="ident">available_database</span> <span class="op">=</span> <span class="ident">available_databases</span>
+            .<span class="ident">get_mut</span>(<span class="ident">name</span>)
+            .<span class="ident">ok_or_else</span>(<span class="op">|</span><span class="op">|</span> <span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::DatabaseNotFound</span>(<span class="ident">name</span>.<span class="ident">to_string</span>())))<span class="question-mark">?</span>;
+
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">database</span>) <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">available_database</span>.<span class="ident">open_database</span> {
+            <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">database</span>.<span class="ident">clone</span>());
+        }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">schemas</span> <span class="op">=</span> <span class="macro">fast_async_write!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">schemas</span>);
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">schema</span>) <span class="op">=</span> <span class="ident">schemas</span>.<span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="ident">schema</span>) {
-            <span class="ident">schema</span>.<span class="ident">open</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">clone</span>()).<span class="kw">await</span>
+            <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">schema</span>.<span class="ident">open</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="self">self</span>.<span class="ident">clone</span>()).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="ident">available_database</span>.<span class="ident">open_database</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">db</span>.<span class="ident">clone</span>());
+            <span class="prelude-val">Ok</span>(<span class="ident">db</span>)
         } <span class="kw">else</span> {
             <span class="prelude-val">Err</span>(<span class="ident">Error::Core</span>(<span class="ident">bonsaidb_core::Error::SchemaNotRegistered</span>(
                 <span class="ident">schema</span>,
@@ -1329,10 +1239,7 @@
     <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;internal-apis&quot;</span>)]</span>
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="doccomment">/// Opens a database through a generic-free trait.</span>
-    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database_without_schema_internal</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">database_without_schema_internal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Database</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">database_without_schema</span>(<span class="ident">name</span>).<span class="kw">await</span>
     }
 
@@ -1393,7 +1300,7 @@
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">DatabaseOpener</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> {
     <span class="kw">fn</span> <span class="ident">schematic</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="ident">Schematic</span>;
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">storage</span>: <span class="ident">Storage</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">storage</span>: <span class="ident">Storage</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Database</span>, <span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
@@ -1424,111 +1331,11 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">schematic</span>
     }
 
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">storage</span>: <span class="ident">Storage</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Box</span><span class="op">&lt;</span><span class="kw">dyn</span> <span class="ident">OpenDatabase</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">open</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">name</span>: <span class="ident">String</span>, <span class="ident">storage</span>: <span class="ident">Storage</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Database</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">roots</span> <span class="op">=</span> <span class="ident">storage</span>.<span class="ident">open_roots</span>(<span class="kw-2">&amp;</span><span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
         <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="ident">Database::new</span>::<span class="op">&lt;</span><span class="ident">DB</span>, <span class="kw">_</span><span class="op">&gt;</span>(<span class="ident">name</span>, <span class="ident">roots</span>, <span class="ident">storage</span>).<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="prelude-val">Ok</span>(<span class="ident">Box::new</span>(<span class="ident">db</span>))
+        <span class="prelude-val">Ok</span>(<span class="ident">db</span>)
     }
-}
-
-<span class="doccomment">/// Methods for accessing a database without the `Schema` type present.</span>
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="attribute">#[<span class="ident">async_trait</span>]</span>
-<span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">OpenDatabase</span>: <span class="ident">Send</span> <span class="op">+</span> <span class="ident">Sync</span> <span class="op">+</span> <span class="ident">Debug</span> <span class="op">+</span> <span class="lifetime">&#39;static</span> {
-    <span class="kw">fn</span> <span class="ident">as_any</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;_</span> <span class="kw">dyn</span> <span class="ident">Any</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_from_collection_id</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">id</span>: <span class="ident">u64</span>,
-        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">get_multiple_from_collection_id</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">ids</span>: <span class="kw-2">&amp;</span>[<span class="ident">u64</span>],
-        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_from_collection</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">ids</span>: <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-        <span class="ident">order</span>: <span class="ident">Sort</span>,
-        <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">collection</span>: <span class="kw-2">&amp;</span><span class="ident">CollectionName</span>,
-        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">apply_transaction</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">transaction</span>: <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
-        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">OperationResult</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
-        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">order</span>: <span class="ident">Sort</span>,
-        <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::Serialized</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">query_with_docs</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
-        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">order</span>: <span class="ident">Sort</span>,
-        <span class="ident">limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-        <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-        <span class="ident">permissions</span>: <span class="kw-2">&amp;</span><span class="ident">Permissions</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::MappedSerialized</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
-        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">reduce_grouped</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
-        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedSerializedValue</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">delete_docs</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">view</span>: <span class="kw-2">&amp;</span><span class="ident">ViewName</span>,
-        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-        <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u64</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_executed_transactions</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">starting_id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
-        <span class="ident">result_limit</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Executed</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">last_transaction_id</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">execute_key_operation</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">op</span>: <span class="ident">KeyOperation</span>)
-        -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_collection</span>(
-        <span class="kw-2">&amp;</span><span class="self">self</span>,
-        <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
-    ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact_key_value_store</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">compact</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">backup</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">location</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">AnyBackupLocation</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
-
-    <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">restore</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">location</span>: <span class="kw-2">&amp;</span><span class="kw">dyn</span> <span class="ident">AnyBackupLocation</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
 <span class="attribute">#[<span class="ident">async_trait</span>]</span>
@@ -1579,7 +1386,13 @@
                 <span class="ident">schema</span>: <span class="ident">schema</span>.<span class="ident">clone</span>(),
             })
             .<span class="kw">await</span><span class="question-mark">?</span>;
-        <span class="ident">available_databases</span>.<span class="ident">insert</span>(<span class="ident">name</span>.<span class="ident">to_string</span>(), <span class="ident">schema</span>);
+        <span class="ident">available_databases</span>.<span class="ident">insert</span>(
+            <span class="ident">name</span>.<span class="ident">to_string</span>(),
+            <span class="ident">AvailableDatabase</span> {
+                <span class="ident">schema_name</span>: <span class="ident">schema</span>,
+                <span class="ident">open_database</span>: <span class="prelude-val">None</span>,
+            },
+        );
 
         <span class="prelude-val">Ok</span>(())
     }
@@ -1588,25 +1401,15 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident"><span class="self">Self</span>::Database</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
-
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">stored_schema</span>) <span class="op">=</span> <span class="ident">available_databases</span>.<span class="ident">get</span>(<span class="ident">name</span>) {
-            <span class="kw">if</span> <span class="ident">stored_schema</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="ident">DB::schema_name</span>()<span class="question-mark">?</span> {
-                <span class="prelude-val">Ok</span>(<span class="ident">Database::new</span>::<span class="op">&lt;</span><span class="ident">DB</span>, <span class="kw">_</span><span class="op">&gt;</span>(
-                    <span class="ident">name</span>.<span class="ident">to_owned</span>(),
-                    <span class="self">self</span>.<span class="ident">open_roots</span>(<span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>,
-                    <span class="self">self</span>.<span class="ident">clone</span>(),
-                )
-                .<span class="kw">await</span><span class="question-mark">?</span>)
-            } <span class="kw">else</span> {
-                <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::SchemaMismatch</span> {
-                    <span class="ident">database_name</span>: <span class="ident">name</span>.<span class="ident">to_owned</span>(),
-                    <span class="ident">schema</span>: <span class="ident">DB::schema_name</span>()<span class="question-mark">?</span>,
-                    <span class="ident">stored_schema</span>: <span class="ident">stored_schema</span>.<span class="ident">clone</span>(),
-                })
-            }
+        <span class="kw">let</span> <span class="ident">db</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">database_without_schema</span>(<span class="ident">name</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+        <span class="kw">if</span> <span class="ident">db</span>.<span class="ident">data</span>.<span class="ident">schema</span>.<span class="ident">name</span> <span class="op">==</span> <span class="ident">DB::schema_name</span>()<span class="question-mark">?</span> {
+            <span class="prelude-val">Ok</span>(<span class="ident">db</span>)
         } <span class="kw">else</span> {
-            <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::DatabaseNotFound</span>(<span class="ident">name</span>.<span class="ident">to_owned</span>()))
+            <span class="prelude-val">Err</span>(<span class="ident">bonsaidb_core::Error::SchemaMismatch</span> {
+                <span class="ident">database_name</span>: <span class="ident">name</span>.<span class="ident">to_owned</span>(),
+                <span class="ident">schema</span>: <span class="ident">DB::schema_name</span>()<span class="question-mark">?</span>,
+                <span class="ident">stored_schema</span>: <span class="ident">db</span>.<span class="ident">data</span>.<span class="ident">schema</span>.<span class="ident">name</span>.<span class="ident">clone</span>(),
+            })
         }
     }
 
@@ -1648,9 +1451,9 @@
         <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">available_databases</span>
             .<span class="ident">iter</span>()
-            .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">name</span>, <span class="ident">schema</span>)<span class="op">|</span> <span class="ident">connection::Database</span> {
+            .<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">name</span>, <span class="ident">available_database</span>)<span class="op">|</span> <span class="ident">connection::Database</span> {
                 <span class="ident">name</span>: <span class="ident">name</span>.<span class="ident">to_string</span>(),
-                <span class="ident">schema</span>: <span class="ident">schema</span>.<span class="ident">clone</span>(),
+                <span class="ident">schema</span>: <span class="ident">available_database</span>.<span class="ident">schema_name</span>.<span class="ident">clone</span>(),
             })
             .<span class="ident">collect</span>())
     }
@@ -1658,7 +1461,12 @@
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>)]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">list_available_schemas</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">SchemaName</span><span class="op">&gt;</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">available_databases</span> <span class="op">=</span> <span class="macro">fast_async_read!</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">available_databases</span>);
-        <span class="prelude-val">Ok</span>(<span class="ident">available_databases</span>.<span class="ident">values</span>().<span class="ident">unique</span>().<span class="ident">cloned</span>().<span class="ident">collect</span>())
+        <span class="prelude-val">Ok</span>(<span class="ident">available_databases</span>
+            .<span class="ident">values</span>()
+            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">db</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="ident">db</span>.<span class="ident">schema_name</span>)
+            .<span class="ident">unique</span>()
+            .<span class="ident">cloned</span>()
+            .<span class="ident">collect</span>())
     }
 
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;tracing&quot;</span>, <span class="ident">tracing::instrument</span>(<span class="ident">skip</span>(<span class="ident">username</span>)))]</span>
@@ -1861,6 +1669,12 @@
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">std::fmt::Formatter</span><span class="op">&lt;</span><span class="lifetime">&#39;_</span><span class="op">&gt;</span>) -&gt; <span class="ident">std::fmt::Result</span> {
         <span class="ident">Debug::fmt</span>(<span class="self">self</span>, <span class="ident">f</span>)
     }
+}
+
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
+<span class="kw">struct</span> <span class="ident">AvailableDatabase</span> {
+    <span class="ident">schema_name</span>: <span class="ident">SchemaName</span>,
+    <span class="ident">open_database</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Database</span><span class="op">&gt;</span>,
 }
 </code></pre></div>
 </section><section id="search" class="content hidden"></section><div id="rustdoc-vars" data-root-path="../../" data-current-crate="bonsaidb_local" data-search-index-js="../../search-index.js" data-search-js="../../search.js"></div>
