@@ -159,7 +159,7 @@ pub struct BlogPost {
     type Key = Option&lt;String&gt;;
     type Value = u32;
 
-    fn map(&amp;self, document: &amp;Document&lt;'_&gt;) -&gt; MapResult&lt;Self::Key, Self::Value&gt; {
+    fn map(&amp;self, document: &amp;Document) -&gt; MapResult&lt;Self::Key, Self::Value&gt; {
         let post = document.contents::&lt;BlogPost&gt;()?;
         Ok(document.emit_key_and_value(post.category, 1))
     }
