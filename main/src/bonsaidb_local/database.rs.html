@@ -1419,6 +1419,11 @@
 <span id="1419">1419</span>
 <span id="1420">1420</span>
 <span id="1421">1421</span>
+<span id="1422">1422</span>
+<span id="1423">1423</span>
+<span id="1424">1424</span>
+<span id="1425">1425</span>
+<span id="1426">1426</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow</span>::{<span class="ident">Borrow</span>, <span class="ident">Cow</span>},
     <span class="ident">collections::HashMap</span>,
@@ -1427,6 +1432,7 @@
     <span class="ident">u8</span>,
 };
 
+<span class="kw">use</span> <span class="ident">async_lock::Mutex</span>;
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Connection</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>, <span class="ident">Sort</span>, <span class="ident">StorageConnection</span>},
@@ -1444,6 +1450,7 @@
         <span class="self">self</span>, <span class="ident">ChangedDocument</span>, <span class="ident">Changes</span>, <span class="ident">Command</span>, <span class="ident">Operation</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>,
     },
 };
+<span class="kw">use</span> <span class="ident">bonsaidb_utils::fast_async_lock</span>;
 <span class="kw">use</span> <span class="ident">byteorder</span>::{<span class="ident">BigEndian</span>, <span class="ident">ByteOrder</span>};
 <span class="kw">use</span> <span class="ident">itertools::Itertools</span>;
 <span class="kw">use</span> <span class="ident">nebari</span>::{
@@ -1451,7 +1458,7 @@
     <span class="ident">tree</span>::{<span class="ident">AnyTreeRoot</span>, <span class="ident">KeyEvaluation</span>, <span class="ident">Root</span>, <span class="ident">TreeRoot</span>, <span class="ident">Unversioned</span>, <span class="ident">Versioned</span>},
     <span class="ident">AbortError</span>, <span class="ident">Buffer</span>, <span class="ident">ExecutingTransaction</span>, <span class="ident">Roots</span>, <span class="ident">Tree</span>,
 };
-<span class="kw">use</span> <span class="ident">tokio::sync::oneshot</span>;
+<span class="kw">use</span> <span class="ident">tokio::sync::watch</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;encryption&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::vault::TreeVault</span>;
@@ -2782,10 +2789,8 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">struct</span> <span class="ident">Context</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="ident">roots</span>: <span class="ident">Roots</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>,
-    <span class="ident">kv_operation_sender</span>: <span class="ident">flume::Sender</span><span class="op">&lt;</span>(
-        <span class="ident">keyvalue::ManagerOp</span>,
-        <span class="ident">oneshot::Sender</span><span class="op">&lt;</span><span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span><span class="op">&gt;</span>,
-    )<span class="op">&gt;</span>,
+    <span class="ident">key_value_state</span>: <span class="ident">Arc</span><span class="op">&lt;</span><span class="ident">Mutex</span><span class="op">&lt;</span><span class="ident">keyvalue::KeyValueState</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="ident">runtime</span>: <span class="ident">tokio::runtime::Handle</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">Borrow</span><span class="op">&lt;</span><span class="ident">Roots</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Context</span> {
@@ -2796,16 +2801,21 @@
 
 <span class="kw">impl</span> <span class="ident">Context</span> {
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">roots</span>: <span class="ident">Roots</span><span class="op">&lt;</span><span class="ident">StdFile</span><span class="op">&gt;</span>, <span class="ident">key_value_persistence</span>: <span class="ident">KeyValuePersistence</span>) -&gt; <span class="self">Self</span> {
-        <span class="kw">let</span> (<span class="ident">kv_operation_sender</span>, <span class="ident">kv_operation_receiver</span>) <span class="op">=</span> <span class="ident">flume::unbounded</span>();
+        <span class="kw">let</span> (<span class="ident">background_sender</span>, <span class="ident">background_receiver</span>) <span class="op">=</span> <span class="ident">watch::channel</span>(<span class="prelude-val">None</span>);
+        <span class="kw">let</span> <span class="ident">key_value_state</span> <span class="op">=</span> <span class="ident">Arc::new</span>(<span class="ident">Mutex::new</span>(<span class="ident">keyvalue::KeyValueState::new</span>(
+            <span class="ident">key_value_persistence</span>,
+            <span class="ident">roots</span>.<span class="ident">clone</span>(),
+            <span class="ident">background_sender</span>,
+        )));
         <span class="kw">let</span> <span class="ident">context</span> <span class="op">=</span> <span class="self">Self</span> {
-            <span class="ident">roots</span>: <span class="ident">roots</span>.<span class="ident">clone</span>(),
-            <span class="ident">kv_operation_sender</span>,
+            <span class="ident">roots</span>,
+            <span class="ident">key_value_state</span>: <span class="ident">key_value_state</span>.<span class="ident">clone</span>(),
+            <span class="ident">runtime</span>: <span class="ident">tokio::runtime::Handle::current</span>(),
         };
-        <span class="ident">tokio::task::spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
-            <span class="ident">keyvalue::KeyValueManager::new</span>(<span class="ident">kv_operation_receiver</span>, <span class="ident">roots</span>, <span class="ident">key_value_persistence</span>)
-                .<span class="ident">run</span>()
-                .<span class="kw">await</span>
-        });
+        <span class="ident">tokio::task::spawn</span>(<span class="ident">keyvalue::background_worker</span>(
+            <span class="ident">key_value_state</span>,
+            <span class="ident">background_receiver</span>,
+        ));
         <span class="ident">context</span>
     }
 
@@ -2813,11 +2823,8 @@
         <span class="kw-2">&amp;</span><span class="self">self</span>,
         <span class="ident">op</span>: <span class="ident">KeyOperation</span>,
     ) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Output</span>, <span class="ident">bonsaidb_core::Error</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> (<span class="ident">result_sender</span>, <span class="ident">result_receiver</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
-        <span class="self">self</span>.<span class="ident">kv_operation_sender</span>
-            .<span class="ident">send</span>((<span class="ident">keyvalue::ManagerOp::Op</span>(<span class="ident">op</span>), <span class="ident">result_sender</span>))
-            .<span class="ident">map_err</span>(<span class="ident">Error::from_send</span>)<span class="question-mark">?</span>;
-        <span class="ident">result_receiver</span>.<span class="kw">await</span>.<span class="ident">map_err</span>(<span class="ident">Error::from</span>)<span class="question-mark">?</span>
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">key_value_state</span>);
+        <span class="ident">state</span>.<span class="ident">perform_kv_operation</span>(<span class="ident">op</span>).<span class="kw">await</span>
     }
 
     <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">update_key_expiration_async</span>(
@@ -2825,15 +2832,18 @@
         <span class="ident">tree_key</span>: <span class="ident">String</span>,
         <span class="ident">expiration</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Timestamp</span><span class="op">&gt;</span>,
     ) {
-        <span class="kw">let</span> <span class="ident">update</span> <span class="op">=</span> <span class="ident">keyvalue::ExpirationUpdate::new</span>(<span class="ident">tree_key</span>, <span class="ident">expiration</span>);
-        <span class="kw">let</span> (<span class="ident">result_sender</span>, <span class="ident">result_receiver</span>) <span class="op">=</span> <span class="ident">oneshot::channel</span>();
-        <span class="kw">if</span> <span class="self">self</span>
-            .<span class="ident">kv_operation_sender</span>
-            .<span class="ident">send</span>((<span class="ident">keyvalue::ManagerOp::SetExpiration</span>(<span class="ident">update</span>), <span class="ident">result_sender</span>))
-            .<span class="ident">is_ok</span>()
-        {
-            <span class="ident">drop</span>(<span class="ident">result_receiver</span>.<span class="kw">await</span>);
-        }
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">state</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="self">self</span>.<span class="ident">key_value_state</span>);
+        <span class="ident">state</span>.<span class="ident">update_key_expiration</span>(<span class="ident">tree_key</span>, <span class="ident">expiration</span>);
+    }
+}
+
+<span class="kw">impl</span> <span class="ident">Drop</span> <span class="kw">for</span> <span class="ident">Context</span> {
+    <span class="kw">fn</span> <span class="ident">drop</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) {
+        <span class="kw">let</span> <span class="ident">key_value_state</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">key_value_state</span>.<span class="ident">clone</span>();
+        <span class="self">self</span>.<span class="ident">runtime</span>.<span class="ident">spawn</span>(<span class="kw">async</span> <span class="kw">move</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">key_value_state</span> <span class="op">=</span> <span class="macro">fast_async_lock!</span>(<span class="ident">key_value_state</span>);
+            <span class="ident">key_value_state</span>.<span class="ident">shutdown</span>().<span class="kw">await</span>
+        });
     }
 }
 
