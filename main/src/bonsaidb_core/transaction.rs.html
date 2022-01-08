@@ -225,17 +225,7 @@
 <span id="225">225</span>
 <span id="226">226</span>
 <span id="227">227</span>
-<span id="228">228</span>
-<span id="229">229</span>
-<span id="230">230</span>
-<span id="231">231</span>
-<span id="232">232</span>
-<span id="233">233</span>
-<span id="234">234</span>
-<span id="235">235</span>
-</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::borrow::Cow</span>;
-
-<span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+</pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{<span class="ident">document::Header</span>, <span class="ident">schema::CollectionName</span>};
 
@@ -244,38 +234,38 @@
 <span class="doccomment">/// progress will return old data and not block.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Default</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Transaction</span> {
     <span class="doccomment">/// The operations in this transaction.</span>
-    <span class="kw">pub</span> <span class="ident">operations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">operations</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Operation</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">Transaction</span> {
     <span class="doccomment">/// Returns a new, empty transaction.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() -&gt; <span class="self">Self</span> {
         <span class="ident"><span class="self">Self</span>::default</span>()
     }
 
     <span class="doccomment">/// Adds an operation to the transaction.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">operation</span>: <span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">operation</span>: <span class="ident">Operation</span>) {
         <span class="self">self</span>.<span class="ident">operations</span>.<span class="ident">push</span>(<span class="ident">operation</span>);
     }
 
     <span class="doccomment">/// Appends an operation to the transaction and returns self.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">operation</span>: <span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">with</span>(<span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">operation</span>: <span class="ident">Operation</span>) -&gt; <span class="self">Self</span> {
         <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">operation</span>);
         <span class="self">self</span>
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">operation</span>: <span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
+<span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">Operation</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">Transaction</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">operation</span>: <span class="ident">Operation</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">operations</span>: <span class="macro">vec!</span>[<span class="ident">operation</span>],
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">Transaction</span> {
     <span class="doccomment">/// Inserts a new document with `contents` into `collection`.  If `id` is</span>
     <span class="doccomment">/// `None` a unique id will be generated. If an id is provided and a</span>
     <span class="doccomment">/// document already exists with that id, a conflict error will be returned.</span>
@@ -297,25 +287,22 @@
 <span class="doccomment">/// A single operation performed on a `Collection`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="attribute">#[<span class="ident">must_use</span>]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Operation</span> {
     <span class="doccomment">/// The id of the `Collection`.</span>
     <span class="kw">pub</span> <span class="ident">collection</span>: <span class="ident">CollectionName</span>,
 
     <span class="doccomment">/// The command being performed.</span>
-    <span class="kw">pub</span> <span class="ident">command</span>: <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">command</span>: <span class="ident">Command</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">Operation</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">Operation</span> {
     <span class="doccomment">/// Inserts a new document with `contents` into `collection`.  If `id` is</span>
     <span class="doccomment">/// `None` a unique id will be generated. If an id is provided and a</span>
     <span class="doccomment">/// document already exists with that id, a conflict error will be returned.</span>
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">insert</span>(<span class="ident">collection</span>: <span class="ident">CollectionName</span>, <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>, <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">collection</span>,
-            <span class="ident">command</span>: <span class="ident">Command::Insert</span> {
-                <span class="ident">id</span>,
-                <span class="ident">contents</span>: <span class="ident">Cow::Owned</span>(<span class="ident">contents</span>),
-            },
+            <span class="ident">command</span>: <span class="ident">Command::Insert</span> { <span class="ident">id</span>, <span class="ident">contents</span> },
         }
     }
 
@@ -323,10 +310,7 @@
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">update</span>(<span class="ident">collection</span>: <span class="ident">CollectionName</span>, <span class="ident">header</span>: <span class="ident">Header</span>, <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">collection</span>,
-            <span class="ident">command</span>: <span class="ident">Command::Update</span> {
-                <span class="ident">header</span>: <span class="ident">Cow::Owned</span>(<span class="ident">header</span>),
-                <span class="ident">contents</span>: <span class="ident">Cow::Owned</span>(<span class="ident">contents</span>),
-            },
+            <span class="ident">command</span>: <span class="ident">Command::Update</span> { <span class="ident">header</span>, <span class="ident">contents</span> },
         }
     }
 
@@ -334,16 +318,14 @@
     <span class="kw">pub</span> <span class="kw">const</span> <span class="kw">fn</span> <span class="ident">delete</span>(<span class="ident">collection</span>: <span class="ident">CollectionName</span>, <span class="ident">header</span>: <span class="ident">Header</span>) -&gt; <span class="self">Self</span> {
         <span class="self">Self</span> {
             <span class="ident">collection</span>,
-            <span class="ident">command</span>: <span class="ident">Command::Delete</span> {
-                <span class="ident">header</span>: <span class="ident">Cow::Owned</span>(<span class="ident">header</span>),
-            },
+            <span class="ident">command</span>: <span class="ident">Command::Delete</span> { <span class="ident">header</span> },
         }
     }
 }
 
 <span class="doccomment">/// A command to execute within a `Collection`.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Command</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Command</span> {
     <span class="doccomment">/// Inserts a new document containing `contents`.</span>
     <span class="ident">Insert</span> {
         <span class="doccomment">/// An optional id for the document. If this is `None`, a unique id will</span>
@@ -351,7 +333,8 @@
         <span class="doccomment">/// that id, a conflict error will be returned.</span>
         <span class="ident">id</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">u64</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The initial contents of the document.</span>
-        <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
+        <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     },
 
     <span class="doccomment">/// Update an existing `Document` identified by `id`. `revision` must match</span>
@@ -360,10 +343,11 @@
     <span class="ident">Update</span> {
         <span class="doccomment">/// The header of the `Document`. The revision must match the current</span>
         <span class="doccomment">/// document.</span>
-        <span class="ident">header</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Header</span><span class="op">&gt;</span>,
+        <span class="ident">header</span>: <span class="ident">Header</span>,
 
         <span class="doccomment">/// The new contents to store within the `Document`.</span>
-        <span class="ident">contents</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, [<span class="ident">u8</span>]<span class="op">&gt;</span>,
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
+        <span class="ident">contents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     },
 
     <span class="doccomment">/// Delete an existing `Document` identified by `id`. `revision` must match</span>
@@ -371,7 +355,7 @@
     <span class="doccomment">/// command fill fail with a `DocumentConflict` error.</span>
     <span class="ident">Delete</span> {
         <span class="doccomment">/// The current header of the `Document`.</span>
-        <span class="ident">header</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">Header</span><span class="op">&gt;</span>,
+        <span class="ident">header</span>: <span class="ident">Header</span>,
     },
 }
 

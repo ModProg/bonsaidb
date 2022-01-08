@@ -760,6 +760,7 @@
 <span id="760">760</span>
 <span id="761">761</span>
 <span id="762">762</span>
+<span id="763">763</span>
 </pre><pre class="rust"><code><span class="doccomment">//! Encryption and secret management.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! `BonsaiDb`&#39;s vault is the core of encryption and secret management. To offer</span>
@@ -1417,6 +1418,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Serialize</span>, <span class="ident">Deserialize</span>)]</span>
 <span class="kw">struct</span> <span class="ident">HpkePayload</span> {
     <span class="ident">encryption</span>: <span class="ident">PublicKeyEncryption</span>,
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
     <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="ident">tag</span>: [<span class="ident">u8</span>; <span class="number">16</span>],
     <span class="ident">encapsulated_key</span>: <span class="ident">EncappedKey</span><span class="op">&lt;</span><span class="ident">X25519</span><span class="op">&gt;</span>,

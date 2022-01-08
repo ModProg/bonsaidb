@@ -412,6 +412,9 @@
 <span id="412">412</span>
 <span id="413">413</span>
 <span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">actionable::Permissions</span>;
 <span class="kw">use</span> <span class="ident">custodian_password</span>::{
     <span class="ident">LoginFinalization</span>, <span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>, <span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>,
@@ -645,7 +648,7 @@
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;custom&quot;</span>))]</span>
     <span class="ident">ApplyTransaction</span> {
         <span class="doccomment">/// The trasnaction to apply.</span>
-        <span class="ident">transaction</span>: <span class="ident">Transaction</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+        <span class="ident">transaction</span>: <span class="ident">Transaction</span>,
     },
     <span class="doccomment">/// Lists executed transactions.</span>
     <span class="attribute">#[<span class="ident">cfg_attr</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;actionable-traits&quot;</span>, <span class="ident">actionable</span>(<span class="ident">protection</span> <span class="op">=</span> <span class="string">&quot;simple&quot;</span>))]</span>
@@ -667,6 +670,7 @@
         <span class="doccomment">/// The topics to publish to.</span>
         <span class="ident">topic</span>: <span class="ident">String</span>,
         <span class="doccomment">/// The payload to publish.</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
         <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Publishes `payload` to all subscribers of all `topics`.</span>
@@ -675,6 +679,7 @@
         <span class="doccomment">/// The topics to publish to.</span>
         <span class="ident">topics</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The payload to publish.</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
         <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Subscribes `subscriber_id` to messages for `topic`.</span>
@@ -779,7 +784,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">DatabaseResponse</span> {
     <span class="doccomment">/// One or more documents.</span>
-    <span class="ident">Documents</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span><span class="op">&gt;</span>),
+    <span class="ident">Documents</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Document</span><span class="op">&gt;</span>),
     <span class="doccomment">/// A number of documents were deleted.</span>
     <span class="ident">DocumentsDeleted</span>(<span class="ident">u64</span>),
     <span class="doccomment">/// Results of [`DatabaseRequest::ApplyTransaction`].</span>
@@ -808,6 +813,7 @@
         <span class="doccomment">/// The topic the payload was received on.</span>
         <span class="ident">topic</span>: <span class="ident">String</span>,
         <span class="doccomment">/// The message payload.</span>
+        <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
         <span class="ident">payload</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Output from a [`KeyOperation`] being executed.</span>

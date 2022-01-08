@@ -228,6 +228,10 @@
 <span id="228">228</span>
 <span id="229">229</span>
 <span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
@@ -368,7 +372,7 @@
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MappedDocument</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span> <span class="op">=</span> (), <span class="ident">V</span> <span class="op">=</span> ()<span class="op">&gt;</span> {
     <span class="doccomment">/// The id of the document that emitted this entry.</span>
-    <span class="kw">pub</span> <span class="ident">document</span>: <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">document</span>: <span class="ident">Document</span>,
 
     <span class="doccomment">/// The key used to index the View.</span>
     <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">K</span>,
@@ -390,10 +394,12 @@
     <span class="doccomment">/// The header of the document that emitted this entry.</span>
     <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Header</span>,
 
-    <span class="doccomment">/// The key used to index the View.</span>
+    <span class="doccomment">/// The key used to index the View.Operation</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 
-    <span class="doccomment">/// An associated value stored in the view.</span>
+    <span class="doccomment">/// An associated value stored in the view.Operation</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 }
 
@@ -417,7 +423,7 @@
     <span class="doccomment">/// The serialized mapped value.</span>
     <span class="kw">pub</span> <span class="ident">mapping</span>: <span class="ident">MappedSerializedValue</span>,
     <span class="doccomment">/// The source document.</span>
-    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Document</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">source</span>: <span class="ident">Document</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">MappedSerialized</span> {
@@ -453,9 +459,11 @@
 <span class="doccomment">/// A serialized [`MappedValue`].</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Serialize</span>, <span class="ident">Deserialize</span>, <span class="ident">Debug</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">MappedSerializedValue</span> {
-    <span class="doccomment">/// The serialized key.</span>
+    <span class="doccomment">/// The serialized key.Operation</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">key</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
-    <span class="doccomment">/// The serialized value.</span>
+    <span class="doccomment">/// The serialized value.Operation</span>
+    <span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span>
     <span class="kw">pub</span> <span class="ident">value</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
 }
 </code></pre></div>
