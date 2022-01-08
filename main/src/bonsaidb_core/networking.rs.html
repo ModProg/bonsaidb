@@ -415,6 +415,7 @@
 <span id="415">415</span>
 <span id="416">416</span>
 <span id="417">417</span>
+<span id="418">418</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">actionable::Permissions</span>;
 <span class="kw">use</span> <span class="ident">custodian_password</span>::{
     <span class="ident">LoginFinalization</span>, <span class="ident">LoginRequest</span>, <span class="ident">LoginResponse</span>, <span class="ident">RegistrationFinalization</span>, <span class="ident">RegistrationRequest</span>,
@@ -423,6 +424,7 @@
 <span class="kw">use</span> <span class="ident">derive_where::DeriveWhere</span>;
 <span class="kw">use</span> <span class="ident">schema::SchemaName</span>;
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">serde_bytes::ByteBuf</span>;
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
     <span class="ident">connection</span>::{<span class="ident">AccessPolicy</span>, <span class="ident">Database</span>, <span class="ident">QueryKey</span>, <span class="ident">Range</span>, <span class="ident">Sort</span>},
@@ -608,7 +610,7 @@
         <span class="doccomment">/// The name of the view.</span>
         <span class="ident">view</span>: <span class="ident">ViewName</span>,
         <span class="doccomment">/// The filter for the view.</span>
-        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">ByteBuf</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The order for the query into the view.</span>
         <span class="ident">order</span>: <span class="ident">Sort</span>,
         <span class="doccomment">/// The maximum number of results to return.</span>
@@ -626,7 +628,7 @@
         <span class="doccomment">/// The name of the view.</span>
         <span class="ident">view</span>: <span class="ident">ViewName</span>,
         <span class="doccomment">/// The filter for the view.</span>
-        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">ByteBuf</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The access policy for the query.</span>
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
         <span class="doccomment">/// Whether to return a single value or values grouped by unique key. If</span>
@@ -640,7 +642,7 @@
         <span class="doccomment">/// The name of the view.</span>
         <span class="ident">view</span>: <span class="ident">ViewName</span>,
         <span class="doccomment">/// The filter for the view.</span>
-        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span><span class="op">&gt;</span>,
+        <span class="ident">key</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">ByteBuf</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="doccomment">/// The access policy for the query.</span>
         <span class="ident">access_policy</span>: <span class="ident">AccessPolicy</span>,
     },
@@ -794,7 +796,7 @@
     <span class="doccomment">/// Results of [`DatabaseRequest::Query`] when `with_docs` is true.</span>
     <span class="ident">ViewMappingsWithDocs</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">map::MappedSerialized</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Result of [`DatabaseRequest::Reduce`] when `grouped` is false.</span>
-    <span class="ident">ViewReduction</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>),
+    <span class="ident">ViewReduction</span>(<span class="attribute">#[<span class="ident">serde</span>(<span class="ident">with</span> <span class="op">=</span> <span class="string">&quot;serde_bytes&quot;</span>)]</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Result of [`DatabaseRequest::Reduce`] when `grouped` is true.</span>
     <span class="ident">ViewGroupedReduction</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">MappedSerializedValue</span><span class="op">&gt;</span>),
     <span class="doccomment">/// Results of [`DatabaseRequest::ListExecutedTransactions`].</span>

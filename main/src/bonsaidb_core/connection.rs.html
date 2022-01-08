@@ -929,6 +929,11 @@
 <span id="929">929</span>
 <span id="930">930</span>
 <span id="931">931</span>
+<span id="932">932</span>
+<span id="933">933</span>
+<span id="934">934</span>
+<span id="935">935</span>
+<span id="936">936</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std::marker::PhantomData</span>;
 
 <span class="kw">use</span> <span class="ident">async_trait::async_trait</span>;
@@ -939,6 +944,7 @@
 };
 <span class="kw">use</span> <span class="ident">futures</span>::{<span class="ident">future::BoxFuture</span>, <span class="ident">Future</span>, <span class="ident">FutureExt</span>};
 <span class="kw">use</span> <span class="ident">serde</span>::{<span class="ident">Deserialize</span>, <span class="ident">Serialize</span>};
+<span class="kw">use</span> <span class="ident">serde_bytes::ByteBuf</span>;
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;multiuser&quot;</span>)]</span>
 <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::schema::NamedReference</span>;
@@ -1452,12 +1458,12 @@
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::use_self</span>)]</span> <span class="comment">// clippy is wrong, Self is different because of generic parameters</span>
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span><span class="op">&gt;</span> <span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Converts this key to a serialized format using the [`Key`] trait.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">serialized</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">ByteBuf</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident"><span class="self">Self</span>::Matches</span>(<span class="ident">key</span>) =&gt; <span class="ident">key</span>
                 .<span class="ident">as_big_endian_bytes</span>()
                 .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::Database</span>(<span class="ident">view::Error::key_serialization</span>(<span class="ident">err</span>).<span class="ident">to_string</span>()))
-                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">QueryKey::Matches</span>(<span class="ident">v</span>.<span class="ident">to_vec</span>())),
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">v</span><span class="op">|</span> <span class="ident">QueryKey::Matches</span>(<span class="ident">ByteBuf::from</span>(<span class="ident">v</span>.<span class="ident">to_vec</span>()))),
             <span class="ident"><span class="self">Self</span>::Range</span>(<span class="ident">range</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">QueryKey::Range</span>(<span class="ident">range</span>.<span class="ident">as_big_endian_bytes</span>().<span class="ident">map_err</span>(
                 <span class="op">|</span><span class="ident">err</span><span class="op">|</span> <span class="ident">Error::Database</span>(<span class="ident">view::Error::key_serialization</span>(<span class="ident">err</span>).<span class="ident">to_string</span>()),
             )<span class="question-mark">?</span>)),
@@ -1466,7 +1472,7 @@
                     .<span class="ident">iter</span>()
                     .<span class="ident">map</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> {
                         <span class="ident">key</span>.<span class="ident">as_big_endian_bytes</span>()
-                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> <span class="ident">key</span>.<span class="ident">to_vec</span>())
+                            .<span class="ident">map</span>(<span class="op">|</span><span class="ident">key</span><span class="op">|</span> <span class="ident">ByteBuf::from</span>(<span class="ident">key</span>.<span class="ident">to_vec</span>()))
                             .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
                                 <span class="ident">Error::Database</span>(<span class="ident">view::Error::key_serialization</span>(<span class="ident">err</span>).<span class="ident">to_string</span>())
                             })
@@ -1480,7 +1486,7 @@
 }
 
 <span class="attribute">#[<span class="ident">allow</span>(<span class="ident">clippy::use_self</span>)]</span> <span class="comment">// clippy is wrong, Self is different because of generic parameters</span>
-<span class="kw">impl</span> <span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">ByteBuf</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Deserializes the bytes into `K` via the [`Key`] trait.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deserialized</span><span class="op">&lt;</span><span class="ident">K</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">QueryKey</span><span class="op">&lt;</span><span class="ident">K</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
@@ -1538,7 +1544,7 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span> <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Serializes the range&#39;s contained values to big-endian bytes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Range</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">T::Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Range</span><span class="op">&lt;</span><span class="ident">ByteBuf</span><span class="op">&gt;</span>, <span class="ident">T::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Range</span> {
             <span class="ident">start</span>: <span class="self">self</span>.<span class="ident">start</span>.<span class="ident">as_big_endian_bytes</span>()<span class="question-mark">?</span>,
             <span class="ident">end</span>: <span class="self">self</span>.<span class="ident">end</span>.<span class="ident">as_big_endian_bytes</span>()<span class="question-mark">?</span>,
@@ -1546,7 +1552,7 @@
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">Range</span><span class="op">&lt;</span><span class="ident">ByteBuf</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Deserializes the range&#39;s contained values from big-endian bytes.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Range</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">T::Error</span><span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(<span class="ident">Range</span> {
@@ -1569,16 +1575,20 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span> <span class="ident">Bound</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Serializes the contained value to big-endian bytes.</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Bound</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span>, <span class="ident">T::Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">as_big_endian_bytes</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Bound</span><span class="op">&lt;</span><span class="ident">ByteBuf</span><span class="op">&gt;</span>, <span class="ident">T::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
             <span class="ident">Bound::Unbounded</span> =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bound::Unbounded</span>),
-            <span class="ident">Bound::Included</span>(<span class="ident">value</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bound::Included</span>(<span class="ident">value</span>.<span class="ident">as_big_endian_bytes</span>()<span class="question-mark">?</span>.<span class="ident">to_vec</span>())),
-            <span class="ident">Bound::Excluded</span>(<span class="ident">value</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bound::Excluded</span>(<span class="ident">value</span>.<span class="ident">as_big_endian_bytes</span>()<span class="question-mark">?</span>.<span class="ident">to_vec</span>())),
+            <span class="ident">Bound::Included</span>(<span class="ident">value</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bound::Included</span>(<span class="ident">ByteBuf::from</span>(
+                <span class="ident">value</span>.<span class="ident">as_big_endian_bytes</span>()<span class="question-mark">?</span>.<span class="ident">to_vec</span>(),
+            ))),
+            <span class="ident">Bound::Excluded</span>(<span class="ident">value</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="ident">Bound::Excluded</span>(<span class="ident">ByteBuf::from</span>(
+                <span class="ident">value</span>.<span class="ident">as_big_endian_bytes</span>()<span class="question-mark">?</span>.<span class="ident">to_vec</span>(),
+            ))),
         }
     }
 }
 
-<span class="kw">impl</span> <span class="ident">Bound</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
+<span class="kw">impl</span> <span class="ident">Bound</span><span class="op">&lt;</span><span class="ident">ByteBuf</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Deserializes the bound&#39;s contained value from big-endian bytes.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Key</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Bound</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">T::Error</span><span class="op">&gt;</span> {
         <span class="kw">match</span> <span class="self">self</span> {
