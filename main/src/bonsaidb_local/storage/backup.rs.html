@@ -523,6 +523,15 @@
 <span id="523">523</span>
 <span id="524">524</span>
 <span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">io::ErrorKind</span>,
     <span class="ident">path</span>::{<span class="ident">Path</span>, <span class="ident">PathBuf</span>},
@@ -992,7 +1001,7 @@
     };
 
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{<span class="ident">Builder</span>, <span class="ident">StorageConfiguration</span>};
+    <span class="kw">use</span> <span class="ident"><span class="kw">crate</span>::config</span>::{<span class="ident">Builder</span>, <span class="ident">KeyValuePersistence</span>, <span class="ident">PersistenceThreshold</span>, <span class="ident">StorageConfiguration</span>};
 
     <span class="attribute">#[<span class="ident">tokio::test</span>]</span>
     <span class="kw">async</span> <span class="kw">fn</span> <span class="ident">backup_restore</span>() -&gt; <span class="ident">anyhow::Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
@@ -1004,7 +1013,11 @@
         <span class="kw">let</span> <span class="ident">test_doc</span> <span class="op">=</span> {
             <span class="kw">let</span> <span class="ident">database_directory</span> <span class="op">=</span> <span class="ident">TestDirectory::new</span>(<span class="string">&quot;backup-restore.bonsaidb&quot;</span>);
             <span class="kw">let</span> <span class="ident">storage</span> <span class="op">=</span> <span class="ident">Storage::open</span>(
-                <span class="ident">StorageConfiguration::new</span>(<span class="kw-2">&amp;</span><span class="ident">database_directory</span>).<span class="ident">with_schema</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
+                <span class="ident">StorageConfiguration::new</span>(<span class="kw-2">&amp;</span><span class="ident">database_directory</span>)
+                    .<span class="ident">key_value_persistence</span>(<span class="ident">KeyValuePersistence::lazy</span>([
+                        <span class="ident">PersistenceThreshold::after_changes</span>(<span class="number">2</span>),
+                    ]))
+                    .<span class="ident">with_schema</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
             )
             .<span class="kw">await</span><span class="question-mark">?</span>;
             <span class="ident">storage</span>.<span class="ident">create_database</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>(<span class="string">&quot;basic&quot;</span>, <span class="bool-val">false</span>).<span class="kw">await</span><span class="question-mark">?</span>;
@@ -1013,7 +1026,10 @@
                 .<span class="ident">collection</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()
                 .<span class="ident">push</span>(<span class="kw-2">&amp;</span><span class="ident">Basic::new</span>(<span class="string">&quot;somevalue&quot;</span>))
                 .<span class="kw">await</span><span class="question-mark">?</span>;
-            <span class="ident">db</span>.<span class="ident">set_numeric_key</span>(<span class="string">&quot;somekey&quot;</span>, <span class="number">1_u64</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="ident">db</span>.<span class="ident">set_numeric_key</span>(<span class="string">&quot;key1&quot;</span>, <span class="number">1_u64</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="ident">db</span>.<span class="ident">set_numeric_key</span>(<span class="string">&quot;key2&quot;</span>, <span class="number">2_u64</span>).<span class="kw">await</span><span class="question-mark">?</span>;
+            <span class="comment">// This key will not be persisted right away.</span>
+            <span class="ident">db</span>.<span class="ident">set_numeric_key</span>(<span class="string">&quot;key3&quot;</span>, <span class="number">3_u64</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
             <span class="ident">storage</span>.<span class="ident">backup</span>(<span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">backup_destination</span>.<span class="number">0</span>).<span class="kw">await</span>.<span class="ident">unwrap</span>();
 
@@ -1037,7 +1053,9 @@
             .<span class="ident">expect</span>(<span class="string">&quot;Backed up document.not found&quot;</span>);
         <span class="kw">let</span> <span class="ident">contents</span> <span class="op">=</span> <span class="ident">doc</span>.<span class="ident">contents</span>::<span class="op">&lt;</span><span class="ident">Basic</span><span class="op">&gt;</span>()<span class="question-mark">?</span>;
         <span class="macro">assert_eq!</span>(<span class="ident">contents</span>.<span class="ident">value</span>, <span class="string">&quot;somevalue&quot;</span>);
-        <span class="macro">assert_eq!</span>(<span class="ident">db</span>.<span class="ident">get_key</span>(<span class="string">&quot;somekey&quot;</span>).<span class="ident">into_u64</span>().<span class="kw">await</span><span class="question-mark">?</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">db</span>.<span class="ident">get_key</span>(<span class="string">&quot;key1&quot;</span>).<span class="ident">into_u64</span>().<span class="kw">await</span><span class="question-mark">?</span>, <span class="prelude-val">Some</span>(<span class="number">1</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">db</span>.<span class="ident">get_key</span>(<span class="string">&quot;key2&quot;</span>).<span class="ident">into_u64</span>().<span class="kw">await</span><span class="question-mark">?</span>, <span class="prelude-val">Some</span>(<span class="number">2</span>));
+        <span class="macro">assert_eq!</span>(<span class="ident">db</span>.<span class="ident">get_key</span>(<span class="string">&quot;key3&quot;</span>).<span class="ident">into_u64</span>().<span class="kw">await</span><span class="question-mark">?</span>, <span class="prelude-val">Some</span>(<span class="number">3</span>));
 
         <span class="comment">// Calling restore again should generate an error.</span>
         <span class="macro">assert!</span>(<span class="ident">restored_storage</span>

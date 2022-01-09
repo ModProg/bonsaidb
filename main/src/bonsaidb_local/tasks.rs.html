@@ -230,6 +230,8 @@
 <span id="230">230</span>
 <span id="231">231</span>
 <span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
 </pre><pre class="rust"><code><span class="kw">use</span> <span class="ident">std</span>::{
     <span class="ident">borrow::Cow</span>,
     <span class="ident">collections</span>::{<span class="ident">HashMap</span>, <span class="ident">HashSet</span>},
@@ -239,12 +241,13 @@
 <span class="kw">use</span> <span class="ident">async_lock::RwLock</span>;
 <span class="kw">use</span> <span class="ident">bonsaidb_core</span>::{
     <span class="ident">connection::Connection</span>,
+    <span class="ident">keyvalue::Timestamp</span>,
     <span class="ident">schema</span>::{<span class="ident">view</span>, <span class="ident">CollectionName</span>, <span class="ident">ViewName</span>},
 };
 <span class="kw">use</span> <span class="ident">bonsaidb_utils</span>::{<span class="ident">fast_async_read</span>, <span class="ident">fast_async_write</span>};
 
 <span class="kw">use</span> <span class="kw">crate</span>::{
-    <span class="ident">database::Database</span>,
+    <span class="ident">database</span>::{<span class="ident">keyvalue::ExpirationLoader</span>, <span class="ident">Database</span>},
     <span class="ident">jobs</span>::{<span class="ident">manager::Manager</span>, <span class="ident">task::Handle</span>},
     <span class="ident">tasks::compactor::Compactor</span>,
     <span class="ident">views</span>::{
@@ -423,8 +426,9 @@
         } <span class="kw">else</span> {
             <span class="prelude-val">Some</span>(
                 <span class="self">self</span>.<span class="ident">jobs</span>
-                    .<span class="ident">enqueue</span>(<span class="ident"><span class="kw">crate</span>::database::keyvalue::ExpirationLoader</span> {
+                    .<span class="ident">lookup_or_enqueue</span>(<span class="ident">ExpirationLoader</span> {
                         <span class="ident">database</span>: <span class="ident">database</span>.<span class="ident">clone</span>(),
+                        <span class="ident">launched_at</span>: <span class="ident">Timestamp::now</span>(),
                     })
                     .<span class="kw">await</span>,
             )
