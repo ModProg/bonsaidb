@@ -387,7 +387,7 @@
     },
     <span class="ident">transaction</span>::{<span class="ident">Executed</span>, <span class="ident">OperationResult</span>, <span class="ident">Transaction</span>},
 };
-<span class="kw">use</span> <span class="ident">bonsaidb_server</span>::{<span class="ident">Backend</span>, <span class="ident">CustomServer</span>, <span class="ident">ServerDatabase</span>};
+<span class="kw">use</span> <span class="ident">bonsaidb_server</span>::{<span class="ident">Backend</span>, <span class="ident">CustomServer</span>, <span class="ident">NoBackend</span>, <span class="ident">ServerDatabase</span>};
 
 <span class="doccomment">/// A local server or a server over a network connection.</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnyServerConnection</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
@@ -575,7 +575,7 @@
 
 <span class="doccomment">/// A database connection that can be either from a local server or a server</span>
 <span class="doccomment">/// over a network connection.</span>
-<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnyDatabase</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">AnyDatabase</span><span class="op">&lt;</span><span class="ident">B</span>: <span class="ident">Backend</span> <span class="op">=</span> <span class="ident">NoBackend</span><span class="op">&gt;</span> {
     <span class="doccomment">/// A local database.</span>
     <span class="ident">Local</span>(<span class="ident">ServerDatabase</span><span class="op">&lt;</span><span class="ident">B</span><span class="op">&gt;</span>),
     <span class="doccomment">/// A networked database accessed with a [`Client`].</span>
