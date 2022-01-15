@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1.4.3/css/pico.min.css">
+    <title>
+        BonsaiDb Commerce Benchmark</title>
+    <style>
+        .diagram {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            max-width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        
+
+<hgroup>
+    <h1>BonsaiDb Commerce Benchmark</h1>
+    <h3>large, readheavy, 2 agent(s)</h3>
+</hgroup>
+
+<h3>Configuration</h3>
+<h5>Initial Data Set</h5>
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Type</th>
+            <th scope="col">Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Products</td>
+            <td>10000</td>
+        </tr>
+        <tr>
+            <td>Categories</td>
+            <td>100</td>
+        </tr>
+        <tr>
+            <td>Customers</td>
+            <td>1000</td>
+        </tr>
+        <tr>
+            <td>Orders</td>
+            <td>0</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Summary</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Backend</th>
+            <th scope="col">Total Time</th>
+            <th scope="col">Wall Time</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>bonsaidb-local</td>
+            <td>933.7ms</td>
+            <td>466.8ms</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-quic</td>
+            <td>1.831s</td>
+            <td>915.6ms</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-ws</td>
+            <td>1.625s</td>
+            <td>812.5ms</td>
+        </tr>
+        
+        <tr>
+            <td>postgresql</td>
+            <td>44.47s</td>
+            <td>22.23s</td>
+        </tr>
+        
+    </tbody>
+</table>
+<p>Table of Contents:</p>
+<ul>
+    
+    <li>
+        <a href="#AddProductToCart">AddProductToCart</a>
+        <ul>
+            
+            <li><a href="#bonsaidb-local-AddProductToCart">bonsaidb-local</a></li>
+            
+            <li><a href="#bonsaidb-quic-AddProductToCart">bonsaidb-quic</a></li>
+            
+            <li><a href="#bonsaidb-ws-AddProductToCart">bonsaidb-ws</a></li>
+            
+            <li><a href="#postgresql-AddProductToCart">postgresql</a></li>
+            
+        </ul>
+    </li>
+    
+    <li>
+        <a href="#CreateCart">CreateCart</a>
+        <ul>
+            
+            <li><a href="#bonsaidb-local-CreateCart">bonsaidb-local</a></li>
+            
+            <li><a href="#bonsaidb-quic-CreateCart">bonsaidb-quic</a></li>
+            
+            <li><a href="#bonsaidb-ws-CreateCart">bonsaidb-ws</a></li>
+            
+            <li><a href="#postgresql-CreateCart">postgresql</a></li>
+            
+        </ul>
+    </li>
+    
+    <li>
+        <a href="#FindProduct">FindProduct</a>
+        <ul>
+            
+            <li><a href="#bonsaidb-local-FindProduct">bonsaidb-local</a></li>
+            
+            <li><a href="#bonsaidb-quic-FindProduct">bonsaidb-quic</a></li>
+            
+            <li><a href="#bonsaidb-ws-FindProduct">bonsaidb-ws</a></li>
+            
+            <li><a href="#postgresql-FindProduct">postgresql</a></li>
+            
+        </ul>
+    </li>
+    
+    <li>
+        <a href="#Load">Load</a>
+        <ul>
+            
+            <li><a href="#bonsaidb-local-Load">bonsaidb-local</a></li>
+            
+            <li><a href="#bonsaidb-quic-Load">bonsaidb-quic</a></li>
+            
+            <li><a href="#bonsaidb-ws-Load">bonsaidb-ws</a></li>
+            
+            <li><a href="#postgresql-Load">postgresql</a></li>
+            
+        </ul>
+    </li>
+    
+    <li>
+        <a href="#LookupProduct">LookupProduct</a>
+        <ul>
+            
+            <li><a href="#bonsaidb-local-LookupProduct">bonsaidb-local</a></li>
+            
+            <li><a href="#bonsaidb-quic-LookupProduct">bonsaidb-quic</a></li>
+            
+            <li><a href="#bonsaidb-ws-LookupProduct">bonsaidb-ws</a></li>
+            
+            <li><a href="#postgresql-LookupProduct">postgresql</a></li>
+            
+        </ul>
+    </li>
+    
+</ul>
+
+<h3>Operation Results</h3>
+
+
+<h5><a name="AddProductToCart">AddProductToCart</a></h5>
+
+<img src="AddProductToCart.png" class="diagram" />
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Backend</th>
+            <th scope="col">Avg</th>
+            <th scope="col">Min</th>
+            <th scope="col">Max</th>
+            <th scope="col">StdDev</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>bonsaidb-local</a></td>
+            <td>170.1us</td>
+            <td>87.17us</td>
+            <td>828.9us</td>
+            <td>55.02us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-quic</a></td>
+            <td>423.6us</td>
+            <td>304.6us</td>
+            <td>1.139ms</td>
+            <td>76.30us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-ws</a></td>
+            <td>349.7us</td>
+            <td>228.2us</td>
+            <td>2.150ms</td>
+            <td>130.3us</td>
+        </tr>
+        
+        <tr>
+            <td>postgresql</a></td>
+            <td>874.2us</td>
+            <td>490.0us</td>
+            <td>6.967ms</td>
+            <td>384.0us</td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<a href="#bonsaidb-local-AddProductToCart" name="bonsaidb-local-AddProductToCart"></a>
+<img src="bonsaidb-local-AddProductToCart.png" class="diagram" />
+
+<a href="#bonsaidb-quic-AddProductToCart" name="bonsaidb-quic-AddProductToCart"></a>
+<img src="bonsaidb-quic-AddProductToCart.png" class="diagram" />
+
+<a href="#bonsaidb-ws-AddProductToCart" name="bonsaidb-ws-AddProductToCart"></a>
+<img src="bonsaidb-ws-AddProductToCart.png" class="diagram" />
+
+<a href="#postgresql-AddProductToCart" name="postgresql-AddProductToCart"></a>
+<img src="postgresql-AddProductToCart.png" class="diagram" />
+
+
+
+<h5><a name="CreateCart">CreateCart</a></h5>
+
+<img src="CreateCart.png" class="diagram" />
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Backend</th>
+            <th scope="col">Avg</th>
+            <th scope="col">Min</th>
+            <th scope="col">Max</th>
+            <th scope="col">StdDev</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>bonsaidb-local</a></td>
+            <td>136.7us</td>
+            <td>83.65us</td>
+            <td>624.6us</td>
+            <td>50.35us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-quic</a></td>
+            <td>262.6us</td>
+            <td>175.2us</td>
+            <td>1.364ms</td>
+            <td>87.17us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-ws</a></td>
+            <td>231.8us</td>
+            <td>144.9us</td>
+            <td>3.285ms</td>
+            <td>159.3us</td>
+        </tr>
+        
+        <tr>
+            <td>postgresql</a></td>
+            <td>1.037ms</td>
+            <td>542.2us</td>
+            <td>40.37ms</td>
+            <td>2.044ms</td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<a href="#bonsaidb-local-CreateCart" name="bonsaidb-local-CreateCart"></a>
+<img src="bonsaidb-local-CreateCart.png" class="diagram" />
+
+<a href="#bonsaidb-quic-CreateCart" name="bonsaidb-quic-CreateCart"></a>
+<img src="bonsaidb-quic-CreateCart.png" class="diagram" />
+
+<a href="#bonsaidb-ws-CreateCart" name="bonsaidb-ws-CreateCart"></a>
+<img src="bonsaidb-ws-CreateCart.png" class="diagram" />
+
+<a href="#postgresql-CreateCart" name="postgresql-CreateCart"></a>
+<img src="postgresql-CreateCart.png" class="diagram" />
+
+
+
+<h5><a name="FindProduct">FindProduct</a></h5>
+
+<img src="FindProduct.png" class="diagram" />
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Backend</th>
+            <th scope="col">Avg</th>
+            <th scope="col">Min</th>
+            <th scope="col">Max</th>
+            <th scope="col">StdDev</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>bonsaidb-local</a></td>
+            <td>98.14us</td>
+            <td>25.70us</td>
+            <td>1.219ms</td>
+            <td>52.91us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-quic</a></td>
+            <td>223.4us</td>
+            <td>142.2us</td>
+            <td>3.162ms</td>
+            <td>75.22us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-ws</a></td>
+            <td>193.5us</td>
+            <td>96.00us</td>
+            <td>8.196ms</td>
+            <td>200.1us</td>
+        </tr>
+        
+        <tr>
+            <td>postgresql</a></td>
+            <td>535.6us</td>
+            <td>200.6us</td>
+            <td>25.28ms</td>
+            <td>778.6us</td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<a href="#bonsaidb-local-FindProduct" name="bonsaidb-local-FindProduct"></a>
+<img src="bonsaidb-local-FindProduct.png" class="diagram" />
+
+<a href="#bonsaidb-quic-FindProduct" name="bonsaidb-quic-FindProduct"></a>
+<img src="bonsaidb-quic-FindProduct.png" class="diagram" />
+
+<a href="#bonsaidb-ws-FindProduct" name="bonsaidb-ws-FindProduct"></a>
+<img src="bonsaidb-ws-FindProduct.png" class="diagram" />
+
+<a href="#postgresql-FindProduct" name="postgresql-FindProduct"></a>
+<img src="postgresql-FindProduct.png" class="diagram" />
+
+
+
+<h5><a name="Load">Load</a></h5>
+
+<img src="Load.png" class="diagram" />
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Backend</th>
+            <th scope="col">Avg</th>
+            <th scope="col">Min</th>
+            <th scope="col">Max</th>
+            <th scope="col">StdDev</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>bonsaidb-local</a></td>
+            <td>390.7ms</td>
+            <td>390.6ms</td>
+            <td>390.9ms</td>
+            <td>0s</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-quic</a></td>
+            <td>422.7ms</td>
+            <td>422.6ms</td>
+            <td>422.8ms</td>
+            <td>0s</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-ws</a></td>
+            <td>457.3ms</td>
+            <td>457.2ms</td>
+            <td>457.4ms</td>
+            <td>0s</td>
+        </tr>
+        
+        <tr>
+            <td>postgresql</a></td>
+            <td>40.72s</td>
+            <td>40.70s</td>
+            <td>40.74s</td>
+            <td>0s</td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<a href="#bonsaidb-local-Load" name="bonsaidb-local-Load"></a>
+<img src="bonsaidb-local-Load.png" class="diagram" />
+
+<a href="#bonsaidb-quic-Load" name="bonsaidb-quic-Load"></a>
+<img src="bonsaidb-quic-Load.png" class="diagram" />
+
+<a href="#bonsaidb-ws-Load" name="bonsaidb-ws-Load"></a>
+<img src="bonsaidb-ws-Load.png" class="diagram" />
+
+<a href="#postgresql-Load" name="postgresql-Load"></a>
+<img src="postgresql-Load.png" class="diagram" />
+
+
+
+<h5><a name="LookupProduct">LookupProduct</a></h5>
+
+<img src="LookupProduct.png" class="diagram" />
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Backend</th>
+            <th scope="col">Avg</th>
+            <th scope="col">Min</th>
+            <th scope="col">Max</th>
+            <th scope="col">StdDev</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>bonsaidb-local</a></td>
+            <td>46.44us</td>
+            <td>14.30us</td>
+            <td>691.2us</td>
+            <td>28.37us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-quic</a></td>
+            <td>169.1us</td>
+            <td>108.3us</td>
+            <td>2.394ms</td>
+            <td>57.55us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-ws</a></td>
+            <td>130.0us</td>
+            <td>64.90us</td>
+            <td>3.762ms</td>
+            <td>107.0us</td>
+        </tr>
+        
+        <tr>
+            <td>postgresql</a></td>
+            <td>507.5us</td>
+            <td>199.7us</td>
+            <td>4.526ms</td>
+            <td>178.7us</td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<a href="#bonsaidb-local-LookupProduct" name="bonsaidb-local-LookupProduct"></a>
+<img src="bonsaidb-local-LookupProduct.png" class="diagram" />
+
+<a href="#bonsaidb-quic-LookupProduct" name="bonsaidb-quic-LookupProduct"></a>
+<img src="bonsaidb-quic-LookupProduct.png" class="diagram" />
+
+<a href="#bonsaidb-ws-LookupProduct" name="bonsaidb-ws-LookupProduct"></a>
+<img src="bonsaidb-ws-LookupProduct.png" class="diagram" />
+
+<a href="#postgresql-LookupProduct" name="postgresql-LookupProduct"></a>
+<img src="postgresql-LookupProduct.png" class="diagram" />
+
+
+
+
+
+
+    </main>
+</body>
+
+</html>
