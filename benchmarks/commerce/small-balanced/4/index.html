@@ -63,86 +63,45 @@
             <th scope="col">Backend</th>
             <th scope="col">Total Time</th>
             <th scope="col">Wall Time</th>
+            <th scope="col">Transport</th>
         </tr>
     </thead>
     <tbody>
         
         <tr>
             <td>bonsaidb-local</td>
-            <td>1.776s</td>
-            <td>444.1ms</td>
+            <td>1.550s</td>
+            <td>387.5ms</td>
+            <td>None</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</td>
-            <td>7.101s</td>
-            <td>1.775s</td>
+            <td>6.073s</td>
+            <td>1.518s</td>
+            <td>UDP with TLS</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</td>
-            <td>5.305s</td>
-            <td>1.326s</td>
+            <td>4.422s</td>
+            <td>1.106s</td>
+            <td>TCP</td>
         </tr>
         
         <tr>
             <td>postgresql</td>
-            <td>15.19s</td>
-            <td>3.797s</td>
+            <td>12.67s</td>
+            <td>3.168s</td>
+            <td>TCP</td>
         </tr>
         
     </tbody>
 </table>
 
 <details>
-
-    <p>Table of Contents:</p>
+    <summary>Table of Contents:</summary>
     <ul>
-        
-        <li>
-            <a href="#AddProductToCart">AddProductToCart</a>
-            <ul>
-                
-                <li><a href="#bonsaidb-local-AddProductToCart">bonsaidb-local</a></li>
-                
-                <li><a href="#bonsaidb-quic-AddProductToCart">bonsaidb-quic</a></li>
-                
-                <li><a href="#bonsaidb-ws-AddProductToCart">bonsaidb-ws</a></li>
-                
-                <li><a href="#postgresql-AddProductToCart">postgresql</a></li>
-                
-            </ul>
-        </li>
-        
-        <li>
-            <a href="#CreateCart">CreateCart</a>
-            <ul>
-                
-                <li><a href="#bonsaidb-local-CreateCart">bonsaidb-local</a></li>
-                
-                <li><a href="#bonsaidb-quic-CreateCart">bonsaidb-quic</a></li>
-                
-                <li><a href="#bonsaidb-ws-CreateCart">bonsaidb-ws</a></li>
-                
-                <li><a href="#postgresql-CreateCart">postgresql</a></li>
-                
-            </ul>
-        </li>
-        
-        <li>
-            <a href="#FindProduct">FindProduct</a>
-            <ul>
-                
-                <li><a href="#bonsaidb-local-FindProduct">bonsaidb-local</a></li>
-                
-                <li><a href="#bonsaidb-quic-FindProduct">bonsaidb-quic</a></li>
-                
-                <li><a href="#bonsaidb-ws-FindProduct">bonsaidb-ws</a></li>
-                
-                <li><a href="#postgresql-FindProduct">postgresql</a></li>
-                
-            </ul>
-        </li>
         
         <li>
             <a href="#Load">Load</a>
@@ -175,6 +134,51 @@
         </li>
         
         <li>
+            <a href="#FindProduct">FindProduct</a>
+            <ul>
+                
+                <li><a href="#bonsaidb-local-FindProduct">bonsaidb-local</a></li>
+                
+                <li><a href="#bonsaidb-quic-FindProduct">bonsaidb-quic</a></li>
+                
+                <li><a href="#bonsaidb-ws-FindProduct">bonsaidb-ws</a></li>
+                
+                <li><a href="#postgresql-FindProduct">postgresql</a></li>
+                
+            </ul>
+        </li>
+        
+        <li>
+            <a href="#CreateCart">CreateCart</a>
+            <ul>
+                
+                <li><a href="#bonsaidb-local-CreateCart">bonsaidb-local</a></li>
+                
+                <li><a href="#bonsaidb-quic-CreateCart">bonsaidb-quic</a></li>
+                
+                <li><a href="#bonsaidb-ws-CreateCart">bonsaidb-ws</a></li>
+                
+                <li><a href="#postgresql-CreateCart">postgresql</a></li>
+                
+            </ul>
+        </li>
+        
+        <li>
+            <a href="#AddProductToCart">AddProductToCart</a>
+            <ul>
+                
+                <li><a href="#bonsaidb-local-AddProductToCart">bonsaidb-local</a></li>
+                
+                <li><a href="#bonsaidb-quic-AddProductToCart">bonsaidb-quic</a></li>
+                
+                <li><a href="#bonsaidb-ws-AddProductToCart">bonsaidb-ws</a></li>
+                
+                <li><a href="#postgresql-AddProductToCart">postgresql</a></li>
+                
+            </ul>
+        </li>
+        
+        <li>
             <a href="#RateProduct">RateProduct</a>
             <ul>
                 
@@ -195,9 +199,11 @@
 <h3>Operation Results</h3>
 
 
-<h5><a name="AddProductToCart">AddProductToCart</a></h5>
+<h5><a name="Load" href="#Load">Load</a></h5>
 
-<img src="AddProductToCart.png" class="diagram" />
+<p>Measures the time spent loading the initial data set and performing any pre-cache operations that most database administrators would perform on their databases periodically to ensure good performance.</p>
+
+
 
 <table>
     <thead>
@@ -213,231 +219,33 @@
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>381.9us</td>
-            <td>84.99us</td>
-            <td>5.816ms</td>
-            <td>353.1us</td>
-        </tr>
-        
-        <tr>
-            <td>bonsaidb-quic</a></td>
-            <td>1.101ms</td>
-            <td>537.1us</td>
-            <td>16.88ms</td>
-            <td>996.9us</td>
-        </tr>
-        
-        <tr>
-            <td>bonsaidb-ws</a></td>
-            <td>823.5us</td>
-            <td>363.8us</td>
-            <td>14.61ms</td>
-            <td>729.2us</td>
-        </tr>
-        
-        <tr>
-            <td>postgresql</a></td>
-            <td>2.898ms</td>
-            <td>925.2us</td>
-            <td>49.87ms</td>
-            <td>3.058ms</td>
-        </tr>
-        
-    </tbody>
-</table>
-
-
-<a href="#bonsaidb-local-AddProductToCart" name="bonsaidb-local-AddProductToCart"></a>
-<img src="bonsaidb-local-AddProductToCart.png" class="diagram" />
-
-<a href="#bonsaidb-quic-AddProductToCart" name="bonsaidb-quic-AddProductToCart"></a>
-<img src="bonsaidb-quic-AddProductToCart.png" class="diagram" />
-
-<a href="#bonsaidb-ws-AddProductToCart" name="bonsaidb-ws-AddProductToCart"></a>
-<img src="bonsaidb-ws-AddProductToCart.png" class="diagram" />
-
-<a href="#postgresql-AddProductToCart" name="postgresql-AddProductToCart"></a>
-<img src="postgresql-AddProductToCart.png" class="diagram" />
-
-
-
-<h5><a name="CreateCart">CreateCart</a></h5>
-
-<img src="CreateCart.png" class="diagram" />
-
-<table>
-    <thead>
-        <tr>
-            <th scope="col">Backend</th>
-            <th scope="col">Avg</th>
-            <th scope="col">Min</th>
-            <th scope="col">Max</th>
-            <th scope="col">StdDev</th>
-        </tr>
-    </thead>
-    <tbody>
-        
-        <tr>
-            <td>bonsaidb-local</a></td>
-            <td>266.2us</td>
-            <td>73.47us</td>
-            <td>5.014ms</td>
-            <td>272.2us</td>
-        </tr>
-        
-        <tr>
-            <td>bonsaidb-quic</a></td>
-            <td>730.2us</td>
-            <td>286.0us</td>
-            <td>16.47ms</td>
-            <td>1.243ms</td>
-        </tr>
-        
-        <tr>
-            <td>bonsaidb-ws</a></td>
-            <td>518.2us</td>
-            <td>213.2us</td>
-            <td>9.634ms</td>
-            <td>688.7us</td>
-        </tr>
-        
-        <tr>
-            <td>postgresql</a></td>
-            <td>3.597ms</td>
-            <td>819.7us</td>
-            <td>53.81ms</td>
-            <td>6.070ms</td>
-        </tr>
-        
-    </tbody>
-</table>
-
-
-<a href="#bonsaidb-local-CreateCart" name="bonsaidb-local-CreateCart"></a>
-<img src="bonsaidb-local-CreateCart.png" class="diagram" />
-
-<a href="#bonsaidb-quic-CreateCart" name="bonsaidb-quic-CreateCart"></a>
-<img src="bonsaidb-quic-CreateCart.png" class="diagram" />
-
-<a href="#bonsaidb-ws-CreateCart" name="bonsaidb-ws-CreateCart"></a>
-<img src="bonsaidb-ws-CreateCart.png" class="diagram" />
-
-<a href="#postgresql-CreateCart" name="postgresql-CreateCart"></a>
-<img src="postgresql-CreateCart.png" class="diagram" />
-
-
-
-<h5><a name="FindProduct">FindProduct</a></h5>
-
-<img src="FindProduct.png" class="diagram" />
-
-<table>
-    <thead>
-        <tr>
-            <th scope="col">Backend</th>
-            <th scope="col">Avg</th>
-            <th scope="col">Min</th>
-            <th scope="col">Max</th>
-            <th scope="col">StdDev</th>
-        </tr>
-    </thead>
-    <tbody>
-        
-        <tr>
-            <td>bonsaidb-local</a></td>
-            <td>240.5us</td>
-            <td>37.18us</td>
-            <td>5.497ms</td>
-            <td>300.9us</td>
-        </tr>
-        
-        <tr>
-            <td>bonsaidb-quic</a></td>
-            <td>954.4us</td>
-            <td>390.4us</td>
-            <td>10.35ms</td>
-            <td>608.4us</td>
-        </tr>
-        
-        <tr>
-            <td>bonsaidb-ws</a></td>
-            <td>699.0us</td>
-            <td>229.0us</td>
-            <td>12.47ms</td>
-            <td>549.7us</td>
-        </tr>
-        
-        <tr>
-            <td>postgresql</a></td>
-            <td>1.455ms</td>
-            <td>388.1us</td>
-            <td>30.20ms</td>
-            <td>1.583ms</td>
-        </tr>
-        
-    </tbody>
-</table>
-
-
-<a href="#bonsaidb-local-FindProduct" name="bonsaidb-local-FindProduct"></a>
-<img src="bonsaidb-local-FindProduct.png" class="diagram" />
-
-<a href="#bonsaidb-quic-FindProduct" name="bonsaidb-quic-FindProduct"></a>
-<img src="bonsaidb-quic-FindProduct.png" class="diagram" />
-
-<a href="#bonsaidb-ws-FindProduct" name="bonsaidb-ws-FindProduct"></a>
-<img src="bonsaidb-ws-FindProduct.png" class="diagram" />
-
-<a href="#postgresql-FindProduct" name="postgresql-FindProduct"></a>
-<img src="postgresql-FindProduct.png" class="diagram" />
-
-
-
-<h5><a name="Load">Load</a></h5>
-
-<img src="Load.png" class="diagram" />
-
-<table>
-    <thead>
-        <tr>
-            <th scope="col">Backend</th>
-            <th scope="col">Avg</th>
-            <th scope="col">Min</th>
-            <th scope="col">Max</th>
-            <th scope="col">StdDev</th>
-        </tr>
-    </thead>
-    <tbody>
-        
-        <tr>
-            <td>bonsaidb-local</a></td>
-            <td>5.482ms</td>
-            <td>5.480ms</td>
-            <td>5.485ms</td>
+            <td>5.691ms</td>
+            <td>5.689ms</td>
+            <td>5.693ms</td>
             <td>0s</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>10.30ms</td>
-            <td>10.30ms</td>
-            <td>10.31ms</td>
+            <td>9.515ms</td>
+            <td>9.511ms</td>
+            <td>9.519ms</td>
             <td>0s</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>8.835ms</td>
-            <td>8.831ms</td>
-            <td>8.839ms</td>
+            <td>7.932ms</td>
+            <td>7.930ms</td>
+            <td>7.934ms</td>
             <td>0s</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>252.0ms</td>
-            <td>251.9ms</td>
-            <td>252.1ms</td>
+            <td>194.1ms</td>
+            <td>194.0ms</td>
+            <td>194.1ms</td>
             <td>0s</td>
         </tr>
         
@@ -459,9 +267,13 @@
 
 
 
-<h5><a name="LookupProduct">LookupProduct</a></h5>
+<h5><a name="LookupProduct" href="#LookupProduct">LookupProduct</a></h5>
+
+<p>Meaures the time spent looking up a product by its id. This operation is meant to simulate the basic needs of the database to provide a product details page after a user clicked a direct link that contians the product&#x27;s unique id, including the product&#x27;s current rating.</p>
+
 
 <img src="LookupProduct.png" class="diagram" />
+
 
 <table>
     <thead>
@@ -477,34 +289,34 @@
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>124.1us</td>
-            <td>21.79us</td>
-            <td>4.571ms</td>
-            <td>157.2us</td>
+            <td>107.0us</td>
+            <td>16.99us</td>
+            <td>1.220ms</td>
+            <td>81.07us</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>864.9us</td>
-            <td>330.0us</td>
-            <td>8.782ms</td>
-            <td>472.9us</td>
+            <td>765.4us</td>
+            <td>332.3us</td>
+            <td>3.934ms</td>
+            <td>198.2us</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>646.8us</td>
-            <td>201.6us</td>
-            <td>11.24ms</td>
-            <td>665.2us</td>
+            <td>533.3us</td>
+            <td>189.8us</td>
+            <td>2.689ms</td>
+            <td>160.7us</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>1.412ms</td>
-            <td>315.9us</td>
-            <td>36.93ms</td>
-            <td>1.644ms</td>
+            <td>1.201ms</td>
+            <td>313.9us</td>
+            <td>38.04ms</td>
+            <td>1.005ms</td>
         </tr>
         
     </tbody>
@@ -525,9 +337,13 @@
 
 
 
-<h5><a name="RateProduct">RateProduct</a></h5>
+<h5><a name="FindProduct" href="#FindProduct">FindProduct</a></h5>
 
-<img src="RateProduct.png" class="diagram" />
+<p>Measures the time spent looking up a product by its name (exact match, indexed). This operation is meant to simulate the basic needs of the database to provide a product details after finding a product by its name, including the product&#x27;s current rating.</p>
+
+
+<img src="FindProduct.png" class="diagram" />
+
 
 <table>
     <thead>
@@ -543,34 +359,244 @@
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>750.7us</td>
-            <td>365.6us</td>
-            <td>1.817ms</td>
-            <td>222.2us</td>
+            <td>205.3us</td>
+            <td>31.39us</td>
+            <td>1.774ms</td>
+            <td>147.9us</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>1.380ms</td>
-            <td>971.3us</td>
-            <td>3.660ms</td>
-            <td>406.3us</td>
+            <td>829.9us</td>
+            <td>409.1us</td>
+            <td>5.300ms</td>
+            <td>258.6us</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>1.674ms</td>
-            <td>719.9us</td>
-            <td>20.74ms</td>
-            <td>2.854ms</td>
+            <td>600.0us</td>
+            <td>213.9us</td>
+            <td>2.986ms</td>
+            <td>199.4us</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>7.377ms</td>
-            <td>3.486ms</td>
-            <td>51.25ms</td>
-            <td>5.977ms</td>
+            <td>1.312ms</td>
+            <td>329.5us</td>
+            <td>41.39ms</td>
+            <td>1.422ms</td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<a href="#bonsaidb-local-FindProduct" name="bonsaidb-local-FindProduct"></a>
+<img src="bonsaidb-local-FindProduct.png" class="diagram" />
+
+<a href="#bonsaidb-quic-FindProduct" name="bonsaidb-quic-FindProduct"></a>
+<img src="bonsaidb-quic-FindProduct.png" class="diagram" />
+
+<a href="#bonsaidb-ws-FindProduct" name="bonsaidb-ws-FindProduct"></a>
+<img src="bonsaidb-ws-FindProduct.png" class="diagram" />
+
+<a href="#postgresql-FindProduct" name="postgresql-FindProduct"></a>
+<img src="postgresql-FindProduct.png" class="diagram" />
+
+
+
+<h5><a name="CreateCart" href="#CreateCart">CreateCart</a></h5>
+
+<p>Measures the time spent creating a shopping cart.</p>
+
+
+<img src="CreateCart.png" class="diagram" />
+
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Backend</th>
+            <th scope="col">Avg</th>
+            <th scope="col">Min</th>
+            <th scope="col">Max</th>
+            <th scope="col">StdDev</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>bonsaidb-local</a></td>
+            <td>232.9us</td>
+            <td>71.36us</td>
+            <td>854.5us</td>
+            <td>104.0us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-quic</a></td>
+            <td>515.7us</td>
+            <td>209.8us</td>
+            <td>2.509ms</td>
+            <td>167.2us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-ws</a></td>
+            <td>416.0us</td>
+            <td>191.9us</td>
+            <td>3.611ms</td>
+            <td>223.1us</td>
+        </tr>
+        
+        <tr>
+            <td>postgresql</a></td>
+            <td>2.515ms</td>
+            <td>917.0us</td>
+            <td>29.18ms</td>
+            <td>1.459ms</td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<a href="#bonsaidb-local-CreateCart" name="bonsaidb-local-CreateCart"></a>
+<img src="bonsaidb-local-CreateCart.png" class="diagram" />
+
+<a href="#bonsaidb-quic-CreateCart" name="bonsaidb-quic-CreateCart"></a>
+<img src="bonsaidb-quic-CreateCart.png" class="diagram" />
+
+<a href="#bonsaidb-ws-CreateCart" name="bonsaidb-ws-CreateCart"></a>
+<img src="bonsaidb-ws-CreateCart.png" class="diagram" />
+
+<a href="#postgresql-CreateCart" name="postgresql-CreateCart"></a>
+<img src="postgresql-CreateCart.png" class="diagram" />
+
+
+
+<h5><a name="AddProductToCart" href="#AddProductToCart">AddProductToCart</a></h5>
+
+<p>Measures the time spent adding a product to a shopping cart.</p>
+
+
+<img src="AddProductToCart.png" class="diagram" />
+
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Backend</th>
+            <th scope="col">Avg</th>
+            <th scope="col">Min</th>
+            <th scope="col">Max</th>
+            <th scope="col">StdDev</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>bonsaidb-local</a></td>
+            <td>343.2us</td>
+            <td>101.8us</td>
+            <td>2.049ms</td>
+            <td>166.7us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-quic</a></td>
+            <td>916.8us</td>
+            <td>510.7us</td>
+            <td>3.025ms</td>
+            <td>222.6us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-ws</a></td>
+            <td>695.9us</td>
+            <td>319.0us</td>
+            <td>5.820ms</td>
+            <td>294.7us</td>
+        </tr>
+        
+        <tr>
+            <td>postgresql</a></td>
+            <td>2.473ms</td>
+            <td>732.7us</td>
+            <td>23.81ms</td>
+            <td>1.116ms</td>
+        </tr>
+        
+    </tbody>
+</table>
+
+
+<a href="#bonsaidb-local-AddProductToCart" name="bonsaidb-local-AddProductToCart"></a>
+<img src="bonsaidb-local-AddProductToCart.png" class="diagram" />
+
+<a href="#bonsaidb-quic-AddProductToCart" name="bonsaidb-quic-AddProductToCart"></a>
+<img src="bonsaidb-quic-AddProductToCart.png" class="diagram" />
+
+<a href="#bonsaidb-ws-AddProductToCart" name="bonsaidb-ws-AddProductToCart"></a>
+<img src="bonsaidb-ws-AddProductToCart.png" class="diagram" />
+
+<a href="#postgresql-AddProductToCart" name="postgresql-AddProductToCart"></a>
+<img src="postgresql-AddProductToCart.png" class="diagram" />
+
+
+
+<h5><a name="RateProduct" href="#RateProduct">RateProduct</a></h5>
+
+<p>Measures the time spent adding or updating a review of a product by a customer. Each customer can only have one review per product. When this operation is complete, all subsequent calls to LookupProduct and FindProduct should reflect the new rating. This simulates an &#x27;upsert&#x27; (insert or update) operation using a unique index.</p>
+
+
+<img src="RateProduct.png" class="diagram" />
+
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Backend</th>
+            <th scope="col">Avg</th>
+            <th scope="col">Min</th>
+            <th scope="col">Max</th>
+            <th scope="col">StdDev</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>bonsaidb-local</a></td>
+            <td>671.9us</td>
+            <td>391.9us</td>
+            <td>1.254ms</td>
+            <td>184.1us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-quic</a></td>
+            <td>1.228ms</td>
+            <td>872.4us</td>
+            <td>2.413ms</td>
+            <td>249.0us</td>
+        </tr>
+        
+        <tr>
+            <td>bonsaidb-ws</a></td>
+            <td>983.7us</td>
+            <td>635.9us</td>
+            <td>2.183ms</td>
+            <td>240.5us</td>
+        </tr>
+        
+        <tr>
+            <td>postgresql</a></td>
+            <td>5.623ms</td>
+            <td>3.156ms</td>
+            <td>19.28ms</td>
+            <td>2.257ms</td>
         </tr>
         
     </tbody>
