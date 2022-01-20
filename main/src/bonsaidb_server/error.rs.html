@@ -234,8 +234,8 @@
     <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">other</span>: <span class="ident">Error</span>) -&gt; <span class="self">Self</span> {
         <span class="comment">// without it, there&#39;s no way to get this to_string() easily.</span>
         <span class="kw">match</span> <span class="ident">other</span> {
+            <span class="ident">Error::Core</span>(<span class="ident">core</span>) <span class="op">|</span> <span class="ident">Error::Database</span>(<span class="ident">bonsaidb_local::Error::Core</span>(<span class="ident">core</span>)) =&gt; <span class="ident">core</span>,
             <span class="ident">Error::Database</span>(<span class="ident">storage</span>) =&gt; <span class="ident"><span class="self">Self</span>::Database</span>(<span class="ident">storage</span>.<span class="ident">to_string</span>()),
-            <span class="ident">Error::Core</span>(<span class="ident">core</span>) =&gt; <span class="ident">core</span>,
             <span class="ident">Error::Io</span>(<span class="ident">io</span>) =&gt; <span class="ident"><span class="self">Self</span>::Io</span>(<span class="ident">io</span>.<span class="ident">to_string</span>()),
             <span class="ident">Error::Transport</span>(<span class="ident">networking</span>) =&gt; <span class="ident"><span class="self">Self</span>::Transport</span>(<span class="ident">networking</span>),
             <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;websockets&quot;</span>)]</span>
