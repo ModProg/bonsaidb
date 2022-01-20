@@ -159,28 +159,35 @@ pub struct BlogPost {
     type Key = Option&lt;String&gt;;
     type Value = u32;
 
-    fn map(&amp;self, document: &amp;Document) -&gt; MapResult&lt;Self::Key, Self::Value&gt; {
+    fn name(&amp;self) -&gt; Result&lt;Name, InvalidNameError&gt; {
+        Name::new(&quot;by-category&quot;)
+    }
+}
+
+impl ViewSchema for BlogPostsByCategory {
+    type View = Self;
+
+    fn map(&amp;self, document: &amp;Document) -&gt; ViewMapResult&lt;Self::View&gt; {
         let post = document.contents::&lt;BlogPost&gt;()?;
         Ok(document.emit_key_and_value(post.category, 1))
     }
 
     fn reduce(
         &amp;self,
-        mappings: &amp;[MappedValue&lt;Self::Key, Self::Value&gt;],
+        mappings: &amp;[ViewMappedValue&lt;Self::View&gt;],
         _rereduce: bool,
-    ) -&gt; Result&lt;Self::Value, view::Error&gt; {
+    ) -&gt; ReduceResult&lt;Self::View&gt; {
         Ok(mappings.iter().map(|mapping| mapping.value).sum())
-    }
-
-    fn version(&amp;self) -&gt; u64 {
-        1
-    }
-
-    fn name(&amp;self) -&gt; Result&lt;Name, InvalidNameError&gt; {
-        Name::new(&quot;by-category&quot;)
     }
 }
 </code></pre>
+<p>The two traits being implemented are <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.View.html">View</a> and
+<a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.ViewSchema.html">ViewSchema</a>. These traits are designed to allow keeping the
+<code>View</code> implementation in a shared code library that is used by both client-side
+and server-side code, while keeping the <code>ViewSchema</code> implementation in the
+server executable only.</p>
+<h2 id="views-for-serializedcollection"><a class="header" href="#views-for-serializedcollection">Views for <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.SerializedCollection.html"><code>SerializedCollection</code></a></a></h2>
+<p>For users who are using <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.SerializedCollection.html"><code>SerializedCollection</code></a>, <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.CollectionViewSchema.html"><code>CollectionViewSchema</code></a> can be implemented instead of <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.ViewSchema.html"><code>ViewSchema</code></a>. The only difference between the two is that the <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.CollectionViewSchema.html#tymethod.map"><code>map()</code></a> function takes a <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/struct.CollectionDocument.html"><code>CollectionDocument</code></a> instead of a <a href="https://dev.bonsaidb.io/main/bonsaidb/core/document/struct.Document.html"><code>Document</code></a>.</p>
 <h2 id="value-serialization"><a class="header" href="#value-serialization">Value Serialization</a></h2>
 <p>For views to function, the Value type must able to be serialized and deserialized from storage. To accomplish this, all views must implement the <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.SerializedView.html"><code>SerializedView</code></a> trait. For <a href="https://serde.rs/">Serde</a>-compatible data structures, <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.DefaultViewSerialization.html"><code>DefaultSerializedView</code></a> is an empty trait that can be implemented instead to provide the default serialization that BonsaiDb recommends.</p>
 <h2 id="map"><a class="header" href="#map">Map</a></h2>
@@ -233,7 +240,7 @@ pub struct BlogPost {
 <h2 id="using-arbitrary-types-as-a-view-key"><a class="header" href="#using-arbitrary-types-as-a-view-key">Using arbitrary types as a View Key</a></h2>
 <p>In our previous example, we used <code>String</code> for the Key type. The reason is important: Keys must be sortable by <a href="http://sled.rs/">our underlying storage engine</a>, which means special care must be taken. Most serialization types do not guarantee binary sort order. Instead, BonsaiDb exposes the <a href="https://dev.bonsaidb.io/main/bonsaidb/core/schema/trait.Key.html"><code>Key</code></a> trait. On that documentation page, you can see that BonsaiDb implements <code>Key</code> for many built-in types.</p>
 <h3 id="using-an-enum-as-a-view-key"><a class="header" href="#using-an-enum-as-a-view-key">Using an enum as a View Key</a></h3>
-<p>The easiest way to expose an enum is to derive <a href="https://docs.rs/num-traits/0.2.14/num_traits/cast/trait.FromPrimitive.html"><code>num_traits::FromPrimitive</code></a> and <a href="https://docs.rs/num-traits/0.2.14/num_traits/cast/trait.ToPrimitive.html"><code>num_traits::ToPrimitive</code></a> using <a href="https://lib.rs/num-derive">num-derive</a>, and add an <code>impl EnumKey</code> line:</p>
+<p>The easiest way to expose an enum is to derive <a href="https://docs.rs/num-traits/0.2.14/num_traits/cast/trait.FromPrimitive.html"><code>num_traits::FromPrimitive</code></a> and <a href="https://docs.rs/num-traits/0.2.14/num_traits/cast/trait.ToPrimitive.html"><code>num_traits::ToPrimitive</code></a> using <a href="https://crates.io/crates/num-derive">num-derive</a>, and add an <code>impl EnumKey</code> line:</p>
 <pre><code class="language-rust noplayground no_run">#[derive(
     Serialize, Deserialize, Debug, num_derive::FromPrimitive, num_derive::ToPrimitive, Clone,
 )]
