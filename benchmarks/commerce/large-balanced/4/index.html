@@ -54,6 +54,57 @@
         </tr>
     </tbody>
 </table>
+<h5>Shopping Plans</h5>
+
+<p>This run executed 1000 shopping plans across 4 worker(s). All total, the workers will
+    execute the following breakdown of operations:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Operation</th>
+            <th scope="col">Invocations</th>
+        </tr>
+    </thead>
+    <tbody>
+        
+        <tr>
+            <td>Load</td>
+            <td>1</td>
+        </tr>
+        
+        <tr>
+            <td>LookupProduct</td>
+            <td>2729</td>
+        </tr>
+        
+        <tr>
+            <td>FindProduct</td>
+            <td>2762</td>
+        </tr>
+        
+        <tr>
+            <td>CreateCart</td>
+            <td>714</td>
+        </tr>
+        
+        <tr>
+            <td>AddProductToCart</td>
+            <td>1350</td>
+        </tr>
+        
+        <tr>
+            <td>Checkout</td>
+            <td>165</td>
+        </tr>
+        
+        <tr>
+            <td>RateProduct</td>
+            <td>81</td>
+        </tr>
+        
+    </tbody>
+</table>
 
 <h3>Summary</h3>
 
@@ -70,29 +121,29 @@
         
         <tr>
             <td>bonsaidb-local</td>
-            <td>2.254s</td>
-            <td>563.6ms</td>
+            <td>1.822s</td>
+            <td>455.5ms</td>
             <td>None</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</td>
-            <td>6.189s</td>
-            <td>1.547s</td>
+            <td>5.211s</td>
+            <td>1.303s</td>
             <td>UDP with TLS</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</td>
-            <td>4.651s</td>
-            <td>1.163s</td>
+            <td>3.877s</td>
+            <td>969.3ms</td>
             <td>TCP</td>
         </tr>
         
         <tr>
             <td>postgresql</td>
-            <td>43.09s</td>
-            <td>10.77s</td>
+            <td>35.96s</td>
+            <td>8.991s</td>
             <td>TCP</td>
         </tr>
         
@@ -218,6 +269,8 @@
 
 <p>Measures the time spent loading the initial data set and performing any pre-cache operations that most database administrators would perform on their databases periodically to ensure good performance.</p>
 
+<p>This operation was executed 1 time(s) across each backend.</p>
+
 
 
 <table>
@@ -228,40 +281,45 @@
             <th scope="col">Min</th>
             <th scope="col">Max</th>
             <th scope="col">StdDev</th>
+            <th scope="col">Outliers</th>
         </tr>
     </thead>
     <tbody>
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>321.0ms</td>
-            <td>321.0ms</td>
-            <td>321.0ms</td>
+            <td>277.5ms</td>
+            <td>277.5ms</td>
+            <td>277.5ms</td>
             <td>0s</td>
+            <td>0</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>393.5ms</td>
-            <td>393.5ms</td>
-            <td>393.5ms</td>
+            <td>326.6ms</td>
+            <td>326.6ms</td>
+            <td>326.6ms</td>
             <td>0s</td>
+            <td>0</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>370.3ms</td>
-            <td>370.3ms</td>
-            <td>370.3ms</td>
+            <td>318.2ms</td>
+            <td>318.2ms</td>
+            <td>318.2ms</td>
             <td>0s</td>
+            <td>0</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>29.14s</td>
-            <td>29.14s</td>
-            <td>29.14s</td>
+            <td>24.54s</td>
+            <td>24.54s</td>
+            <td>24.54s</td>
             <td>0s</td>
+            <td>0</td>
         </tr>
         
     </tbody>
@@ -286,6 +344,8 @@
 
 <p>Meaures the time spent looking up a product by its id. This operation is meant to simulate the basic needs of the database to provide a product details page after a user clicked a direct link that contians the product&#x27;s unique id, including the product&#x27;s current rating.</p>
 
+<p>This operation was executed 2729 time(s) across each backend.</p>
+
 
 <img src="LookupProduct.png" class="diagram" />
 
@@ -298,40 +358,45 @@
             <th scope="col">Min</th>
             <th scope="col">Max</th>
             <th scope="col">StdDev</th>
+            <th scope="col">Outliers</th>
         </tr>
     </thead>
     <tbody>
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>121.1us</td>
-            <td>23.80us</td>
-            <td>1.604ms</td>
-            <td>97.15us</td>
+            <td>96.28us</td>
+            <td>21.20us</td>
+            <td>1.256ms</td>
+            <td>76.27us</td>
+            <td>45</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>683.6us</td>
-            <td>334.9us</td>
-            <td>6.372ms</td>
-            <td>206.4us</td>
+            <td>574.4us</td>
+            <td>210.0us</td>
+            <td>12.84ms</td>
+            <td>278.1us</td>
+            <td>4</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>475.9us</td>
-            <td>164.0us</td>
-            <td>5.923ms</td>
-            <td>176.7us</td>
+            <td>400.9us</td>
+            <td>171.5us</td>
+            <td>5.443ms</td>
+            <td>139.1us</td>
+            <td>5</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>1.439ms</td>
-            <td>348.7us</td>
-            <td>33.38ms</td>
-            <td>1.338ms</td>
+            <td>1.201ms</td>
+            <td>289.8us</td>
+            <td>44.81ms</td>
+            <td>1.208ms</td>
+            <td>9</td>
         </tr>
         
     </tbody>
@@ -356,6 +421,8 @@
 
 <p>Measures the time spent looking up a product by its name (exact match, indexed). This operation is meant to simulate the basic needs of the database to provide a product details after finding a product by its name, including the product&#x27;s current rating.</p>
 
+<p>This operation was executed 2762 time(s) across each backend.</p>
+
 
 <img src="FindProduct.png" class="diagram" />
 
@@ -368,40 +435,45 @@
             <th scope="col">Min</th>
             <th scope="col">Max</th>
             <th scope="col">StdDev</th>
+            <th scope="col">Outliers</th>
         </tr>
     </thead>
     <tbody>
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>239.9us</td>
-            <td>50.80us</td>
-            <td>1.820ms</td>
-            <td>149.5us</td>
+            <td>196.6us</td>
+            <td>35.60us</td>
+            <td>1.901ms</td>
+            <td>127.9us</td>
+            <td>44</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>768.3us</td>
-            <td>384.5us</td>
-            <td>9.994ms</td>
-            <td>323.7us</td>
+            <td>649.5us</td>
+            <td>249.8us</td>
+            <td>10.20ms</td>
+            <td>330.9us</td>
+            <td>14</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>565.6us</td>
-            <td>228.8us</td>
-            <td>5.888ms</td>
-            <td>237.1us</td>
+            <td>467.6us</td>
+            <td>225.2us</td>
+            <td>5.058ms</td>
+            <td>158.9us</td>
+            <td>10</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>1.564ms</td>
-            <td>389.8us</td>
-            <td>56.19ms</td>
-            <td>1.680ms</td>
+            <td>1.244ms</td>
+            <td>314.9us</td>
+            <td>37.47ms</td>
+            <td>1.151ms</td>
+            <td>11</td>
         </tr>
         
     </tbody>
@@ -426,6 +498,8 @@
 
 <p>Measures the time spent creating a shopping cart.</p>
 
+<p>This operation was executed 714 time(s) across each backend.</p>
+
 
 <img src="CreateCart.png" class="diagram" />
 
@@ -438,40 +512,45 @@
             <th scope="col">Min</th>
             <th scope="col">Max</th>
             <th scope="col">StdDev</th>
+            <th scope="col">Outliers</th>
         </tr>
     </thead>
     <tbody>
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>291.5us</td>
-            <td>70.91us</td>
-            <td>18.64ms</td>
-            <td>720.9us</td>
+            <td>219.9us</td>
+            <td>57.10us</td>
+            <td>18.75ms</td>
+            <td>699.9us</td>
+            <td>1</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>459.8us</td>
-            <td>246.8us</td>
-            <td>1.694ms</td>
-            <td>112.1us</td>
+            <td>398.4us</td>
+            <td>199.4us</td>
+            <td>5.270ms</td>
+            <td>231.2us</td>
+            <td>3</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>362.8us</td>
-            <td>187.8us</td>
-            <td>4.262ms</td>
-            <td>170.8us</td>
+            <td>300.1us</td>
+            <td>156.9us</td>
+            <td>1.232ms</td>
+            <td>80.79us</td>
+            <td>5</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>2.281ms</td>
-            <td>632.3us</td>
-            <td>11.29ms</td>
-            <td>1.133ms</td>
+            <td>1.916ms</td>
+            <td>482.8us</td>
+            <td>6.614ms</td>
+            <td>794.9us</td>
+            <td>15</td>
         </tr>
         
     </tbody>
@@ -496,6 +575,8 @@
 
 <p>Measures the time spent adding a product to a shopping cart.</p>
 
+<p>This operation was executed 1350 time(s) across each backend.</p>
+
 
 <img src="AddProductToCart.png" class="diagram" />
 
@@ -508,40 +589,45 @@
             <th scope="col">Min</th>
             <th scope="col">Max</th>
             <th scope="col">StdDev</th>
+            <th scope="col">Outliers</th>
         </tr>
     </thead>
     <tbody>
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>352.3us</td>
-            <td>93.01us</td>
-            <td>2.441ms</td>
-            <td>181.7us</td>
+            <td>272.2us</td>
+            <td>79.60us</td>
+            <td>1.967ms</td>
+            <td>121.1us</td>
+            <td>18</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>828.0us</td>
-            <td>457.5us</td>
-            <td>15.25ms</td>
-            <td>610.2us</td>
+            <td>690.0us</td>
+            <td>395.6us</td>
+            <td>9.376ms</td>
+            <td>285.6us</td>
+            <td>3</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>635.8us</td>
-            <td>235.7us</td>
-            <td>22.70ms</td>
-            <td>844.9us</td>
+            <td>530.7us</td>
+            <td>300.8us</td>
+            <td>14.82ms</td>
+            <td>569.7us</td>
+            <td>4</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>2.253ms</td>
-            <td>516.9us</td>
-            <td>11.68ms</td>
-            <td>1.091ms</td>
+            <td>1.875ms</td>
+            <td>457.8us</td>
+            <td>24.80ms</td>
+            <td>1.037ms</td>
+            <td>5</td>
         </tr>
         
     </tbody>
@@ -566,6 +652,8 @@
 
 <p>Measures the time spent converting a shopping cart into an order for a customer.</p>
 
+<p>This operation was executed 165 time(s) across each backend.</p>
+
 
 <img src="Checkout.png" class="diagram" />
 
@@ -578,40 +666,45 @@
             <th scope="col">Min</th>
             <th scope="col">Max</th>
             <th scope="col">StdDev</th>
+            <th scope="col">Outliers</th>
         </tr>
     </thead>
     <tbody>
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>632.6us</td>
-            <td>277.6us</td>
-            <td>2.344ms</td>
-            <td>307.7us</td>
+            <td>483.9us</td>
+            <td>209.7us</td>
+            <td>1.568ms</td>
+            <td>178.2us</td>
+            <td>3</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>1.294ms</td>
-            <td>948.5us</td>
-            <td>1.871ms</td>
-            <td>166.4us</td>
+            <td>1.077ms</td>
+            <td>767.7us</td>
+            <td>1.936ms</td>
+            <td>178.9us</td>
+            <td>3</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>986.9us</td>
-            <td>657.6us</td>
-            <td>4.537ms</td>
-            <td>307.8us</td>
+            <td>804.4us</td>
+            <td>533.3us</td>
+            <td>1.239ms</td>
+            <td>114.9us</td>
+            <td>1</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>2.750ms</td>
-            <td>973.0us</td>
-            <td>7.538ms</td>
-            <td>1.170ms</td>
+            <td>2.223ms</td>
+            <td>606.3us</td>
+            <td>5.968ms</td>
+            <td>961.0us</td>
+            <td>4</td>
         </tr>
         
     </tbody>
@@ -636,6 +729,8 @@
 
 <p>Measures the time spent adding or updating a review of a product by a customer. Each customer can only have one review per product. When this operation is complete, all subsequent calls to LookupProduct and FindProduct should reflect the new rating. This simulates an &#x27;upsert&#x27; (insert or update) operation using a unique index.</p>
 
+<p>This operation was executed 81 time(s) across each backend.</p>
+
 
 <img src="RateProduct.png" class="diagram" />
 
@@ -648,40 +743,45 @@
             <th scope="col">Min</th>
             <th scope="col">Max</th>
             <th scope="col">StdDev</th>
+            <th scope="col">Outliers</th>
         </tr>
     </thead>
     <tbody>
         
         <tr>
             <td>bonsaidb-local</a></td>
-            <td>1.879ms</td>
-            <td>461.1us</td>
-            <td>40.91ms</td>
-            <td>6.055ms</td>
+            <td>1.660ms</td>
+            <td>410.0us</td>
+            <td>34.56ms</td>
+            <td>5.385ms</td>
+            <td>3</td>
         </tr>
         
         <tr>
             <td>bonsaidb-quic</a></td>
-            <td>1.836ms</td>
-            <td>893.9us</td>
-            <td>37.96ms</td>
-            <td>4.342ms</td>
+            <td>1.595ms</td>
+            <td>715.5us</td>
+            <td>36.87ms</td>
+            <td>4.179ms</td>
+            <td>1</td>
         </tr>
         
         <tr>
             <td>bonsaidb-ws</a></td>
-            <td>1.728ms</td>
-            <td>801.8us</td>
-            <td>37.82ms</td>
-            <td>4.747ms</td>
+            <td>1.356ms</td>
+            <td>610.8us</td>
+            <td>29.04ms</td>
+            <td>3.490ms</td>
+            <td>2</td>
         </tr>
         
         <tr>
             <td>postgresql</a></td>
-            <td>7.129ms</td>
-            <td>4.550ms</td>
-            <td>13.72ms</td>
-            <td>1.785ms</td>
+            <td>5.485ms</td>
+            <td>3.192ms</td>
+            <td>8.581ms</td>
+            <td>1.091ms</td>
+            <td>0</td>
         </tr>
         
     </tbody>
@@ -710,9 +810,9 @@
     <footer class="container">
         <hr />
         <small>
-            This report was generated at 2022-01-20T01:23:42.85639232Z and git revision
-            <a href="https://github.com/khonsulabs/bonsaidb/tree/bcbd2f677ec2467fdf4ab05d5e4504ddd5199bfa">
-                bcbd2f6
+            This report was generated at 2022-01-20T14:57:25.501456298Z and git revision
+            <a href="https://github.com/khonsulabs/bonsaidb/tree/4dddf1d284f9f08753302c1b5307f4847b93b21a">
+                4dddf1d
             </a>.
         </small>
     </footer>
