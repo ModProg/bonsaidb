@@ -5,7 +5,7 @@ sourcesIndex["bonsaidb_core"] = {"name":"","dirs":[{"name":"admin","files":["dat
 sourcesIndex["bonsaidb_keystorage_s3"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["bonsaidb_local"] = {"name":"","dirs":[{"name":"database","files":["keyvalue.rs","pubsub.rs"]},{"name":"jobs","dirs":[{"name":"manager","files":["jobs.rs","managed_job.rs"]}],"files":["manager.rs","mod.rs","task.rs","traits.rs"]},{"name":"storage","files":["backup.rs"]},{"name":"tasks","files":["compactor.rs","task.rs"]},{"name":"views","files":["integrity_scanner.rs","mapper.rs"]}],"files":["cli.rs","config.rs","database.rs","error.rs","lib.rs","open_trees.rs","storage.rs","tasks.rs","vault.rs","views.rs"]};
 sourcesIndex["bonsaidb_macros"] = {"name":"","files":["lib.rs"]};
-sourcesIndex["bonsaidb_server"] = {"name":"","dirs":[{"name":"cli","files":["certificate.rs","mod.rs","serve.rs"]},{"name":"server","files":["acme.rs","connected_client.rs","database.rs","shutdown.rs","tcp.rs","websockets.rs"]}],"files":["async_io_util.rs","backend.rs","config.rs","error.rs","hosted.rs","lib.rs","server.rs","test_util.rs"]};
+sourcesIndex["bonsaidb_server"] = {"name":"","dirs":[{"name":"cli","files":["certificate.rs","mod.rs","serve.rs"]},{"name":"server","files":["acme.rs","connected_client.rs","database.rs","shutdown.rs","tcp.rs","websockets.rs"]}],"files":["backend.rs","config.rs","error.rs","hosted.rs","lib.rs","server.rs","test_util.rs"]};
 sourcesIndex["bonsaidb_utils"] = {"name":"","files":["lib.rs","lock_macros.rs"]};
 sourcesIndex["xtask"] = {"name":"","files":["main.rs"]};
 createSourceSidebar();

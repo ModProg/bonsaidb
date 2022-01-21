@@ -26,6 +26,8 @@
 <span id="25">25</span>
 <span id="26">26</span>
 <span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
 </pre><pre class="rust"><code><span class="attribute">#![<span class="ident">allow</span>(<span class="ident">missing_docs</span>)]</span>
 
 <span class="kw">use</span> <span class="ident">std::path::Path</span>;
@@ -45,6 +47,8 @@
             .<span class="ident">with_schema</span>::<span class="op">&lt;</span><span class="ident">BasicSchema</span><span class="op">&gt;</span>()<span class="question-mark">?</span>,
     )
     .<span class="kw">await</span><span class="question-mark">?</span>;
+    <span class="macro">assert_eq!</span>(<span class="ident">server</span>.<span class="ident">primary_domain</span>(), <span class="ident">BASIC_SERVER_NAME</span>);
+
     <span class="ident">server</span>.<span class="ident">install_self_signed_certificate</span>(<span class="bool-val">false</span>).<span class="kw">await</span><span class="question-mark">?</span>;
 
     <span class="ident">server</span>
